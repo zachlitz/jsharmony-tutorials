@@ -1,0 +1,37 @@
+{
+  "name": "jsharmony-tutorials",
+  "version": "1.0.0",
+  "description": "jsHarmony Tutorials",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apHarmony/jsharmony-tutorials"
+  },
+  "keywords": [
+    "jsHarmony",
+    "quickstart",
+    "tutorials",
+    "documentation",
+    "started",
+    "help",
+    "intro",
+    "introduction"
+  ],
+  "author": "apHarmony <contact@apharmony.com> (http://www.apharmony.com/)",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/apHarmony/jsharmony-tutorials/issues"
+  },
+  "homepage": "https://github.com/apHarmony/jsharmony-tutorials",
+  "devDependencies": {
+    "mocha": "~3.2.0"
+  },
+  "dependencies": {
+    "jsharmony": "^1.0.0",
+    "jsharmony-db-pgsql": "^1.0.0",
+    "jsharmony-factory": "^1.0.0"
+  }
+}

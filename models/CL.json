@@ -1,0 +1,17 @@
+{
+"comment":"CL",
+    "layout":"grid", 
+	"title":"All Customers",
+	"table":"c",
+	"access":"BI", 
+    "roles": {"C_B":"B","C_X":"*"},
+	"caption":[0,"Customer","Customers"],
+	"sort":["^c_name"], 
+	"buttons":[{"link":"add:C"}],
+	"topmenu":"clients",
+	"fields":[
+	  {"name":"c_id","type":"bigint","access":"FB","key":1,"link":"edit:C","caption": "ID"},
+	  {"name":"c_sts","type":"varchar","length":"8","caption":"Status","access":"B"},
+	  {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","access":"B","link":"edit:C"}
+	]
+}
