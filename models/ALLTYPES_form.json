@@ -1,0 +1,27 @@
+{
+  "comment": "ALLTYPES",
+  "layout": "form",
+  "title": "ALLTYPES",
+  "table": "alltypes",
+  "caption": ["","Item","Items"],
+  "actions": "BIUD",
+  "popup": [900,600],
+  "fields": [
+    {"name":"x_primary", "type":"int", "caption":"x_primary", "key":1, "control":"textbox_S", "actions":"B", "validate":["Required"], "nl":1},
+    {"name":"x_bigint", "type":"bigint", "caption":"x_bigint", "actions":"BIU", "control":"textbox", "validate":[], "nl":1},
+    {"name":"x_integer", "type":"integer", "caption":"x_integer", "control":"textbox_S", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_smallint", "type":"smallint", "caption":"x_smallint", "control":"textbox_VS", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_tinyint", "type":"tinyint", "caption":"x_tinyint", "control":"textbox_VS", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_boolean", "type":"boolean", "caption":"x_boolean", "control":"checkbox", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_decimal", "type":"decimal", "precision":[38,10], "caption":"x_decimal", "control":"textbox_decimal", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_real", "type":"real", "precision":53, "caption":"x_real", "control":"textbox_decimal", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_time", "type":"time", "precision":7, "caption":"x_time", "control":"textbox_hhmmss", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_date", "type":"date", "precision":0, "caption":"x_date", "control":"date_mmddyyyy", "actions":"BIU", "validate":[], "nl":1},
+    {"name":"x_datetime", "type":"datetime", "precision":3, "caption":"x_datetime", "controlclass":"xtextbox_tstmp7", "actions":"BIU", "control":"textbox", "validate":[], "nl":1},
+    {"name":"x_char", "type":"char", "length":100, "caption":"x_char", "actions":"BIU", "control":"textbox_L", "validate":[], "nl":1},
+    {"name":"x_varchar", "type":"varchar", "length":100, "caption":"x_varchar", "actions":"BIU", "control":"textbox_L", "validate":[], "nl":1},
+    {"name":"x_varcharmax", "type":"varchar", "length":-1, "caption":"x_varcharmax", "actions":"BIU", "control":"textarea_M", "captionclass":"xtextarea_caption", "validate":[], "nl":1},
+    {"name":"x_text", "type":"text", "caption":"x_text", "actions":"BIU", "control":"textarea_M", "captionclass":"xtextarea_caption", "validate":[], "nl":1},
+    {"name":"x_blob", "type":"blob", "length":100, "caption":"x_blob", "actions":"BIU", "control":"textbox_VL", "validate":[], "nl":1}
+  ]
+}

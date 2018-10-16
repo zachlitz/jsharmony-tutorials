@@ -1,0 +1,15 @@
+{
+  "comment":"C_CF",
+  "layout":"multisel",
+  "title":"Flags",
+	"table":"cf",
+	"actions":"BU",
+  "roles": {"CX_B":"B","CX_X":"*"},
+	"fields":[
+	  {"name":"c_id","type":"bigint","foreignkey": 1,"control":"hidden"},
+	  {"name":"cf_id","type":"bigint","key":1,"control":"hidden"},
+	  {"name":"cf_type","type":"varchar","length":"8",
+       "caption":"Flag Type","actions":"B",
+       "lov": { "UCOD": "cf_type" }}
+	]
+}

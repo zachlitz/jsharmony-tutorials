@@ -20,19 +20,25 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
-  "Title": "Introduction",
-  "Menu": ["Getting Started"],
-  "Flags": ["SiteDefault"]
+  "Title": "Basic Form",
+  "Menu": ["Models"],
+  "Code": ["/models/C.json","/models/C.js"],
+  "Demo": "/C",
+  "DemoWindowParams": "width=1000,height=700"
 }
 </script>
-The jsHarmony Tutorials provide an example-based reference for quickly getting up to speed with jsHarmony.<br/>
+Forms are located in the "models" folder.  Except in cases of routes or inheritance, each form has its own file.<br/>
 <br/>
-The tutorials are organized by implementation use cases, so that new users can find the functionality that is specific to their development project without reviewing the full documentation.<br/>
+Forms are named FORMNAME.json, where FORMNAME is the name of the form.  Form names should consist of alpha-numeric characters and underscores.<br/>
 <br/>
-Users looking for additional information also have the following resources:
-<ul>
-  <li>jsHarmony Model Language Reference</li>
-  <li>jsHarmony Community Forums</li>
-  <li><a target="_blank" href="https://github.com/apHarmony/jsharmony">jsHarmony Source Code</a> (for Advanced Developers)</li>
-  <li>Development Support</li>
-</ul>
+<h3>Empty Form</h3>
+In the most basic example, let's create an empty form using the code below, and save it as 01_FORM_EMPTY.json
+<br/><pre>
+{ }
+</pre><br/>
+<h3>Layout / Title / Caption</h3>
+<h3>Database Tables</h3>
+<h3>Roles / Actions</h3>
+<h3>Controls</h3>
+<h3>Linking to a Grid</h3>
+<h3>New vs Edit Mode</h3>

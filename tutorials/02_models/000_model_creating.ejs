@@ -1,0 +1,79 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Creating Models",
+  "Menu": ["Models", "Models Overview"]
+}
+</script>
+
+<h3>Introduction</h3>
+Models are the building blocks of jsHarmony applications.  Each model is defined in JSON format, and can be extended with custom JavaScript hooks.<br/>
+<br/>
+Defining a model automatically creates the following URLs:
+<ul>
+  <li><b>/:modelid</b> - The browser URL used to access the model</li>
+  <li><b>/_d/:modelid</b> - The application server interface for GET/POST/PUT/DELETE operations</li>
+  <li><b>/_model/:modelid</b> - The meta-data used to render the model</li>
+</ul>
+
+<h3>Creating Models</h3>
+Models can be added by creating a new file in the "models" subfolder.  Models can be defined one of two ways:<br/>
+<br/>
+<b>One model per file</b><br/>
+Create a new file in the "models" folder named MODELID.json with the following contents:
+<pre>
+{
+  "table":"c",
+  "layout":"grid"
+}
+</pre>
+In this situation, the model ID will be the same as the file name ("MODELID") and the model definition will be the contents of the file.<br/>
+<br/>
+<b>Multiple models per file</b><br/>
+Create a new file in the "models" folder with the following contents:
+<pre>
+{
+  "MODELID1": {
+    "table":"c",
+    "layout":"grid"
+  },
+  "MODELID2": {
+    "table":"c",
+    "layout":"form"
+  },
+}
+</pre>
+In this situation, two models will be created and named "MODELID1" and "MODELID2".  The filename is not used in this case as part of any of the model IDs.
+
+<h3>Title / Caption</h3>
+<pre>
+{
+  "table":"c",
+  "layout":"grid",
+  "title":"All Customers",
+  "caption":[0,"Customer","Customers"]
+}
+</pre>
+The page heading can be configured via the <b>"title"</b> property.<br/>
+<br/>
+The <b>"caption"</b> property describes what the model is editing, in singular and plural form.  The caption is defined as an array, with caption[1] as the singular form and caption[2] as the plural form.  The caption is primarily used in system-generated messages.
+<pre>[0,"singular","plural"]</pre>

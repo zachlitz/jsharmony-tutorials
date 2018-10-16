@@ -1,0 +1,28 @@
+{
+  "CW_DEV":{
+    "comment":"C",
+    "layout": "form", 
+    "title": "Customer Information",
+    "table": "c",
+    "actions": "B", 
+    "roles": {"C_B":"B","C_X":"*"},
+    "caption": [ "", "Customer", "Customers" ],
+    "topmenu": "clients",
+    "popup":[1000,700],
+    "tabpos":"top",
+    "tabcode": "c_sts",
+    "tabs":[
+      {"name":"Overview","caption": "Overview","target":"C_SUB","bindings":{"c_id":"c_id"}},
+      {"name":"Contacts","caption": "Contacts","target":"C_CCL","bindings":{"c_id":"c_id"},
+        "actions":"BU"},
+      {"name":"Flags","caption": "Flags","target":"C_CF","bindings":{"c_id":"c_id"},
+        "showcode": ["ACTIVE"],"actions":"BU"},
+      {"name":"SetInactive","caption": "Set Inactive","target":"C_EXEC","bindings":{"c_id":"c_id"},
+        "showcode": ["ACTIVE"],"actions":"BU"}
+    ],
+    "fields": [
+      {"name":"c_id", "type": "bigint", "actions":"B","key": 1},
+      {"name": "c_sts","type":"varchar","length":8,"actions": "B"}
+    ]
+  }
+}

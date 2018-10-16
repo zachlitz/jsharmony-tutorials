@@ -1,0 +1,330 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "System Architecture",
+  "Menu": ["Getting Started"],
+  "Flags": ["SiteDefault"]
+}
+</script>
+
+<h3>What is jsHarmony?</h3>
+A Model-Driven Rapid Application Development platform for web applications 🔥
+<ol>
+  <li>Connect to an existing SQL Server or PostgreSQL database</li>
+  <li>Use JSON files to define the application's forms, grids, and reports</li>
+  <li>Run and deploy</li>
+</ol>
+
+jsHarmony automically generates the User Interface, Authentication, Menu system, and Administration. Most components of the system can be customized via JavaScript hooks.
+
+
+<h3>Guiding Design Principles</h3>
+<ul>
+  <li>Security</li>
+  <li>Fast Performance and Scalability</li>
+  <li>Flexibility (Program anything)</li>
+  <li>Ease of maintenance</li>
+</ul>
+
+
+<h3>The Platform</h3>
+<b>Application Server - Node.js Express Server</b><br/>
+The jsHarmony application server uses Node.js Express for routing.  On startup, the server reads all the Models and programs files located in the "models" folder and stores them in memory.  The "supervisor" script is used to auto-restart the server when models are changed.<br/>
+<br/>
+<u>Primary application server components</u>
+<ul>
+  <li>Express routing layer</li>
+  <li>Database layer</li>
+  <li>Authentication</li>
+  <li>Menu</li>
+  <li>Report Server</li>
+  <li>Job Processor</li>
+  <li>Server-side JS</li>
+</ul>
+The application server handles the following general categories of requests via HTTP and RESTful web services:
+<ul>
+  <li>
+    <b>Static Resources</b><br/>
+    Images, documents, compiled or source JavaScript and CSS, public and user-authenticated files
+  </li>
+  <li>
+    <b>Data Models / Metadata</b><br/>
+    The forms, grids, and other programs used by the client to interface with the database
+  </li>
+  <li>
+    <b>Database Requests and Server-Side Operations</b><br/>
+    Database operations (select, insert, update, and delete), transactions, stored procedure execution, and custom server-side programs.
+  </li>
+  <li>
+    <b>Reports</b><br/>
+    PDF Reports generated via the report templating tool
+  </li>
+</ul>
+<b>JavaScript / jQuery Client</b><br/>
+The jsHarmony client is implemented via a jQuery SPA (Single-Page Architecture) web application.  EJS templates are used to render client content, and popup windows are used to enable concurrent editing of multiple records.<br/>
+<br/>
+<u>Primary jsHarmony client components</u>
+<ul>
+  <li>Single Page JavaScript App</li>
+  <li>EJS Template Engine</li>
+  <li>Popups</li>
+  <li>Databinding</li>
+  <li>Validation</li>
+  <li>Editable Grid with automated paging</li>
+  <li>Advanced Controls</li>
+</ul>
+
+<h3>Model Architecture</h3>
+Models are used to display and edit data.  Below is the full workflow for a standard form.
+<ol>
+  <li>The Client browser accesses either the root <b>"/"</b> site, or a specific model <b>"/:modelid"</b></li>
+  <li>The server provides the jsHarmony SPA web app that will be used for the remainder of the browser session</li>
+  <li>Client loads the SPA web app, and parses the querystring to determine the target model id</li>
+  <li>
+    Client downloads the target model definition from the server<br/>
+    <div class="url">/_model/:modelid</div><br/>
+    The model definition consists of:
+    <ul>
+      <li>Fields, controls, and validation</li>
+      <li>Subforms</li>
+      <li>Custom client-side JS</li>
+    </ul>
+  </li>
+  <li>Client generates the user interface based on the model definition</li>
+  <li>
+    Based on the querystring or current state, Client requests the data record from the server<br/>
+    <div class="url">/_d/:modelid</div> &nbsp;(GET)<br/>
+    The model data record consists of:
+    <ul>
+      <li>Data row(s)</li>
+      <li>Drop-down List of Values (LOV)</li>
+      <li>Defaults</li>
+      <li>Breadcrumbs</li>
+    </ul>
+  </li>
+  <li>Client binds the data to the user interface</li>
+  <li>User updates the data as necessary client-side</li>
+  <li>
+    User saves the data record<br/>
+    <div class="url">/_d/:modelid</div> &nbsp;(PUT, POST, DELETE), or<br/>
+    <div class="url">/_d/transaction</div> &nbsp;(For running all updates in an atomic transaction)
+    <ul>
+      <li>Client sends updated data record to the server</li>
+      <li>Server returns a success code and new ID (if applicable), or an error message</li>
+    </ul>
+  </li>
+  <li>Client reloads the data record from server to update any fields modified by server-side triggers</li>
+</ol>
+
+<h3>Report Architecture</h3>
+Reports consist of two components: the form to enter the report paramters, and the actual execution of the report.
+<ol>
+  <li>
+    Client accesses the report model via the SPA web app<br/>
+    <div class="url">/_report/:modelid</div><br/>
+  </li>
+  <li>
+    Client downloads the report model definition from the server<br/>
+    <div class="url">/_model/_report_:modelid</div><br/>
+    The report model definition consists of:
+    <ul>
+      <li>Report parameters, controls, and validation</li>
+      <li>Custom client-side JS</li>
+    </ul>
+  </li>
+  <li>Client generates the user interface based on the model definition</li>
+  <li>
+    Based on the querystring or current state, Client requests the report model data from the server<br/>
+    <div class="url">/_d/_report_:modelid</div> &nbsp;(GET)<br/>
+    The report model data record consists of:
+    <ul>
+      <li>Drop-down List of Values (LOV)</li>
+      <li>Defaults</li>
+    </ul>
+  </li>
+  <li>Client binds the data to the user interface</li>
+  <li>
+    User enters the report parameters and Client runs the report with one of the following methods:
+    <ul>
+      <li>
+        <div class="url">/_d/_report/:reportid/</div> &nbsp;(GET)<br/>
+        Generates a PDF version of the report via PhantomJS and returns it to the Client
+      </li>
+      <li>
+        <div class="url">/_d/_report_html/:reportid/</div> &nbsp;(GET)<br/>
+        Generates an HTML version of the report via PhantomJS and returns it to the Client
+      </li>
+      <li>
+        <div class="url">/_d/_reportjob/:reportid/</div> &nbsp;(GET)<br/>
+        Queues the report for batch job processing
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3>Job Processor Architecture</h3>
+The job processor checks the database for new jobs every few seconds, and executes any jobs it receives.
+<ol>
+  <li>The jsharmony.RQST (job request) table is populated by database triggers, backend processes, or by running a batch report</li>
+  <li>The Job Processor checks the jsharmony.RQST table every few seconds for a new job</li>
+  <li>
+    When a new job is found, the Job Processor parses the request and performs its actions, which may include:
+    <ol>
+      <li>Generating and saving a report</li>
+      <li>Sending emails</li>
+      <li>Sending SMS messages</li>
+      <li>Generating notes</li>
+      <li>Queuing tasks for Client subscribers (printers, factory floor machines, etc)</li>
+    </ol>
+  </li>
+</ol>
+
+<h3>Model Capabilities</h3>
+Model capabilities are described in detail in the "Models" section and in the jsHarmony Model Language Reference.  A brief overview is below:<br/>
+<br/>
+There are five types of models:
+<ul>
+  <li>
+    <b>Grid Models</b><br/>
+    Read-only or editable grids used to display recordsets.  Grids have search and filter support, as well as the ability to export to CSV.
+  </li>
+  <li>
+    <b>Form Models</b><br/>
+    Control-based forms for editing a single row.  Forms can contain subforms of any of the other model types.
+  </li>
+  <li>
+    <b>Multi-Form Models</b><br/>
+    Form with navigator control to switch between records.  Multi-forms are designed to be subforms of a parent form, and all data across all rows of a multi-form is saved in one transaction.
+  </li>
+  <li>
+    <b>Multi-Sel Models</b><br/>
+    A list of values displayed in a table, enabling checkbox row selection.  Used for "one-to-many" List of Values child tables, such as status flags or attribute checkboxes.
+  </li>
+  <li>
+    <b>Exec Models</b><br/>
+    Unbound form used for gathering user parameters and running reports and stored procedures
+  </li>
+</ul>
+The database SQL statements are auto-generated based on the models.  The SQL can be overridden per field, or per database operation.<br/>
+<br/>
+<b>Controls</b><br/>
+jsHarmony provides the following controls:<br/>
+<ul>
+  <li>label</li>
+  <li>textbox</li>
+  <li>textzoom (textbox with popup for expanded entry)</li>
+  <li>textarea</li>
+  <li>dropdown</li>
+  <li>date (with calendar dropdown)</li>
+  <li>button (Standard button)</li>
+  <li>linkbutton (Text link)</li>
+  <li>checkbox</li>
+  <li>file_upload</li>
+  <li>tree</li>
+  <li>password</li>
+  <li>hidden</li>
+  <li>subform</li>
+  <li>html</li>
+</ul>
+Additionally, custom controls such as Google Maps integration, week / month views, salesperson dispatching tools, and barcoding can be implemented for special-use cases.<br/>
+<br/>
+<b>Inheritance</b><br/>
+A key feature of jsHarmony is the ability to chain models together through inheritance.  This significantly decreases development and maintenance overhead by reducing repetitive code.  Models can inherit properties and controls from a parent model, and remove / reorder fields as necessary.  In addition, control definitions can be chained and inherited, enabling custom per-project settings of system controls.<br/>
+<br/>
+<b>Datalocks</b><br/>
+When implementing client portals and other publicly-accessible applications, data security is essential.  jsHarmony provides record security on a per-database request level, ensuring that every user has access to only their restricted subset of data.  When datalocks are enabled for a portal, every model key used by that portal is required to contain a datalock definition to ensure system security.
+
+<h3>Database Design Guidelines</h3>
+The jsHarmony factory creates a "jsharmony" schema, separating jsHarmony tables from the user data.<br/>
+<br/>
+The following key tables are stored in the jsharmony schema:
+<ul>
+  <li>Documents (D)</li>
+  <li>Notes (N)</li>
+  <li>Text Management (TXT)</li>
+  <li>Help System (HP, H)<br/>&nbsp;</li>
+
+  <li>System Users and Roles (PE, SR, SPER)</li>
+  <li>Client Portal Users and Roles (CPE, CR, CPER)</li>
+  <li>Menu (SM / SRM / CRM)<br/>&nbsp;</li>
+
+  <li>Settings Configuration (PPD)</li>
+  <li>Developer / System / User Settings (XPP, GPP, PPP)</li>
+  <li>Developer List of Values (GCOD_H, GCOD2_H, GCOD*)</li>
+  <li>System List of Values (UCOD_H, UCOD2_H, UCOD*)<br/>&nbsp;</li>
+
+  <li>Job Processor Tables (RQST, RQST_*)</li>
+  <li>Automated Request Queue (RQ)</li>
+  <li>Audit Trail (AUD_H, AUD_D)</li>
+</ul>
+<b>Context User</b><br/>
+All database operations are run under the same database account.  In order to differentiate between jsHarmony users, the Postgres "sessionvars.appuser" and SQL Server "context_info" is automatically set to the current user before each database operation, so that audit trail or database-side security triggers can be implemented.<br/>
+<br/>
+The value for the current user is determined by auth.getContextUser in the jsHarmony config, for example:
+<pre>{ 
+  auth: { 
+    getContextUser: function(user_info, jsh){ return 'S' + user_info[jsh.map.user_id]; } 
+  } 
+}</pre>
+The jsHarmony Factory defines the Admin context as 'S'+PE_ID, and the Client context as 'C'+PE_ID, where PE_ID is the User ID.<br/>
+<br/>
+<b>Unique IDs</b><br/>
+jsHarmony works best when each table has a unique integer ID column.  In instances where tables have multiple primary keys or character primary keys, it is recommended to add an automatically-incrementing integer ID column to the table, and use that as the internal key for jsHarmony.<br/>
+<br/>
+<b>Documents</b><br/>
+?? How to link to Documents<br/>
+<br/>
+<b>Notes</b><br/>
+?? How to link to Notes<br/>
+<br/>
+<b>Errors / Warnings</b><br/>
+?? Sample syntax for integrating errors / warnings<br/>
+<br/>
+<b>Triggers</b><br/>
+?? What should be handled via triggers<br/>
+<br/>
+<b>Code Tables / List of Values</b><br/>
+-- Explanation of code tables (System / User)<br/>
+<br/>
+-- Tutorial for using  code table - initializing, binding to a column<br/>
+<br/>
+<b>Developer / Admin / User Settings</b><br/>
+-- Explanation of settings<br/>
+<br/>
+-- Tutorial for using settings<br/>
+<br/>
+<b>Built-in List of Values</b><br/>
+UCOD_COUNTRY / UCOD2_COUNTRY_STATE<br/>
+UCOD_AC / UCOD_AHC / UCOD_AC1<br/>
+V_YEARS<br/>
+V_MONTHS<br/>
+<br/>
+<b>Audit Trail</b><br/>
+?? How to add audit trail<br/>
+<br/>
+<b>Reusable SQL Expressions</b><br/>
+How to define and use<br/>
+<br/>
+<b>Cross-database compatibility</b><br/>
+-- About mssql / pgsql extensions<br/>
+-- About datatypes<br/>
+-- General notes - lowercase

@@ -1,17 +1,49 @@
-{
-"comment":"CL",
+{ 
+  "CL": {
+    "table":"v_c",
     "layout":"grid", 
-	"title":"All Customers",
-	"table":"c",
-	"access":"BI", 
+    "title":"All Customers",
+    "caption":[0,"Customer","Customers"],
+    "actions":"BI", 
     "roles": {"C_B":"B","C_X":"*"},
-	"caption":[0,"Customer","Customers"],
-	"sort":["^c_name"], 
-	"buttons":[{"link":"add:C"}],
-	"topmenu":"clients",
-	"fields":[
-	  {"name":"c_id","type":"bigint","access":"FB","key":1,"link":"edit:C","caption": "ID"},
-	  {"name":"c_sts","type":"varchar","length":"8","caption":"Status","access":"B"},
-	  {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","access":"B","link":"edit:C"}
-	]
+    "sort":["^c_name"], 
+    "buttons":[{"link":"add:C"}],
+    "topmenu":"clients",
+    "fields":[
+      {"name":"c_id","type":"bigint","actions":"FB","key":1,"link":"edit:C","caption": "ID"},
+      {"name":"c_sts_txt","type":"varchar","length":"8","caption":"Status","actions":"B"},
+      {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"edit:C"}
+    ]
+  },
+  "CL_TABS": {
+    "inherits": "CL",
+    //"buttons":[{"link":"add:CW"}],
+    "fields": [
+      {"name":"c_id","link":"edit:CW"},
+      {"name":"c_name","link":"edit:CW"}
+    ]
+  },
+  "CL_ENCRYPT": {
+    "inherits": "CL",
+    "fields": [
+      {"name":"c_id","link":"edit:C_ENCRYPT"},
+      {"name":"c_name","link":"edit:C_ENCRYPT"},
+      {"name":"c_einhash","type":"hash","length":20,"salt":"c_einhash","actions":"S","caption": "EIN"}
+    ]
+  },
+  "CL_FILE": {
+    "inherits": "CL",
+    "fields": [
+      {"name":"c_id","link":"edit:C_FILE"},
+      {"name":"c_name","link":"edit:C_FILE"}
+    ]
+  },
+  "CL_DEV": {
+    "inherits": "CL",
+    "buttons":[{"link":"add:CW_DEV"}],
+    "fields": [
+      {"name":"c_id","link":"edit:CW_DEV"},
+      {"name":"c_name","link":"edit:CW_DEV"}
+    ]
+  }
 }

@@ -1,0 +1,135 @@
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree .tree_item { display:table; }
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree .tree_item .glyph,
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree .tree_item img,
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree .tree_item span { display:table-cell; }
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree .nochildren .glyph { display:none; }
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree a:hover { text-decoration:none; }
+<%-rootcss%> .tutorials_menu.xform_ctrl.tree { width:250px; float:left; position:relative; }
+<%-rootcss%> .tutorials_body { float:left; padding:0; }
+<%-rootcss%> .tutorial_title { padding-top:15px; padding-left:29px; padding-bottom: 13px; line-height:30px; }
+<%-rootcss%> .tutorial_tabs_body,
+<%-rootcss%> .tutorial_tabs_body pre,
+<%-rootcss%> .tutorial_tabs_body li {
+  font-size:14px; 
+  line-height:20px;
+}
+<%-rootcss%> .tutorial_tabs_body { padding:21px 0px 30px 29px; overflow:scroll; }
+<%-rootcss%> .tutorial_tabs_body pre { 
+  /*background-color:#f2f2f2; */
+  display:inline-block;
+  padding-right:15px;
+  margin-right:15px;
+  margin-top:0px;
+  margin-bottom:0px;
+}
+<%-rootcss%> .tutorials_search {
+  position:absolute;
+  top:88px;
+  left:26px;
+  border:1px solid #ccc;
+  background-color:#fff;
+  height:23px;
+}
+<%-rootcss%> .tutorials_search input {
+  background-color:transparent;
+  border:0;
+  height:21px;
+  vertical-align:middle;
+}
+<%-rootcss%> .tutorials_search input.query {
+  width:202px;
+  padding:1px 5px;
+}
+<%-rootcss%> .tutorials_search input.submit {
+	background-image: url('/images/icon_search.png');
+	background-position: center;
+	background-repeat: no-repeat;
+  background-size:15px 15px;
+	cursor: pointer;
+	width: 20px;
+  color: transparent;
+}
+<%-rootcss%> .search_result {
+  padding-bottom:25px;
+  font-size:13px;
+}
+<%-rootcss%> .search_result .title {
+  font-size:16px;
+  text-decoration:underline;
+}
+<%-rootcss%> .search_result .url {
+  color:#006622;
+  font-size:13px;
+}
+
+<%-(rootcss||'body')%>.tutorials { overflow:hidden; }
+
+<%-rootcss%> .tutorial_tabs {
+  border-bottom:1px solid #aaa;
+  padding-left:29px;
+  white-space:nowrap;
+}
+<%-rootcss%> .tutorial_tabs .left {
+  display:inline-block;
+  width:1px;
+  height:31px;
+  background-color:#aaa;
+  vertical-align:bottom;
+}
+<%-rootcss%> .tutorial_tabs a.selected {
+  background-color:#f2f2f2;
+}
+<%-rootcss%> .tutorial_tabs a {
+  display:inline-block;
+  border-right:1px solid #aaa;
+  border-top:1px solid #aaa;
+  padding:6px 20px;
+}
+<%-rootcss%> .tutorial_overview {
+  padding-right:10px;
+}
+<%-rootcss%> .tutorial_overview ul ul,
+<%-rootcss%> .tutorial_overview ul ol,
+<%-rootcss%> .tutorial_overview ol ul,
+<%-rootcss%> .tutorial_overview ol ol {
+  margin-top:6px;
+}
+<%-rootcss%> .tutorial_overview ul li,
+<%-rootcss%> .tutorial_overview ol li {
+  padding-bottom:6px;
+}
+<%-rootcss%> .tutorial_overview h3 {
+  margin-top:30px;
+  margin-bottom:10px;
+}
+<%-rootcss%> .tutorial_overview .url {
+  display:inline-block;
+  margin-top:3px;
+  margin-bottom:3px;
+  font-weight:bold;
+}
+<%-rootcss%> ul.tutorial_outline {
+  margin:0;
+  padding-left:25px;
+  list-style-type: square;
+  color:#426cc2;
+}
+<%-rootcss%> .tutorial_overview ul.tutorial_outline li {
+  padding-bottom:3px;
+}
+<%-rootcss%> .tutorial_tabs_body .tutorial_overview pre { 
+  display:block;
+  margin-top:15px;
+  margin-bottom:15px;
+  overflow:visible;
+}
+<%-rootcss%> pre.shell {
+  background-color:#333;
+  color:#fff;
+  font-weight:normal;
+  padding-left:10px;
+}
+<%-rootcss%> a.tutorial_outline_anchor {
+  position:relative;
+  display:block;
+}

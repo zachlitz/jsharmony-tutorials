@@ -24,7 +24,47 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Menu": ["Getting Started"]
 }
 </script>
-Creating a Project
+
+<h3>System Requirements</h3>
+jsHarmony requires Node.js and NPM (usually included with Node.js).  Please install Node.js version 6.9 or higher, available from the Node.js website:<br/>
+<br/>
+<a href="https://nodejs.org/en/" target="_blank">Download Node.js</a>
+
+<h3>Installing the CLI (Command Line Interface)</h3>
+jsHarmony projects are easily created via the Command Line Interface (CLI).  The CLI can be installed via the following command:
+<pre class="shell">npm install jsharmony-cli -g</pre>
+After installing the CLI, the "jsharmony" command will be available for creating jsHarmony projects, databases, and models.
+
 <h3>Creating a Factory Project</h3>
+The jsHarmony Factory is a full-featured application development platform, including the following features:
+<ul>
+  <li>User Authentication and Management</li>
+  <li>Menu Management</li>
+  <li>List of Values Maintenance</li>
+  <li>Help Screens and Maintenance</li>
+  <li>Text Maintenance</li>
+  <li>Notes and Documents</li>
+  <li>Job Processor</li>
+  <li>Client Portal</li>
+</ul>
+jsHarmony Factory projects are created via the CLI.  <br/>
+<br/>
+Create an empty folder for the project, cd into that folder, and type the following command:
+<pre class="shell">jsharmony create factory</pre>
+The CLI will provide step-by-step wizard and automatically generate the Node.js project and database.<br/>
+<br/>
+<b>Existing Database</b><br/>
+When adding jsHarmony Factory to an existing database, select "No" when asked by the installer whether create a new database.  Then, modify the app.config.js file with the existing database credentials and type the following command from the project root:
+<pre class="shell">jsharmony init database</pre>
+All jsHarmony tables will be added to the jsHarmony schema, separating them from the existing data.<br/>
+<br/>
+When connecting to an existing database, it is recommended to create a new user for exclusive use by the jsHarmony server.
+
 <h3>Creating an Empty Project</h3>
-<h3>Creating a Sample Application</h3>
+An empty jsHarmony project can be useful for adding forms and grids to an existing application, however it may require advanced programming to integrate with an existing authentication system.  Where possible, it is recommended to use the jsHarmony Factory to take advantage of the built-in security and management features.<br/>
+<br/>
+Empty jsHarmony projects are created via the CLI.  <br/>
+<br/>
+Create an empty folder for the project, cd into that folder, and type:
+<pre class="shell">jsharmony create empty</pre>
+The wizard will ask step-by-step questions and generate the Node.js project.  No database tables are created for empty jsHarmony projects.

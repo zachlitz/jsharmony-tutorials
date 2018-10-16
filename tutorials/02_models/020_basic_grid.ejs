@@ -1,0 +1,72 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Basic Grid",
+  "Menu": ["Models"],
+  "Code": ["/models/CL.json"],
+  "Demo": "/CL"
+}
+</script>
+<h3>Introduction</h3>
+Grids provide a listing of records, while forms are used to edit an individual record.  Grids can be either read-only or editable.
+<pre>
+{
+  "table":"c",
+  "layout":"grid"
+}
+</pre>
+Create a grid by setting the <b>"layout"</b> parameter to "grid".<br/>
+<br/>
+Each grid gets its data from a database table or view.  In this example, the Customer "c" table contains the data for the grid.<br/>
+<br/>
+The database table or view is defined in the <b>"table"</b> parameter.
+
+<h3>Grid Fields</h3>
+Columns used in filtering or linking to other forms must be defined in the fields section.
+Key is required for updatable grids.
+xxxxxxxxxxxxxxxxxxxx
+
+
+
+<h3>Grid Actions</h3>
+Basic grids feature only "B" (Browse) and "I" (Insert) actions.  Disabling the Browse action prevents access to the entire grid, while disabling the Insert action hides the "Add" button, if defined.
+
+<h3>Sort</h3>
+
+
+<h3>Searching / Filtering</h3>
+"grid_require_filter": 1
+"grid_expand_filter": 1
+"noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
+
+<h3>"Add" Button</h3>
+"buttons":[{"link":"add:C"}],
+{ "link": "add:H", "icon": "add", "text": "Add %%%CAPTION%%%", "actions": "I", "bindings": { "N_SCOPE_ID": "N_SCOPE_ID", "N_SCOPE": "'C'", "C_ID":  "N_SCOPE_ID", "N_TYPE":  "'C'" }, "style": "", "class": "", "roles": { "CLIENT": "*", "C_ADMIN": "B" }, "nl": 1 }, //or just put the link for add
+  "nogridadd": 1,
+
+<h3>Paging</h3>
+Paging is automatically performed when the user scrolls to the bottom of the screen.  The number of rows per page can be configured via:
+<pre>"rowlimit": 50</pre>
+The Config variable "default_rowlimit" defined in app.config.js sets the default value of the rowlimit parameter:
+<pre>jsh.Config.default_rowlimit = 50;</pre>
+In certain use cases, automatic paging can be disabled via:
+<pre>"disableautoload": 1</pre>

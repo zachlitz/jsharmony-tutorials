@@ -14,6 +14,11 @@
      "caption": "Customer Name","captionstyle": "width:120px;text-align:right;"},
     {"name":"c_sts","type":"varchar","length":8,"actions":"BIU","control":"dropdown","sample": "Active",
      "lov": { "UCOD": "C_STS", "blank": 1 },"validate":["Required"],"default":"ACTIVE",
-     "caption": "Status","nl":1}
+     "caption": "Status","nl":1},
+	  {"name":"c_ein","type":"encascii","length":16,"actions":"BIU",
+     "validate": ["IsEIN","MinLength:9","MaxLength:9","Required"], "password": "c_ein","hash": "c_einhash","format": "ein",
+	   "control":"textbox_M","sample":"999-99-9999","caption":"EIN","captionstyle":"width:102px;text-align:right;"},
+    {"name":"c_einhash","type":"hash","length": 20,"salt": "c_einhash"}
+    
   ]
 }

@@ -1,0 +1,113 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Project Structure",
+  "Menu": ["Getting Started"],
+  "ID": "PROJECT_STRUCTURE"
+}
+</script>
+
+<h3>/app.js, /package.json, /nstart &nbsp; (Node.js Startup Files)</h3>
+<ul>
+  <li><b>/app.js</b> - The root Node.js file.  The system can be run from the shell via "node app.js"</li>
+  <li><b>/package.js</b> - The Node.js project meta information</li>
+  <li><b>/nstart.sh (Linux), or /nstart.cmd (Windows)</b> - The batch file used to launch app.js.  It runs a process monitor called supervisor to auto-restart when any models or JavaScript files are modified.  Supervisor does not detect newly created files, so the server will need to be manually restarted when new files are added.</li>
+</ul>
+
+<h3>/app.config.js</h3>
+<u>The primary system configuration.</u>  Most system settings should be stored in app.config.js.  Path-based and host-based config files are available for multiple test and deployment configurations.  The settings files are evaluated in the following order (files evaluated later override previous settings):
+<ul>
+  <li style="color:#555;">/node_modules/jsharmony-factory/app.config.default.js</li>
+  <li>/app.config.js</li>
+  <li>/app.config.FOLDER_PATH.js (ex. c:\wk\Project would be app.config.wk_Project.js)</li>
+  <li>/app.config.HOSTNAME.js (ex. app.config.srv03.js)</li>
+</ul>
+<a href="id:GETTING_STARTED_APPLICATION_SETTINGS">Learn more about the available application settings</a>
+
+<h3>/models</h3>
+Front-end and back-end interface definitions are stored in the models folder.  In general, most project files should be saved in the models folder.
+<ul>
+  <li>
+    <b>/models/*</b><br/>
+    Each model contains meta information and a list of fields. Learn more about programming models under the Forms tutorials.
+  </li>
+  <li>
+    <b>/models/reports/*</b><br/>
+    Subfolder for report models.  '_report_' is prefixed to each model ID in the reports folder.
+  </li>
+  <li>
+    <b>/models/js/*</b><br/>
+    Shared front-end JavaScript files used by the models
+  </li>
+  <li>
+    <b>/models/sql/*.json</b><br/>
+    <b>/models/sql/*.[dbType].json</b><br/>
+    SQL macro definitions.  For cross-database compatibility, macros can be targeted for a specific database type via .pgsql.json or .mssql.json file extensions.<br/>
+  </li>
+  <li>
+    <b>/models/sql/datatypes.[dbType].json</b><br/>
+    The datatypes.pgsql.json and datatypes.mssql.json files can be used to define custom datatypes.
+  </li>
+  <li>
+    <b>/models/sql/scripts/*.json</b><br/>
+    <b>/models/sql/scripts/*.[dbType].json</b><br/>
+    <b>/models/sql/scripts/[scriptGroup]/*.json</b><br/>
+    <b>/models/sql/scripts/[scriptGroup]/*.[dbType].json</b><br/>
+    <b>/models/sql/scripts/[scriptGroup]/[dbType]/*.json</b><br/>
+    Application scripts run during initialization or via the Developer tools
+  </li>
+  <li>
+    <b>/models/sql/[dbID]/*</b><br/>
+    Any SQL macros, datatypes, and scripts can be localized to a database instance by saving them in a subfolder named after the database connection ID
+  </li>
+  <li>
+    <b>/models/style/*</b><br/>
+    Custom CSS stylesheets
+  </li>
+  <li>
+    <b>/models/_config.json</b><br/>
+    jsHarmony system settings file (Datalocks, database column hashes and passwords, help configuration)
+  </li>
+  <li>
+    <b>/models/_controls.json</b><br/>
+    Custom model control definitions
+  </li>
+  <li>
+    <b>/models/_procs.json</b> &nbsp; (Naming convention only)<br/>
+    Stored procedure models
+  </li>
+  <li>
+    <b>/models/_funcs.json</b> &nbsp; (Naming convention only)<br/>
+    Custom server-side JS functions
+  </li>
+</ul>
+<h3>/data</h3>
+System logs, temp files, and data files
+<h3>/views</h3>
+Front-end design and layout overrides
+<h3>/public</h3>
+Static resources merged into the project root.  General naming convention:
+<ul>
+  <li>/public/images/*</li>
+  <li>/public/js/*</li>
+  <li>/public/favicon.ico</li>
+</ul>

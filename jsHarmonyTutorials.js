@@ -17,11 +17,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with this package.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+var jsHarmony = require('jsharmony');
+var jsHarmonyModule = require('jsharmony/jsHarmonyModule');
 var jsHarmonyFactory = require('jsharmony-factory');
 var HelperRender = require('jsharmony/HelperRender');
 var HelperFS = require('jsharmony/HelperFS');
 var Helper = require('jsharmony/Helper');
 var JSHFind = require('jsharmony/JSHFind');
+var jsHarmonyTutorialsConfig = require('./jsHarmonyTutorialsConfig.js');
 var fs = require('fs');
 var path = require('path');
 var async = require('async');
@@ -30,28 +33,70 @@ var express = require('express');
 
 function jsHarmonyTutorials(){
   var _this = this;
+  _this.Config = new jsHarmonyTutorialsConfig();
   _this.typename = 'jsHarmonyTutorials';
   _this.basepath = path.dirname(module.filename);
 
   this.tutfolder = _this.basepath + '/tutorials';
   this.tutorials = {};
   this.tutlisting = [];
+  this.tutids = {};
   this.tutmenu = {};
 
   //Load jsHarmony Factory
-  var adminConfig = this.getFactoryConfig();
-  jsHarmonyFactory.LoadSettings(_this.basepath+'/app.settings.js')
-  if(!global.modeldir) global.modeldir = [];
-  global.modeldir.unshift(_this.basepath + '/models/');
-  HelperFS.loadViews(_this.basepath + '/views', '');
-  this.JSF = new jsHarmonyFactory(adminConfig);
+  _this.factoryConfig = this.getFactoryConfig();
 }
 
-jsHarmonyTutorials.prototype.Run = function(){ 
+jsHarmonyTutorials.prototype = new jsHarmonyModule();
+
+jsHarmonyTutorials.prototype.Application = function(){
+  var jsh = new jsHarmony();
+  var factory = new jsHarmonyFactory(this.factoryConfig);
+  jsh.AddModule(factory);
+  jsh.AddModule(this);
+  return jsh;
+}
+
+jsHarmonyTutorials.Application = function(){ return (new jsHarmonyTutorials()).Application(); }
+
+jsHarmonyTutorials.prototype.InitTutorialsDB = function(cb){
   var _this = this;
-  _this.LoadTutorials(function(){
-    _this.JSF.Run(); 
+  var db = _this.jsh.DB['default'];
+  db.RunScripts(_this.jsh, ['jsHarmonyTutorials','init'], {}, function(err, rslt){
+    if(rslt && rslt.length && rslt[0].length) console.log(JSON.stringify(rslt, null, 4));
+    if(err){ console.log('Error initializing database'); console.log(err); }
+    else console.log('Database ready');
+    if(cb) cb();
   });
+}
+
+jsHarmonyTutorials.prototype.Init = function(cb){ 
+  var _this = this;
+  _this.LoadTutorials(cb);
+
+  //Initialize Database
+  var prevReady = _this.jsh.Config.onServerReady;
+  _this.jsh.Config.onServerReady = function(servers){
+    var db = _this.jsh.DB['default'];
+    db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{},function(err,rslt){
+      if(err || !rslt){
+        console.log('Initializing database tables, please wait...');
+        db.RunScripts(_this.jsh, ['*','init','init'], {}, function(err, rslt){
+          console.log('Initializing database functions, please wait...');
+          if(err){ console.log('Error initializing database'); console.log(err); return; }
+          db.RunScripts(_this.jsh, ['*','restructure'], {}, function(err, rslt){
+            console.log('Initializing database data, please wait...');
+            if(err){ console.log('Error initializing database'); console.log(err); return; }
+            db.RunScripts(_this.jsh, ['*','init_data'], {}, function(err, rslt){
+              if(err){ console.log('Error initializing database'); console.log(err); return; }
+              _this.InitTutorialsDB(prevReady);
+            });
+          });
+        });
+      }
+      else _this.InitTutorialsDB(prevReady);
+    });
+  }
 }
 
 jsHarmonyTutorials.prototype.getFactoryConfig = function(){
@@ -74,11 +119,6 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
         }
         if(!defaultTutorial) return next();
         Helper.Redirect302(res,'/tutorials/'+defaultTutorial);
-        //Render Menu
-        //Render a Page
-        //Render Code View /tutorials/forms/01_basic_form/code
-        //Link to model
-        //Done!
       },
       '/_tutorials/*': function(req, res, next){
         if(!req.params || !req.params[0]) return Helper.GenError(req, res, -4, 'Invalid tutorial name');
@@ -93,6 +133,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
           fs.readFile(filepath, 'utf8', function(err, data){
             if(err) return Helper.GenError(req, res, -99999, err);
             var config = _this.tutorials[tutorial];
+            data += config.ID;
             var rslt = {
               data: data,
               config: config,
@@ -123,12 +164,12 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
         var filepath = _this.tutfolder+'/'+tutorial;
         if(!(tutorial in _this.tutorials)) return next();
         HelperRender.reqGet(req, res, jshrouter.jsh, 'tutorials_home', 'jsHarmony Tutorials',
-          { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
+          { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutids: _this.tutids, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
       },
       '/search/*': function(req, res, next){
         var jshrouter = this;
         HelperRender.reqGet(req, res, jshrouter.jsh, 'tutorials_home', 'jsHarmony Tutorials',
-          { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
+          { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutids: _this.tutids, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
       },
       '/_search/': function(req, res, next){
         var jshrouter = this;
@@ -234,6 +275,7 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
   var _this = this;
   //Read all files in the tutorials folder
   HelperFS.funcRecursive(_this.tutfolder,function(filepath, cb){
+    //For each File
     fs.readFile(filepath, 'utf8', function(err, data){
       if(err) return cb(err);
       var head = "";
@@ -251,12 +293,27 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
       catch(ex){ return cb(); }
       if(!dataobj) return cb();
       var tutorialname = filepath.substr(_this.tutfolder.length+1);
+
+      //Verify tutorial object
+      if(!dataobj.ID){
+        var id = dataobj.Title||'';
+        if(dataobj.Menu) id = dataobj.Menu.join('_') + '_' + id;
+        dataobj.ID = Helper.ReplaceAll(id,' ','_').toUpperCase();
+      }
+      var suffixid = 0;
+      while((dataobj.ID + (suffixid?'_'+suffixid:'')) in _this.tutids){
+        if(!suffixid) suffixid += 2;
+        else suffixid++;
+      }
+      if(suffixid) dataobj.ID += '_' + suffixid;
+
+      _this.tutids[dataobj.ID] = tutorialname;
       _this.tutlisting.push(tutorialname);
       _this.tutorials[tutorialname] = dataobj;
       return cb();
     });
-    //For each File
   },undefined,function(){
+    //Once all files have been read
     _this.tutlisting.sort();
     //Generate menu
     for(var i=0;i<_this.tutlisting.length;i++){

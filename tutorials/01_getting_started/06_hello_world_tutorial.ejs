@@ -1,0 +1,133 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Hello World Tutorial",
+  "Menu": ["Getting Started"]
+}
+</script>
+<h3>Introduction</h3>
+This step-by-step tutorial will help you install jsHarmony, create a Factory project, and generate a simple grid and form for a database table.<br/>
+<br/>
+The example uses PostgreSQL, however the steps should be similar for SQL Server.
+<h3>Installation Requirements</h3>
+<ul>
+  <li><a href="https://nodejs.org/en/" target="_blank">Node.js</a></li>
+  <li><a href="https://www.postgresql.org/download/" target="_blank">PostgreSQL Database</a></li>
+</ul>
+
+<h3>Verify Requirements</h3>
+<ul>
+<li>
+  <b>Node.js 6.9+</b><br/>
+  <br/>
+  Open a command prompt and type:
+  <pre class="shell">node -v</pre>
+  Ensure the Node.js version is 6.9 or higher.<br/>
+  &nbsp;
+</li>
+<li>
+  <b>PostgreSQL 9.5+</b><br/>
+  <br/>
+  Open a command prompt on the database server and type:
+  <pre class="shell">psql postgres
+select version();</pre>
+  jsHarmony Factory has been tested on PostgreSQL 9.5 and higher.
+</li>
+</ul>
+
+<h3>Create the Project</h3>
+<ol>
+  <li>
+    Install the jsHarmony CLI:
+    <pre class="shell">npm install -g jsharmony-cli</pre>
+  </li>
+  <li>
+    Create a folder:
+    <pre class="shell">mkdir c:\wk\firstjsh</pre>
+  </li>
+  <li>
+    CD into that folder:
+    <pre class="shell">cd c:\wk\firstjsh</pre>
+  </li>
+  <li>
+    Create the factory project:
+    <pre class="shell">jsharmony create factory</pre>
+  </li>
+  <li>
+    Type "1" to continue:
+    <pre class="shell">This command will set up the jsHarmony Factory in the current folder:
+C:\wk\firstjsh
+Continue with the operation?
+1) Yes
+2) No</pre>
+  </li>
+  <li>
+    Type "1" to select a PostgreSQL database:
+    <pre class="shell">Please select a database type:
+1) PostgreSQL
+2) SQL Server</pre>
+  </li>
+  <li>
+    Type "1" to create a new database:
+    <pre class="shell">Create a new database for this jsHarmony Factory project?
+1) Yes
+2) No</pre>
+  </li>
+  <li>
+    Enter the database information:
+    <pre class="shell">=======================================
+Please enter database admin information
+=======================================
+Please enter the database server: localhost
+Please enter an ADMIN database user for running the scripts: postgres
+Please enter the password for user "postgres": ********
+
+
+Please enter the NEW database name: firstjsh</pre>
+  </li>
+  <li>
+    Take note of the username and password provided by the installer
+    <pre class="shell">The jsHarmony Factory database has been created!
+
+** Please verify the configuration in C:\wk\firstjsh\app.config.js
+** Be sure to configure ports and HTTPS for security
+
+Then start the server by running nstart.cmd
+
+Log in with the admin account below:
+User: admin@jsharmony.com
+Password: ****************</pre>
+  </li>
+  <li>
+    Start the server with nstart.sh (Linux) or nstart.cmd (Windows)
+    <pre>nstart</pre>
+  </li>
+  <li>
+    Take note of the port from the server output
+    <pre class="shell">::jsHarmony Server ready::
+<span class="curdt"></span> Listening on HTTP port 8080
+<span class="curdt"></span> Log in at http://localhost:8080</pre>
+  </li>
+  <li>
+    Open a web browser and log in to the system with the admin user and password provided by the installer in step 9
+  </li>
+</ol>

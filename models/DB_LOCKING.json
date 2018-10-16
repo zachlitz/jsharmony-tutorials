@@ -1,0 +1,15 @@
+{
+  "DB_LOCKING": {
+      "layout": "exec",
+      "title": "Database Locking Procedure",
+      "actions": "BU",
+      "dev": 1,
+      "sqlexec": ["WITH RECURSIVE",
+                  "  cnt(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM cnt WHERE x<10000000)",
+                  "SELECT max(x) FROM cnt limit 1;"], 
+      "fields": [
+        {"name":"RUN","caption":"","nl": 1,"control":"button","value":"Run Long Database Statement","controlstyle": "padding:3px 8px;margin-top:10px;",
+         "onclick":"jsh.XRunDBFunc(function(){ });"}
+      ]
+  }
+}

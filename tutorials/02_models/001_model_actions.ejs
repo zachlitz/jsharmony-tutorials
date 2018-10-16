@@ -1,0 +1,77 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Actions / Roles",
+  "Menu": ["Models","Models Overview"]
+}
+</script>
+
+
+<h3>Introduction</h3>
+Permissions ensure that users can't access restricted data and can only change what they need to change in the system.<br/>
+<br/>
+The <b>"actions"</b> property defines the capabilities of the entire model.<br/>
+<br/>
+The <b>"roles"</b> property restricts the capabilities of the model per user.
+
+<h3>Actions / Roles</h3>
+<pre>
+{
+  "table":"c",
+  "layout":"grid",
+  "title":"All Customers",
+  "caption":[0,"Customer","Customers"],
+  "actions":"BI",
+  "roles": {"C_B":"B","C_X":"*"}
+}
+</pre>
+The <b>"actions"</b> parameter defines what operations the model can perform.  Actions can be any combination of the following characters.
+<ul>
+  <li><b>B</b> - Browse</li>
+  <li><b>I</b> - Insert</li>
+  <li><b>U</b> - Update</li>
+  <li><b>D</b> - Delete</li>
+</ul>
+<br/>
+The "role" parameter is used to restrict actions by user role.  Roles can be defined as follows:
+<ul>
+  <li><b>B</b> - Browse</li>
+  <li><b>I</b> - Insert</li>
+  <li><b>U</b> - Update</li>
+  <li><b>D</b> - Delete</li>
+  <li><b>*</b> - All roles - equivalent to BIUD</li>
+</ul>
+By default, only the SYSADMIN role has access to a model.  Permissions for users who are not SYSADMINs must be explicity defined using the "role" parameter.<br/>
+<br/>
+Effective permissions are computed by intersecting the model's "actions" parameter with a union of each applicable "role".  For example, the following model will have different effective permissions based on the users' roles:
+<pre>
+"actions":"BIUD",
+"roles":{ 
+  "SYSADMIN":"*",
+  "EDIT":"BU",
+  "READONLY":"B" 
+}
+</pre>
+<b>=> Resulting effective permissions</b><br/>
+A user with only the "READONLY" role will have <b>"B"</b> actions<br/>
+A user with both the "EDIT" and "READONLY" roles will have <b>"BU"</b> actions<br/>
+A user with both the "SYSADMIN", "EDIT" and "READONLY" roles will have <b>"BIUD"</b> actions

@@ -1,30 +1,30 @@
-<h1 id="tutorial_title">&nbsp;</h1>
-<div id="tutorial_tabs"><div class="left"></div><!--
-  --><a href="#" class="overview" onclick="viewTutorialOverview(); return false;">Overview</a><!--
-  --><a href="#" class="code" onclick="viewTutorialCodeListing(); return false;">Code</a><!--
-  --><a href="#" class="demo" onclick="viewTutorialDemo(); return false;">Demo</a>
+<h1 class="tutorial_title">&nbsp;</h1>
+<div class="tutorial_tabs"><div class="left"></div><!--
+  --><a href="#" class="overview" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialOverview(); return false;">Overview</a><!--
+  --><a href="#" class="code" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialCodeListing(); return false;">Code</a><!--
+  --><a href="#" class="demo" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialDemo(); return false;">Demo</a>
 </div>
-<div id="tutorial_tabs_body">
-  <div id="tutorial_overview"></div>
-  <div id="tutorial_code_listing"></div>
-  <div id="tutorial_code"></div>
-  <div id="tutorial_search_results"></div>
+<div class="tutorial_tabs_body">
+  <div class="tutorial_overview"></div>
+  <div class="tutorial_code_listing"></div>
+  <div class="tutorial_code"></div>
+  <div class="tutorial_search_results"></div>
 </div>
-<script id="tutorial_code_listing_template" type="text/x-ejs-template">
+<script class="tutorial_code_listing_template" type="text/x-ejs-template">
 <h2>Source Code</h2>
 <# if(data.Code) for(var i=0;i<data.Code.length;i++){ #>
-  <a href="#" onclick="viewTutorialCode(<#-i#>); return false;"><#=data.Code[i]#></a><br/>
+  <a href="#" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialCode(<#-i#>); return false;"><#=data.Code[i]#></a><br/>
 <# } #>
 </script>
-<script id="tutorial_code_template" type="text/x-ejs-template">
-<h2>Source Code <a href="#" onclick="viewTutorialCodeListing();return false;" style="font-size:13px;font-weight:normal;display:inline-block;margin-left:10px;">[Listing]</a></h2>
+<script class="tutorial_code_template" type="text/x-ejs-template">
+<h2>Source Code <a href="#" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialCodeListing();return false;" style="font-size:13px;font-weight:normal;display:inline-block;margin-left:10px;">[Listing]</a></h2>
 <h3><#=data.filename#></h3>
-<pre id="tutorial_code_source"><#=data.source#></pre>
+<pre class="tutorial_code_source"><#=data.source#></pre>
 </script>
-<script id="tutorial_search_results_template" type="text/x-ejs-template">
+<script class="tutorial_search_results_template" type="text/x-ejs-template">
 <# if(data) for(var i=0;i<data.length;i++){ var tutorial = data[i].File.substr(11); #>
   <div class="search_result">
-    <a class="title hand" href="#" onclick="loadTutorial('<#=tutorial#>'); return false;"><#=tutorials[tutorial].Title#></a>
+    <a class="title hand" href="#" onclick="<%=req.jshsite.instance%>.App.tutorials.loadTutorial('<#=tutorial#>'); return false;"><#=tutorials[tutorial].Title#></a>
     <div class="url"><#=data[i].File#></div>
     <#-data[i].Preview#>
   </div>

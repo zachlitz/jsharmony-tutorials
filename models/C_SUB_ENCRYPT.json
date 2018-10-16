@@ -1,0 +1,19 @@
+{
+  "comment":"C",
+  "layout": "form", 
+  "title": "Customer Information",
+  "table": "c",
+  "actions": "BIUD", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "caption": [ "", "Customer", "Customers" ],
+  "topmenu": "clients",
+  "popup":[1000,700],
+  "fields": [
+    {"name":"c_id", "type": "bigint", "actions":"B","key": 1},
+	  {"name":"c_ein","type":"encascii","length":16,"actions":"BIU",
+     "validate": ["IsEIN","MinLength:9","MaxLength:9"], "password": "c_ein","hash": "c_einhash","format": "ein",
+	   "control":"textbox_M","sample":"999-99-9999","caption":"EIN","captionstyle":"width:102px;text-align:right;"},
+    {"name":"c_einhash","type":"hash","length": 20,"salt": "c_einhash"}
+    
+  ]
+}

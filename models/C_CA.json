@@ -1,0 +1,34 @@
+{
+  "layout": "form-m", 
+  "table": "ca",
+  "actions": "BIUD", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "caption": ["","Address","Addresses"],
+  "fields": [
+    { "name": "c_id", "type": "bigint", "actions": "I", "foreignkey": 1},
+    { "name": "ca_id", "type": "bigint", "key": 1},
+    { "name": "ca_country","type": "varchar","length": 8,"actions": "BIU",
+      "control": "dropdown", "lov": { "UCOD": "country", "schema":"jsharmony", "blank": 1 },
+      "validate": [ "Required" ],
+      "default": "USA","caption": "Country","eol": 1 },
+    { "name": "ca_addr1","type": "varchar","length": 50,"actions": "BIU",
+      "control": "textbox_M","validate": [ "MaxLength:50" ],
+      "caption": "Address","captionstyle": "width:70px;","eol": 1 },
+    { "name": "ca_addr2","type": "varchar","length": 50,"actions": "BIU",
+      "control": "textbox_M","validate": [ "MaxLength:50" ],
+      "caption": " ","captionstyle": "width:70px;","eol": 1 },
+    { "name": "ca_city","type": "varchar","length": 50,"actions": "BIU",
+      "control": "textbox_M","validate": [ "MaxLength:50", "Required" ],
+      "caption": "City","captionstyle": "width:70px;","eol": 1 },
+    { "name": "ca_state","type": "varchar","length": 8,"actions": "BIU",
+      "control": "dropdown_S","lov": { "UCOD2": "country_state", "schema":"jsharmony", "blank": 1, "parent": "ca_country" },
+      "validate": [ "Required" ],
+      "caption": "State","captionstyle": "width:70px;" },
+    { "name": "ca_zip","type": "varchar","length": 50,"actions": "BIU",
+      "control": "textbox_S","controlstyle": "width:72px;","validate": [ "MaxLength:20" ],
+      "caption": "Zip" }
+  ],
+  "dberrors": [
+    [ "xxxxxUNQ_CA", "Client can only have one record of each Address Type." ]
+  ]
+}

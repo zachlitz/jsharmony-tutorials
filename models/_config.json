@@ -1,0 +1,22 @@
+{
+  "queues": {
+    "zebra1": { "actions": "BIUD", "roles": {"SYSADMIN":"*"} },
+    "dotmatrix1": { "actions": "BIUD", "roles": {"SYSADMIN":"*"} }
+  },
+  "datalocks": {
+    "client": {
+      "c_id": {
+        "c_id": "c_id=@datalock_c_id",
+        "cf_id": "cf_id in (select cf_id from cf where c_id=@datalock_c_id)",
+        "ALWAYS": "1=1",
+        "NEVER": "1=2"
+      }
+    }
+  },
+  "salts": {
+    "c_einhash": "kasldjr v2k3j5h2 q43kljhqvwenovyN RHNIOHRnIUASFHQ@(#*$V!#$UIYOQSNIHWEadftawer1"
+  },
+  "passwords": {
+    "c_ein": "sdkjfvhqnw35o3y812jNOFHNOWQIERVNO@Q#N#%O&YNEQHWrjkhwdvherfv23vr2efvewf"
+  }
+}
