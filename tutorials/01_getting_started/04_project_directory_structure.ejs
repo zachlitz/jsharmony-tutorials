@@ -20,9 +20,9 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
-  "Title": "Project Structure",
+  "Title": "Project Directory Structure",
   "Menu": ["Getting Started"],
-  "ID": "PROJECT_STRUCTURE"
+  "ID": "PROJECT_DIRECTORY_STRUCTURE"
 }
 </script>
 
@@ -36,12 +36,12 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <h3>/app.config.js</h3>
 <u>The primary system configuration.</u>  Most system settings should be stored in app.config.js.  Path-based and host-based config files are available for multiple test and deployment configurations.  The settings files are evaluated in the following order (files evaluated later override previous settings):
 <ul>
-  <li style="color:#555;">/node_modules/jsharmony-factory/app.config.default.js</li>
+  <li style="color:#555;">(Configuration Defaults - jsHarmonyConfig.js, jsHarmonyFactoryConfig.js, etc)</li>
   <li>/app.config.js</li>
-  <li>/app.config.FOLDER_PATH.js (ex. c:\wk\Project would be app.config.wk_Project.js)</li>
+  <li>/app.config.FOLDER_PATH.js (ex. c:\wk\Project would translate to app.config.wk_Project.js)</li>
   <li>/app.config.HOSTNAME.js (ex. app.config.srv03.js)</li>
 </ul>
-<a href="id:GETTING_STARTED_APPLICATION_SETTINGS">Learn more about the available application settings</a>
+<a href="id:GETTING_STARTED_APPLICATION_CONFIG">Learn more about the configurable application settings</a>
 
 <h3>/models</h3>
 Front-end and back-end interface definitions are stored in the models folder.  In general, most project files should be saved in the models folder.
@@ -61,7 +61,7 @@ Front-end and back-end interface definitions are stored in the models folder.  I
   <li>
     <b>/models/sql/*.json</b><br/>
     <b>/models/sql/*.[dbType].json</b><br/>
-    SQL macro definitions.  For cross-database compatibility, macros can be targeted for a specific database type via .pgsql.json or .mssql.json file extensions.<br/>
+    SQL macro definitions.  For cross-database compatibility, macros can target a specific database type via .pgsql.json or .mssql.json file extensions.<br/>
   </li>
   <li>
     <b>/models/sql/datatypes.[dbType].json</b><br/>
@@ -92,11 +92,11 @@ Front-end and back-end interface definitions are stored in the models folder.  I
     Custom model control definitions
   </li>
   <li>
-    <b>/models/_procs.json</b> &nbsp; (Naming convention only)<br/>
+    <b>/models/_procs.json</b> &nbsp; (Not required - recommended naming convention only)<br/>
     Stored procedure models
   </li>
   <li>
-    <b>/models/_funcs.json</b> &nbsp; (Naming convention only)<br/>
+    <b>/models/_funcs.json</b> &nbsp; (Not required - recommended naming convention only)<br/>
     Custom server-side JS functions
   </li>
 </ul>
@@ -105,7 +105,7 @@ System logs, temp files, and data files
 <h3>/views</h3>
 Front-end design and layout overrides
 <h3>/public</h3>
-Static resources merged into the project root.  General naming convention:
+Static resources merged into the project root.  Recommended naming convention:
 <ul>
   <li>/public/images/*</li>
   <li>/public/js/*</li>

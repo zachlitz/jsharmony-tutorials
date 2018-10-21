@@ -29,12 +29,13 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <h3>What is jsHarmony?</h3>
 A Model-Driven Rapid Application Development platform for web applications 🔥
 <ol>
-  <li>Connect to an existing SQL Server or PostgreSQL database</li>
-  <li>Use JSON files to define the application's forms, grids, and reports</li>
+  <li>Connect to an existing SQL Server, SQLite, or PostgreSQL database</li>
+  <li>Use JSON files to define the application's forms, grids, reports, and API endpoints</li>
+  <li>(Optional) Add custom routes and API endpoints</li>
   <li>Run and deploy</li>
 </ol>
 
-jsHarmony automically generates the User Interface, Authentication, Menu system, and Administration. Most components of the system can be customized via JavaScript hooks.
+jsHarmony automically generates the User Interface, Authentication, Menu system, and Administration. Most of the system functionality can be extended via JavaScript hooks.
 
 
 <h3>Guiding Design Principles</h3>
@@ -48,7 +49,7 @@ jsHarmony automically generates the User Interface, Authentication, Menu system,
 
 <h3>The Platform</h3>
 <b>Application Server - Node.js Express Server</b><br/>
-The jsHarmony application server uses Node.js Express for routing.  On startup, the server reads all the Models and programs files located in the "models" folder and stores them in memory.  The "supervisor" script is used to auto-restart the server when models are changed.<br/>
+The jsHarmony application server uses Node.js Express for routing.  On startup, the server reads all the Models and programs files located in the "models" folder and stores them in memory.  A "supervisor" script can be used to auto-restart the server when models are changed.<br/>
 <br/>
 <u>Primary application server components</u>
 <ul>
@@ -80,11 +81,11 @@ The application server handles the following general categories of requests via 
   </li>
 </ul>
 <b>JavaScript / jQuery Client</b><br/>
-The jsHarmony client is implemented via a jQuery SPA (Single-Page Architecture) web application.  EJS templates are used to render client content, and popup windows are used to enable concurrent editing of multiple records.<br/>
+The jsHarmony client is implemented via a JavaScript SPA (Single-Page Architecture) web application.  EJS templates are used to render client content, and popup windows are used to enable concurrent editing of multiple records.<br/>
 <br/>
 <u>Primary jsHarmony client components</u>
 <ul>
-  <li>Single Page JavaScript App</li>
+  <li>Single-Page JavaScript App</li>
   <li>EJS Template Engine</li>
   <li>Popups</li>
   <li>Databinding</li>
@@ -97,7 +98,7 @@ The jsHarmony client is implemented via a jQuery SPA (Single-Page Architecture) 
 Models are used to display and edit data.  Below is the full workflow for a standard form.
 <ol>
   <li>The Client browser accesses either the root <b>"/"</b> site, or a specific model <b>"/:modelid"</b></li>
-  <li>The server provides the jsHarmony SPA web app that will be used for the remainder of the browser session</li>
+  <li>The server returns the jsHarmony SPA web app that will be used for the remainder of the browser session</li>
   <li>Client loads the SPA web app, and parses the querystring to determine the target model id</li>
   <li>
     Client downloads the target model definition from the server<br/>
@@ -117,8 +118,9 @@ Models are used to display and edit data.  Below is the full workflow for a stan
     <ul>
       <li>Data row(s)</li>
       <li>Drop-down List of Values (LOV)</li>
-      <li>Defaults</li>
+      <li>Title</li>
       <li>Breadcrumbs</li>
+      <li>Default Field Values</li>
     </ul>
   </li>
   <li>Client binds the data to the user interface</li>
@@ -136,7 +138,7 @@ Models are used to display and edit data.  Below is the full workflow for a stan
 </ol>
 
 <h3>Report Architecture</h3>
-Reports consist of two components: the form to enter the report paramters, and the actual execution of the report.
+Reports consist of two components: the form to enter the report parameters, and the actual execution of the report.
 <ol>
   <li>
     Client accesses the report model via the SPA web app<br/>
@@ -205,7 +207,7 @@ There are five types of models:
 <ul>
   <li>
     <b>Grid Models</b><br/>
-    Read-only or editable grids used to display recordsets.  Grids have search and filter support, as well as the ability to export to CSV.
+    Read-only or editable grids used to display recordsets.  Grids provide an interface to search and sort data, and can also export to CSV.
   </li>
   <li>
     <b>Form Models</b><br/>
@@ -217,14 +219,14 @@ There are five types of models:
   </li>
   <li>
     <b>Multi-Sel Models</b><br/>
-    A list of values displayed in a table, enabling checkbox row selection.  Used for "one-to-many" List of Values child tables, such as status flags or attribute checkboxes.
+    A list of values displayed in a table, enabling checkbox row selection.  Used for "one-to-many" List-of-Values child tables, such as status flags or attribute checkboxes.
   </li>
   <li>
     <b>Exec Models</b><br/>
-    Unbound form used for gathering user parameters and running reports and stored procedures
+    Unbound form used to gather user parameters, and run reports and stored procedures
   </li>
 </ul>
-The database SQL statements are auto-generated based on the models.  The SQL can be overridden per field, or per database operation.<br/>
+Database SQL statements are auto-generated based on the models.  The SQL can be overridden per field, or per database operation.<br/>
 <br/>
 <b>Controls</b><br/>
 jsHarmony provides the following controls:<br/>
@@ -248,18 +250,18 @@ jsHarmony provides the following controls:<br/>
 Additionally, custom controls such as Google Maps integration, week / month views, salesperson dispatching tools, and barcoding can be implemented for special-use cases.<br/>
 <br/>
 <b>Inheritance</b><br/>
-A key feature of jsHarmony is the ability to chain models together through inheritance.  This significantly decreases development and maintenance overhead by reducing repetitive code.  Models can inherit properties and controls from a parent model, and remove / reorder fields as necessary.  In addition, control definitions can be chained and inherited, enabling custom per-project settings of system controls.<br/>
+A key feature of jsHarmony is the ability to chain models together through inheritance.  This significantly decreases development and maintenance overhead by reducing repetitive code.  Models can inherit properties and controls from a parent model, and remove / reorder fields as necessary.  In addition, control definitions can be chained and inherited, enabling custom per-project overrides of system controls.<br/>
 <br/>
 <b>Datalocks</b><br/>
-When implementing client portals and other publicly-accessible applications, data security is essential.  jsHarmony provides record security on a per-database request level, ensuring that every user has access to only their restricted subset of data.  When datalocks are enabled for a portal, every model key used by that portal is required to contain a datalock definition to ensure system security.
+When implementing client portals and other publicly-accessible applications, data security is essential.  jsHarmony provides record security on a per-database request level, ensuring that every user has access to only their restricted subset of data.  When datalocks are enabled for a portal, every form and grid used by that portal is required to contain a datalock definition to ensure system security.
 
 <h3>Database Design Guidelines</h3>
-The jsHarmony factory creates a "jsharmony" schema, separating jsHarmony tables from the user data.<br/>
+The jsHarmony factory has additional data that needs to be stored in a database (for the user management, menu system, etc).  jsHarmony factory tables are stored in a "jsharmony" schema, separating jsHarmony tables from the application data.<br/>
 <br/>
 The following key tables are stored in the jsharmony schema:
 <ul>
-  <li>Documents (D)</li>
-  <li>Notes (N)</li>
+  <li>Centralized Documents (D)</li>
+  <li>Centralized Notes (N)</li>
   <li>Text Management (TXT)</li>
   <li>Help System (HP, H)<br/>&nbsp;</li>
 
@@ -277,15 +279,17 @@ The following key tables are stored in the jsharmony schema:
   <li>Audit Trail (AUD_H, AUD_D)</li>
 </ul>
 <b>Context User</b><br/>
-All database operations are run under the same database account.  In order to differentiate between jsHarmony users, the Postgres "sessionvars.appuser" and SQL Server "context_info" is automatically set to the current user before each database operation, so that audit trail or database-side security triggers can be implemented.<br/>
+All database operations are run under the same database account.  In order to differentiate between jsHarmony users, the Postgres session variable "sessionvars.appuser" and SQL Server "context_info" is automatically set to the current user before each database operation, so that audit trail or database-side security triggers can perform logic based on the application user.<br/>
 <br/>
-The value for the current user is determined by auth.getContextUser in the jsHarmony config, for example:
-<pre>{ 
-  auth: { 
-    getContextUser: function(user_info, jsh){ return 'S' + user_info[jsh.map.user_id]; } 
-  } 
-}</pre>
-The jsHarmony Factory defines the Admin context as 'S'+PE_ID, and the Client context as 'C'+PE_ID, where PE_ID is the User ID.<br/>
+The value for the current user is determined by auth.getContextUser in the jsHarmonySite config, for example:
+<pre>
+jsh.Sites['default'].auth.getContextUser = function(user_info, jsh){ return 'S' + user_info[jsh.map.user_id]; };
+</pre>
+The jsHarmony Factory sets the context user to the following defaults, where PE_ID is the user ID:
+<ul>
+  <li><b>Main system:</b> 'S'+PE_ID</li>
+  <li><b>Client Portal:</b> 'C'+PE_ID</li>
+</ul>
 <br/>
 <b>Unique IDs</b><br/>
 jsHarmony works best when each table has a unique integer ID column.  In instances where tables have multiple primary keys or character primary keys, it is recommended to add an automatically-incrementing integer ID column to the table, and use that as the internal key for jsHarmony.<br/>

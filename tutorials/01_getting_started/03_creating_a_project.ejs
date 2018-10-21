@@ -35,7 +35,7 @@ jsHarmony projects are easily created via the Command Line Interface (CLI).  The
 <pre class="shell">npm install jsharmony-cli -g</pre>
 After installing the CLI, the "jsharmony" command will be available for creating jsHarmony projects, databases, and models.
 
-<h3>Creating a Factory Project</h3>
+<h3>Creating a jsHarmony Factory Project</h3>
 The jsHarmony Factory is a full-featured application development platform, including the following features:
 <ul>
   <li>User Authentication and Management</li>
@@ -51,9 +51,9 @@ jsHarmony Factory projects are created via the CLI.  <br/>
 <br/>
 Create an empty folder for the project, cd into that folder, and type the following command:
 <pre class="shell">jsharmony create factory</pre>
-The CLI will provide step-by-step wizard and automatically generate the Node.js project and database.<br/>
+The CLI leads the user through a step-by-step wizard, automatically generating the Node.js project and creating a new database.<br/>
 <br/>
-<b>Existing Database</b><br/>
+<b>Integrating with an Existing Database</b><br/>
 When adding jsHarmony Factory to an existing database, select "No" when asked by the installer whether create a new database.  Then, modify the app.config.js file with the existing database credentials and type the following command from the project root:
 <pre class="shell">jsharmony init database</pre>
 All jsHarmony tables will be added to the jsHarmony schema, separating them from the existing data.<br/>
@@ -61,7 +61,7 @@ All jsHarmony tables will be added to the jsHarmony schema, separating them from
 When connecting to an existing database, it is recommended to create a new user for exclusive use by the jsHarmony server.
 
 <h3>Creating an Empty Project</h3>
-An empty jsHarmony project can be useful for adding forms and grids to an existing application, however it may require advanced programming to integrate with an existing authentication system.  Where possible, it is recommended to use the jsHarmony Factory to take advantage of the built-in security and management features.<br/>
+In most use cases, it is recommended to create a jsHarmony Factory project instead of an empty project, to take advantage of the built-in security and administration features.  An empty jsHarmony project can still be useful in certain instances, such as when creating a new jsHarmony Module, however it may require advanced programming.<br/>
 <br/>
 Empty jsHarmony projects are created via the CLI.  <br/>
 <br/>

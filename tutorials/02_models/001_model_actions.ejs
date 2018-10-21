@@ -27,11 +27,11 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <h3>Introduction</h3>
-Permissions ensure that users can't access restricted data and can only change what they need to change in the system.<br/>
+Permissions ensure that users can't access restricted data, and can only change data that they have access to in the system.<br/>
 <br/>
-The <b>"actions"</b> property defines the capabilities of the entire model.<br/>
+The <b>"actions"</b> property defines whether the model can be used for <b>BIUD</b> - Browse, Insert, Update, or Delete.<br/>
 <br/>
-The <b>"roles"</b> property restricts the capabilities of the model per user.
+The <b>"roles"</b> property further restricts the capabilities of the model per user.
 
 <h3>Actions / Roles</h3>
 <pre>
@@ -52,7 +52,7 @@ The <b>"actions"</b> parameter defines what operations the model can perform.  A
   <li><b>D</b> - Delete</li>
 </ul>
 <br/>
-The "role" parameter is used to restrict actions by user role.  Roles can be defined as follows:
+The "roles" parameter is used to restrict actions by user role.  Roles can be defined as follows:
 <ul>
   <li><b>B</b> - Browse</li>
   <li><b>I</b> - Insert</li>
@@ -60,9 +60,9 @@ The "role" parameter is used to restrict actions by user role.  Roles can be def
   <li><b>D</b> - Delete</li>
   <li><b>*</b> - All roles - equivalent to BIUD</li>
 </ul>
-By default, only the SYSADMIN role has access to a model.  Permissions for users who are not SYSADMINs must be explicity defined using the "role" parameter.<br/>
+By default, only the SYSADMIN and DEV roles have access to a model.  Permissions for users who are not SYSADMINs or DEVs must be explicity defined using the "role" parameter.<br/>
 <br/>
-Effective permissions are computed by intersecting the model's "actions" parameter with a union of each applicable "role".  For example, the following model will have different effective permissions based on the users' roles:
+From a technical perspective, effective permissions are computed by intersecting the model's "actions" parameter with a union of each applicable "role".  For example:
 <pre>
 "actions":"BIUD",
 "roles":{ 
@@ -71,7 +71,7 @@ Effective permissions are computed by intersecting the model's "actions" paramet
   "READONLY":"B" 
 }
 </pre>
-<b>=> Resulting effective permissions</b><br/>
-A user with only the "READONLY" role will have <b>"B"</b> actions<br/>
-A user with both the "EDIT" and "READONLY" roles will have <b>"BU"</b> actions<br/>
-A user with both the "SYSADMIN", "EDIT" and "READONLY" roles will have <b>"BIUD"</b> actions
+<b>=> Will result in the following permissions:</b><br/>
+A user with only the "READONLY" role will have <b>"B"</b> access<br/>
+A user with both the "EDIT" and "READONLY" roles will have <b>"BU"</b> access<br/>
+A user with both the "SYSADMIN", "EDIT" and "READONLY" roles will have <b>"BIUD"</b> access

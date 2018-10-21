@@ -42,18 +42,16 @@ function jsHarmonyTutorials(){
   this.tutlisting = [];
   this.tutids = {};
   this.tutmenu = {};
-
-  //Load jsHarmony Factory
-  _this.factoryConfig = this.getFactoryConfig();
 }
 
 jsHarmonyTutorials.prototype = new jsHarmonyModule();
 
 jsHarmonyTutorials.prototype.Application = function(){
   var jsh = new jsHarmony();
-  var factory = new jsHarmonyFactory(this.factoryConfig);
+  var factory = new jsHarmonyFactory();
   jsh.AddModule(factory);
   jsh.AddModule(this);
+  jsh.Sites[factory.mainSiteID] = _.extend(this.getFactoryConfig(),jsh.Sites[factory.mainSiteID]);
   return jsh;
 }
 
@@ -75,8 +73,9 @@ jsHarmonyTutorials.prototype.Init = function(cb){
   _this.LoadTutorials(cb);
 
   //Initialize Database
-  var prevReady = _this.jsh.Config.onServerReady;
-  _this.jsh.Config.onServerReady = function(servers){
+  if(!_this.jsh.Config.onServerReady) _this.jsh.Config.onServerReady = [];
+  else if(!_.isArray(_this.jsh.Config.onServerReady)) _this.jsh.Config.onServerReady = [_this.jsh.Config.onServerReady];
+  _this.jsh.Config.onServerReady.push(function(cb, servers){
     var db = _this.jsh.DB['default'];
     db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{},function(err,rslt){
       if(err || !rslt){
@@ -89,14 +88,14 @@ jsHarmonyTutorials.prototype.Init = function(cb){
             if(err){ console.log('Error initializing database'); console.log(err); return; }
             db.RunScripts(_this.jsh, ['*','init_data'], {}, function(err, rslt){
               if(err){ console.log('Error initializing database'); console.log(err); return; }
-              _this.InitTutorialsDB(prevReady);
+              _this.InitTutorialsDB(cb);
             });
           });
         });
       }
-      else _this.InitTutorialsDB(prevReady);
+      else _this.InitTutorialsDB(cb);
     });
-  }
+  });
 }
 
 jsHarmonyTutorials.prototype.getFactoryConfig = function(){
@@ -133,8 +132,8 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
           fs.readFile(filepath, 'utf8', function(err, data){
             if(err) return Helper.GenError(req, res, -99999, err);
             var config = _this.tutorials[tutorial];
-            data += config.ID;
             var rslt = {
+              id: config.ID,
               data: data,
               config: config,
               source: {},

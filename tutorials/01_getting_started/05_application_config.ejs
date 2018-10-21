@@ -1,0 +1,635 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Application Config",
+  "Menu": ["Getting Started"],
+  "ID": "GETTING_STARTED_APPLICATION_CONFIG"
+}
+</script>
+
+
+
+
+<h3>app.config Sample File</h3>
+<pre>
+var sqliteDBDriver = require('jsharmony-db-sqlite');
+
+exports = module.exports = function(jsh, config, dbconfig){
+
+  //Database Configuration
+  dbconfig['default'] = { _driver: new sqliteDBDriver(), database: "data/db/project.db" };
+
+  //Server Settings
+  config.server.http_port = 8080;
+  //config.server.https_port = 8081;
+  //config.server.https_cert = 'path/to/https-cert.pem';
+  //config.server.https_key = 'path/to/https-key.pem';
+  //config.server.https_ca = 'path/to/https-ca.crt';
+  config.frontsalt = "Xo7gu%)X56c5.k)|wc#rD4zbRWxY]x8fSMSf*r.4|mZ+~zLU~gZvbr}Ri|{y";
+
+  //jsHarmony Factory Configuration
+  var configFactory = config.modules['jsHarmonyFactory'];
+
+  configFactory.clientsalt = "nAk+CID[?!8g~~IjV+}43TWE]V(N[jj!F30,xVG36_9s9C,z_q-Y[n)FY85z";
+  configFactory.clientcookiesalt = "9B8Tf4oSj2ld+Rb0=0xCAzTrx(KDXzCUjXXstA[u^S|$*%7?H8F#~Vd?8mp.";
+  configFactory.mainsalt = "_^N8q@xkCb{p$-@@Yxroq[a8$E,WCmi4VF9Lk7fxmCvg0xL#@M3gaWq}hG9.";
+  configFactory.maincookiesalt = "*cbPRJ!*%eiWXpLQsxw+KO(]O?ybUr^kXuV&^~@DY3F*)k{kTSuuPE2cN1Qa";
+}    
+</pre>
+
+
+
+
+<h3>app.config File Format</h3>
+The app.config files should be defined as JavaScript modules containing the following export function:
+<pre>
+exports = module.exports = function(jsh, config, dbconfig){
+  //jsh:      jsHarmony instsance
+  //config:   Alias for jsh.Config
+  //dbconfig: Alias for jsh.DBConfig
+}
+</pre>
+jsHarmony core parameters is stored in the config / jsh.Config object.  jsHarmony core parameters can be set as follows:
+<pre>
+config.app_name = 'jsHarmony';
+</pre>
+jsHarmony module configuration is stored in the config.modules array.  For example, jsHarmony Factory parameters can be set as follows:
+<pre>
+config.modules['jsHarmonyFactory'].debug_params.disable_job_processor = true;
+</pre>
+
+
+
+
+<h3>jsHarmony Core Parameters</h3>
+jsHarmony core parameters is stored in the config / jsh.Config object.  jsHarmony core parameters can be set as follows:
+<pre>
+//Application Name (used in the web page site title)
+config.app_name = 'jsHarmony';
+
+//Support Email displayed to users in error messages
+config.support_email = 'donotreply@company.com';
+
+//Admin email address for error notifications
+config.error_email = 'donotreply@company.com';
+
+//System-wide application settings for server-side JS
+config.app_settings = { }
+
+//Front-end JS Salt - used as one-way encryption for JS lookups, to prevent leaking form names (popups, etc)
+//Salts should be 60+ character strings of mixed uppercase characters, lowercase characters, symbols, and numbers.
+config.frontsalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+
+//jsHarmony System Settings
+config.system_settings = {
+  //"Datalock to Key" matching will be case-insensitive for cross-database compatibility
+  case_insensitive_datalocks: true,
+  //Do not show an error if ImageMagick is not installed
+  ignore_imagemagick: false,
+  //Enable http access to encrypted content (normally https is enforced for any encrypted data requests)
+  "allow_insecure_http_encryption": false,
+  //Suffix override for jsHarmony cookie name - default is _PORT (ex. _8080), to enable multiple applications on the same domain
+  "cookie_suffix": undefined,
+  //Automatically add bindings to models, based on key fields in child forms
+  "automatic_bindings": true,
+  //Automatically add datalocks to model fields, based on key fields and defined datalocks
+  "automatic_datalocks": true,
+  //If a parameter is sent in the querystring, automatically apply it to SQL statements, and automatically define foreign keys
+  "automatic_parameters": true
+};
+
+config.default_rowlimit = 50;   //Number of grid rows returned per request, per "Load More" / auto-scroll-load
+config.export_rowlimit = 5000;  //Maximum number of rows for CSV export
+config.max_filesize = 50000000; //Default 50MB file upload size limit
+config.max_user_temp_foldersize = 50000000; //Default 50MB limit for users' temp staging folder
+config.public_temp_expiration = 5 * 60;     //Clear public temp files after 5 min
+config.user_temp_expiration = 6 * 60 * 60;  //Clear users' temp files after 6 hours
+
+//Valid file upload extensions
+config.valid_extensions = [".jpg", ".jpeg", ".pdf", ".png", ".gif", ".txt", ".xlsm", ".xls", ".xlsx", ".bak", ".zip",".csv"];
+
+//Valid image extensions (for thumbnail resizing)
+config.supported_images = ['.jpg','.jpeg','.gif','.png'];
+
+config.appbasepath = path.dirname(require.main.filename); //Path to the application root (containing the models folder)
+config.localmodeldir = config.appbasepath + '/models/';   //The primary local model folder
+config.datadir = path.dirname(module.filename) + '/data/'; //Dynamic data folder (logs, temp files, user data)
+config.logdir = datadir + 'log/'; //Path to log
+config.LogSleepDelay = 1000;      //Amount of time to queue log messages before flushing log to disk
+
+config.use_sample_data = 0;  //Display sample data instead of application server data (for prototyping)
+config.require_html5_after_login = true; //Show an "Upgrade Required" message if the user does not have an HTML5 browser
+config.interactive = false;   //Whether or not the system is run in interactive (CLI) mode, instead of server mode
+
+//Back-end DB Field Mapping  ("Attribute" -> "DB Field Name")
+config.field_mapping = {
+  "user_id": "user_id",
+  "user_hash": "user_hash",
+  "user_status": "user_status",
+  "user_email": "user_email",
+  "user_name": "user_name",
+  "user_firstname": "user_firstname",
+  "user_lastname": "user_lastname",
+  "user_last_ip": "user_last_ip",
+  "user_last_tstmp": "user_last_tstmp",
+  "user_role": "user_role",
+  "rowcount": "xrowcount",
+  "codeval": "codeval",
+  "codetxt": "codetxt",
+  "codeseq": "codseq",
+  "codeparent": "codeparent",
+};
+
+//Front-end UI Field Mapping  ("UI Attribute" -> "DB Field Name")
+config.ui_field_mapping = {
+  "codeval": "codeval",
+  "codetxt": "codetxt",
+  "codeparentid": "codeparentid",
+  "codeicon": "codeicon",
+  "codeid": "codeid",
+  "codeparent": "codeparent",
+  "codeseq": "codeseq",
+  "codetype": "codetype"
+};
+
+//Replace "search_schema" with "replace_schema" in SQL statements
+config.schema_replacement = [
+  { 
+    "search_schema": "jsharmony.",
+    "replace_schema": "jsharmony_"
+  }
+];
+
+//Remote Message Queues - Enables multiple remote client subscribers to pull elements from a message queue
+config.queues = {
+  "dotmatrix1": { "access": "BIUD", "roles": {"SYSADMIN":"*"} }
+};
+
+//Macros - pre-process models and apply macro transformations
+config.macros = {
+  //Standard String Replacement Macro, used via "#MACRO1"
+  "MACRO1": "VALUE1",
+
+  //Standard Object Replacement Macro, used via "#MACRO2"
+  "MACRO2": { "KEY1": "VALUE1", "KEY2": "VALUE2" },
+  //Object Replacement Macros can be merged with overrides via:
+  //  { "#MACRO2": { "KEY1": "VALUE3" } }    =>   { "KEY1": "VALUE3", "KEY2": "VALUE2" }
+
+  //Function macro, used via ["#MACRO3","PARAM1","PARAM2"]
+  "MACRO3": "js:function(a,b){ return a+b; }",
+
+  //Macros can be nested:
+  //  { "#MACRO2": { "KEY1": ["#MACRO3","PARAM1","PARAM2"] } }    =>   { "KEY1": "PARAM1PARAM2", "KEY2": "VALUE2" }
+},
+
+//Model Groups - Define groups of models for Dynamic Bindings
+config.model_groups = {
+  "JSHARMONY_NOTES": ["NWUCS", "NWUS", "NWCS", "NWCSC_BASE", "NWCSC", "NWCSCB"],
+  "JSHARMONY_DOCUMENTS": ["DL_BASE"]
+};
+
+//Dynamic Bindings - For automatic bindings, when the child form in the model group, define advanced bindings for modules
+config.dynamic_bindings = {
+  "JSHARMONY_NOTES": {
+    "n_scope_id": "key", //Bind the "n_scope_id" column to the parent form's key
+    "n_scope": {         //Bind the "n_scope" column based on the parent form's key name
+      "key:c_id": "'C'", //If the parent form's key name is "c_id", set the binding to the character string 'C'
+      "key:ct_id": "'CT'"
+    }
+  },
+  "JSHARMONY_DOCUMENTS": {
+    "d_scope_id": "key",
+    "d_scope": {
+      "key:c_id": "'C'",
+      "key:ct_id": "'CT'"
+    }
+  }
+};
+
+//Mapping between Site ID and the Model ID that will be used for the "Help" buttons
+config.help_view = {
+  "main": "HSHOWL",
+  "client": "C_HSHOWL"
+};
+
+//Key field that will be passed to the help_view, containing the ID of the model where the help button was pressed
+config.help_panelid = "hp_code";
+
+//Default buttons - assigned based on link action (add/edit/download/select)
+config.default_buttons = {
+  "add": { "icon": "add", "text": "Add %%%CAPTION%%%", "actions": "I", "class": "xbuttonadd" },
+  "edit": { "icon": "edit", "text": "Edit %%%CAPTION%%%" } 
+};
+
+//Salts used by encascii / hash fields to encrypt data
+config.salts = {
+  "field_name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+};
+
+//Passwords used by encascii fields to encrypt data
+config.passwords = {
+  "field_name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+};
+
+//Array of functions to be executed after jsHarmony server is started.  Ensure "callback();" is called after each function
+config.onServerReady = [
+  function(callback, servers){ return callback(); }
+];
+
+//Additional CSS files merged into application.css
+config.css_extensions = [
+  path.dirname(module.filename) + '/public/jquery-ui/css/jquery-ui-1.10.3.custom.min.css',
+  path.dirname(module.filename) + '/public/js/colorbox/colorbox.css',
+];
+
+//Start jsHarmony without the standard console messages
+config.silentStart = false;
+
+//Google Maps API Key
+config.google_settings = { API_KEY: 'XXXXXXXXXXXXXX' };
+
+//Config objects for additional modules loaded into jsHarmony
+config.modules = {
+  jsHarmonyFactory: { ... }
+};
+</pre>
+
+
+
+
+<h3>Database Settings</h3>
+<pre>
+//PostgreSQL Database Connection String
+//-------------------------------------
+var pgsqlDBDriver = require('jsharmony-db-pgsql');
+dbconfig['default'] = { 
+  host: "server.domain.com", 
+  database: "DBNAME", 
+  user: "DBUSER", 
+  password: "DBPASS", 
+  _driver: new pgsqlDBDriver(),
+  options: {
+    pooled: true
+  },
+  options:{
+    //By default, transactions will rollback on WARNING messages
+    stopTransactionAndCommitOnWarning: false
+  }
+};
+
+//SQL Server Database Connection String
+//-------------------------------------
+var mssqlDBDriver = require('jsharmony-db-mssql');
+dbconfig['default'] = { 
+  server: "server.domain.com", 
+  database: "DBNAME", 
+  user: "DBUSER", 
+  password: "DBPASS", 
+  _driver: new pgsqlDBDriver(),
+  options:{
+    connectTimeout:30000, //Maximum wait time to log in to a server
+    requestTimeout:30000, //Maximum time per SQL query
+    ecrypt:true,          //Use encrypted channel, required for Azure
+    useUTC: false,        //Use UTC vs local time for dates, may cause unexpected behavior with Date/Time controls
+    pooled: true          //Enable database connection pooling
+  } 
+};
+
+//SQLite Database Connection String
+//-------------------------------------
+var sqliteDBDriver = require('jsharmony-db-sqlite');
+dbconfig['default'] = { 
+  database: "DBPATH", //or ":memory:"
+  _driver: new sqliteDBDriver(),
+  options:{
+    //By default, transactions will rollback on WARNING messages
+    stopTransactionAndCommitOnWarning: false
+  }
+};
+</pre>
+
+
+
+
+<h3>Web Server Settings and Security</h3>
+If both HTTP and HTTPS ports are set, the HTTP port will redirect to the HTTPS port (recommended configuration).
+<pre>
+config.server.http_port = 8080;     //Port for HTTP traffic (0 will bind to the next available port)
+config.server.http_ip = '0.0.0.0';  //IP binding for HTTP traffic
+config.server.https_port = 8081;    //Port for HTTPS traffic (0 will bind to the next available port)
+config.server.https_ip = '0.0.0.0'; //IP binding for HTTPS traffic
+config.server.https_cert = 'path/to/https-cert.pem'; //HTTPS Public Certificate
+config.server.https_key = 'path/to/https-key.pem';   //HTTPS Private Key
+config.server.https_ca = 'path/to/https-ca.pem';     //HTTPS Certificate Authority Keychain (concatenate multiple files into one)
+config.server.request_timeout = 2*60*1000;   //Maximum execution time for a web request (default 2 min)
+config.server.add_default_routes = true;     //Automatically add 404 / Error Catching routes to the end of the jsh.Sites['main'] router
+</pre>
+If the "PORT" environment variable is set, that value will override config.server.http_port<br/>
+If the "TLSPORT" environment variable is set, that value will override config.server.https_port
+
+
+
+
+<h3>Mailer Settings</h3>
+<pre>
+config.mailer_email = 'DO NOT REPLY <donotreply@company.com>'; //Mailer "from" address
+
+//SMTP Mailer
+//-----------
+config.mailer_settings = {
+  type: 'smtp',
+  host: 'mail.company.com',
+  port: 465,
+  auth: {
+    user: 'donotreply@company.com',
+    pass: 'XXXXXXXXXXXXXXX'
+  },
+  secure: true,
+  tls: { rejectUnauthorized: false }, //Ignore TLS cert, required by some shared email hosts
+  maxConnections: 5,  //Maximum simultaneous connections to the SMTP server
+  maxMessages: 10     //Messages sent per SMTP connection before reconnecting
+};
+
+// Amazon SES MAILER
+//------------------
+config.mailer_settings = {
+  type: 'ses',
+  accessKeyId: "XXXXXXXXXXXXXXXXXXX",
+  secretAccessKey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  rateLimit: 10   //Messages per second
+}
+</pre>
+
+
+
+
+<h3>Datalocks</h3>
+Datalocks are used by client portals or similar sites to restrict table data by a user id or other user-based field.  For example, a customer could be restricted to see only their own orders.<br/>
+<br/>
+If a datalock is enabled for a site, every form and report in that site is required to have a datalock defined, so that no unauthorized data will be displayed.
+<pre>
+config.datalocks = {
+  "client":{   //The site ID where this datalock will be enabled
+    "c_id":{   //The datalock key (defined under site.datalock)
+               //An array of ("field_name"->"sql") pairs.  Forms fields matching the "field_name" will automatically have the datalock assigned
+               //The datalock is a sql "where" expression, limiting "field_name" by the datalock key
+      "o_id":"o_id in (select o_id from o where o.c_id=@datalock_c_id)",
+      "o_contact":"o_contact in (select cc_id from cc where cc.c_id=@datalock_c_id)",
+      "ca_id":"ca_id in (select ca_id from ca where ca.c_id=@datalock_c_id)",
+      "cc_id":"cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)",
+      "cf_id":"cf_id in (select cf_id from cf where cf.c_id=@datalock_c_id)",
+      "e_id":"e_id in (select e_id from e where e.c_id=@datalock_c_id)"
+    }
+  }
+};
+</pre>
+
+
+
+
+<h3>Site Settings</h3>
+Multiple jsHarmony sites can be defined per server.  For instance, in the standard jsHarmony Factory configuration, the "main" site is accessible via "http://server/", while the Client Portal ("client" site) is accessible via "http://server/client/".<br/>
+<br/>
+The default site ID is "main".  Implementing jsHarmony Factory automatically sets most of these values.
+<pre>
+var site = jsh.Sites['main'];
+
+site.id = id;                   //Site ID - Used in Datalocks, and to reference the site
+site.home_url = "/";            //URL of the site root - used in the logo links in the site templates
+site.basetemplate = "index";    //Default EJS template for rendering pages on this site
+site.baseurl = '/';             //Root URL for form / grid / application server links
+site.publicurl = '/';           //Public folder URL (shared CSS / images, used to share a public folder between multiple sites)
+site.instance = "jshInstance";  //Client-side JSH Instance ID
+site.rootcss = '';              //CSS Prefix for styles
+site.show_system_errors = true; //Whether to display debug information in the system errors (should be set to false for production)
+site.cookiesalt = '';           //Salt used by cookieParser to prevent user from modifying cookie data
+
+//Site menu generator
+site.menu = function(req,res,jsh,params,onComplete){ 
+  params.ShowListing = true; 
+  params.XMenu = { MainMenu:[], SubMenus:{} }; 
+  onComplete(); 
+}
+
+//Global parameters available to the JS client front-end
+//If defined as functions, they will be evaluated on each request
+site.globalparams = {
+  user_id: function (req) { return req.user_id; }
+};
+
+//Function run when routing is initialized
+site.onLoad = function (jsh) { };
+
+//Define datalocks for this site - evaluated on each request.  Use authentication data when available.
+site.datalock = {
+  "c_id": function (req) { return req.gdata[jsh.map.client_id]; }
+};
+
+//For each of the datalocks in the site.datalocks section, define the database datatypes
+site.datalocktypes = {
+  "c_id": { 'name': "c_id", 'type': 'bigint' }
+};
+</pre>
+
+
+
+
+<h3>Site Settings :: Authentication</h3>
+<pre>
+site.auth = {
+  salt: "",      //Salt for encrypting / verifying user passwords
+  supersalt: "", //Salt for encrypting / verifying the super-admin password (used in account impersonation)
+  sql_auth: "",  //SQL statement for authentication - Should return password hash for user id, and list of roles
+  sql_login: "", //SQL statement for initial login - Should return password hash for user id
+  sql_superlogin: "",    //SQL statement for account impersonation via superadmin - should return password hash for superadmin user id
+  sql_loginsuccess: "",  //Perform SQL operation after login (such as updating login timestamp)
+  sql_passwordreset: "", //Perform SQL password reset
+
+  //Return User Name
+  getuser_name: function (user_info, jsh) { return user_info[jsh.map.user_firstname] + ' ' + user_info[jsh.map.user_lastname]; },
+
+  //Return Database Context user (for database audit trail, etc)
+  getContextUser: function (user_info, jsh) { return 'S' + user_info[jsh.map.user_id]; },
+
+  //Run code after successful login, such as setting req.gdata variables for datalocks
+  onAuthComplete: function (req, user_info, jsh, onSuccess) { onSuccess(); },
+
+  //Run code before authenticating user, for custom authentication via tokens
+  preprocess_account: function (AppSrv, account, onComplete, onFail) { onComplete(); },
+
+  //Generate and return authentication token
+  getToken = function (AppSrv, req, cb) {
+    cb({
+      __auth_PE_ID: req.user_id,
+      __auth_tstmp: tstmp,
+      __auth_token: passhash
+    });
+  },
+
+  onAuth: function (req, res, onSuccess, onFail) { },  //Override authentication function
+  onRenderLogin: function (req, res, onComplete) { },  //Override login screen
+  onRenderLoginForgotPassword: function (req, res, onComplete) { },      //Override "Forgot Password" screen
+  onRenderLoginForgotPasswordReset: function (req, res, onComplete) { }, //Override "Forgot Password - Reset" screen
+
+  allow_insecure_http_logins: false,  //Allow login over http (normally https is required)
+
+  on_auth: function(req, jsh, params, cb){ /*cb(err, rslt)* / },         //Override authentication database code 
+  on_login: function(req, jsh, params, cb){ /*cb(err, rslt)* / },        //Override login database code
+  on_loginsuccess: function(req, jsh, params, cb){ /*cb(err, rslt)* / }, //Override post-login success database code
+  on_superlogin: function(req, jsh, params, cb){ /*cb(err, rslt)* / },   //Override superadmin login database code
+  on_passwordreset: function(req, jsh, params, cb){ /*cb(err, rslt)* / } //Override password reset database code
+};
+</pre>
+
+
+
+
+<h3>Site Settings :: Public / Private Apps</h3>
+<pre>
+//System-wide public Express routes
+site.public_apps = [{'/public_page': function(req, res){ res.send('Public Page'); }}];
+
+//System-wide private Express routes (requiring login)
+site.private_apps = [{'/private_page': function(req, res){ res.send('Private Page'); }}];    
+</pre>
+
+
+
+
+<h3>jsHarmony Factory</h3>
+Since the jsHarmony Factory is a module on top of the jsHarmony platform, jsHarmony Factory settings will need to be referenced under the config.modules['jsHarmonyFactory'] object:
+<pre>
+//jsHarmony Factory Configuration
+var configFactory = config.modules['jsHarmonyFactory'];
+
+//Each salt should be a 60+ character string of mixed uppercase characters, lowercase characters, symbols, and numbers.
+configFactory.clientsalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';  //Used to encode client portal passwords
+configFactory.clientcookiesalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'; //Used to verify client portal cookies
+configFactory.mainsalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';  //Used to encode main system passwords
+configFactory.maincookiesalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'; //Used to verify main system cookies
+</pre>
+
+
+
+
+<h3>jsHarmony Factory :: Job Processor</h3>
+<pre>
+configFactory.JobSleepDelay = 5000;  //Sleep time when between queued jobs (default 5 sec)
+configFactory.JobCheckDelay = 60000; //Sleep time when no more jobs found in queue  (default 60 sec)
+
+//Translate Database Fields to fields in Job Processor ("DB field": "Job Processor Field")
+configFactory.job_field_mapping = {
+  "rqst_id": "RQST_ID",
+  "rqst_atype": "RQST_ATYPE",
+  "rqst_aname": "RQST_ANAME",
+  "rqst_parms": "RQST_PARMS",
+  "rqst_source": "RQST_SOURCE",
+  "d_id": "D_ID",
+  "d_scope": "D_SCOPE",
+  "d_scope_id": "D_SCOPE_ID",
+  "d_ctgr": "D_CTGR",
+  "d_desc": "D_Desc",
+  "rq_id": "RQ_ID",
+  "rq_name": "RQ_NAME",
+  "rq_message": "RQ_MESSAGE",
+  "email_txt_attrib": "EMAIL_TXT_ATTRIB",
+  "email_to": "EMAIL_TO",
+  "email_cc": "EMAIL_CC",
+  "email_bcc": "EMAIL_BCC",
+  "email_attach": "EMAIL_ATTACH",
+  "email_subject": "EMAIL_SUBJECT",
+  "email_text": "EMAIL_TEXT",
+  "email_html": "EMAIL_HTML",
+  "email_d_id": "EMAIL_D_ID",
+  "email_d_filename": "EMAIL_D_FileName",
+  "sms_txt_attrib": "SMS_TXT_ATTRIB",
+  "sms_to": "SMS_TO",
+  "sms_body": "SMS_BODY",
+  "n_scope": "N_SCOPE",
+  "n_scope_id": "N_SCOPE_ID",
+  "n_type": "N_TYPE",
+  "n_note": "N_Note",
+  "c_id": "C_ID"
+};
+</pre>
+
+<h3>jsHarmony Factory :: Barcoding / Scanner / Twilio</h3>
+<pre>
+//barcodeHarmony Server
+configFactory.barcode_settings = { server: 'https://localhost:3101' };
+
+//scanHarmony Server
+configFactory.scanner_settings = { server: 'https://localhost:3105' };
+
+//Twilio Account for sending SMS Messages
+configFactory.twilio_settings = {
+  SMS_FROM: '+12223334444',
+  ACCOUNT_SID: 'XXXXXXXX',
+  AUTH_TOKEN: 'XXXXXXXXXXXXXXXXXXXXXXXXX'
+};
+</pre>
+
+
+
+
+<h3>jsHarmony Factory :: Task Scheduler</h3>
+<pre>
+//Simple Job Scheduler
+configFactory.enable_scheduler = true;
+configFactory.scheduled_tasks = {
+  'JOBNAME': {
+    action: jsh.AppSrv.JobProc.ExecuteSQL("exec dbo.BATCH_JOB"),
+    when: function(curdt, lastdt){ return (curdt.getTime() - lastdt.getTime() > 300000); } //Every 5 minutes
+  } 
+};
+</pre>
+
+
+
+
+<h3>Debug Settings</h3>
+<pre>
+//jsHarmony Core Debug Params
+config.debug_params = _.extend(config.debug_params,{
+  jsh_error_level: 1         //1 = ERROR, 2 = WARNING, 4 = INFO  :: Messages generated while parsing jsHarmony configs
+  web_detailed_errors: true, //Show full stack trace and error message to the user (be sure to set to false in production)
+  pipe_log : true,           //Show LOG messages on CONSOLE
+  appsrv_requests: false,    //Display all APPSRV requests on LOG/CONSOLE
+  report_debug: false,       //Display report warnings (Null value, etc.)
+  db_requests: false,        //Log every database request
+  db_error_sql_state: true,  //Log full SQL state on database error
+  disable_email: false,                  //Disable sending any email messages
+  hide_deprecated: false,                //Do not show messages about deprecated features
+  monitor_globals: true      //Enable client-side monitoring of global / window variables: display a message if a new variable is found
+  ignore_globals: [],        //Ignore these global / window variables in the client-side global variable monitor
+});
+
+//jsHarmony Factory Core Debug Params
+configFactory.debug_params = _.extend(configFactory.debug_params,{
+  job_requests: false,       //Display all JOB requests on LOG/CONSOLE
+  email_override: 'donotreply@company.com',  //Override all outbound emails to send to this address
+  sms_override: '+12223334444',          //Overrided all outbound SMS messages to send to this phone #
+  no_job_email: false,                   //Disable sending EMAILS from the job processor
+  no_job_sms: false,                     //Disable sending SMS messages from the job processor
+  disable_job_processor: false,          //Disable the job processor entirely
+});
+</pre>

@@ -45,12 +45,12 @@ The example uses PostgreSQL, however the steps should be similar for SQL Server.
   &nbsp;
 </li>
 <li>
-  <b>PostgreSQL 9.5+</b><br/>
+  <b>PostgreSQL 9.2+</b><br/>
   <br/>
   Open a command prompt on the database server and type:
   <pre class="shell">psql postgres
 select version();</pre>
-  jsHarmony Factory has been tested on PostgreSQL 9.5 and higher.
+  jsHarmony Factory has been tested on PostgreSQL 9.2 and higher.
 </li>
 </ul>
 
@@ -84,7 +84,8 @@ Continue with the operation?
     Type "1" to select a PostgreSQL database:
     <pre class="shell">Please select a database type:
 1) PostgreSQL
-2) SQL Server</pre>
+2) SQL Server
+3) SQLite</pre>
   </li>
   <li>
     Type "1" to create a new database:
@@ -129,5 +130,54 @@ Password: ****************</pre>
   </li>
   <li>
     Open a web browser and log in to the system with the admin user and password provided by the installer in step 9
+  </li>
+  <li>
+    Now that the server is working, let's add a form.<br/>
+    Stop the server by pressing Ctrl+c
+  </li>
+  <li>
+    Create a new file <b>c:\wk\firstjsh\models\HELLOWORLD.json</b> with the following content
+    <pre>
+{
+  "layout":"form",
+  "title":"Hello World",
+  "roles": {"*":"B"},
+  "actions":"B",
+  "topmenu":"dashboard",
+  "nokey": 1,
+  "fields":[
+    {"control":"html","value":"Hello World"}
+  ]
+}
+    </pre>
+  </li>
+  <li>
+    Start the server again by running nstart.sh (Linux) or nstart.cmd (Windows)
+    <pre>nstart</pre>
+  </li>
+  <li>
+    Log in to the system again and verify that the HELLOWORLD model is working:<br/>
+    <pre>http://localhost:8080/HELLOWORLD</pre>
+  </li>
+  <li>Add the HELLOWORLD model to the menu:
+    <ol type="a">
+      <li>Click on the "Developer" tab</li>
+      <li>Click "Menu Items"</li>
+      <li>Right click on the "Dashboard" menu item, and click "Add Child Item"</li>
+      <li>
+        Enter the following parameters:<br/>
+        <b>Menu ID:</b> HELLOWORLD<br/>
+        <b>Display Name:</b> Hello World
+      </li>
+      <li>Click browse next to "Model / Command", and select the "HELLOWORLD" model</li>
+      <li>Click "Save"</li>
+      <li>Click Edit next to "Privileges"</li>
+      <li>Select "*" (All Users)</li>
+      <li>Click "Save" and close the Roles dialog</li>
+      <li>Click "Dashboard" and refresh the browser</li>
+    </ol>
+  </li>
+  <li>
+    There should be a new link on the Dashboard submenu called "Hello World".  Clicking on it should open the model.
   </li>
 </ol>

@@ -103,10 +103,11 @@ jsHarmonyTutorials.prototype.Init = function(config){
     _this.loadTutorial(node[jsh.uimap['codeval']]);
   }
 
-  _this.loadTutorial = function(tutorial,options){
+  _this.loadTutorial = function(tutorial,options,cb){
     if(!options) options = {};
     XPost.prototype.XExecute('../_tutorials/'+tutorial,{}, function (rslt) {
       var config = rslt.config;
+      if(typeof options.scrollTop != 'undefined') config.scrollTop = options.scrollTop;
       config.id = tutorial;
       var displayTitle = config.Title;
       //if(config.Menu) for(var i=config.Menu.length-1;i>=0;i--) displayTitle = config.Menu[i] + ' - ' + displayTitle;
@@ -116,6 +117,9 @@ jsHarmonyTutorials.prototype.Init = function(config){
       document.title = 'Tutorial - '+displayTitle;
       if(!options.noHistory){
         XExt.AddHistory(url,config);
+      }
+      else {
+        XExt.ReplaceHistory(url, config);
       }
       jsh.$root('.tutorial_tabs_body').scrollTop(0);
       curTutorial = config;
@@ -162,6 +166,8 @@ jsHarmonyTutorials.prototype.Init = function(config){
         }
       }
       onLayout();
+      if(typeof config.scrollTop !== 'undefined') jsh.$root('.tutorial_tabs_body').scrollTop(config.scrollTop);
+      if(cb) cb();
     });
   }
 
@@ -243,6 +249,13 @@ jsHarmonyTutorials.prototype.Init = function(config){
     onLayout();
   }
 
+  _this.saveScroll = function(){
+    var scrollTop = jsh.$root('.tutorial_tabs_body').scrollTop();
+    var curstate = history.state;
+    if(!curstate) return;
+    XExt.ReplaceHistory(window.location.href, _.extend(curstate,{ scrollTop: scrollTop }));
+  }
+
   $(document).ready(function(){
     tutorialsLOV = [];
     genTutorialsLOV(tutorialsLOV,tutorialsMenu);
@@ -253,7 +266,11 @@ jsHarmonyTutorials.prototype.Init = function(config){
     var path = window.location.pathname;
     if(XExt.beginsWith(path,'/tutorials/')){
       var tutorial = path.substr(11);
-      _this.loadTutorial(tutorial,{ noHistory: true });
+      var scrollTop = undefined;
+      if(history.state && (typeof history.state.scrollTop != 'undefined')) scrollTop = history.state.scrollTop;
+      _this.loadTutorial(tutorial,{ noHistory: true, scrollTop: scrollTop }, function(){
+        //On Complete
+      });
     }
     else if(XExt.beginsWith(path,'/search/')){
       _this.searchTutorials(jsh._GET.query||'',{ noHistory: true });
@@ -265,6 +282,8 @@ jsHarmonyTutorials.prototype.Init = function(config){
       if($(_this).val()=='Search') $(_this).val('');
     });
     jsh.$root('.tutorials_search .query').mouseup(function(e) { e.preventDefault(); return false; });
+    jsh.$root('.tutorial_tabs_body').scroll(function(){ _this.saveScroll(); });
+    $(window).resize(function(){ _this.saveScroll(); });
   });
 
   $(window).resize(onLayout);
@@ -273,9 +292,11 @@ jsHarmonyTutorials.prototype.Init = function(config){
     var state = event.state;
     var url = window.location.pathname;
     jsh._GET = XExt.parseGET();
-    if(state && state.config && state.config.id) _this.loadTutorial(state.config.id,{ noHistory: true });
-    else if(url.indexOf('/search/')==0) _this.searchTutorials(jsh._GET.query||'',{ noHistory: true });
+    var scrollTop = undefined;
+    if(state && ('scrollTop' in state)) scrollTop = state.scrollTop;
+    if(state && state.config && state.config.id) _this.loadTutorial(state.config.id,{ noHistory: true, scrollTop: scrollTop });
+    else if(url.indexOf('/search/')==0) _this.searchTutorials(jsh._GET.query||'',{ noHistory: true, scrollTop: scrollTop });
     else if(curTutorial && (url.indexOf('/tutorials/')==0) &&(curTutorial.id==url.substr(11))){ }
-    else if(url.indexOf('/tutorials/')==0) _this.loadTutorial(url.substr(11),{ noHistory: true });
+    else if(url.indexOf('/tutorials/')==0) _this.loadTutorial(url.substr(11),{ noHistory: true, scrollTop: scrollTop });
   }
 }
