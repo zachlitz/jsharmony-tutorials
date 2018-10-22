@@ -1,0 +1,49 @@
+{
+  "C_CUSTOM": {
+    "layout": "form",
+    "title": "",
+    "actions": "B",
+    "nokey": 1,
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "oninit": "jsh.App.C_CUSTOM.oninit(xform);",
+    "ondestroy": "jsh.App.C_CUSTOM.ondestroy();",
+    "buttons": [
+      { "link": "js:jsh.App.C_CUSTOM.help();", "icon": "help", "text": "", "actions": "B" }
+    ],
+    "hide_system_buttons" : ["print","help"]
+  },
+
+  //Custom API Endpoint for getting list of customers and initial form data
+  "C_CUSTOM_GET_C": {
+    "layout": "exec",
+    "title": "Select all orders for a customer",
+    "actions": "U",
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "sqlexec": [
+      "select c_id,c_name,c_sts from c;",
+      "select codeval,codetxt from ucod_c_sts where (CODETDT is null or CODETDT>datetime('now','localtime')) order by codseq;"
+    ],
+    "sqltype": "multirecordset",
+    "fields": [
+    ]
+  },
+
+  //Custom API Endpoint for updating customer status
+  "C_CUSTOM_UPDATE_C_STS": {
+    "layout": "exec",
+    "title": "Update customer status",
+    "actions": "U",
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "sqlexec": "update c set c_sts=@c_sts where c_id=@c_id", 
+    "fields": [
+      {"name":"c_id","type":"bigint","actions":"U","control":"hidden"},
+      {"name":"c_sts","type":"varchar","length":8,"actions":"U","control":"hidden"}
+    ]
+  }
+}

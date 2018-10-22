@@ -1,6 +1,6 @@
 {
   "name": "jsharmony-tutorials",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "jsHarmony Tutorials",
   "main": "index.js",
   "scripts": {
@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/apHarmony/jsharmony-tutorials",
   "devDependencies": {
-    "mocha": "~3.2.0"
+    "mocha": "^5.2.0"
   },
   "dependencies": {
-    "jsharmony": "^1.0.0",
-    "jsharmony-db-sqlite": "^1.0.0",
-    "jsharmony-factory": "^1.0.0"
+    "jsharmony": "^1.1.0",
+    "jsharmony-db-sqlite": "^1.1.0",
+    "jsharmony-factory": "^1.1.0"
   }
 }
