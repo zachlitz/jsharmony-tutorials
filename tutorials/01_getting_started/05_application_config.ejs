@@ -308,7 +308,7 @@ dbconfig['default'] = {
   options:{
     connectTimeout:30000, //Maximum wait time to log in to a server
     requestTimeout:30000, //Maximum time per SQL query
-    ecrypt:true,          //Use encrypted channel, required for Azure
+    ecrypt:true,          //Use encrypted channel (default to true), required for Azure
     useUTC: false,        //Use UTC vs local time for dates, may cause unexpected behavior with Date/Time controls
     pooled: true          //Enable database connection pooling
   } 
@@ -535,6 +535,9 @@ configFactory.maincookiesalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 <pre>
 configFactory.JobSleepDelay = 5000;  //Sleep time when between queued jobs (default 5 sec)
 configFactory.JobCheckDelay = 60000; //Sleep time when no more jobs found in queue  (default 60 sec)
+
+//Auto-start Job Processor
+this.auto_start_job_processor = true;
 
 //Translate Database Fields to fields in Job Processor ("DB field": "Job Processor Field")
 configFactory.job_field_mapping = {
