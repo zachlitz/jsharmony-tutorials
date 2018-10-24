@@ -29,7 +29,7 @@ var fs = require('fs');
 var path = require('path');
 var async = require('async');
 var _ = require('lodash');
-var express = require('jsharmony/node_modules/express');
+var express = require('jsharmony/lib/express');
 
 function jsHarmonyTutorials(){
   var _this = this;
