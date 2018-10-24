@@ -1,6 +1,6 @@
 {
   "name": "jsharmony-tutorials",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "jsHarmony Tutorials",
   "main": "index.js",
   "scripts": {
@@ -30,8 +30,10 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
+    "async": "^2.1.4",
     "jsharmony": "^1.1.0",
     "jsharmony-db-sqlite": "^1.1.0",
-    "jsharmony-factory": "^1.1.0"
+    "jsharmony-factory": "^1.1.0",
+    "lodash": "^4.14.0"
   }
 }
