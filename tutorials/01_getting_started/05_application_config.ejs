@@ -76,6 +76,10 @@ jsHarmony module configuration is stored in the config.modules array.  For examp
 <pre>
 config.modules['jsHarmonyFactory'].debug_params.disable_job_processor = true;
 </pre>
+jsHarmony site parameters are stored in the jsh.Sites array.  For example, the main site parameters can be set as follows:
+<pre>
+jsh.Sites['main'].basetemplate = 'index';
+</pre>
 
 
 
@@ -613,7 +617,7 @@ configFactory.scheduled_tasks = {
 <pre>
 //jsHarmony Core Debug Params
 config.debug_params = _.extend(config.debug_params,{
-  jsh_error_level: 1         //1 = ERROR, 2 = WARNING, 4 = INFO  :: Messages generated while parsing jsHarmony configs
+  jsh_error_level: 1,        //1 = ERROR, 2 = WARNING, 4 = INFO  :: Messages generated while parsing jsHarmony configs
   web_detailed_errors: true, //Show full stack trace and error message to the user (be sure to set to false in production)
   pipe_log : true,           //Show LOG messages on CONSOLE
   appsrv_requests: false,    //Display all APPSRV requests on LOG/CONSOLE
@@ -622,7 +626,7 @@ config.debug_params = _.extend(config.debug_params,{
   db_error_sql_state: true,  //Log full SQL state on database error
   disable_email: false,                  //Disable sending any email messages
   hide_deprecated: false,                //Do not show messages about deprecated features
-  monitor_globals: true      //Enable client-side monitoring of global / window variables: display a message if a new variable is found
+  monitor_globals: true,     //Enable client-side monitoring of global / window variables: display a message if a new variable is found
   ignore_globals: [],        //Ignore these global / window variables in the client-side global variable monitor
 });
 
