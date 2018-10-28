@@ -2,7 +2,6 @@
   "CW_BASE":{
     "comment":"C",
     "layout": "form", 
-    "title": "Customer Information",
     "table": "c",
     "actions": "B", 
     "roles": {"C_B":"B","C_X":"*"},
