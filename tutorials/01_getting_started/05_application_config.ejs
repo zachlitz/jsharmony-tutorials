@@ -265,6 +265,24 @@ config.css_extensions = [
   path.dirname(module.filename) + '/public/js/colorbox/colorbox.css',
 ];
 
+//Fonts embedded for all reports (including headers and footers)
+//TrueType format is recommended for cross-platform compatibility
+//Font source path can be one of:
+//  /absolute/path/to/font.ttf
+//  path/relative/to/application/root.ttf
+//  moduleid/path/to/font.ttf
+config.default_report_fonts = [
+  {
+    "font-family": "Roboto",
+    "font-style": "normal",
+    "font-weight": 400,
+    "src": "jsharmony/public/fonts/Roboto-Regular.ttf",
+    "format": "truetype", //truetype, woff2, woff, embedded-opentype, svg
+    "local": ["Roboto","Roboto-Regular"],
+    "css": "body { font-family: \'Roboto\'; }" //Additional CSS appended to the stylesheet
+  }
+];
+
 //Start jsHarmony without the standard console messages
 config.silentStart = false;
 
@@ -496,11 +514,11 @@ site.auth = {
 
   allow_insecure_http_logins: false,  //Allow login over http (normally https is required)
 
-  on_auth: function(req, jsh, params, cb){ /*cb(err, rslt)* / },         //Override authentication database code 
-  on_login: function(req, jsh, params, cb){ /*cb(err, rslt)* / },        //Override login database code
-  on_loginsuccess: function(req, jsh, params, cb){ /*cb(err, rslt)* / }, //Override post-login success database code
-  on_superlogin: function(req, jsh, params, cb){ /*cb(err, rslt)* / },   //Override superadmin login database code
-  on_passwordreset: function(req, jsh, params, cb){ /*cb(err, rslt)* / } //Override password reset database code
+  on_auth: function(req, jsh, params, cb){ /*cb(err, rslt)*/ },         //Override authentication database code 
+  on_login: function(req, jsh, params, cb){ /*cb(err, rslt)*/ },        //Override login database code
+  on_loginsuccess: function(req, jsh, params, cb){ /*cb(err, rslt)*/ }, //Override post-login success database code
+  on_superlogin: function(req, jsh, params, cb){ /*cb(err, rslt)*/ },   //Override superadmin login database code
+  on_passwordreset: function(req, jsh, params, cb){ /*cb(err, rslt)*/ } //Override password reset database code
 };
 </pre>
 
