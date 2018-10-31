@@ -133,3 +133,7 @@
   position:relative;
   display:block;
 }
+<%-rootcss%> .tutorial_overview .screenshot {
+  display: block;
+  padding: 18px 0px;
+}

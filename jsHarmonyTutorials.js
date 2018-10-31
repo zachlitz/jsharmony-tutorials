@@ -30,6 +30,7 @@ var path = require('path');
 var async = require('async');
 var _ = require('lodash');
 var express = require('jsharmony/lib/express');
+var ejs = require('ejs');
 
 function jsHarmonyTutorials(){
   var _this = this;
@@ -75,7 +76,7 @@ jsHarmonyTutorials.prototype.Init = function(cb){
   //Initialize Database
   if(!_this.jsh.Config.onServerReady) _this.jsh.Config.onServerReady = [];
   else if(!_.isArray(_this.jsh.Config.onServerReady)) _this.jsh.Config.onServerReady = [_this.jsh.Config.onServerReady];
-  _this.jsh.Config.onServerReady.push(function(cb, servers){
+  _this.jsh.Config.onServerReady.unshift(function(cb, servers){
     var db = _this.jsh.DB['default'];
     db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{},function(err,rslt){
       if(err || !rslt){
@@ -138,6 +139,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
               config: config,
               source: {},
             };
+            rslt.data = ejs.render(rslt.data, { getScreenshot: function(url, desc, params){ return _this.getScreenshot(url, desc, params); } });
             if(!config.Code) config.Code = [];
             async.eachSeries(config.Code,function(codefile,cb){
               var codepath = _this.basepath + codefile;
@@ -367,5 +369,7 @@ function searchFiles(basedir, search_rslt, fpath, q, searchFiles_cb) {
     });
   });
 }
+
+jsHarmonyTutorials.prototype = _.extend(jsHarmonyTutorials.prototype, require('./jsHarmonyTutorials.Screenshots.js'));
 
 module.exports = exports = jsHarmonyTutorials;
