@@ -1,0 +1,89 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "How Models Work Together",
+  "Menu": ["Models","Models Overview"],
+  "Code": ["/models/CL.json"]
+}
+</script>
+
+<h3>Types of Models</h3>
+There are five basic model layouts: "grid", "form", "form-m", "multisel", and "exec".  These five basic building blocks are used to create jsHarmony applications.
+
+<h3>Model Layout: Grid</h3>
+Grids are the heart of a jsHarmony application.  Grids enable a user to view, add, or edit data, multiple records at a time.  Grids may be designed with either editable controls or read-only rows, and can link to a popup form for further editing.<br/>
+
+<h4>Editable Grid:</h4>
+<%-getScreenshot('/CL_EDITABLE?popup=1','Editable Grid')%>
+
+<h4>Read-only Grid:</h4>
+<%-getScreenshot('/CL?popup=1','Read-only Grid')%>
+
+Most systems will start with a grid, and then progress to forms for editing data.
+
+<h3>Model Layout: Form</h3>
+A form enables the user to view, add, or edit one data record.<br/>
+<br/>
+Forms consists of fields and additional child forms.  Child forms can be embedded via subforms, tabs, or Popup LOVs (Popup List of Values).<br/>
+<br/>
+All parent and child form data will be saved in one transaction, and only the topmost writable parent form will have a "Save" button.
+
+<h4>Simple Form:</h4>
+<%-getScreenshot('/C?c_id=1','Simple Form')%>
+
+<h4>Parent / Child Subforms:</h4>
+<%-getScreenshot('/CW?c_id=1&action=edit','Parent / Child Subforms')%>
+The above example consists of 4 forms:
+<ul>
+  <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
+  <li>The select tab (C_SUB), with two subforms</li>
+  <li>The first subform "Address" (C_CA)</li>
+  <li>The second subform "File" (C_SUB_FILE)</li>
+</ul>
+
+<h4>Parent / Child Grid:</h4>
+<%-getScreenshot('/CW?c_id=1&action=edit&tabs=%7B"CW"%3A"C_CCL"%7D','Parent / Child Grid')%>
+The above example consists of 2 forms:
+<ul>
+  <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
+  <li>The select tab (C_CCL) with the grid</li>
+</ul>
+
+<h3>Model Layout: Form-m</h3>
+Form-m enables a user to view, add, or edit multiple records.  Data is edited one record at a time, using backward / forward navigation.<br/>
+<br/>
+A "form-m" is typically used for navigating a small subset of data, and is implemented as a subform of a parent form (ex. editing multiple addresses of a Customer).  All new or modified data is saved in one transaction.
+<%-getScreenshot('/C_CA_CONTAINER?c_id=1&action=edit','Form-m')%>
+
+<h3>Model Layout: Multisel</h3>
+A multisel displays a checkbox-based List of Values, where multiple values can be selected per "key".  Multisels are primarily used to enter data in many-to-many relationships.
+<%-getScreenshot('/CW?c_id=2&action=edit&tabs=%7B"CW"%3A"C_CF"%7D','Multisel')%>
+
+<h3>Model Layout: Exec</h3>
+Exec forms are unbound, except during initial load.  Exec forms can be used for:
+<ul>
+  <li>Entering Parameters before running a Report</li>
+  <li>API Endpoints for SQL Operations / Procedures</li>
+  <li>Custom User Interfaces</li>
+</ul>
+<screenshot of report runner>
+<%-getScreenshot('/_report/RPE?popup=1','Parent / Child Grid')%>

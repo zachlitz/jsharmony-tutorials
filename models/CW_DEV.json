@@ -15,7 +15,7 @@
       {"name":"Overview","caption": "Overview","target":"C_SUB","bindings":{"c_id":"c_id"}},
       {"name":"Contacts","caption": "Contacts","target":"C_CCL","bindings":{"c_id":"c_id"},
         "actions":"BU"},
-      {"name":"Flags","caption": "Flags","target":"C_CF","bindings":{"c_id":"c_id"},
+      {"name":"Customer Flags","caption": "Customer Flags","target":"C_CF","bindings":{"c_id":"c_id"},
         "showcode": ["ACTIVE"],"actions":"BU"},
       {"name":"SetInactive","caption": "Set Inactive","target":"C_EXEC","bindings":{"c_id":"c_id"},
         "showcode": ["ACTIVE"],"actions":"BU"}

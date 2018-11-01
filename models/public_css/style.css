@@ -135,5 +135,8 @@
 }
 <%-rootcss%> .tutorial_overview .screenshot {
   display: block;
-  padding: 18px 0px;
+  margin: 18px 0px;
+  padding:14px;
+  border:1px solid black;
+
 }

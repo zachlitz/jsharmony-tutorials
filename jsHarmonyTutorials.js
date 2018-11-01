@@ -104,9 +104,13 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
   return { 
     auth: false,
     menu: function(req,res,jsh,params,onComplete){ params.XMenu = { MainMenu:[], SubMenus: {} }; params.ShowListing = true; onComplete(); },
-    public_apps: [{
-      '*':  express.static(path.join(_this.basepath, 'public'))
-    }],
+    public_apps: [
+      { '*':  express.static(path.join(_this.basepath, 'public')) },
+      { '*':  function(req, res, next){
+        if(req.query['popup']) req._override_template = 'popup';
+        return next();
+      } },
+    ],
     private_apps: [{
       '/': function(req, res, next){
         var defaultTutorial = '';
@@ -120,6 +124,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
         if(!defaultTutorial) return next();
         Helper.Redirect302(res,'/tutorials/'+defaultTutorial);
       },
+      //Return an individual tutorial
       '/_tutorials/*': function(req, res, next){
         if(!req.params || !req.params[0]) return Helper.GenError(req, res, -4, 'Invalid tutorial name');
         var tutorial = req.params[0];
@@ -157,6 +162,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
           });
         });
       },
+      //Load SPA - Individual Tutorial
       '/tutorials/*': function(req, res, next){
         var jshrouter = this;
         if(!req.params || !req.params[0]) return next();
@@ -167,11 +173,13 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
         HelperRender.reqGet(req, res, jshrouter.jsh, 'tutorials_home', 'jsHarmony Tutorials',
           { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutids: _this.tutids, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
       },
+      //Load SPA - Search
       '/search/*': function(req, res, next){
         var jshrouter = this;
         HelperRender.reqGet(req, res, jshrouter.jsh, 'tutorials_home', 'jsHarmony Tutorials',
           { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutids: _this.tutids, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
       },
+      //Get search results
       '/_search/': function(req, res, next){
         var jshrouter = this;
         var query = req.query['query'];
@@ -272,6 +280,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
   }
 }
 
+//Search through tutorials folder and generate menu
 jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
   var _this = this;
   //Read all files in the tutorials folder
@@ -291,7 +300,7 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
       try{
         var dataobj = JSON.parse(data);
       }
-      catch(ex){ return cb(); }
+      catch(ex){ console.log('Error parsing JSON data in '+filepath+':\n'+data); return cb(); }
       if(!dataobj) return cb();
       var tutorialname = filepath.substr(_this.tutfolder.length+1);
 

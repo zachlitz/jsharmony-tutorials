@@ -1,7 +1,7 @@
 {
   "comment":"C",
   "layout": "form", 
-  "title": "Customer Information",
+  "title": "Client Document",
   "table": "c",
   "actions": "BIUD", 
   "roles": {"C_B":"B","C_X":"*"},
