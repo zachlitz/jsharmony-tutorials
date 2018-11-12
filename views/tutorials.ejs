@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>jsHarmony Tutorials - <%= title %></title>
-<link href='https://fonts.googleapis.com/css?family=Droid+Sans|Material+Icons|PT+Sans' rel='stylesheet' type='text/css' />
+<link href='/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' />
 <link rel="stylesheet" type="text/css" href="/application.css" />
 <script type="text/javascript" src="/js/jsHarmony.js"></script>
 <script type="text/javascript">
@@ -36,7 +36,7 @@ hljs.initHighlightingOnLoad();
     <a class="xlogoimg" href="<%-ejsext.iif(req.isAuthenticated,'',req.jshsite.home_url)%>/"><img src="/images/tutorials-logo.png" alt="jsHarmony Tutorials" title="jsHarmony Tutorials" /></a>
     <a class="xsublogo" href="<%-ejsext.iif(req.isAuthenticated,'',req.jshsite.home_url)%>/" alt="Tutorials Collection" title="Tutorials Collection"><img src="/images/tutorials-tagline.png" /></a>
   </div>
-  <a href="/_RESTART" style="position:absolute;top:18px;right:20px;background-color:#bbb;border:1px solid #000;display:inline-block;padding:6px 20px;color:#000">Restart</a>
+  <a href="/_RESTART" style="position:absolute;top:18px;right:20px;background-color:#ddd;border:1px solid #000;display:inline-block;padding:6px 20px;color:#000">Restart</a>
   <div class="tutorials_search">
     <form action="/_search" method="get" onSubmit="<%=req.jshsite.instance%>.App.tutorials.searchTutorials(<%=req.jshsite.instance%>.$root('.tutorials_search .query').val()); return false;">
       <input name="query" class="query" type="text" value="Search" /><input class="submit" type="submit" />

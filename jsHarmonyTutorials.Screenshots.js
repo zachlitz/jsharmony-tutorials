@@ -77,7 +77,8 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     width: _this.DEFAULT_SCREENSHOT_SIZE[0], 
     height: null,
     trim: true,
-    resize: null //{ width: xxx, height: yyy }
+    resize: null, //{ width: xxx, height: yyy }
+    onload: function(){}
   }, params);
   if(!params.browserWidth) params.browserWidth = params.x + params.width;
   if(!params.browserHeight) params.browserHeight = _this.DEFAULT_SCREENSHOT_SIZE[1];
@@ -86,19 +87,21 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     var fullurl = 'http://localhost:'+port+url;
     page.setViewport({ width: params.browserWidth, height: params.browserHeight }).then(function(){
       page.goto(fullurl).then(function(){
-        console.log(_this.basepath + '/public/screenshots/'+fname);
-        var screenshotParams = { path: fpath, type: 'png' };
-        if(params.height){
-          screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
-        }
-        else screenshotParams.fullPage = true;
-        page.screenshot(screenshotParams).then(function(){
-          _this.processScreenshot(fpath, params, function(err){
-            if(err) jsh.Log.error(err);
-            page.close().then(function () {
-              return callback();
-            }).catch(function (err) { jsh.Log.error(err); });
-          });
+        page.evaluate(params.onload).then(function(){
+          console.log(_this.basepath + '/public/screenshots/'+fname);
+          var screenshotParams = { path: fpath, type: 'png' };
+          if(params.height){
+            screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
+          }
+          else screenshotParams.fullPage = true;
+          page.screenshot(screenshotParams).then(function(){
+            _this.processScreenshot(fpath, params, function(err){
+              if(err) jsh.Log.error(err);
+              page.close().then(function () {
+                return callback();
+              }).catch(function (err) { jsh.Log.error(err); });
+            });
+          }).catch(function (err) { jsh.Log.error(err); });
         }).catch(function (err) { jsh.Log.error(err); });
       }).catch(function (err) { jsh.Log.error(err); });
     }).catch(function (err) { jsh.Log.error(err); });

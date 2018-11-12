@@ -2,12 +2,13 @@
 <div class="tutorial_tabs"><div class="left"></div><!--
   --><a href="#" class="overview" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialOverview(); return false;">Overview</a><!--
   --><a href="#" class="code" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialCodeListing(); return false;">Code</a><!--
-  --><a href="#" class="demo" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialDemo(); return false;">Demo</a>
+  --><a href="#" class="demo" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialDemoListing(); return false;">Demo</a>
 </div>
 <div class="tutorial_tabs_body">
   <div class="tutorial_overview"></div>
   <div class="tutorial_code_listing"></div>
   <div class="tutorial_code"></div>
+  <div class="tutorial_demo_listing"></div>
   <div class="tutorial_search_results"></div>
 </div>
 <script class="tutorial_code_listing_template" type="text/x-ejs-template">
@@ -17,9 +18,19 @@
 <# } #>
 </script>
 <script class="tutorial_code_template" type="text/x-ejs-template">
-<h2>Source Code <a href="#" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialCodeListing();return false;" style="font-size:13px;font-weight:normal;display:inline-block;margin-left:10px;">[Listing]</a></h2>
+<h2>Source Code <a href="#" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialCodeListing();return false;" style="font-size:13px;font-weight:normal;display:inline-block;margin-left:10px;">[File Listing]</a></h2>
 <h3><#=data.filename#></h3>
 <pre class="tutorial_code_source"><#=data.source#></pre>
+</script>
+<script class="tutorial_demo_listing_template" type="text/x-ejs-template">
+<h2>Demo</h2>
+<# if(data.Demo){ #>
+<ul>
+  <# for(var i=0;i<data.Demo.length;i++){ var demo = data.Demo[i]; #>
+    <li><a href="#" onclick="<%=req.jshsite.instance%>.App.tutorials.viewTutorialDemo(<#-i#>); return false;"><#=demo.title#></a></li>
+  <# } #>
+  </ul>
+<# } #>
 </script>
 <script class="tutorial_search_results_template" type="text/x-ejs-template">
 <# if(data) for(var i=0;i<data.length;i++){ var tutorial = data[i].File.substr(11); #>

@@ -1,0 +1,139 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Inheritance",
+  "Menu": ["Models","Models Overview"],
+  "Code": ["/models/CL.json"]
+}
+</script>
+
+<h3>What is inheritance</h3>
+Inheritance enables the developer to create a new model based on the design of another model, with changes such as:
+<ul>
+  <li>Different actions (Browse vs Update forms)</li>
+  <li>Additional or fewer fields</li>
+  <li>Different table datasource</li>
+  <li>Different styles or menu</li>
+  <li>Different buttons</li>
+</ul>
+By reducing repeated code, inheritance results in:
+<ul>
+  <li>Faster development</li>
+  <li>Fewer bugs</li>
+  <li>Easier-to-maintain systems</li>
+</ul>
+
+<h3>How to implement inheritance</h3>
+Starting with a basic grid of contacts:
+<pre>
+"CCL_BASIC": {
+  "table":"v_cc",
+  "layout":"grid",
+  "title":"All Contacts",
+  "actions":"B", 
+  "sort":["^cc_name"], 
+  "topmenu":"clients",
+  "fields":[
+    {"name":"cc_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+    {"name":"cc_name","type":"varchar","length":"50","caption": "Contact","actions":"B"},
+    {"name":"c_name","type":"varchar","length":"50","caption": "Customer","actions":"B"}
+  ]
+}
+</pre>
+<%-getScreenshot('/CCL_BASIC?popup=1','Inheritance - Contact Listing')%>
+A developer may want to create another grid, based on that grid, but with the customer name replaced by the contact title:
+<pre>
+"CCL_INHERITED": {
+  "inherits": "CCL_BASIC",
+  "fields":[
+    {"name":"cc_title","type":"varchar","length":"8","caption": "Title","actions":"B","__AFTER__":"cc_name"},
+    {"name":"c_name","__REMOVE__":1}
+  ]
+}
+</pre>
+<%-getScreenshot('/CCL_INHERITED?popup=1','Inheritance - Inherited Grid')%>
+
+<h3>Inheritance Syntax</h3>
+
+<ul>
+  <li>
+    <b>"inherits": "MODEL NAME"</b><br/>
+    The inherits parameter references the parent model.  All properties of the parent model will be copied to the child model.  It's important to note, any JavaScript that embeds the parent model name will not be changed.  In the example above, if there was a JavaScript class "CCL_BASIC", it would still be called "CCL_BASIC" in the child model.  It should not cause problems, however it is recommended to use a different shared base class name in this situation for code readability.
+  </li>
+  <li>
+    <b>"__REMOVEPROPERTY__": 1</b><br/>
+    The __REMOVEPROPERTY__ parameter can be used to remove top-level parent model properties from child models.
+  </li>
+  <li>
+    <b>"__REMOVE__": 1</b><br/>
+    The __REMOVE__ parameter can be used to remove Fields and Tabs from inherited models.
+  </li>
+  <li>
+    <b>"__AFTER__": "FIELDNAME"</b><br/>
+    <b>"__AFTER__": "__START__"</b><br/>
+    <b>"__AFTER__": "__END__"</b><br/>
+    The __AFTER__ parameter can be used to change the sort position of fields and tabs.  Setting __AFTER__ to the fieldname will position the new field after the target field.  Setting __AFTER__ to __START__ or __END__ will position the field at the beginning or end of the model.
+  </li>
+</ul>
+
+<h3>Inheritance Behavior by Property</h3>
+<ul>
+  <li>
+    <b>model.groups</b> - Child model groups are added to the parent model groups.
+  </li>
+  <li>
+    <b>model.fields</b> - Child fields are added to the array of parent fields.  Fields can be removed using "__REMOVE__" and reordered using "__AFTER__".  Parent field properties can be overridden per-field, when the child field has the same name as the parent.
+  </li>
+  <li>
+    <b>model.fields.roles</b> - Field roles are merged
+  </li>
+  <li>
+    <b>model.fields.validate</b> - Field validation is replaced
+  </li>
+  <li>
+    <b>model.fields.*</b> - All other field properties are merged
+  </li>
+  <li>
+    <b>model.tabs</b> - Child model tabs are added to existing parent tabs.  Tabs can be removed using "__REMOVE__" and reordered using "__AFTER__".  Parent model tab properties can be overridden per-tab, when the child model's tab has the same name as the parent.
+  </li>
+  <li>
+    <b>model.tabs.*</b> - All tab properties are merged
+  </li>
+  <li>
+    <b>model.roles</b> - Model roles are replaced
+  </li>
+  <li>
+    <b>model.js</b> - Child model javascript codefiles will be appended to the parent model's javascript codefile
+  </li>
+  <li>
+    <b>model.pagesettings</b> - Report page settings are merged
+  </li>
+  <li>
+    <b>model.reportdata</b> - Report queries will be merged at the top level (_.extend)
+  </li>
+  <li>
+    <b>model.fonts</b> - Child report fonts will be concatenated to the parent report fonts
+  </li>
+  <li>
+    <b>model.*</b> - Other properties will be replaced
+  </li>
+</ul>

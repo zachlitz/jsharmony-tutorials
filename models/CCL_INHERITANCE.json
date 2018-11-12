@@ -1,0 +1,22 @@
+{
+  "CCL_BASIC": {
+    "table":"v_cc",
+    "layout":"grid",
+    "title":"All Contacts",
+    "actions":"B", 
+    "sort":["^cc_name"], 
+    "topmenu":"clients",
+    "fields":[
+      {"name":"cc_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cc_name","type":"varchar","length":"50","caption": "Contact","actions":"B"},
+      {"name":"c_name","type":"varchar","length":"50","caption": "Customer","actions":"B"}
+    ]
+  },
+  "CCL_INHERITED": {
+    "inherits": "CCL_BASIC",
+    "fields":[
+      {"name":"cc_title","type":"varchar","length":"8","caption": "Title","actions":"B","__AFTER__":"cc_name"},
+      {"name":"c_name","__REMOVE__":1}
+    ]
+  }
+}

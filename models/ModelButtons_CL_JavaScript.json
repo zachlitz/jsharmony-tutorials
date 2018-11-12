@@ -1,0 +1,19 @@
+{
+  "ModelButtons_CL_JavaScript": {
+    "table":"c",
+    "layout":"grid",
+    "title":"All Customers",
+    "caption":[0,"Customer","Customers"],
+    "actions":"B", 
+    "topmenu":"clients",
+    "buttons":[
+      {"text":"Current Model ID","link":"js:js:XExt.Alert('The current model is '+xformid);","icon":"search"},
+      {"text":"Active Users Report","link":"js:XExt.popupReport('RPE',{ 'pe_sts': 'ACTIVE' },{width:850,height:600});","icon":"export"}
+    ],
+    "hide_system_buttons":["export","filter","print"],
+    "fields":[
+      {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"edit:ModelButtons_C"}
+    ]
+  }
+}

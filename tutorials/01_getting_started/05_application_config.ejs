@@ -213,7 +213,7 @@ config.model_groups = {
 
 //Dynamic Bindings - For automatic bindings, when the child form in the model group, define advanced bindings for modules
 config.dynamic_bindings = {
-  "JSHARMONY_NOTES": {
+  "JSHARMONY_NOTES": {   //Model ID or Model Group (from config.model_groups)
     "n_scope_id": "key", //Bind the "n_scope_id" column to the parent form's key
     "n_scope": {         //Bind the "n_scope" column based on the parent form's key name
       "key:c_id": "'C'", //If the parent form's key name is "c_id", set the binding to the character string 'C'
@@ -475,7 +475,7 @@ site.datalocktypes = {
 
 
 
-<h3>Site Settings :: Authentication</h3>
+<h3 data-level="2">Authentication</h3>
 <pre>
 site.auth = {
   salt: "",      //Salt for encrypting / verifying user passwords
@@ -525,7 +525,7 @@ site.auth = {
 
 
 
-<h3>Site Settings :: Public / Private Apps</h3>
+<h3 data-level="2">Public / Private Apps</h3>
 <pre>
 //System-wide public Express routes
 site.public_apps = [{'/public_page': function(req, res){ res.send('Public Page'); }}];
@@ -553,7 +553,7 @@ configFactory.maincookiesalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 
-<h3>jsHarmony Factory :: Job Processor</h3>
+<h3 data-level="2">Job Processor</h3>
 <pre>
 configFactory.JobSleepDelay = 5000;  //Sleep time when between queued jobs (default 5 sec)
 configFactory.JobCheckDelay = 60000; //Sleep time when no more jobs found in queue  (default 60 sec)
@@ -597,7 +597,7 @@ configFactory.job_field_mapping = {
 };
 </pre>
 
-<h3>jsHarmony Factory :: Barcoding / Scanner / Twilio</h3>
+<h3 data-level="2">Barcoding / Scanner / Twilio</h3>
 <pre>
 //barcodeHarmony Server
 configFactory.barcode_settings = { server: 'https://localhost:3101' };
@@ -616,7 +616,7 @@ configFactory.twilio_settings = {
 
 
 
-<h3>jsHarmony Factory :: Task Scheduler</h3>
+<h3 data-level="2">Task Scheduler</h3>
 <pre>
 //Simple Job Scheduler
 configFactory.enable_scheduler = true;

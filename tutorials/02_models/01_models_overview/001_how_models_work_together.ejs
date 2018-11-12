@@ -21,15 +21,14 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "How Models Work Together",
-  "Menu": ["Models","Models Overview"],
-  "Code": ["/models/CL.json"]
+  "Menu": ["Models","Models Overview"]
 }
 </script>
 
-<h3>Types of Models</h3>
-There are five basic model layouts: "grid", "form", "form-m", "multisel", and "exec".  These five basic building blocks are used to create jsHarmony applications.
+<h3>Types of Model Layouts</h3>
+There are five basic model layouts: "grid", "form", "form-m", "multisel", and "exec".  These five building blocks work together to create complex layouts in jsHarmony applications.
 
-<h3>Model Layout: Grid</h3>
+<h3 data-level="2">Grid Layout</h3>
 Grids are the heart of a jsHarmony application.  Grids enable a user to view, add, or edit data, multiple records at a time.  Grids may be designed with either editable controls or read-only rows, and can link to a popup form for further editing.<br/>
 
 <h4>Editable Grid:</h4>
@@ -40,7 +39,7 @@ Grids are the heart of a jsHarmony application.  Grids enable a user to view, ad
 
 Most systems will start with a grid, and then progress to forms for editing data.
 
-<h3>Model Layout: Form</h3>
+<h3 data-level="2">Form Layout</h3>
 A form enables the user to view, add, or edit one data record.<br/>
 <br/>
 Forms consists of fields and additional child forms.  Child forms can be embedded via subforms, tabs, or Popup LOVs (Popup List of Values).<br/>
@@ -68,17 +67,17 @@ The above example consists of 2 forms:
   <li>The select tab (C_CCL) with the grid</li>
 </ul>
 
-<h3>Model Layout: Form-m</h3>
+<h3 data-level="2">Form-m Layout</h3>
 Form-m enables a user to view, add, or edit multiple records.  Data is edited one record at a time, using backward / forward navigation.<br/>
 <br/>
 A "form-m" is typically used for navigating a small subset of data, and is implemented as a subform of a parent form (ex. editing multiple addresses of a Customer).  All new or modified data is saved in one transaction.
 <%-getScreenshot('/C_CA_CONTAINER?c_id=1&action=edit','Form-m')%>
 
-<h3>Model Layout: Multisel</h3>
+<h3 data-level="2">Multisel Layout</h3>
 A multisel displays a checkbox-based List of Values, where multiple values can be selected per "key".  Multisels are primarily used to enter data in many-to-many relationships.
 <%-getScreenshot('/CW?c_id=2&action=edit&tabs=%7B"CW"%3A"C_CF"%7D','Multisel')%>
 
-<h3>Model Layout: Exec</h3>
+<h3 data-level="2">Exec Layout</h3>
 Exec forms are unbound, except during initial load.  Exec forms can be used for:
 <ul>
   <li>Entering Parameters before running a Report</li>

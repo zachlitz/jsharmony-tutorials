@@ -117,6 +117,9 @@
 <%-rootcss%> .tutorial_overview ul.tutorial_outline li {
   padding-bottom:3px;
 }
+<%-rootcss%> .tutorial_overview ul.tutorial_outline li.level2 {
+  margin-left:20px;
+}
 <%-rootcss%> .tutorial_tabs_body .tutorial_overview pre { 
   display:block;
   margin-top:15px;

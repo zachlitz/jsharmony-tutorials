@@ -1,0 +1,346 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Model Buttons",
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelButtons_CL.json",
+    "/models/ModelButtons_C.json",
+    "/models/ModelButtons_CL_Grouped.json",
+    "/models/ModelButtons_CL_JavaScript.json",
+    "/models/ModelButtons_Icons.json",
+    "/models/ModelButtons_Icons.onroute.js"
+  ],
+  "Demo": [
+    { "url": "/ModelButtons_CL", "title": "Grid Buttons" },
+    { "url": "/ModelButtons_C?action=edit&c_id=2", "title": "Form Buttons" },
+    { "url": "/ModelButtons_CL_Grouped", "title": "Buttons w/ Drop-down Groups" },
+    { "url": "/ModelButtons_CL_JavaScript", "title": "JavaScript Button Links" },
+    { "url": "/ModelButtons_Icons", "title": "Icon Listing" }
+  ]
+}
+</script>
+
+<h3>Buttons Overview</h3>
+Buttons are displayed in the top-right of each model.  
+<%-getScreenshot('/ModelButtons_CL?popup=1','Model Buttons')%>
+
+Custom buttons can be added to the button toolbar by adding to the model.buttons array:
+<pre>
+{
+  "buttons":[
+    {"link":"add:C"}
+  ],
+}
+</pre>
+
+<h3>Button Text, Icon, and Style</h3>
+Buttons have a variety of properties for configuring text, icon, and style:
+<pre>
+{
+  "buttons":[
+    {
+      "link":"add:C",
+      "text":"Add %%%CAPTION%%%",
+      "icon":"add",
+      "style":"border:2px solid black;",
+      "class":"CL_buttonAddC",
+      "nl":1
+    }
+  ],
+}
+</pre>
+<div style="padding-bottom:15px;">
+  <b>button.text</b><br/>
+  The text attribute modifies the text to the right of the button.  The keyword %%%CAPTION%%% will insert the model caption into the button text.  Setting the text to blank will display only the icon.
+</div>
+<div style="padding-bottom:15px;">
+  <b>button.icon</b><br/>
+  The icon attribute changes the button icon.  Set the icon to "none" to hide the icon and display only text.<br/>
+  <br/>
+  Icon images are loaded via "/images/icon_ICONNAME.png".  For instance, the "add" icon can be overwritten by uploading a new image to "public/images/icon_add.png" in the Application root.<br/>
+  <br/>
+  The following built-in icons are available in jsHarmony:
+  <%-getScreenshot('/ModelButtons_Icons?popup=1','Model Buttons')%>
+</div>
+<div style="padding-bottom:15px;">
+  <b>button.style</b><br/>
+  The style attribute enables adding custom CSS to the "A" button element
+</div>
+<div style="padding-bottom:15px;">
+  <b>button.class</b><br/>
+  The class attribute enables adding custom CSS class to the "A" button element
+</div>
+<div>
+  <b>button.nl</b> &nbsp; (line break)<br/>
+  The nl attribute adds a new line before the start of the button.  This can be useful for organizing multiple buttons into rows.
+</div>
+
+<h3>Default Button Styles</h3>
+Button styles are automatically applied to any button links beginning with "add:" or "edit:".  The default button styles can be modified in app.config.js.
+<pre>
+config.default_buttons = {
+  "add": { "icon": "add", "text": "Add %%%CAPTION%%%", "actions": "I", "class": "xbuttonadd" },
+  "edit": { "icon": "edit", "text": "Edit %%%CAPTION%%%" } 
+}
+</pre>
+
+<h3>Button Groups</h3>
+Button Groups combine buttons into a drop-down menu.
+<%-getScreenshot('/ModelButtons_CL_Grouped?popup=1','Model Buttons',{ onload:function(){     return new Promise(function(resolve){
+  jshInstance.$('.xelemModelButtons_CL_Grouped.xactions_dropdown').click()
+  return resolve();
+}); } })%>
+Button groups can be defined via the "group" attribute, that specifies the name of the drop-down menu:
+<pre>
+{
+  "buttons":[
+    {"group":"Actions","link":"add:ModelButtons_C","icon":"add"},
+    {"group":"Actions","link":"ModelButtons_CL","icon":"search","text":"View Customers"}
+  ]
+}
+</pre>
+
+<h3>Link / Bindings</h3>
+The "link" attribute sets the button's action and target model.  Links have the following syntax:
+<pre>
+add:MODELID&amp;<i>parameter</i>
+edit:MODELID&amp;<i>parameter</i>
+savenew:MODELID&amp;<i>parameter</i>
+
+<i>parameter</i> :=
+  tabs={\"PARENT_MODEL\":\"SELECTED_TAB_MODEL\"}
+</pre>
+
+Each of the three actions generate a different URL:
+<ul>
+  <li>
+    <b>add:</b><br/>
+    Opens a form for adding new data<br/>
+    /MODELID?action=add
+  </li>
+  <li>
+    <b>edit:</b><br/>
+    Opens a form for editing data, or viewing a grid<br/>
+    /MODELID?action=edit
+  </li>
+  <li>
+    <b>savenew:</b><br/>
+    Saves the data first, and on success, opens a form for adding new data<br/>
+    /MODELID?action=add
+  </li>
+</ul>
+
+Bindings define the querystring parameters that will be passed in the button link.  Bindings are evaluated client-side on load, and are defined as follows:
+<pre>
+{
+  "CHILD_FIELD1": "PARENT_FIELD", //Data bindings
+  "CHILD_FIELD2": "'CONSTANT'"    //Character string bindings
+}
+</pre>
+In the example above, assuming that the value of PARENT_FIELD was "5", the bindings would generate the following URL:
+<pre>
+/MODELID?action=edit&CHILD_FIELD1=5&CHILD_FIELD2=CONSTANT
+</pre>
+
+<h4>Automatic Bindings</h4>
+In most cases, bindings are automatically generated by the system.  Automatic bindings are enabled by the following app.config.js parameter:
+<pre>
+config.system_settings.automatic_bindings = true;
+</pre>
+On "add" links, the following fields are automatically added to the bindings:
+<ul>
+  <li>Any fields defined in model.querystring</li>
+  <li>Any of the model's bindings</li>
+  <li>Any query string fields except "action" and "tabs"</li>
+  <li>In form, form-m, and exec models, any fields that exist in both the parent model and link target models, except for the link target's key fields</li>
+</ul>
+On "edit" and "savenew" links, the following fields are automatically added to the bindings:
+<ul>
+  <li>The link target's key fields</li>
+</ul>
+
+
+<h4>Link Querystring Generation</h4>
+
+The model id and action parameter are generated based on the link target above.  Next:
+<ol>
+  <li>If the link target model is the same as the current model, all querystring parameters will be copied to the link.</li>
+  <li>If tabs are defined in the "link" attribute, they are added to the querystring</li>
+  <li>Bindings are then added to the querystring, and evaluated client-side on load</li>
+</ol>
+
+<h4>Examples</h4>
+<pre>
+{
+  "buttons":[
+    {
+      "link": "edit:CW",
+      "bindings": { "C_ID": "C_ID_BILLTO" }
+    }
+  ]
+}
+//When C_ID_BILLTO is "5" on the parent form
+URL: /CW?action=edit&C_ID=5
+
+{
+  "buttons":[
+    {
+      "link": "edit:EW",
+      "bindings": { "E_ID": "E_ID" }
+    }
+  ]
+}
+//When E_ID is "3" on the parent form
+URL: /E?action=edit&E_ID=3
+
+{
+  "buttons":[
+    {
+      "link": "edit:CW&tabs={\"CW\":\"C_CCL\"}",
+      "bindings": { "C_ID": "C_ID" }
+    }
+  ]
+}
+//When C_ID is "1" on the parent form
+URL: /CL?action=edit&C_ID=1tabs={"CW":"C_CCL"}
+</pre>
+
+<h3>JavaScript</h3>
+Buttons can run JavaScript by prefixing the link attribute with "js:"<br/>
+The following variables are added to the JavaScript namespace:
+<ul>
+  <li><b>xformid</b>: The model id of the form where the button is located</li>
+</ul>
+<pre>
+{
+  "buttons":[
+    {
+      "link": "js:XExt.Alert('The current model is '+xformid);",
+      "text": "Current Model ID"
+    }
+  ]
+}
+</pre>
+The following are common JavaScript functions used in buttons:
+
+<h4>XExt.navTo(url)</h4>
+<pre>
+Redirects to a target URL
+@param string url : The target URL
+@return false
+
+Example: XExt.navTo('/CW?C_ID=4')
+</pre>
+
+<h4>XExt.popupForm(modelid, action, params, windowparams, win)</h4>
+<pre>
+Opens a model in a popup window
+@param string modelid      : The target model id
+@param string action       : The model action, must be "add" or "edit"
+@param object params       : Querystring parameters for the popup, ex. { "c_id": 4 }
+@param object windowparams : Parameters passed to window.open
+                             Default: { width: 1000, height: 600, resizable: 1, scrollbars: 1 }
+@param window win          : (Optional) Target window for the redirect.
+                             If passed as a parameter, no new window is created.
+                             The win parameter is useful to avoid popup blockers,
+                             when the window needs to be created before running an AJAX request.
+@return window             : The resulting popup window object
+
+Note: If the window width and height is not specified, it will default to:
+        1. The model.popup size if available
+        2. 1000 x 600
+
+Example: XExt.popupForm('CW','edit',{'c_id':XForms[xformid].c_id()},{width:850,height:600});
+</pre>
+
+<h4>XExt.popupReport (modelid, params, windowparams, win)</h4>
+<pre>
+Opens a report PDF in a popup window
+@param string modelid      : The target report model id (without the _report_ prefix)
+@param object params       : Querystring parameters for the report, ex. { "c_id": 4 }
+@param object windowparams : Parameters passed to window.open
+                             Default: { width: 1000, height: 600, resizable: 1, scrollbars: 1 }
+@param window win          : (Optional) Target window for the redirect.
+                             If passed as a parameter, no new window is created.
+                             The win parameter is useful to avoid popup blockers,
+                             when the window needs to be created before running an AJAX request.
+@return window             : The resulting popup window object
+
+Note: If the window width and height is not specified, it will default to:
+        1. The model.popup size if available
+        2. 1000 x 600
+
+Example: XExt.popupReport('RPE',{ 'pe_sts': 'ACTIVE' },{width:850,height:600});
+</pre>
+
+<h3>Actions / Security / Roles</h3>
+Buttons can be restricted to be hidden based on the current action, or based on the current user's roles.
+<pre>
+{
+  "buttons":[
+    {
+      "link":"edit:CW",
+      "actions":"BIU",
+      "roles": {
+        "main":{"DADMIN":"*"},
+        "client": {"CSYSADMIN":"I"}
+      }
+    }
+  ],
+}
+</pre>
+
+<ul>
+  <li>If the querystring action is set to "add", only buttons with the "I" attribute will be shown.</li>
+  <li>If the querystring action is set to "edit" (Browse / Update), only buttons with the "U" attribute will be shown.</li>
+  <li>Otherwise, only buttons with the "B" attribute will be shown.</li>
+</ul>
+
+<h4>Roles</h4>
+Roles can be used to further limit button access.  When roles are defined, they are cross-applied with the "actions".<br/>
+Users without role access will not see the button.  Users with DEV or SYSADMIN access have access to all buttons.
+
+<h3>Hiding System Buttons</h3>
+All models have built-in buttons, based on the model layout.  The built-in system buttons can be hidden via the model.hide_system_buttons property:
+<pre>
+{
+
+  "hide_system_buttons": ["export","filter","print"]
+}
+</pre>
+The following system buttons can be hidden, depending on the model layout:
+
+<h4>Grid</h4>
+<ul>
+  <li><b>clear</b> <i>(Displayed in inline popups, such as Popup LOV and Duplicate)</i></li>
+  <li><b>filter</b></li>
+  <li><b>print</b></li>
+  <li><b>export</b> <i>(Automatically hidden in Popup LOV and Duplicate)</i></li>
+  <li><b>help</b></li>
+</ul>
+
+<h4>Form, Form-m, Exec, and Multisel</h4>
+<ul>
+  <li><b>print</b></li>
+  <li><b>help</b></li>
+</ul>

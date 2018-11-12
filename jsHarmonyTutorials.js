@@ -145,6 +145,15 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
               source: {},
             };
             rslt.data = ejs.render(rslt.data, { getScreenshot: function(url, desc, params){ return _this.getScreenshot(url, desc, params); } });
+
+            if(!config.Demo) config.Demo = [];
+            if(!_.isArray(config.Demo)) config.Demo = [config.Demo];
+            for(var i=0;i<config.Demo.length;i++){
+              if(_.isString(config.Demo[i])){
+                config.Demo[i] = { url: config.Demo[i], title: config.Demo[i] };
+              }
+            }
+
             if(!config.Code) config.Code = [];
             async.eachSeries(config.Code,function(codefile,cb){
               var codepath = _this.basepath + codefile;

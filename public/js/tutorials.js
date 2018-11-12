@@ -135,7 +135,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
       if(config.Code && config.Code.length) jsh.$root('.tutorial_tabs a.code').show();
       else jsh.$root('.tutorial_tabs a.code').hide();
 
-      if(config.Demo) jsh.$root('.tutorial_tabs a.demo').show();
+      if(config.Demo && config.Demo.length) jsh.$root('.tutorial_tabs a.demo').show();
       else jsh.$root('.tutorial_tabs a.demo').hide();
 
       //Load Tutorial in Body
@@ -146,11 +146,14 @@ jsHarmonyTutorials.prototype.Init = function(config){
       var outline_html = '';
       jsh.$root('.tutorial_overview').find('h1,h2,h3').each(function(){
         var jobj = $(this);
+        if(jobj.closest('.tutorials_intro').length) return;
         header_i++;
         jobj.before('<a class="tutorial_outline_anchor" name="header_'+header_i+'"></a>');
-        outline_html += '<li><a href="#header_'+header_i+'">'+XExt.escapeHTML(jobj.text())+'</a></li>';
+        var level = jobj.data('level');
+        outline_html += '<li class="level'+level+'"><a href="#header_'+header_i+'">'+XExt.escapeHTML(jobj.text())+'</a></li>';
       });
       if(outline_html) jsh.$root('.tutorial_overview').prepend('<ul class="tutorial_outline">'+outline_html+'</ul>');
+      jsh.$root('.tutorial_overview').prepend(jsh.$root('.tutorial_overview .tutorials_intro'));
 
       //Select tab
       jsh.$root('.tutorial_tabs a').removeClass('selected');
@@ -224,11 +227,25 @@ jsHarmonyTutorials.prototype.Init = function(config){
     onLayout();
   }
 
-  _this.viewTutorialDemo = function(){
-    if(curTutorial.Demo){
-      var windowparams = curTutorial.DemoWindowParams||'height=700,width=1000';
-      window.open(curTutorial.Demo,'_blank',windowparams);
-    }
+  _this.viewTutorialDemo = function(idx){
+    console.log(curTutorial.Demo[idx]);
+    var windowparams = curTutorial.Demo[idx].windowparams||'height=700,width=1000';
+    window.open(curTutorial.Demo[idx].url,'_blank',windowparams);
+  }
+
+  _this.viewTutorialDemoListing = function(){
+    if(!curTutorial.Demo.length) return;
+    if(curTutorial.Demo.length==1){ _this.viewTutorialDemo(0); return; }
+
+    jsh.$root('.tutorial_tabs a').removeClass('selected');
+    jsh.$root('.tutorial_tabs a.demo').addClass('selected');
+    jsh.$root('.tutorial_tabs_body').children().hide();
+    jsh.$root('.tutorial_demo_listing').show();
+    //Use template to render
+    var ejssource = jsh.$root('.tutorial_demo_listing_template').html();
+    ejssource = ejssource.replace(/<#/g,'<%').replace(/#>/g,'%>')
+    jsh.$root('.tutorial_demo_listing').html(ejs.render(ejssource,{data:curTutorial,xejs:XExt.xejs}));
+    onLayout();
   }
 
   _this.searchTutorials = function(query,options){

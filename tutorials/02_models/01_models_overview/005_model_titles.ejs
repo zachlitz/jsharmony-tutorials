@@ -21,8 +21,111 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Model Titles",
-  "Menu": ["Models","Models Overview"],
-  "Code": ["/models/CL.json"]
+  "Menu": ["Models","Models Overview"]
 }
 </script>
-Model Titles
+
+<div class="tutorials_intro" style="padding-bottom:10px;">
+  <h3 style="margin-top:0px;">Types of Titles</h3>
+  Model titles are displayed at the top of each window.  Titles can be defined with:
+</div>
+
+<h4>Default Title</h4>
+If the title is not defined, the model.caption will be used as the title.  If the model.caption is not defined, the model ID will be used as the title.
+
+<h4>Browser Window Title (document.title)</h4>
+The topmost form's title will be used as the window title. (ex., "Customer Information")
+<%-getScreenshot('/C_SUB?c_id=1&action=edit','Parent / Child Grid',{ height: 300 })%>
+On a tabbed form, if the parent form's title is set to blank, the window title will be set to the title of the selected tab. (ex., "Customer Information")
+<%-getScreenshot('/CW?c_id=1&action=edit','Parent / Child Grid',{ height: 300 })%>
+
+<h3 data-level="2">Static Text</h3>
+In the simplest scenario, a model can have a text title:
+<pre>
+{
+  "title": "Customer Management"
+}
+</pre>
+
+<h3 data-level="2">Different titles for "Add" and "Edit" modes</h3>
+Titles on forms can be customized based on whether the user is adding or editing a record:
+<pre>
+{
+  "title": {
+    "add": "Add Customer",
+    "edit": "Edit Customer"
+  }
+}
+</pre>
+
+<h3 data-level="2">GET Parameters / Breadcrumb Data / Form Data / System parameters</h3>
+Dynamic parameters can be inserted into the title.  When using dynamic parameters, the title will be rendered after the form data is loaded.
+
+<h4>GET Parameters</h4>
+Querystring / GET parameters can be added via the following syntax:
+<pre>
+{
+  "title": "Customer <#=_GET.CUSTOMER_ID#>"
+}
+</pre>
+
+<h4>Breadcrumb Data</h4>
+SQL data returned from the breadcrumbs query can be rendered in the title:
+<pre>
+{
+  "title": "Customer <#=bcrumbs.CUSTOMER_ID#>"
+}
+</pre>
+
+<h4>Form Data</h4>
+SQL data returned from the form select query can be rendered in the title:
+<pre>
+{
+  "title": "Customer <#=data.CUSTOMER_ID#>"
+}
+</pre>
+
+<h4>System Parameters</h4>
+System parameters that are defined in jshSite's globalparams can be rendered in the title.  The globalparams object is stored in the client-side JavaScript window object under jshInstance.globalparams.
+<pre>
+{
+  "title": "Welcome @user_name"
+}
+</pre>
+
+<h3 data-level="2">SQL-generated Titles</h3>
+Titles can be generated using custom SQL.
+
+<h4>Basic SQL syntax:</h4>
+<pre>
+{
+  "title": { "sql": "select 'Date '||getdate()" }
+}
+</pre>
+
+<h4>SQL w/Parameters:</h4>
+Keys and foreign keys that are defined in model.fields can be used as SQL parameters.
+<pre>
+{
+  "title": { "sql": "select c_name||' Contacts' from c where c_id=@c_id" }
+}
+</pre>
+
+<h4>Add / Edit Titles</h4>
+Different titles can be displayed when adding or editing data:
+<pre>
+{
+  "title": {
+    "add": "New Customer",
+    "edit": {"sql": "select c_name from c where c_id=@c_id" }
+  }
+}
+</pre>
+
+<h4>Ignoring datalocks:</h4>
+In some instances, the developer may choose to ignore datalocks in the query:
+<pre>
+{
+  "title": { "sql": "select c_name||' Contacts' from c where c_id=@c_id", "nodatalock": ["c_id"] }
+}
+</pre>

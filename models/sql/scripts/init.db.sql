@@ -3,6 +3,7 @@ pragma foreign_keys = ON;
 begin;
 
 drop table if exists alltypes;
+drop view if exists v_cc;
 drop view if exists v_c;
 drop table if exists cf;
 drop table if exists ca;
@@ -95,6 +96,12 @@ create view v_c as
   select c_id,c_sts,c_name,ucod_c_sts.codetxt as c_sts_txt,c_einhash
     from c
     left outer join ucod_c_sts on c.c_sts = ucod_c_sts.codeval;
+
+/*********V_C*********/
+create view v_cc as
+  select cc_id,cc_name,cc_title,cc_phone,cc_email,cc.c_id,c_name
+    from cc
+    inner join c on c.c_id=cc.c_id;
     
 /*********ALLTYPES*********/
 create table alltypes (

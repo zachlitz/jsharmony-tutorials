@@ -1,0 +1,56 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Links",
+  "Menu": ["Models","Fields / Controls","Built-in Controls"],
+  "Code": ["/models/C.json","/models/C.js"]
+}
+</script>
+Grid Links<br/>
+&nbsp; &nbsp; Add / Edit / Download<br/>
+&nbsp; &nbsp; Custom Links<br/>
+Form Links<br/>
+&nbsp; &nbsp; Custom Links
+
+
+<h3>Link / Bindings</h3>
+<pre>
+add:MODELID&amp;<i>parameter1</i>&amp;<i>parameter2</i>&amp;<i>parameter3</i>&amp;...
+edit:MODELID&amp;<i>parameter1</i>&amp;<i>parameter2</i>&amp;<i>parameter3</i>&amp;...
+savenew:MODELID&amp;<i>parameter1</i>&amp;<i>parameter2</i>&amp;<i>parameter3</i>&amp;...
+download:MODELID&amp;DOWNLOAD_FIELD=KEY_VALUE_FIELD
+
+<i>parameter</i> :=
+  KEY_FIELD
+  KEY_FIELD=VALUE_FIELD
+  tabs={\"PARENT_MODEL\":\"SELECTED_TAB_MODEL\"}
+</pre>
+
+If the link's target model is the same as the current model, all querystring parameters will be copied.
+
+<h4>Examples</h4>
+<pre>
+edit:CW&C_ID=C_ID_BILLTO
+edit:EW&E_ID
+add:POPUP_EXEC_CREATE_GCOD&codeschema=codeschema&codename=codename&codemean=codemean
+add:T_POPUP_PLE&PLE_ID,E_ID,PL_TYPE
+</pre>
