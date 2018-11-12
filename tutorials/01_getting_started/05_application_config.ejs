@@ -635,15 +635,19 @@ configFactory.scheduled_tasks = {
 <pre>
 //jsHarmony Core Debug Params
 config.debug_params = _.extend(config.debug_params,{
-  jsh_error_level: 1,        //1 = ERROR, 2 = WARNING, 4 = INFO  :: Messages generated while parsing jsHarmony configs
-  web_detailed_errors: true, //Show full stack trace and error message to the user (be sure to set to false in production)
-  pipe_log : true,           //Show LOG messages on CONSOLE
+  jsh_error_level: 1,        //Bitmask: 1 = ERROR, 2 = WARNING, 4 = INFO  :: Messages generated while parsing jsHarmony configs
   appsrv_requests: false,    //Display all APPSRV requests on LOG/CONSOLE
-  report_debug: false,       //Display report warnings (Null value, etc.)
-  db_requests: false,        //Log every database request
-  db_error_sql_state: true,  //Log full SQL state on database error
-  disable_email: false,                  //Disable sending any email messages
+
+  pipe_log : true,           //Show LOG messages on CONSOLE
   hide_deprecated: false,                //Do not show messages about deprecated features
+  disable_email: false,                  //Disable sending any email messages
+  report_debug: false,       //Display report warnings (Null value, etc.)
+  auth_debug: false,         //Debug Login / Authentication, and log hashes
+
+  db_requests: false,        //Log every database request
+  db_log_level: 6,           //Bitmask: 2 = WARNING, 4 = NOTICES :: Database messages logged to the console / log 
+  db_error_sql_state: true,  //Log full SQL state on database error
+  
   monitor_globals: true,     //Enable client-side monitoring of global / window variables: display a message if a new variable is found
   ignore_globals: [],        //Ignore these global / window variables in the client-side global variable monitor
 });
