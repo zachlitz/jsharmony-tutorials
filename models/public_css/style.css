@@ -120,6 +120,12 @@
 <%-rootcss%> .tutorial_overview ul.tutorial_outline li.level2 {
   margin-left:20px;
 }
+<%-rootcss%> .tutorial_overview ul.tutorial_outline li.level3 {
+  margin-left:40px;
+}
+<%-rootcss%> .tutorial_overview ul.tutorial_outline li.level4 {
+  margin-left:60px;
+}
 <%-rootcss%> .tutorial_tabs_body .tutorial_overview pre { 
   display:block;
   margin-top:15px;

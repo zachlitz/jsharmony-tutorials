@@ -1,0 +1,15 @@
+{
+  "ModelStyle_controlstyle_form": {
+    "layout": "form", 
+    "table": "c",
+    "actions": "BIUD", 
+    "caption": [ "", "Customer", "Customers" ],
+    "fields": [
+      {"name":"c_id", "type": "bigint", "actions":"B","key": 1,"control":"label","caption":"ID"},
+      {"name": "c_name","type": "varchar","length": 50,"actions": "BIU","control": "textbox","caption": "Customer Name","nl": 1,
+       "controlstyle": "border: 4px dashed black;",
+       "controlclass": "fieldWithErrors"
+      }
+    ]
+  }
+}

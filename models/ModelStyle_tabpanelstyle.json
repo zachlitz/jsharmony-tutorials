@@ -1,0 +1,16 @@
+{
+  "ModelStyle_tabpanelstyle": {
+    "table":"c",
+    "layout": "form", 
+    "actions": "B", 
+    "caption": [ "", "Customer", "Customers" ],
+    "tabpos":"top",
+    "tabpanelstyle":"min-width:600px;border:2px dashed red;",
+    "tabs":[
+      {"name":"Contacts","target":"C_CCL"}
+    ],
+    "fields": [
+      {"name":"c_id", "type": "bigint", "actions":"B","key": 1}
+    ]
+  }
+}

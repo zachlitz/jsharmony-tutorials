@@ -26,45 +26,155 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 }
 </script>
 
-<h3>CSS Properties</h3>
-xxxxxxxxxxxxxxxxxxxxx
-model.css
-Tabs
-  tabpanelstyle
-Grid
-  tablestyle
-  rowstyle (+ejs)
-  rowclass (+ejs)
-Forms
-  formstyle
-Fields
-  captionclass
-  captionstyle
-  controlclass
-  controlstyle
-  cellstyle
-  cellclass
+<br/>
+jsHarmony forms and grids are rendered using HTML and css.  A variety of properties are available for applying CSS styles.
+
+<h3>Model Properties</h3>
+
+<h3 data-level="2">model.css</h3>
+The "css" property allows the user to apply any custom CSS selectors and styles.  A full stylesheet can be implemented in the "css" property.
+The property value can either be a string or an array of strings.  Arrays of strings will be concatenated with spaces.
+<pre>
+{
+  "css": [
+    ".xbody_ModelStyle_CL .xform_title { color: red; }",
+    ".xbody .xactions a { color: red; }"
+  ]
+}
+</pre>
+<%-getScreenshot('/ModelStyle_css?popup=1','Model Style - css')%>
+
+<h3>Tab Properties</h3>
+
+<h3 data-level="2">model.tabpanelstyle</h3>
+The "tabpanelstyle" property is applied to the tab panel container.
+<pre>
+{
+  "tabpanelstyle": "border: 2px dashed red;"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_tabpanelstyle?c_id=2&action=edit&popup=1','Model Style - tabpanelstyle')%>
+
+<h3>Grid Properties</h3>
+
+<h3 data-level="2">model.tablestyle</h3>
+The "tablestyle" property defines the style of the grid's HTML table.
+<pre>
+{
+  "tablestyle": "border: 2px solid red;"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_tablestyle?popup=1','Model Style - tablestyle')%>
+
+<h3 data-level="2">model.rowstyle / model.rowclass</h3>
+The "rowstyle" and "rowclass" properties are applied to the "style" and "class" of each TR data row of the grid.<br/>
+<br/>
+EJS can be used to add dynamic styles based on the row index or row data.  EJS should be escaped with &lt;# ... #&gt;.  The following EJS variables are available:
+<ul>
+  <li><b>rowid</b> : The grid row index, starting from 0 as the first row</li>
+  <li><b>datarow</b> : The current row's data.  Fields are accessible via datarow['FIELDNAME']</li>
+  <li><b>data</b> : The full recordset.  Fields are accessible via data[rowid]['FIELDNAME']</li>
+  <li><b>xejs</b> : xejs Helper functions</li>
+  <li><b>jsh</b> : The jsHarmony client-side instance</li>
+  <li><b>instance</b> : The ID of the jsHarmony client-side instance</li>
+</ul>
+Additionally, "even" and "odd" classes are automatically added to each grid row.
+<pre>
+{
+  "rowstyle": "<#=xejs.iif(datarow['c_sts']=='ACTIVE','color:red;','color:black;')#>",
+  "rowclass": "<#-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')#>"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_rowstyle?popup=1','Model Style - rowstyle')%>
+The following built-in row classes are available:<br/>
+&nbsp;
+<table class="xtbl" style="border-top:1px solid black;">
+  <tbody>
+    <tr class="xgrid_row_highlight"><td>xgrid_row_highlight</td></tr>
+    <tr class="xgrid_row_disabled"><td>xgrid_row_disabled</td></tr>
+    <tr class="xgrid_row_error"><td>xgrid_row_error</td></tr>
+    <tr class="xgrid_row_none"><td>xgrid_row_none</td></tr>
+    <tr class="xgrid_row_green"><td>xgrid_row_green</td></tr>
+    <tr class="xgrid_row_yellow"><td>xgrid_row_yellow</td></tr>
+    <tr class="xgrid_row_red"><td>xgrid_row_red</td></tr>
+    <tr class="xgrid_row_gray"><td>xgrid_row_gray</td></tr>
+  </tbody>
+</table>
+
+<h3>Form Properties</h3>
+
+<h3 data-level="2">model.formstyle</h3>
+The "formstyle" property is applied to the DIV containing the form elements.
+<pre>
+{
+  "formstyle": "border: 2px solid red;"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_formstyle?c_id=1&action=edit&popup=1','Model Style - formstyle')%>
+
+<h3>Field Properties</h3>
+Field properties can be defined for each field in the model.
+
+<h3 data-level="2">field.captionstyle / field.captionclass</h3>
+In form, form-m, and exec layouts, the "captionstyle" and "captionclass" properties are applied to the "style" and "class" of the field caption label.<br/>
+In grid layouts, the "captionstyle" and "captionclass" properties are applied to the "style" and "class" of the TH column header.
+<pre>
+{
+  "captionstyle": "border: 4px dashed black;",
+  "captionclass": "fieldWithErrors"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_captionstyle_grid','Model Style - captionstyle - grid')%>
+<%-getScreenshot('/ModelStyle_captionstyle_form?c_id=1&action=edit&popup=1','Model Style - captionstyle - form')%>
+
+<h3 data-level="2">field.cellstyle / field.cellclass</h3>
+On grid and multisel layouts, the "cellstyle" and "cellclass" properties are applied to the "style" and "class" of the TD data row cells.
+<pre>
+{
+  "cellstyle": "border: 4px dashed black;",
+  "cellclass": "fieldWithErrors"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_cellstyle_grid','Model Style - cellstyle - grid')%>
+
+<h3 data-level="2">field.controlstyle / field.controlclass</h3>
+In form, form-m, and exec layouts, the "controlstyle" and "controlclass" properties are applied to the "style" and "class" of the field's control.<br/>
+In grid and multisel layouts, the "controlstyle" and "controlclass" properties are applied to the "style" and "class" of the field's control in each data row.
+<pre>
+{
+  "controlstyle": "border: 4px dashed black;",
+  "controlclass": "fieldWithErrors"
+}
+</pre>
+<%-getScreenshot('/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
+<%-getScreenshot('/ModelStyle_controlstyle_form?c_id=1&action=edit&popup=1','Model Style - controlstyle - form')%>
 
 <h3>Custom CSS Files</h3>
-xxxxxxxxxxxxxxxxxxx
-application.css
-
-{ req: req, rootcss: req.jshsite.rootcss })
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-
 Custom CSS files can be defined either sitewide or per-model.
 
 <h4>Sitewide CSS</h4>
 The "/application.css" URL returns a public CSS file that contains most of the application's styles.
 The application.css file concatenates all of the following files:
-<ul>
-  <li>jsHarmony/jsharmony.css <i>(Core System Styles)</i></li>
-  <li>jsHarmony/jsharmony.theme.css <i>(Design Styles)</i></li>
+<ol>
+  <li>jsHarmony/jsHarmony.css <i>(Core System Styles)</i></li>
+  <li>Each file in jsh.Config.css_extensions</li>
+  <li>jsHarmony/jsHarmony.theme.css <i>(Design Styles)</i></li>
   <li>For each module:<br/>
       &nbsp; &nbsp; module/models/public_css/* <i>(Module-specific Styles)</i></li>
   <li>application/models/public_css/* <i>(Application-specific Styles)</i></li>
+</ol>
+Any files located in the "models/public_css" folder will be added to the public application.css file.<br/>
+<br/>
+When creating a new theme / design for a site, the jsHarmony.theme.css file can be copied into the "models/public_css" folder, and used as a starting point for modifying the styles.<br/>
+<br/>
+Sitewide CSS files can contain EJS for dynamic server-side rendering.  The following EJS parameters are supported:
+<ul>
+  <li>
+    <b>req</b> : Express Request object<br/>
+    &nbsp; &nbsp; <b>req.jsh</b> : jsHarmony object<br/>
+    &nbsp; &nbsp; <b>req.jshsite</b> - jsHarmonySite object</li>
+  <li><b>rootcss</b> : The current jsHarmonySite's "rootcss" property, used for rendering multiple jsHarmony instances.</li>
 </ul>
-Any files located in the "models/public_css" folder will be added to the public application.css file.
 
 <h4>Per-Model CSS</h4>
 Styles that are specific to a model can be part of the model definition, or in a MODELID.css file in the same folder as the model.
@@ -95,12 +205,23 @@ The jsHarmony page is composed of six primary HTML components:
   <li style="margin-left:20px;"><b>xformMODELID</b>: Each model's content</li>
 </ul>
 
-Each form and grid field has classes: "xform_ctrl FIELDNAME xelemMODELID".
+Each form and grid field has the classes: "xform_ctrl FIELDNAME xelemMODELID".
 
-<h3>Popup Dimensions</h3>
-xxxxxxxxxxxxxxxxxxxxx
-Popups
-  popup width/height
+<h3>Popup Windows</h3>
+The "popup" attribute defines whether a model should be opened as a popup window.  Popup windows are used in a variety of situations, for instance when a user clicks on an Add or Edit link.<br/>
+<br/>
+If the "popup" attribute is defined, the model is rendered without a menu or header.
+<pre>
+{
+  "popup": [ WIDTH, HEIGHT ]
+}
+</pre>
+WIDTH and HEIGHT are specified in pixels, for example:
+<pre>
+{
+  "popup": [ 1000, 900 ]
+}
+</pre>
 
 <h3>Fonts</h3>
 System fonts are loaded via /fonts/jsHarmonyFonts.css.  The default fonts are stored in:
@@ -117,9 +238,23 @@ System fonts can be overridden by publishing a file to:
 <pre>
 application/public/fonts/jsHarmonyFonts.css
 </pre>
-It is recommended to embed fonts locally for faster performance and to reduce dependence on external systems.
+It is recommended to embed fonts locally for faster performance and to reduce dependence on external systems.<br/>
+<br/>
+In order to use fonts in a report header/footer, they must be configured in the model.fonts property.
 
 
 <h3>Stylus</h3>
-xxxxxxxxxxxxxxxxxxxxx
-Stylus
+Stylus code can be included in the project by adding a reference to the Stylus file in jsHarmony.Stylus.<br/>
+Stylus files are dynamically compiled the first time they are requested, and cached for subsequent requests.
+<pre>
+jsh.Stylus['stylusID'] = {
+  source: __dirname+'/stylus/filename.styl',//Path to the Stylus Source File
+  path: '/filename.css',                    //Relative URL Path for the Express Router, resolves to https://domain.com/filename.css
+  //roles: { SITEID: { "ROLE":"PERM" } },   //(Optional) Restrict access to the stylesheet by role
+  public: true                              //Enable public unauthenticated access
+
+  //css: 'Compiled Stylus CSS'              //After the Stylus file is compiled, it is cached in the "css" property
+                                            //Once the "css" property is set, the Stylus file will not be compiled again,
+                                            //and the value of the "css" property will be returned instead.
+};
+</pre>
