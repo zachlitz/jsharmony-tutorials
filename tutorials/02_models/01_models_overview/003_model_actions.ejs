@@ -41,7 +41,10 @@ The <b>"roles"</b> property further restricts the capabilities of the model per 
   "title":"All Customers",
   "caption":[0,"Customer","Customers"],
   "actions":"BI",
-  "roles": {"C_B":"B","C_X":"*"}
+  "roles": {
+    "main": { "*":"B" },
+    "client": { "C_B":"B","C_X":"*" },
+  }
 }
 </pre>
 The <b>"actions"</b> parameter defines what operations the model can perform.  Actions can be any combination of the following characters.
@@ -51,8 +54,13 @@ The <b>"actions"</b> parameter defines what operations the model can perform.  A
   <li><b>U</b> - Update</li>
   <li><b>D</b> - Delete</li>
 </ul>
+<pre>
+{
+  "actions":"BIUD"
+}
+</pre>
 <br/>
-The "roles" parameter is used to restrict actions by user role.  Roles can be defined as follows:
+The <b>"roles"</b> parameter is used to restrict actions by user role and site.  Roles can be defined as follows:
 <ul>
   <li><b>B</b> - Browse</li>
   <li><b>I</b> - Insert</li>
@@ -60,9 +68,32 @@ The "roles" parameter is used to restrict actions by user role.  Roles can be de
   <li><b>D</b> - Delete</li>
   <li><b>*</b> - All roles - equivalent to BIUD</li>
 </ul>
+<pre>
+{
+  "roles":{
+    "SITE1": { "ROLE":"PERM", "ROLE":"PERM" },
+    "SITE2": { "ROLE":"PERM", "ROLE":"PERM" }
+  }
+}
+</pre>
+Alternatively, when roles are defined without the site, permissions are applied to the "main" site:
+<pre>
+{
+  "roles":{ "ROLE":"PERM", "ROLE":"PERM" }
+}
+</pre>
+The role ID can be set to "*" to signify all users in that site:
+<pre>
+{
+  "roles":{ "*":"B" }
+}
+</pre>
 By default, only the SYSADMIN and DEV roles have access to a model.  Permissions for users who are not SYSADMINs or DEVs must be explicity defined using the "role" parameter.<br/>
 <br/>
-From a technical perspective, effective permissions are computed by intersecting the model's "actions" parameter with a union of each applicable "role".  For example:
+In order for a model to be visible on a site, the model must have roles assigned for that site.  If a model definition has no roles defined, the model will only be accessible on the "main" site to SYSADMIN and DEV users.
+
+<h4>Effective Permissions</h4>
+Effective permissions for a user are computed by intersecting the model's "actions" parameter with a union of each of the user's "role" permissions.  For example:
 <pre>
 "actions":"BIUD",
 "roles":{ 
