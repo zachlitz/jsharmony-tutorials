@@ -25,4 +25,57 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Code": ["/models/CL.json"]
 }
 </script>
-Breadcrumbs
+
+<h3>Breadcrumbs Overview</h3>
+Breadcrumbs show the hierarchy of the parents of a page, and give the user a way to navigate back to the system root.<br/>
+</br>
+For improved usability, it is recommended to use breadcrumbs on all second+ level pages (unless popup windows / tabs are used).
+
+<h3>Breadcrumbs Syntax</h3>
+<pre>
+{
+  "breadcrumbs": {
+    "parents": [ "<i>breadcrumb_parent_expression1</i>", ""<i>breadcrumb_parent_expression2</i>", ... ],
+    "title": "<i>breadcrumb_title_expression</i>",
+
+    //Optional Parameters
+    "sql": "select c_id,c_name from c where c_id=isnull(@c_id,(select c_id from cc where cc_id=@cc_id))", //SQL statement to populate data for breadcrumbs
+    "sql_params":["c_id","cc_id"] //Array of field names used in the SQL statement - these values are automatically populated on system load
+  }
+}
+
+breadcrumb_parent_expression :=
+  "MODELID", or
+  HTML/EJS, for example "<a href='CW?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
+
+breadcrumb_title_expression :=
+  "CHARACTER STRING", or
+  HTML/EJS, for example "<#=bcrumbs.c_name#>"
+
+Both breadcrumb_parent_expression and breadcrumb_title_expression are evaluated with the following EJS parameters:
+{
+  data: Merged array of:
+          forcequery (model.querystring parameters)
+          Topmost Form SQL Data
+          Topmost Form Binding Values
+  bcrumbs: Merged array of the breadcrumb SQL resultsets of all forms and subforms
+  jsh: jsHarmony Client object
+  instance: Instance name of the jsHarmony Client object
+  LiteralOrCollection: Internal function used to search for a field name in multiple objects
+}
+</pre>
+
+*** Defaults to Form Title if title not set
+
+*** Separate Add / Edit Breadcrumbs
+
+Breadcrumb Links
+
+Link to a Model ID
+Custom HTML
+Using SQL Data
+Using GET / Querystring Data
+Using Form Data
+Using Global / System Variables
+
+Using Breadcrumbs in title / body

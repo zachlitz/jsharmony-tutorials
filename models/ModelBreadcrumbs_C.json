@@ -1,0 +1,24 @@
+{
+  "ModelBreadcrumbs_C": {
+    "layout": "form", 
+    "table": "c",
+    "actions": "BIUD", 
+    "caption": [ "", "Customer", "Customers" ],
+    "breadcrumbs": {
+      "parents": ["ModelBreadcrumbs_CL"],
+      "add": {
+        "title": "New Customer"
+      },
+      "edit": {
+        "sql": "select c_name from c where c_id=@c_id",
+        "title": "<#=bcrumbs.c_name#>"
+      }
+    },
+    "fields": [
+      {"name":"c_id", "type": "bigint", "actions":"B","key": 1,"control":"label","caption":"ID"},
+      {"name": "c_name","type": "varchar","length": 50,"actions": "BIU","control": "textbox","caption": "Customer Name","nl": 1},
+      {"name": "c_sts","type": "varchar","length": 8,"actions": "I","control": "hidden","default":"ACTIVE"},
+      {"name": "ModelBreadcrumbs_CCL","control": "subform","target": "ModelBreadcrumbs_CCL","actions": "BIUD","caption": "Contacts" }
+    ]
+  }
+}

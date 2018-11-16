@@ -22,28 +22,433 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Datalocks",
   "Menu": ["Models","Models Overview"],
-  "Code": ["/models/CL.json"]
+  "Code": ["/models/ModelDatalocks_CC.json"]
 }
 </script>
-Datalocks
 
-What are datalocks?
-Datalock Definitions
-  .datalocks
-Using Datalocks in Models
-  field.datalock
-  %%%DATALOCKS%%%
-    Select Statement filters
-    Before insert / update / delete / exec statements
-  LOV / Title / Breadcrumbs / Defaults
-Datalocks in Reports
-  Job processor
-Ignoring Datalocks
-  title.nodatalock
-  model.nodatalock
-  lov.nodatalock
-  default.nodatalock
-  
-Datalock Options
-  automatic_datalocks
-  case_insensitive_datalocks
+<h3>What are datalocks?</h3>
+Datalocks restrict site-wide access to all data, based on a key field.<br/>
+<br/>
+Common datalock scenarios:
+<ul>
+  <li>Customer Portal <i>(Customers can access only their own data)</i></li>
+  <li>Multi-Tenant SaaS Application <i>(Tenants can access only their own data)</i></li>
+  <li>Multi-Tenant SaaS Application w/Customer Portal <i>(Tenant customers can access only their own data under the tenant's application)</i></li>
+</ul>
+Multiple sites can be hosted in one jsHarmony instance.  For example, the standard jsHarmony Factory implementation provides two applications:
+<ul>
+  <li><b>Main Site</b> - Accessible via "https://domain.com", running without datalocks</li>
+  <li><b>Customer Portal Site</b> - Accessible via "https://domain.com/client", running with datalocks</li>
+</ul>
+In the example above, the Customer Portal site has a datalock on the Customer ID.  The application ensures that Customers can only access their own data, based on the Customer ID.<br/>
+<br/>
+Datalocks enforce model security, key and foreign key security, and ensure valid access across all browse, insert, update, and delete SQL statements.
+
+<h3>Datalocks: The Easy Way</h3>
+One of the challenges of building client portals is ensuring security.  Datalocks provide a way to implement security in public-facing database applications in an automated fashion.  Below is the easy way to implement security in a client portal:
+<ol>
+  <li>Create a jsHarmony Factory application and enable the Client Portal</li>
+  <li>Add the "client" site to the "roles" attribute of any models that will be accessible by the client portal</li>
+  <li>Ensure that database column names are unique across the database, unless the columns are used as foreign keys, or the tables themselves are structural copies of each other</li>
+  <li>Ensure that config.automatic_datalocks is set to "true" (it should be set to "true" by default)</li>
+  <li>
+    If any custom SQL statements are missing "%%%DATALOCKS%%%", a message will show at system startup<br/>
+    &nbsp; &nbsp; Add the %%%DATALOCKS%%% expression to any SQL statements that require it
+
+  </li>
+  <li>
+    If any datalock definitions are missing, a message will show at system startup<br/>
+    &nbsp; &nbsp; Add any missing datalock definitions to the config.datalocks array
+  </li>
+  <li>For any datalocks that should be ignored (if the customer should have access to all applicable values), set the datalock SQL to "1=1" in the datalock definitions</li>
+</ol>
+
+<h3>Defining Site Datalocks</h3>
+Datalocks must first be defined in the Site config.  The site.datalock[KEY_FIELD] function should return the key field value.  In the standard implementation, the key field value would be stored in req.gdata upon authentication.<br/>
+<br/>
+If using the jsHarmony Factory, the c_id (Customer ID) datalock is already defined for the Customer Portal, so only the datalock query SQL statements need to be configured.
+<pre>
+var site = jsh.Sites['main'];
+site.datalock = {
+  "DATALOCK_KEY_FIELD": function (req) { return KEY_FIELD_VALUE; }
+};
+site.datalocktypes = {
+  "DATALOCK_KEY_FIELD": { 'name': "DATALOCK_KEY_FIELD", 'type': 'DATATYPE' }
+};
+</pre>
+For example:
+<pre>
+var site = jsh.Sites['main'];
+site.datalock = {
+  "c_id": function (req) { return req.gdata['c_id']; }
+};
+site.datalocktypes = {
+  "c_id": { 'name': "c_id", 'type': 'bigint' }
+};
+</pre>
+
+The datalock query SQL statements are then defined in app.config.js or in the _config.json file:
+<pre>
+config.datalocks = {
+  "SITEID":{
+    "DATALOCK_KEY_FIELD":{
+      "DATALOCK_NAME1/FIELD_NAME1":"SQL_WHERE1",
+      "DATALOCK_NAME2/FIELD_NAME2":"SQL_WHERE2"
+    }
+  }
+};
+</pre>
+For example:
+<pre>
+config.datalocks = {
+  "client":{
+    "c_id":{
+      "o_id":"o_id in (select o_id from o where o.c_id=@datalock_c_id)",
+      "o_contact":"o_contact in (select cc_id from cc where cc.c_id=@datalock_c_id)",
+      "ca_id":"ca_id in (select ca_id from ca where ca.c_id=@datalock_c_id)",
+      "cc_id":"cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)",
+      "cf_id":"cf_id in (select cf_id from cf where cf.c_id=@datalock_c_id)",
+      "e_id":"e_id in (select e_id from e where e.c_id=@datalock_c_id)",
+      "ALWAYS": "1=1",
+      "NEVER": "1=2"
+    }
+  }
+};
+</pre>
+
+The datalock SQL is a "where" expression, which should limit FIELD_NAME to only the values that are accessible by the DATALOCK_KEY_FIELD.<br/>
+<br/>
+When processing datalocks, forms fields named "FIELD_NAME" will then automatically have the datalock applied to that field. Datalocks can also be named differently from field names, however those datalocks will not be automatically linked to fields.<br/>
+<br/>
+In the example above, the Customer ID datalock (c_id) will be applied to the Orders table (with the key o_id).  Any Order Listing will only show Orders that are accessible by that Customer.
+
+<h3>Using Site Datalocks in Models</h3>
+
+Datalocks are defined per-field.  Any key fields, foreign key fields, and List of Values fields should have a datalock defined.
+<pre>
+{ 
+  "fields":[
+    {"name":"FIELD_NAME","datalock": { "DATALOCK_KEY_FIELD": "DATALOCK_NAME" } }
+  ]
+}
+</pre>
+DATALOCK_NAME can be any of the keys defined in the datalocks array for the DATALOCK_KEY_FIELD.  The DATALOCK_NAME should usually be the same as the field name, however occassionally the developer may want to use a custom datalock, such as "ALWAYS" that enables the customer to access all table records.<br/>
+<br/>
+For example:
+<pre>
+{
+  "fields":[
+    {"name":"o_id","type":"bigint","key":1,"datalock":{ "c_id": "o_id" } },
+    {"name":"other_field","type":"bigint","foreignkey":1,"datalock":{ "c_id": "ALWAYS" } }
+  ]
+}
+</pre>
+
+Once the datalocks have been defined per-field, they will then be automatically added to the SQL statements to limit database table access by the datalock key field.
+
+<h3>Datalock SQL Statements</h3>
+For every database statement, the datalocks expression %%%DATALOCKS%%% is computed per-model as follows:
+<ul>
+  <li>
+    For each DATALOCK_KEY_FIELD in the current site:
+    <ul>
+      <li>Add a SQL parameter to the SQL command: @datalock_DATALOCK_KEY_FIELD, ex. @datalock_c_id</li>
+      <li>
+        For each field in the model:
+        <ul>
+          <li>
+            If the "datalocks" property is defined for that field:
+            <ul>
+              <li>
+                Add the field.datalocks[DATALOCK_KEY_FIELD] sql expression to %%%DATALOCKS%%%
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+There are two types of datalocks:
+<h4>SQL "where" clause datalocks</h4>
+SQL "where" clause datalocks are added to the where clause of a select, update, and delete statement
+<pre>
+select * from cc where 1=1 /*WHERE-CLAUSE DATALOCKS*/
+//===Evaluates to:
+select * from cc where 1=1 and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)
+</pre>
+<h4>SQL "pre-check" datalocks</h4>
+SQL "pre-check" datalocks are run before insert / update statements to verify that input parameters such as foreign keys are valid:
+<pre>
+/*PRE-CHECK DATALOCKS*/
+update cc set cc_name=@cc_name where cc_id=@cc_id /*WHERE-CLAUSE DATALOCKS*/;
+//===Evaluates to:
+do $$begin if not exists(select * from (select @cc_id as cc_id) dual where cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)) then raise exception 'INVALID ACCESS'; end if; end$$; 
+update cc set cc_name=@cc_name where cc_id=@cc_id and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id));
+</pre>
+
+<h3>Datalock SQL per API Call</h3>
+
+&nbsp;<br/>
+
+<b>Select - Grid</b>
+<pre>select * from c where 1=1 ***WHERE_CLAUSE_DATALOCKS***</pre>
+
+<b>Select - Form / Form-m</b>
+<pre>select * from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***</pre>
+
+<b>Select - Multisel</b>
+<pre>
+***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN QUERY)***
+select * from (select * from cf where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***) outer join %%%LOVSQL%%%
+//%%%LOVSQL%%% can also have separate datalocks if it is a custom SQL expression
+</pre>
+
+<b>Select - Tab Code</b>
+<pre>select c_sts from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***</pre>
+
+<b>Select - SQL Title</b>
+<pre>Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL</pre>
+
+<b>Select - SQL Default Value</b>
+<pre>Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL</pre>
+
+<b>Select - LOV (List of Values)</b>
+<pre>
+If the LOV is using a custom sql, sql2, or sqlmp expression:
+  ***PRE_CHECK_DATALOCKS (PARAMETERS USED IN THE CUSTOM LOV EXPRESSION)***
+  Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL
+</pre>
+
+<b>Select - Breadcrumbs</b>
+<pre>***PRE_CHECK_DATALOCKS (PARAMETERS USED IN THE BREADCRUMBS EXPRESSION)***</pre>
+
+<b>Select - Download</b>
+<pre>select filename,filesize from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***</pre>
+
+<b>Select - Report</b>
+<pre>Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL, if not running within in a batch</pre>
+
+<b>Select - Report Batch (Defining the report parameters for running the batch reports)</b>
+<pre>Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL</pre>
+
+<b>Insert</b>
+<pre>
+***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN INSERT)***
+insert into c(columns) values(values);
+//For encryption
+update c set c_encrypted=@c_encrypted where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***
+</pre>
+
+<b>Update - Grid/Form/Form-m</b>
+<pre>
+***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN UPDATE)***
+update c set column=value where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***
+</pre>
+
+<b>Update - Multisel</b>
+<pre>
+***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN UPDATE)***
+delete from cf where c_id=@c_id and cf_type not in (...) ***WHERE_CLAUSE_DATALOCKS***
+insert into cf (select codeval from (%%%LOVSQL%%%) where codeval in (...) and codeval not in (select cf_type from cf where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***))
+//%%%LOVSQL%%% can also have separate datalocks if it is a custom SQL expression
+</pre>
+
+<b>Exec</b>
+<pre>
+***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN UPDATE)***
+Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL
+</pre>
+
+<b>Delete</b>
+<pre>
+delete from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***
+</pre>
+
+<h3>Datalock SQL Examples</h3>
+In the examples below, the following model definition will be used:
+<pre>
+{
+  "CC": {
+    "layout": "form", 
+    "table": "cc",
+    "actions": "BIUD", 
+    "caption": [ "", "Contact", "Contacts" ],
+    "fields": [
+      {"name":"cc_id","type":"bigint","actions":"B","key":1,"control":"label","caption":"ID","datalock":{ "c_id": "cc_id" } },
+      {"name":"c_id","type":"bigint","actions":"BI","foreignkey":1,"control":"hidden","datalock":{ "c_id": "c_id" } },
+      {"name":"cc_name","type":"varchar","length":"100","caption":"Name","actions":"BIU","control": "textbox","nl": 1 }
+    ]
+  }
+}
+</pre>
+
+<h4>SELECT Statement</h4>
+<pre>
+Base SQL Statement:  select cc_id,c_id,cc_name from cc where 1=1 %%%DATALOCKS%%%
+Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+Final SQL Statement: select cc_id,c_id,cc_name from cc where 1=1 and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+</pre>
+
+<h4>UPDATE Statement</h4>
+<pre>
+Base SQL Statement:  update c set c_name=@c_name where cc_id=@cc_id %%%DATALOCKS%%%
+Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+//No pre-checks because the c_id and cc_id are not being updated
+Final SQL Statement: update c set c_name=@c_name where cc_id=@cc_id and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+</pre>
+
+<h4>INSERT Statement</h4>
+<pre>
+Base SQL Statement:  with xrslt as (insert into cc(c_id,cc_name) values (@c_id,@cc_name)) returning cc_id as cc_id) select cc_id from xrslt;
+Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+Final SQL Statement: do $$begin if not exists(select * from (select @cc_id as cc_id) dual where cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)) then raise exception 'INVALID ACCESS'; end if; end$$; 
+                     with xrslt as (insert into cc(c_id,cc_name) values (@c_id,@cc_name)) returning cc_id as cc_id) select cc_id from xrslt;
+</pre>
+
+<h4>DELETE Statement</h4>
+<pre>
+Base SQL Statement:  delete from  c where cc_id=@cc_id %%%DATALOCKS%%%
+Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+Final SQL Statement: delete from  c where cc_id=@cc_id and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+</pre>
+
+<h3>Datalock Implementation Requirements</h3>
+
+Datalocks should be evaluated for any field in the database that could have relational values (a field that is related to a field in another table).  Either the developer needs to define a datalock expression for each relational field, or specify that the datalock should be ignored.<br/>
+<br/>
+Additionally, any custom SQL statements should contain the %%%DATALOCKS%%% expression.  The %%%DATALOCKS%%% expression will be replaced by the dynamically generated SQL that limits the data for the current user.<br/>
+<br/>
+If a jsHarmony site has Datalocks enabled, all models that are accessible by that site should have %%%DATALOCKS%%% in the SQL WHERE expression for the following attributes:
+<ol>
+  <li>All model.title SQL statements</li>
+  <li>All custom model sql statements (sqlselect, sqlinsert, sqlupdate, sqldelete, sqlexec, sqlrowcount, sqldownloadselect, sqlinsertencrypt)</li>
+  <li>All custom LOV expressions (field.lov.sql, field.lov.sql2, field.lov.sqlmp)</li>
+  <li>All custom Default Value SQL expressions (field.default.sql)</li>
+</ol>
+
+All of the following fields in the above models should have datalocks defined:
+<ol>
+  <li>Primary Keys</li>
+  <li>Foreign Keys</li>
+  <li>Fields used as parameters in LOV, Default, Title, or Breadcrumb SQL statements</li>
+  <li>Any List of Values fields with custom SQL (field.lov.sql, field.lov.sql2, field.lov.sqlmp, field.lov.sqlselect) that can be truncated for efficiency during insert (do not have the field.always_editable_on_insert property set)</li>
+  <li>The "lovkey" in Multisel models</li>
+  <li>Any fields with a custom LOV (field.lov.sql, field.lov.sql2, field.lov.sqlmp, field.lov.sqlselect), or a popup LOV</li>
+</ol>
+
+<h3>Automatic Datalocks</h3>
+When automatic datalocks are enabled, datalocks are automatically added to form fields if the field name matches the datalock field name.  Automatic datalocks are enabled in the config by default:
+<pre>
+config.system_settings.automatic_datalocks = true;
+</pre>
+
+Datalocks are automatically added to:
+<ol>
+  <li>Primary Keys</li>
+  <li>Foreign Keys</li>
+  <li>Fields used as parameters in LOV, Default, Title, or Breadcrumb SQL statements</li>
+  <li>Any fields with a custom LOV (field.lov.sql, field.lov.sql2, field.lov.sqlmp, field.lov.sqlselect), or a popup LOV</li>
+  <li>Any fields used as a primary key in another model</li>
+  <li>Any fields used as a foreign key in another model</li>
+  <li>Any fields used as a LOV in another model</li>
+  <li>In an "exec" model, any input fields (with action "U"), for which a datalock is defined</li>
+</ol>
+
+
+<h3>Case-Insensitive Datalocks</h3>
+By default, datalock names are case insensitive.  This behavior can be modified in app.config.js:
+<pre>
+config.system_settings.case_insensitive_datalocks = true;
+</pre>
+
+<h3>Using Site Datalocks in Reports</h3>
+Reports can be run in two modes:
+<ul>
+  <li><b>In-session Reports</b> - Reports that are run and displayed to the user immediately</li>
+  <li><b>Batch Reports</b> - Reports that are run using the "jobqueue", for instance when auto-generating reports or sending reports via email</li>
+</ul>
+
+<h4>In-session Report Datalocks</h4>
+In-session reports can have datalocks applied from the user's authentication information.  It is important to ensure that when users can run "in-session" reports, all the parameters have datalocks defined, and the "reportdata" has datalocks defined for all queries.
+
+<h4>Batch Report Dattalocks</h4>
+Batch reports are run without datalocks.  It is important to ensure that users cannot queue reports or see data that they should not have access to.<br/>
+<br/>
+If the "jobqueue" attribute is used, it should contain a valid %%%DATALOCKS%%% expression, to ensure that the user will not be able to queue reports that would give them access to other clients' data.<br/>
+
+<h3>Ignoring Datalocks</h3>
+Datalocks should be ignored for a field or SQL statement only if the end user should have access to all possible values of the field.
+
+<h4>model.nodatalock</h4>
+If datalocks should be ignored for the entire model, add the DATALOCK_KEY_FIELD to the model.nodatalock array:
+<pre>
+{
+  "nodatalock": ["c_id"]
+}
+</pre>
+
+<h4>title.nodatalock</h4>
+If datalocks should be ignored for a title's sql statement, add the DATALOCK_KEY_FIELD to the model.title.nodatalock array:
+<pre>
+{
+  "title": { "sql":"select getdate()", "nodatalock": ["c_id"] }
+}
+//Or, for separate add/edit titles
+{
+  "title": { 
+    "add": { "sql":"select getdate()", "nodatalock": ["c_id"] },
+    "edit": { "sql":"select getdate()", "nodatalock": ["c_id"] }
+  }
+}
+</pre>
+
+<h4>field.lov.nodatalock</h4>
+If datalocks should be ignored for a LOV (List of Values), add the DATALOCK_KEY_FIELD to the field.lov.nodatalock array:
+<pre>
+{
+  "fields": [
+    { "name": "cc_id", "type": "varchar", "length": 8, "actions": "BIU", "control": "dropdown", 
+      "lov": { 
+        "sql": "select cc_id as codeval, cc_name as codetxt from cc order by cc_name",
+        "nodatalock": ["c_id"]
+      },
+    }
+  ]
+}
+</pre>
+
+<h4>field.default.nodatalock</h4>
+If datalocks should be ignored for a Default Value SQL expression, add the DATALOCK_KEY_FIELD to the field.default.nodatalock array:
+<pre>
+{
+  "fields": [
+    { "name": "cc_id", "type": "varchar", "length": 8, "actions": "BIU", "control": "dropdown", 
+      "default": { 
+        "sql": "select cc_id from cc limit 1",
+        "nodatalock": ["c_id"]
+      },
+    }
+  ]
+}
+</pre>
+
+<h4>reportdata.nodatalock</h4>
+If datalocks should be ignored for a report data query, add the DATALOCK_KEY_FIELD to the model.reportdata[DATA_SET_ID].nodatalock array:
+<pre>
+{
+  "reportdata" : {
+    "global_data": {
+      "sql": "select (select gpp_val from jsharmony.gpp where gpp_attrib='NAME') as company_name",
+      "nodatalock": ["c_id"] 
+    },
+}
+</pre>
+
+<h3>Debugging Datalocks</h3>
+Datalock SQL errors can be debugged by turning on database SQL logging to see the generated SQL statements.  This should only be done on development environments.<br/>
+<br/>
+Enable database debugging in app.config.js:
+<pre>
+config.debug_params.db_requests = true;
+</pre>

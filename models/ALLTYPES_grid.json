@@ -4,7 +4,7 @@
   "title": "ALLTYPES",
   "table": "alltypes",
   "caption": ["","Item","Items"],
-  "actions": "BI",
+  "actions": "B",
   "sort": ["^x_primary"],
   "buttons": [{"link":"add:ALLTYPES_form"}],
   "fields": [

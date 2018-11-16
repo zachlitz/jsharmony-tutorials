@@ -3,7 +3,7 @@
   "layout":"grid", 
   "title":"Contacts",
   "caption":[0,"Contact","Contacts"],
-  "actions":"BI", 
+  "actions":"B", 
   "roles": {"C_B":"B","C_X":"*"},
   "sort":["^cc_name"], 
   "buttons":[{"link":"add:C_CC", "bindings": { "c_id": "c_id" } }],

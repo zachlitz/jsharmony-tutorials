@@ -3,7 +3,7 @@
   "layout":"grid", 
   "title":"All Customers",
   "caption":[0,"Customer","Customers"],
-  "actions":"BI", 
+  "actions":"B", 
   "roles": {"C_B":"B","C_X":"*"},
   "sort":["^c_name"], 
   "buttons":[{"link":"add:C"}],

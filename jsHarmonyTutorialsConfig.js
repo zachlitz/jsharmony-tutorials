@@ -31,7 +31,6 @@ jsHarmonyTutorialsConfig.prototype = new jsHarmonyConfig.Base();
 jsHarmonyTutorialsConfig.prototype.Init = function(cb, jsh){
 
   jsh.Config.system_settings.allow_insecure_http_encryption = true;
-  jsh.Config.debug_params.db_requests = false;
 
   var factory = jsh.GetModule('jsHarmonyFactory');
   factory.Config.debug_params.disable_job_processor = true;
