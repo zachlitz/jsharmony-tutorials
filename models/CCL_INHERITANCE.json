@@ -3,6 +3,7 @@
     "table":"v_cc",
     "layout":"grid",
     "title":"All Contacts",
+    "caption":["","Contact","Contacts"],
     "actions":"B", 
     "sort":["^cc_name"], 
     "topmenu":"clients",

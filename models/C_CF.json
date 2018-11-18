@@ -2,6 +2,7 @@
   "comment":"C_CF",
   "layout":"multisel",
   "title":"Customer Flags",
+  "caption":["","Flag","Flags"],
 	"table":"cf",
 	"actions":"BU",
   "roles": {"CX_B":"B","CX_X":"*"},

@@ -2,7 +2,7 @@
   "table":"cc",
   "layout":"grid", 
   "title":"Contacts",
-  "caption":[0,"Contact","Contacts"],
+  "caption":["","Contact","Contacts"],
   "actions":"B", 
   "roles": {"C_B":"B","C_X":"*"},
   "sort":["^cc_name"], 

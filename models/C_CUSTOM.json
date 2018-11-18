@@ -2,15 +2,16 @@
   "C_CUSTOM": {
     "layout": "form",
     "title": "",
+    "caption":["","Status","Statuses"],
     "actions": "B",
-    "nokey": 1,
+    "unbound": 1,
     "roles": {
       "main": {"*":"*"}
     },
-    "oninit": "jsh.App.C_CUSTOM.oninit(xform);",
-    "ondestroy": "jsh.App.C_CUSTOM.ondestroy();",
+    "oninit": "_this.oninit(xform);",
+    "ondestroy": "_this.ondestroy();",
     "buttons": [
-      { "link": "js:jsh.App.C_CUSTOM.help();", "icon": "help", "text": "", "actions": "B" }
+      { "link": "js:_this.help();", "icon": "help", "text": "", "actions": "B" }
     ],
     "hide_system_buttons" : ["print","help"]
   },

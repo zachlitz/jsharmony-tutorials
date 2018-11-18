@@ -9,7 +9,7 @@
   "buttons":[{"link":"add:C"}],
   "topmenu":"clients",
   "fields":[
-    {"name":"c_id","type":"bigint","actions":"FB","key":1,"link":"edit:C","caption": "ID","datalock":"client_c_id"},
+    {"name":"c_id","type":"bigint","actions":"B","key":1,"link":"edit:C","caption": "ID","datalock":"client_c_id"},
     {"name":"c_sts_txt","type":"varchar","length":"8","caption":"Status","actions":"B"},
     {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"edit:C"}
   ]
