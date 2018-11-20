@@ -22,61 +22,183 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Breadcrumbs",
   "Menu": ["Models","Models Overview"],
-  "Code": ["/models/CL.json"]
+  "Code": [
+    "/models/ModelBreadcrumbs_CL.json",
+    "/models/ModelBreadcrumbs_C.json",
+    "/models/ModelBreadcrumbs_CCL.json",
+    "/models/ModelBreadcrumbs_CC.json"
+  ],
+  "Demo": "/ModelBreadcrumbs_CL"
 }
 </script>
 
 <h3>Breadcrumbs Overview</h3>
-Breadcrumbs show the hierarchy of the parents of a page, and give the user a way to navigate back to the system root.<br/>
+Breadcrumbs are links rendered at the top of the form, to show the hierarchy of the parents of a page, and give the user a way to navigate back up the tree.<br/>
 </br>
-For improved usability, it is recommended to use breadcrumbs on all second+ level pages (unless popup windows / tabs are used).
+User interface best practices recommend using breadcrumbs on all second-level pages (excluding popup windows / tabs).
+
+<%-getScreenshot('/ModelBreadcrumbs_CC?action=edit&cc_id=2&popup=1','Breadcrumbs')%>
 
 <h3>Breadcrumbs Syntax</h3>
 <pre>
 {
   "breadcrumbs": {
-    "parents": [ "<i>breadcrumb_parent_expression1</i>", ""<i>breadcrumb_parent_expression2</i>", ... ],
-    "title": "<i>breadcrumb_title_expression</i>",
+    "parents": [ "<i>breadcrumb_expression1</i>", ""<i>breadcrumb_expression2</i>", ... ],
+    "title": "<i>breadcrumb_expression</i>",
 
     //Optional Parameters
     "sql": "select c_id,c_name from c where c_id=isnull(@c_id,(select c_id from cc where cc_id=@cc_id))", //SQL statement to populate data for breadcrumbs
-    "sql_params":["c_id","cc_id"], //Array of field names used in the SQL statement - these values are automatically populated on system load
-    "nodatalock":["c_id"] //Disable datalocks (should not be used in most implementations as this potentially reduces security)
+    "sql_params": ["c_id","cc_id"], //Array of field names used in the SQL statement - these values are automatically populated on system load
+    "nodatalock": ["c_id"]          //Disable datalocks (should not be used in most implementations as this potentially reduces security)
   }
 }
 
-breadcrumb_parent_expression :=
+<i>breadcrumb_expression</i> :=
   "MODELID", or
-  HTML/EJS, for example "<a href='CW?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
+  "HTML/EJS String", for example "<a href='CW?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
 
-breadcrumb_title_expression :=
-  "CHARACTER STRING", or
-  HTML/EJS, for example "<#=bcrumbs.c_name#>"
-
-Both breadcrumb_parent_expression and breadcrumb_title_expression are evaluated with the following EJS parameters:
+Any EJS in breadcrumb_expression is escaped with <# #>, and is evaluated with the following parameters:
 {
-  data: Merged array of:
-          forcequery (model.querystring parameters)
-          Topmost Form SQL Data
-          Topmost Form Binding Values
-  bcrumbs: Merged array of the breadcrumb SQL resultsets of all forms and subforms
-  jsh: jsHarmony Client object
-  instance: Instance name of the jsHarmony Client object
-  LiteralOrCollection: Internal function used to search for a field name in multiple objects
+  data:     Merged array of:
+                forcequery (model.querystring parameters)
+                Topmost Form SQL Data
+                Topmost Form Binding Values
+  bcrumbs:  Merged array of the breadcrumb SQL resultsets of all forms and subforms
+  _GET:     Querystring parameters
+  jsh:      jsHarmony Client object
+  instance: Instance name of the jsHarmony Client object, ex. "jshInstance"
 }
 </pre>
 
-*** Defaults to Form Title if title not set
+Breadcrumb parents are generally rendered as links.  The final breadcrumb (the current page) is rendered as follows:
+<ol>
+  <li>Use "model.breadcrumbs.title" / "model.breadcrumbs.add.title" / "model.breadcrumbs.edit.title", if it exists</li>
+  <li>Otherwise, use "model.title" / "model.add.title" / "model.edit.title", if it is a string and not a SQL expression</li>
+</ol>
 
-*** Separate Add / Edit Breadcrumbs
+<h3 data-level="2">Different breadcrumbs for "Add" and "Edit" modes</h3>
+Breadcrumbs can be customized based on whether the user is adding or editing a record:
 
-Breadcrumb Links
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["CL"],
+    "add": {
+      "title": "New Customer"
+    },
+    "edit": {
+      "sql": "select c_name from c where c_id=@c_id",
+      "title": "<#=bcrumbs.c_name#>"
+    }
+  }
+}
+</pre>
 
-Link to a Model ID
-Custom HTML
-Using SQL Data
-Using GET / Querystring Data
-Using Form Data
-Using Global / System Variables
+Any of the breadcrumb parameters for "model.breadcrumbs.add" or "model.breadcrumbs.edit" will fall back to "model.breadcrumbs" if they are not set.
 
-Using Breadcrumbs in title / body
+<h3>Breadcrumb Expressions</h3>
+Breadcrumbs can be defined a variety of ways:
+
+<h4>Model ID (Linking to a Model without Parameters)</h4>
+If the parent model has no parameters, link directly to the model name:
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["ModelBreadcrumbs_CL"]
+  }
+}
+</pre>
+
+<h4>Custom HTML (Linking to a Model with a Custom Caption)</h4>
+The breadcrumb can be custom HTML, for instance when linking to a the parent model with a custom breadcrumb caption:
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["<a href='/ModelBreadcrumbs_CL'>All Customers</a>"]
+  }
+}
+</pre>
+
+<h4>Using Breadcrumb SQL Data (Linking to a Model with Parameters)</h4>
+If the parent form has parameters and should open to a specific record, use an EJS expression.  Any breadcrumbs SQL results are loaded into the "bcrumbs" parameter.<br/>
+<br/>
+In the example below, a different SQL expression needs to be used for "add" and "edit" breadcrumbs, because the key field is not available during an "add" operation.
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["<a href='/ModelBreadcrumbs_C?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"],
+    "add": {
+      "sql": "select c_id,c_name from c where c_id=@c_id",
+      "title": "New Contact"
+    },
+    "edit": {
+      "sql": "select cc.c_id,c_name,cc_name from cc inner join c on cc.c_id=c.c_id where cc_id=@cc_id",
+      "title": "<#=bcrumbs.cc_name#>"
+    }
+  }
+}
+</pre>
+
+<h4>Using Form Data</h4>
+If the breadcrumbs can be initialied via form / querystring data, use the "data" EJS expression.
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["<a href='/ModelBreadcrumbs_C?action=edit&c_id=<#=data.c_id#>'>Edit Customer</a>"],
+    "add": {
+      "title": "New Contact"
+    },
+    "edit": {
+      "title": "<#=data.cc_name#>"
+    }
+  }
+}
+</pre>
+The "data" expression is a merged array of:
+<ul>
+  <li>Querystring Parameters</li>
+  <li>Topmost Form SQL Data</li>
+  <li>Topmost Form Binding Values</li>
+</ul>
+
+<h4>Using GET / Querystring Data</h4>
+Although not recommended since it limits how a form can be used as a subform, querystring parameters can be used in breadcrumbs via:
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["<a href='/ModelBreadcrumbs_C?action=edit&c_id=<#=_GET.c_id#>'>Edit Customer</a>"],
+    "add": {
+      "title": "New Contact"
+    },
+    "edit": {
+      "title": "Edit Contact"
+    }
+  }
+}
+</pre>
+
+<h3>Using Breadcrumbs SQL Data in the Title and Model Body</h3>
+Breadcrumb SQL data can be used in the model title and in the body.  This technique can be useful to optimize the number of SQL statements, or to use metadata from the database.
+
+<h4>Using Breadcrumbs Data in the Title</h4>
+The model title has access to the same "bcrumbs" object as the breadcrumbs:
+<pre>
+{
+  "title": "Customer <#=bcrumbs.CUSTOMER_ID#>"
+}
+</pre>
+
+<h4>Using Breadcrumbs Data in the Model Body</h4>
+The breadcrumbs SQL data for each model is stored in the "data._bcrumbs" property:
+<pre>
+{
+  "fields": [
+    {"name":"pe_name_asgn","type":"varchar","actions":"BIU","control":"textbox","default":"js:data._bcrumbs.pe_name_asgn"}, 
+  ]
+}
+</pre>
+The canonical reference to the "_bcrumbs" property is:
+<pre>
+Forms: jshInstance.App.xform_MODELID.Data._bcrumbs
+Grids: jshInstance.App.xform_MODELID._bcrumbs
+</pre>
