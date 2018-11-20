@@ -40,7 +40,8 @@ For improved usability, it is recommended to use breadcrumbs on all second+ leve
 
     //Optional Parameters
     "sql": "select c_id,c_name from c where c_id=isnull(@c_id,(select c_id from cc where cc_id=@cc_id))", //SQL statement to populate data for breadcrumbs
-    "sql_params":["c_id","cc_id"] //Array of field names used in the SQL statement - these values are automatically populated on system load
+    "sql_params":["c_id","cc_id"], //Array of field names used in the SQL statement - these values are automatically populated on system load
+    "nodatalock":["c_id"] //Disable datalocks (should not be used in most implementations as this potentially reduces security)
   }
 }
 

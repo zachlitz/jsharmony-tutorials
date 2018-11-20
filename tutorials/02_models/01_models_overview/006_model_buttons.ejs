@@ -331,7 +331,7 @@ Note: If the window width and height is not specified, it will default to:
 Example: XExt.popupReport('RPE',{ 'pe_sts': 'ACTIVE' },{width:850,height:600});
 </pre>
 
-<h3>Actions / Security / Roles</h3>
+<h3>Hiding Buttons via Actions / Security / Roles</h3>
 Buttons can be restricted to be hidden based on the current action, or based on the current user's roles.
 <pre>
 {
@@ -349,14 +349,25 @@ Buttons can be restricted to be hidden based on the current action, or based on 
 </pre>
 
 <ul>
-  <li>If the querystring action is set to "add", only buttons with the "I" attribute will be shown.</li>
-  <li>If the querystring action is set to "edit" (Browse / Update), only buttons with the "U" attribute will be shown.</li>
-  <li>Otherwise, only buttons with the "B" attribute will be shown.</li>
+  <li>If the querystring action is set to "add", only buttons with the "B" or "I" actions will be shown.</li>
+  <li>If the querystring action is set to "edit" (Browse / Update), only buttons with the "B" or "U" actions will be shown.</li>
+  <li>Otherwise, only buttons with the "B" action will be shown.</li>
 </ul>
 
 <h4>Roles</h4>
 Roles can be used to further limit button access.  When roles are defined, they are cross-applied with the "actions".<br/>
 Users without role access will not see the button.  Users with DEV or SYSADMIN access have access to all buttons.
+
+<h4>Hiding Based on the Link Target (hide_when_target_inaccessible)</h4>
+By default, buttons with links starting with "add:" will be hidden if the user does not have "I" access to the link target.  Disable this functionality by setting hide_when_target_inaccessible to false:
+<pre>
+{
+  "buttons":[
+    "link":"add:C",
+    "hide_when_target_inaccessible": false
+  ]
+}
+</pre>
 
 <h3>Hiding System Buttons</h3>
 All models have built-in buttons, based on the model layout.  The built-in system buttons can be hidden via the model.hide_system_buttons property:
