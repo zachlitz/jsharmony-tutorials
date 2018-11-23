@@ -24,7 +24,34 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Menu": ["Models","Models Overview"]
 }
 </script>
-  
+
+The jsHarmony menu system can be most easily leveraged using the jsHarmony Factory.  jsHarmony Factory provides a turnkey menu system with:
+
+<ul>
+  <li>Two-level menu</li>
+  <li>Automatic collapsing of items into a "More" side-menu</li>
+  <li>Per-site menus</li>
+  <li>Role-based menu items</li>
+  <li>Administration screens for customizing menu items</li>
+  <li>Administration screens for managing users and roles</li>
+</ul>
+
+
+<pre>
+//Server-side interface
+jshSite.menu = function(req,res,jsh,params,onComplete){ 
+  params.ShowListing = true; 
+  params.XMenu = { MainMenu:[], SubMenus:{} }; 
+  onComplete(); 
+}
+</pre>
+
+<pre>
+//Client-side interface
+--Style sheets and JS files
+--Interface hooks
+</pre>
+
 <pre>
 topmenu
 Explain architecture of menus / CRM / SRM
