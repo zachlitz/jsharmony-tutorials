@@ -27,36 +27,80 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 }
 </script>
 <h3>Introduction</h3>
-Grids provide a listing of records, while forms are used to edit an individual record.  Grids can be either read-only or editable.
+The "grid" layout is used to view or edit multiple records.  Grids can be either read-only or editable.
+
+<%-getScreenshot('/GridBasic_CL?popup=1','Basic Grid')%>
+
+A grid's datasource is a database table or view.  The database table or view is defined by the "table" property.<br/>
+<br/>
+In this example, the Customer "c" table contains the data for the grid:
 <pre>
 {
-  "table":"c",
-  "layout":"grid"
+  "layout":"grid",  //Required - define the model as a grid
+  "table":"c",      //Database table or view used as a data source
+  "actions":"B"     //Read-only grid (as opposed to an editable grid)
 }
 </pre>
-Create a grid by setting the <b>"layout"</b> parameter to "grid".<br/>
-<br/>
-Each grid gets its data from a database table or view.  In this example, the Customer "c" table contains the data for the grid.<br/>
-<br/>
-The database table or view is defined in the <b>"table"</b> parameter.
 
 <h3>Grid Fields</h3>
-Columns used in filtering or linking to other forms must be defined in the fields section.
-A key is required for updatable grids.
-xxxxxxxxxxxxxxxxxxxx
+The "fields" property defines the fields that are pulled from the database.  The database SQL statements will be automatically generated based on the fields.  Hidden columns, such as those used only for filtering or linking to other forms, must also be defined in the fields section.
 
+<pre>
+{
+  "fields":[
+    {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+    {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"edit:C"}
+  ]
+}
+</pre>
 
+Each field should have a "name", datatype information, and a caption.
 
-<h3>Grid Actions</h3>
-Basic grids feature only "B" (Browse) and "I" (Insert) actions.  Disabling the Browse action prevents access to the entire grid, while disabling the Insert action hides the "Add" button, if defined.
+<pre>
+*******
+1. check if "action":"" is pulled from the database
+2. check when action:B is applied
+
+xxxxxxxxxxxxxxxxxxxxxxx
+nokey
+
+name, type, length, precision, key, 
+*** unbound fields
+*** EJS
+hidden, access (B, S
+format
+value
+link
+html
+disable_sort
+disable_search
+disable_search_all
+"sql_sort"
+sql_search
+sql_search_sound
+captionstyle, captionclass
+cellstyle, cellclass
+</pre>
 
 <h3>Sort</h3>
+Clicking on the column header will sort the grid by that column.  Back-button history will also be added for the sort action.
 
+<pre>
+xxxxxxxxxxxxxxxxxxxxxxxx 
+Custom sort expressions
+sql_sort
+disable_sort
+</pre>
 
 <h3>Searching / Filtering</h3>
 "grid_require_filter": 1
 "grid_expand_filter": 1
 "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
+
+sql_search
+sql_search_sound
+disable_search
+disable_search_all
 
 <h3>"Add" Button</h3>
 "buttons":[{"link":"add:C"}],

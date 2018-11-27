@@ -43,8 +43,8 @@ User interface best practices recommend using breadcrumbs on all second-level pa
 <pre>
 {
   "breadcrumbs": {
-    "parents": [ "<i>breadcrumb_expression1</i>", ""<i>breadcrumb_expression2</i>", ... ],
-    "title": "<i>breadcrumb_expression</i>",
+    "parents": [ "[i]breadcrumb_expression1[/i]", ""[i]breadcrumb_expression2[/i]", ... ],
+    "title": "[i]breadcrumb_expression[/i]",
 
     //Optional Parameters
     "sql": "select c_id,c_name from c where c_id=isnull(@c_id,(select c_id from cc where cc_id=@cc_id))", //SQL statement to populate data for breadcrumbs
@@ -53,7 +53,7 @@ User interface best practices recommend using breadcrumbs on all second-level pa
   }
 }
 
-<i>breadcrumb_expression</i> :=
+[i]breadcrumb_expression[/i] :=
   "MODELID", or
   "HTML/EJS String", for example "<a href='CW?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
 
@@ -135,6 +135,16 @@ In the example below, a different SQL expression needs to be used for "add" and 
       "sql": "select cc.c_id,c_name,cc_name from cc inner join c on cc.c_id=c.c_id where cc_id=@cc_id",
       "title": "<#=bcrumbs.cc_name#>"
     }
+  }
+}
+</pre>
+
+<h4>Setting tabs in a linked model</h4>
+Tabs are specified as a querystring parameter, in the format: { "PARENT_MODEL": "SELECTED_TAB_MODEL" }.  The double-quotes must be escaped with a backslash \".
+<pre>
+{
+  "breadcrumbs": {
+    "parents": ["<a href='/CW?action=edit&c_id=<#=bcrumbs.c_id#>&tabs={\"CW\":\"C_CCL\"}'><#=bcrumbs.c_name#></a>"],
   }
 }
 </pre>

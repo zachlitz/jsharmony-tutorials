@@ -375,6 +375,14 @@ config.server.https_key = 'path/to/https-key.pem';   //HTTPS Private Key
 config.server.https_ca = 'path/to/https-ca.pem';     //HTTPS Certificate Authority Keychain (concatenate multiple files into one)
 config.server.request_timeout = 2*60*1000;   //Maximum execution time for a web request (default 2 min)
 config.server.add_default_routes = true;     //Automatically add 404 / Error Catching routes to the end of the jsh.Sites['main'] router
+config.server.webSockets = [
+  {
+    path: '/path',     //Path of the WebSocket for "upgrade" HTTP request
+    server: wsServer,  //WebSocket.Server object handling the request - new WebSocket.Server({ noServer: true })
+    roles: {},         //(Optional) jsHarmony roles for authentication, ex. { "DADMIN": "B" } -  "B" access is used for role evaluation
+    dev: 1             //(Optional) Enable for users with the "DEV" role, not for users with the "SYSADMIN" role
+  }
+]
 </pre>
 If the "PORT" environment variable is set, that value will override config.server.http_port<br/>
 If the "TLSPORT" environment variable is set, that value will override config.server.https_port
@@ -658,6 +666,8 @@ config.debug_params = _.extend(config.debug_params,{
   db_requests: false,        //Log every database request
   db_log_level: 6,           //Bitmask: 2 = WARNING, 4 = NOTICES :: Database messages logged to the console / log 
   db_error_sql_state: true,  //Log full SQL state on database error
+
+  log_socket: true,          //Enable DEV users to connect via WebSockets and read log
   
   monitor_globals: true,     //Enable client-side monitoring of global / window variables: display a message if a new variable is found
   ignore_globals: [],        //Ignore these global / window variables in the client-side global variable monitor

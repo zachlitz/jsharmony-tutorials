@@ -179,6 +179,21 @@ jsHarmonyTutorials.prototype.Init = function(config){
     jsh.$root('.tutorial_tabs a.overview').addClass('selected');
     jsh.$root('.tutorial_tabs_body').children().hide();
     jsh.$root('.tutorial_overview').show();
+    jsh.$root('.tutorial_overview pre').each(function(){
+      var jobj = $(this);
+      var html = jobj.html();
+
+      //Replace bracketes
+      html = XExt.ReplaceAll(html, "<", "&lt;");
+      html = XExt.ReplaceAll(html, ">", "&gt;");
+
+      //Bring back styles
+      html = XExt.ReplaceAll(html, "[i]", "<i>");
+      html = XExt.ReplaceAll(html, "[/i]", "</i>");
+      html = XExt.ReplaceAll(html, "[b]", "<b>");
+      html = XExt.ReplaceAll(html, "[/b]", "</b>");
+      jobj.html(html);
+    });
     jsh.$root('.tutorial_overview pre').not('.shell').each(function(i, block) {
       hljs.highlightBlock(block);
     });
