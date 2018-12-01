@@ -265,16 +265,22 @@ config.passwords = {
   "field_name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 };
 
-//Array of functions to be executed after jsHarmony server is started.  Ensure "callback();" is called after each function
-//This hook can be used to initialize the database
-config.onServerReady = [
-  function(callback, servers){ return callback(); }
-];
-
 //Array of functions to be executed after jsHarmony config is loaded, before initialization.  Ensure "callback();" is called after each function
 //This hook can be used to override config settings
 config.onConfigLoaded = [
   function(callback, jsh){ return callback(); }
+];
+
+//Array of functions to be executed after jsHarmony database drivers are loaded, before the schema is read.  Ensure "callback();" is called after each function
+//This hook can be used to initialize the database
+config.onDBDriverLoaded = [
+  function(callback, jsh){ return callback(); }
+];
+
+//Array of functions to be executed after jsHarmony server is started.  Ensure "callback();" is called after each function
+//This hook can be used to initialize job processors
+config.onServerReady = [
+  function(callback, servers){ return callback(); }
 ];
 
 //Additional CSS files merged into application.css

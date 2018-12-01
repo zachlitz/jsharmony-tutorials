@@ -49,11 +49,15 @@ function jsHarmonyTutorials(){
 jsHarmonyTutorials.prototype = new jsHarmonyModule();
 
 jsHarmonyTutorials.prototype.Application = function(){
+  var _this = this;
   var jsh = new jsHarmony();
   var factory = new jsHarmonyFactory();
   jsh.AddModule(factory);
   jsh.AddModule(this);
   jsh.Sites[factory.mainSiteID] = _.extend(this.getFactoryConfig(),jsh.Sites[factory.mainSiteID]);
+  jsh.Config.onDBDriverLoaded.push(function(cb){
+    _this.InitFactoryDB(cb);
+  });
   return jsh;
 }
 
@@ -70,34 +74,33 @@ jsHarmonyTutorials.prototype.InitTutorialsDB = function(cb){
   });
 }
 
+jsHarmonyTutorials.prototype.InitFactoryDB = function(cb){
+  var _this = this;
+  //Initialize Database
+  var db = _this.jsh.DB['default'];
+  db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{},function(err,rslt){
+    if(err || !rslt){
+      console.log('Initializing database tables, please wait...');
+      db.RunScripts(_this.jsh, ['*','init','init'], {}, function(err, rslt){
+        console.log('Initializing database functions, please wait...');
+        if(err){ console.log('Error initializing database'); console.log(err); return; }
+        db.RunScripts(_this.jsh, ['*','restructure'], {}, function(err, rslt){
+          console.log('Initializing database data, please wait...');
+          if(err){ console.log('Error initializing database'); console.log(err); return; }
+          db.RunScripts(_this.jsh, ['*','init_data'], {}, function(err, rslt){
+            if(err){ console.log('Error initializing database'); console.log(err); return; }
+            _this.InitTutorialsDB(cb);
+          });
+        });
+      });
+    }
+    else _this.InitTutorialsDB(cb);
+  });
+}
+
 jsHarmonyTutorials.prototype.Init = function(cb){ 
   var _this = this;
   _this.LoadTutorials(cb);
-
-  //Initialize Database
-  if(!_this.jsh.Config.onServerReady) _this.jsh.Config.onServerReady = [];
-  else if(!_.isArray(_this.jsh.Config.onServerReady)) _this.jsh.Config.onServerReady = [_this.jsh.Config.onServerReady];
-  _this.jsh.Config.onServerReady.unshift(function(cb, servers){
-    var db = _this.jsh.DB['default'];
-    db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{},function(err,rslt){
-      if(err || !rslt){
-        console.log('Initializing database tables, please wait...');
-        db.RunScripts(_this.jsh, ['*','init','init'], {}, function(err, rslt){
-          console.log('Initializing database functions, please wait...');
-          if(err){ console.log('Error initializing database'); console.log(err); return; }
-          db.RunScripts(_this.jsh, ['*','restructure'], {}, function(err, rslt){
-            console.log('Initializing database data, please wait...');
-            if(err){ console.log('Error initializing database'); console.log(err); return; }
-            db.RunScripts(_this.jsh, ['*','init_data'], {}, function(err, rslt){
-              if(err){ console.log('Error initializing database'); console.log(err); return; }
-              _this.InitTutorialsDB(cb);
-            });
-          });
-        });
-      }
-      else _this.InitTutorialsDB(cb);
-    });
-  });
 }
 
 jsHarmonyTutorials.prototype.getFactoryConfig = function(){
