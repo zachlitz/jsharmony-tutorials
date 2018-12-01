@@ -8,7 +8,7 @@
     "roles": {"C_B":"B","C_X":"*"},
     "sort":["^c_name"], 
     "buttons":[{"link":"add:C"}],
-    "topmenu":"clients",
+    "menu":"clients",
     "commitlevel":"row",
     "fields":[
       {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},

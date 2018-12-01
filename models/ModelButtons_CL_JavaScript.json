@@ -5,7 +5,7 @@
     "title":"All Customers",
     "caption":[0,"Customer","Customers"],
     "actions":"B", 
-    "topmenu":"clients",
+    "menu":"clients",
     "buttons":[
       {"text":"Current Model ID","link":"js:js:XExt.Alert('The current model is '+xformid);","icon":"search"},
       {"text":"Active Users Report","link":"js:XExt.popupReport('RPE',{ 'pe_sts': 'ACTIVE' },{width:850,height:600});","icon":"export"}

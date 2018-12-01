@@ -7,7 +7,7 @@
   "roles": {"C_B":"B","C_X":"*"},
   "sort":["^cc_name"], 
   "buttons":[{"link":"add:C_CC", "bindings": { "c_id": "c_id" } }],
-  "topmenu":"clients",
+  "menu":"clients",
   "fields":[
     {"name":"c_id","type":"bigint","foreignkey": 1},
     {"name":"cc_id","type":"bigint","actions":"B","key":1,"link":"edit:C_CC","caption": "ID"},

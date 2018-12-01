@@ -31,6 +31,7 @@ var async = require('async');
 var _ = require('lodash');
 var express = require('jsharmony/lib/express');
 var ejs = require('ejs');
+var menu = require('jsharmony-factory/models/_menu.js');
 
 function jsHarmonyTutorials(){
   var _this = this;
@@ -103,7 +104,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
   var _this = this;
   return { 
     auth: false,
-    menu: function(req,res,jsh,params,onComplete){ params.XMenu = { MainMenu:[], SubMenus: {} }; params.ShowListing = true; onComplete(); },
+    menu: menu.bind(null, 'S'),
     public_apps: [
       { '*':  express.static(path.join(_this.basepath, 'public')) },
       { '*':  function(req, res, next){

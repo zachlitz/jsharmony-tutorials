@@ -25,6 +25,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 }
 </script>
 
+<h3>Built-in jsHarmony Menu System</h3>
+
 The jsHarmony menu system can be most easily leveraged using the jsHarmony Factory.  jsHarmony Factory provides a turnkey menu system with:
 
 <ul>
@@ -36,23 +38,175 @@ The jsHarmony menu system can be most easily leveraged using the jsHarmony Facto
   <li>Administration screens for managing users and roles</li>
 </ul>
 
+The two-level horizontal menu features a top-level menu, and a sub-menu for each top-level menu:
+<%-getScreenshot('/PEL','Top Menu', { height: 135 })%>
 
+When more items are displayed than will fit on the screen, "More" side-menus are automatically generated:
+<%-getScreenshot('/PEL','Top Menu More', { width:710, height: 135 })%>
+<%-getScreenshot('/PEL','Top Menu More Expanded', { width:710, onload:function(){ return new Promise(function(resolve){
+  jshInstance.$('.xmenu_more').click()
+  return resolve();
+}); } })%>
+<%-getScreenshot('/PEL','Sub Menu More Expanded', { width:710, onload:function(){ return new Promise(function(resolve){
+  jshInstance.$('.xsubmenu_more').click()
+  return resolve();
+}); } })%>
+
+<h3>Built-in jsHarmony Factory Menu Administration</h3>
+Menu administration is available in the jsHarmony Factory Developer tab:
+<%-getScreenshot('/X_SMLW','Menu Administration')%>
+Right-click on a menu to add a child menu item or to delete a menu item.  There are two menu levels:
+<ul>
+  <li>Top-level menu items can be added under "Main System" or "Customer"</li>
+  <li>Submenu items can be added under each top-level menu item</li>
+</ul>
+The Menu ID should be unique across the system.  "Sequence #" will update the sort order.<br/>
+<br/>
+Additionally, a "List" view is available for quick entry:
+<%-getScreenshot('/X_SML','Menu Administration - List View', { height: 400 })%>
+
+Each menu item is visible to users with only the specified roles.  Menu roles can be managed by clicking "Privileges":
+<%-getScreenshot('/X_SRMSELR_HW?action=edit&sm_id=3','Menu Administration - Roles')%>
+
+<h3>JavaScript Actions</h3>
+Each MenuItem can execute JavaScript when it is clicked, instead of navigating to a link.  Use the "js:" prefix to execute javascript:
 <pre>
-//Server-side interface
-jshSite.menu = function(req,res,jsh,params,onComplete){ 
-  params.ShowListing = true; 
-  params.XMenu = { MainMenu:[], SubMenus:{} }; 
+Model / Command:  js:alert('Sample JavaScript action');
+</pre>
+
+<h3>jsHarmony Factory Menu Database Design</h3>
+The jsHarmony Factory database schema is shown below.  Fully custom menus can use their own database structures by overriding the jsHaronySite.menu function.
+<pre>
+jsharmony.SM :: Contains all menu items
+  SM_ID           Menu Item Database ID
+  SM_ID_Parent    Menu Item Parent Database ID
+  SM_STS          Status - ACTIVE / HOLD / CLOSED
+  SM_Name         Menu Item ID (Text ID, used in the menu system front-end)
+  SM_Seq          Sequence # (Sort Order)
+  SM_DESC         Title - Displayed as the menu item text
+  SM_DESCL        Menu Item Long Description
+  SM_DESCVL       Menu Item Very Long Description
+  SM_Cmd          Relative link to a page, or Javascript prefixed with "js:"
+  SM_Image        URL of Image for menu item
+  SM_SubCmd       Additional text appended to SM_Cmd - can used for Anchor links
+  SM_UTYPE        Whether the menu is for the Main System "S", or the Client Portal "C"
+
+jsharmony.SRM :: Main System roles, per menu item
+  SM_ID     Menu Item Database ID
+  SR_NAME   Role Name
+
+jsharmony.CRM :: Client Portal roles, per menu item
+  SM_ID     Menu Item Database ID
+  CR_NAME   Role Name
+</pre>
+Each user is assigned roles in the jsharmony.SPER / jsharmony.CPER tables.  Users will only see menu items that are assigned roles that the user has access to.
+
+<h3>Custom Menus</h3>
+
+<h3 data-level="2">Architecture</h3>
+
+The menu consists of four components:
+<ul>
+  <li>jsHarmonySite.menu function to load menu data from the database for an individual user</li>
+  <li>EJS Template to render menu in HTML</li>
+  <li>CSS Styles</li>
+  <li>XMenu.js extension for dynamic interaction (Submenus, "More" drop-down)</li>
+</ul>
+
+
+<h3 data-level="2">Menu Data: jsHarmonySite.menu</h3>
+
+The built-in menu data function is part of the jsHarmony Factory, in the "modles/_menu.js" file.  Custom menu data functions can be implemented in app.config.js:
+<pre>
+var jshsite = jsh.Sites['main'];
+jshsite.menu = function(req,res,jsh,params,onComplete){ 
+  params.startmodel = 'MODELID'; 
+  params.menudata = { 
+    MainMenu:[
+      {
+        ID: "ITEM1",
+        Title: "First Item",
+        Link: "/MODELID1",
+        OnClick: "alert('test');",
+        Selected: true
+      },
+      {
+        ID: "ITEM2",
+        Title: "Second Item",
+        Link: "/MODELID2",
+        Selected: false
+      },
+    ], 
+    SubMenus:{
+      "ITEM1": [
+        {
+          ID: "SUBITEM1",
+          Title: "Sub Item 1",
+          Link: "/MODELID",
+          OnClick: "alert('test');",
+          Selected: true
+        }
+      ],
+      "ITEM2": [ ... ]
+    } 
+  }; 
   onComplete(); 
 }
 </pre>
+The menudata object should contain "MainMenu" and "SubMenus".  MainMenu is an array of MenuItems, while SubMenus is an associative array of arrays of MenuItems, indexed by the parent MainMenu item ID.<br/>
+<br/>
+The "OnClick" action will override any "Link".  Links can include an Anchor tag to navigate to a specific scroll position of a page.<br/>
+<br/>
+Setting "Selected" to true will highlight the MainMenu item or Submenu item by adding the "selected" class to the target menu item.  The selected class may additionally be overridden by the client-side XMenu.js implementation.
 
+<h3 data-level="2">EJS Template</h3>
+The EJS view renders the menu HTML.  The Horizontal Menu uses the "jsh_menu_horizontal.ejs" view.  When programming custom menus, the view should handle the situation when "menudata" is not passed to the view by inspecting the "locals" variable.
+<pre class="no_styles">
+<div class="xmenuhorizontal">
+  &lt;%
+  if(locals.menudata && menudata.MainMenu){
+    %&gt;<div class="xmenu">&lt;%
+    for(var i=0;i<menudata.MainMenu.length;i++){ menuitem = menudata.MainMenu[i];
+      %&gt;<a href="&lt;%-menuitem.Link%&gt;" onclick="&lt;%-ejsext.escapeHTML(menuitem.OnClick?menuitem.OnClick+';return false;':'')%&gt;" data-id="&lt;%=menuitem.ID%&gt;" class="xmenuitem xmenuitem_&lt;%=menuitem.ID%&gt; &lt;%-ejsext.iif(menuitem.Selected,'selected')%&gt;">&lt;%=menuitem.Title%&gt;<div class="bottom"></div></a>&lt;%
+    }
+    %&gt;</div>&lt;%
+  }
+}
+%&gt;
+</div>
+</pre>
+The EJS menu view are included in the template views "index.ejs" and "client.ejs" via the RenderEJS function:
 <pre>
-//Client-side interface
---Style sheets and JS files
---Interface hooks
+&lt;%-jsh.RenderEJS('jsh_menu_horizontal',locals)%&gt;
 </pre>
 
+<h3 data-level="2">CSS Styles</h3>
+The menu styles are defined in jsHarmony.theme.css, but can be overridden in each application's "public_css" folder.
+
+<h3 data-level="2">XMenu.js</h3>
+XMenu.js provides a dependency-injection framework for custom menus.  Custom Menus should derive from the XMenuBase prototype:
 <pre>
-topmenu
-Explain architecture of menus / CRM / SRM
+var XMenuHorizontal = function(){ }
+XMenuHorizontal.prototype = new XMenuBase();
+
+//Determine whether the menu is installed on the page  ** Not a prototype function
+XMenuHorizontal.isActive = function(){ return jsh.$root('.xmenuhorizontal').length; }
+
+//Initialize the menu (create internal data structured, if necessary
+XMenuHorizontal.prototype.Init = function(){ }
+
+//Update the menu to display "menuid" as the currently selected item
+XMenuHorizontal.prototype.Select = function(menuid){ }
+
+//Called when the browser window is resized
+XMenuHorizontal.prototype.RefreshLayout = function(){ }
+
+//Called when a link is clicked, with the link as a parameter.
+//Can be used to handle situations such as hiding a popup menu when navigating to a new page
+XMenuHorizontal.prototype.Navigated = function(obj){ }
+
+//Bind the custom menu to the global XMenu handler.  Must be bound before jsHarmony.Init / $(document).ready is called on the client
+XMenu.Interfaces['horizontal'] = XMenuHorizontal;
 </pre>
+
+jsHarmony.Init will instantiate the menu interface into the jshInstance.XMenu.Menus object, if isActive for the Interface returns "true".

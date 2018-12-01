@@ -5,7 +5,7 @@
     "title":"All Customers",
     "caption":[0,"Customer","Customers"],
     "actions":"B", 
-    "topmenu":"clients",
+    "menu":"clients",
     "buttons":[{"link":"add:ModelButtons_C"}],
     "fields":[
       {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},

@@ -6,7 +6,7 @@
   "actions": "BIUD", 
   "roles": {"C_B":"B","C_X":"*"},
   "caption": [ "", "Contact", "Contacts" ],
-  "topmenu": "clients",
+  "menu": "clients",
   "breadcrumbs":{
     "sql": "select c_name from c where c_id=(ifnull(@c_id,(select c_id from cc where cc_id=@cc_id)))",
     "sql_params":["c_id"]

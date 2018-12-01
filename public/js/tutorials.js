@@ -138,8 +138,16 @@ jsHarmonyTutorials.prototype.Init = function(config){
       if(config.Demo && config.Demo.length) jsh.$root('.tutorial_tabs a.demo').show();
       else jsh.$root('.tutorial_tabs a.demo').hide();
 
+      //Add PRE tags to tutorials
+      var body = rslt.data;
+      body = body.replace(/<pre([^>]*)>([^]*?)<\/pre([^>]*)>/gi, function(match, pre_start, html, pre_end){
+        html = XExt.ReplaceAll(html, "<", "&lt;");
+        html = XExt.ReplaceAll(html, ">", "&gt;");
+        return '<pre'+pre_start+'>'+html+'</pre'+pre_end+'>';
+      });
+
       //Load Tutorial in Body
-      jsh.$root('.tutorial_overview').html(rslt.data);
+      jsh.$root('.tutorial_overview').html(body);
 
       //Create outline
       var header_i = 0;
@@ -184,17 +192,19 @@ jsHarmonyTutorials.prototype.Init = function(config){
       var html = jobj.html();
 
       //Replace bracketes
-      html = XExt.ReplaceAll(html, "<", "&lt;");
-      html = XExt.ReplaceAll(html, ">", "&gt;");
+      //html = XExt.ReplaceAll(html, "<", "&lt;");
+      //html = XExt.ReplaceAll(html, ">", "&gt;");
 
       //Bring back styles
-      html = XExt.ReplaceAll(html, "[i]", "<i>");
-      html = XExt.ReplaceAll(html, "[/i]", "</i>");
-      html = XExt.ReplaceAll(html, "[b]", "<b>");
-      html = XExt.ReplaceAll(html, "[/b]", "</b>");
+      if(jobj.not('.no_styles,.raw').length){
+        html = XExt.ReplaceAll(html, "[i]", "<i>");
+        html = XExt.ReplaceAll(html, "[/i]", "</i>");
+        html = XExt.ReplaceAll(html, "[b]", "<b>");
+        html = XExt.ReplaceAll(html, "[/b]", "</b>");
+      }
       jobj.html(html);
     });
-    jsh.$root('.tutorial_overview pre').not('.shell').each(function(i, block) {
+    jsh.$root('.tutorial_overview pre').not('.shell,.raw').each(function(i, block) {
       hljs.highlightBlock(block);
     });
     jsh.$root('.tutorial_overview span.curdt').text(moment.utc().format());

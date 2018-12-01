@@ -266,8 +266,15 @@ config.passwords = {
 };
 
 //Array of functions to be executed after jsHarmony server is started.  Ensure "callback();" is called after each function
+//This hook can be used to initialize the database
 config.onServerReady = [
   function(callback, servers){ return callback(); }
+];
+
+//Array of functions to be executed after jsHarmony config is loaded, before initialization.  Ensure "callback();" is called after each function
+//This hook can be used to override config settings
+config.onConfigLoaded = [
+  function(callback, jsh){ return callback(); }
 ];
 
 //Additional CSS files merged into application.css
@@ -466,8 +473,8 @@ site.cookiesalt = '';           //Salt used by cookieParser to prevent user from
 
 //Site menu generator
 site.menu = function(req,res,jsh,params,onComplete){ 
-  params.ShowListing = true; 
-  params.XMenu = { MainMenu:[], SubMenus:{} }; 
+  params.showlisting = true; 
+  params.menudata = { MainMenu:[], SubMenus:{} }; 
   onComplete(); 
 }
 

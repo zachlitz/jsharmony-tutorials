@@ -2,7 +2,7 @@
 "comment":"TMPL_DEFAULT",
   "layout": "exec",
   "actions": "B",
-  "topmenu":"reports",
+  "menu":"reports",
   "pagesettings": { "border": "0.5cm" },
   "pageheader" : ["<style type=\"text/css\">body { zoom:0.75; }</style>",
                   "<h3 style=\"font-size:14px;font-family:'Droid Sans';\"><%=data.HOUSE[0].HOUSE_NAME%>",

@@ -6,7 +6,7 @@
   "actions": "BIUD", 
   "roles": {"C_B":"B","C_X":"*"},
   "caption": [ "", "Customer", "Customers" ],
-  "topmenu": "clients",
+  "menu": "clients",
   "popup":[1000,700],
   "fields": [
     {"name":"c_id", "type": "bigint", "actions":"B","key": 1},

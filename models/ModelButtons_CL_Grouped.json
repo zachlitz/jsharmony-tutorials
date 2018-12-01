@@ -5,7 +5,7 @@
     "title":"All Customers",
     "caption":[0,"Customer","Customers"],
     "actions":"B", 
-    "topmenu":"clients",
+    "menu":"clients",
     "buttons":[
       {"group":"Actions","link":"add:ModelButtons_C","icon":"add"},
       {"group":"Actions","link":"edit:ModelButtons_CL","icon":"search","text":"View Customers"}

@@ -6,7 +6,7 @@
   "actions": "BIUD", 
   "roles": {"C_B":"B","C_X":"*"},
   "caption": [ "", "Customer", "Customers" ],
-  "topmenu": "clients",
+  "menu": "clients",
   "sqlexec": "update c set c_sts='INACTIVE' where c_id=@c_id", 
   "popup":[1000,700],
   "fields": [
