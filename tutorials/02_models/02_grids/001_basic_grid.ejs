@@ -20,10 +20,30 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
+  "ID": "grid_basic",
   "Title": "Basic Grid",
   "Menu": ["Models","Grids"],
-  "Code": ["/models/CL.json"],
-  "Demo": "/CL"
+  "Code": [
+    "/models/GridBasic_CL.json",
+    "/models/GridBasic_ReadOnlyColumn.json",
+    "/models/GridBasic_ReadOnlyGrid.json",
+    "/models/GridBasic_Controls.json",
+    "/models/GridBasic_Controls_Links.json",
+    "/models/GridBasic_HTML.json",
+    "/models/GridBasic_Sort.json",
+    "/models/GridBasic_Search.json",
+    "/models/GridBasic_Rowcount.json",
+    "/models/GridBasic_ExtendedProperties.json"
+  ],
+  "Demo": [
+    { "url": "/GridBasic_CL", "title": "Basic Grid" },
+    { "url": "/GridBasic_ReadOnlyColumn", "title": "Read-Only Column" },
+    { "url": "/GridBasic_ReadOnlyGrid", "title": "Read-Only Grid" },
+    { "url": "/GridBasic_Controls", "title": "Grid Controls" },
+    { "url": "/GridBasic_Controls_Links", "title": "Grid Links" },
+    { "url": "/GridBasic_HTML", "title": "Grid HTML Controls" },
+    { "url": "/GridBasic_Rowcount", "title": "Grid Rowcount" }
+  ]
 }
 </script>
 <h3>Introduction</h3>
@@ -31,86 +51,328 @@ The "grid" layout is used to view or edit multiple records.  Grids can be either
 
 <%-getScreenshot('/GridBasic_CL?popup=1','Basic Grid')%>
 
-A grid's datasource is a database table or view.  The database table or view is defined by the "table" property.<br/>
-<br/>
-In this example, the Customer "c" table contains the data for the grid:
+Syntax for a basic grid is as follows:
 <pre>
-{
-  "layout":"grid",  //Required - define the model as a grid
-  "table":"c",      //Database table or view used as a data source
-  "actions":"B"     //Read-only grid (as opposed to an editable grid)
+"MODELID": {
+  "layout":"grid",              //Required - define the model as a grid
+  "table":"TABLE_OR_VIEW",      //Database table or view used as a data source
+  "caption":["SINGULAR_CAPTION","PLURAL_CAPTION"], //Caption defining the data being edited
+  "fields":[                                       //List of database fields
+    {"name":"FIELD_NAME", "caption":"CAPTION"}
+  ]
 }
 </pre>
-
-<h3>Grid Fields</h3>
-The "fields" property defines the fields that are pulled from the database.  The database SQL statements will be automatically generated based on the fields.  Hidden columns, such as those used only for filtering or linking to other forms, must also be defined in the fields section.
-
+For example:
 <pre>
-{
+"CL": {
+  "table":"c",
+  "layout":"grid",
+  "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-    {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"edit:C"}
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Customer"}
   ]
 }
 </pre>
 
-Each field should have a "name", datatype information, and a caption.
+A grid's datasource is a database table or view.  The database table or view is defined by the "table".  Custom SQL can be used for more advanced scenarios, such as grids that display data from multiple tables.<br/>
+<br/>
+The model caption described the singular and plural names of the data items.  If the caption is not defined, it will default to ["Item","Items"].<br/>
+<br/>
+Each grid field's "name" should match the database column name.  The field caption will be displayed as the column heading.<br/>
+
+<h3>Datatypes and Primary Key</h3>
+Each grid field needs a datatype.  Grids with insert / update / delete statements also require a primary key.  Read-only grids can operation without a primary key, however the "nokey" attribute should be set to true so that it does not generate warnings that the primary key is missing.  In most scenarios, the primary key and datatypes can be automatically recognized based on the database schema, if Config.system_settings.automatic_schema is enabled.<br/>
+<br/>
+Datatypes can alternatively be manually defined as follows:
+<pre>
+"fields": [
+  {"name":"c_id","type":"bigint","key":1,"caption": "ID"},
+  {"name":"c_name","type":"varchar","length":"50","caption":"Customer"}
+]
+</pre>
+Additional information, including a list of all datatypes, is available in the <a href="/tutorials/field_datatypes">Field Datatypes</a> tutorial.
+
+<h3>Actions and Read-only Fields and Grids</h3>
+Actions define whether the data can be "B" (Browsed), "I" (Inserted), "U" (Updated), or "D" (Deleted).  Actions can be defined at the field or model level.<br/>
+<br/>
+An individual field can be made read-only by setting the field action to "B":
+<pre>
+"fields":[
+  {"name":"c_id","caption": "ID"},
+  {"name":"c_name","caption":"Customer","action":"B"}
+]
+</pre>
+<%-getScreenshot('/GridBasic_ReadOnlyColumn?popup=1','Read-only Column')%>
+
+An entire grid can be made read-only by setting the model action to "B":
+<pre>
+"CL": {
+  "table":"c",
+  "layout":"grid",
+  "action":"B",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Customer"}
+  ]
+}
+</pre>
+<%-getScreenshot('/GridBasic_ReadOnlyGrid?popup=1','Read-only Grid')%>
+
+
+Additional information on actions and roles can be found in the <a href="/tutorials/model_actions">Actions / Roles</a> tutorial.
+
+<h3>Grid Fields / Controls</h3>
+The "fields" property defines the fields that are pulled from the database.  The database SQL statements will be automatically generated based on the fields.  Hidden columns, such as those used only for filtering or linking to other forms, also need to be defined in the fields section.<br/>
+<br/>
+Fields controls can be modified using the "control" property:
+<pre>
+{
+  "fields":[
+    {"name":"c_id","caption": "ID","control":"textbox_VS"},
+    {"name":"c_name","caption":"Customer","control":"label"},
+    {"name":"c_sts","caption":"Status","control":"dropdown_M"}
+  ]
+}
+</pre>
+<%-getScreenshot('/GridBasic_Controls?popup=1','Grid Controls')%>
+
+Labels can also link to other models and popup forms:
+<pre>
+{
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Customer","control":"label","link":"edit:C"}
+  ]
+}
+</pre>
+<%-getScreenshot('/GridBasic_Controls_Links?popup=1','Grid Controls - Links')%>
+
+Controls can be customized in a variety of ways.  See the <a href="/tutorials/fields_standard_controls">Fields</a> tutorials for more information.
+
+<h3>Unbound / HTML Fields</h3>
+Unbound fields can be used to display custom links, images, and interactive UX elements in grid rows.  Any field without a "type" property will be unbound.  Unbound HTML fields should have the "control" set to "html", and "value" set to the HTML / EJS code:
 
 <pre>
-*******
-1. check if "action":"" is pulled from the database
-2. check when action:B is applied
-
-xxxxxxxxxxxxxxxxxxxxxxx
-nokey
-
-name, type, length, precision, key, 
-*** unbound fields
-*** EJS
-hidden, access (B, S
-format
-value
-link
-html
-disable_sort
-disable_search
-disable_search_all
-"sql_sort"
-sql_search
-sql_search_sound
-captionstyle, captionclass
-cellstyle, cellclass
+{
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","control": "hidden"},
+    {"name":"c_name_disp","html":"<b>Customer: </b><#=datarow.c_name#>","caption":"Customer"}
+  ]
+}
 </pre>
+
+The following EJS variables are available for evaluating row HTML:
+<pre>
+{
+  datarow,  //The current data row, ex:  { c_id: 1, c_name: "ACME Industries" }
+  rowid,    //The # of the current row being rendered
+  xejs,     //EJS extension functions (XExt.xejs)
+  jsh,      //The jsHarmony client object
+  instance  //The name of the jsHarmony client instance
+}
+</pre>
+
+<%-getScreenshot('/GridBasic_HTML?popup=1','Grid Controls - HTML')%>
+
+Any database columns used in the HTML expression, that are not displayed on the grid, should be added as "hidden" columns, so that the data can be loaded into the datarow object.
 
 <h3>Sort</h3>
-Clicking on the column header will sort the grid by that column.  Back-button history will also be added for the sort action.
-
+Clicking on the column header will sort the grid by that column.  Back-button history will also be added for the sort action.<br/>
+<br/>
+The following properties are available to manage sort behavior:
 <pre>
-xxxxxxxxxxxxxxxxxxxxxxxx 
-Custom sort expressions
-sql_sort
-disable_sort
+Model:
+  //Model's Default Sort Order
+  "sort": [ { "E_Name": "asc" }, { "C_Name": "desc" } ]
+  //Model's Default Sort Order - Alternate Syntax
+  "sort": [ "^E_Name", "vC_Name" ]
+Field:
+  "sql_sort": "ifnull(c_name,c_id)"
+  "disable_sort": true
 </pre>
 
+<h4>model.sort</h4>
+The model's default sort order is defined using the "sort" property - an array of field names and their sort direction.  There are two syntax options available for the sort array:
+<ul>
+  <li>
+    Standard Syntax:<br/>
+    Ascending: { "FIELD_NAME", "asc" }<br/>
+    Descending: { "FIELD_NAME", "desc" }
+  </li>
+  <li>Short Syntax:<br/>
+    Ascending: "^FIELD_NAME"<br/>
+    Descending: "vFIELD_NAME"
+  </li>
+</ul>
+
+<h4>field.sql_sort</h4>
+
+Each field can have a custom SQL sort expression using the "sql_sort" property:
+<pre>
+{
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Customer","sql_sort":"ifnull(c_name,c_id)"}
+  ]
+}
+</pre>
+
+<h4>Disable Sort by Field</h4>
+Setting "disable_sort" to true on the field will prevent the column from being sorted.
+
+<h4>Advanced Sorting<h4/>
+Advanced sorting, such as always keeping one of the rows on top, can be implemented by overriding the model.sqlselect expression.  Additional information can be found in the <a href="/tutorials/model_database_sql">Model Database / SQL</a> tutorial.
+
 <h3>Searching / Filtering</h3>
-"grid_require_filter": 1
-"grid_expand_filter": 1
-"noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
+Searching / Filtering is automatically added to each grid.  Search the grid by clicking on the "Filter" icon.
+<%-getScreenshot('/GridBasic_CL?popup=1','Grid Filtering', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$('.xfilterbutton').click();
+  window.setTimeout(resolve, 1000);
+}); }, beforeScreenshot:function(jsh, page, cb){
+  page.click('.xfilter_column').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
 
-sql_search
-sql_search_sound
-disable_search
-disable_search_all
+<%-getScreenshot('/GridBasic_CL?popup=1','Grid Filtering - ID', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$('.xfilterbutton').click();
+  window.setTimeout(function(){
+    jshInstance.$root('.xfilter_column').val('c_id').change();
+    return resolve(); 
+  }, 1000);
+}); }, beforeScreenshot:function(jsh, page, cb){
+  page.click('.xfilter_comparison').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
 
-<h3>"Add" Button</h3>
-"buttons":[{"link":"add:C"}],
-{ "link": "add:H", "icon": "add", "text": "Add %%%CAPTION%%%", "actions": "I", "bindings": { "N_SCOPE_ID": "N_SCOPE_ID", "N_SCOPE": "'C'", "C_ID":  "N_SCOPE_ID", "N_TYPE":  "'C'" }, "style": "", "class": "", "roles": { "CLIENT": "*", "C_ADMIN": "B" }, "nl": 1 }, //or just put the link for add
-  "nogridadd": 1,
+<%-getScreenshot('/GridBasic_CL?popup=1','Grid Filtering - Customer', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$('.xfilterbutton').click();
+  window.setTimeout(function(){
+    jshInstance.$root('.xfilter_column').eq(0).val('c_id').change();
+    jshInstance.$root('.xfilter_add').click();
+    jshInstance.$root('.xfilter_column').eq(0).val('c_name').change();
+    return resolve(); 
+  }, 1000);
+}); }, beforeScreenshot:function(jsh, page, cb){
+  page.click('.xfilter_expression_0 .xfilter_comparison').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
+
+Each filter column has a comparison type based on the datatype.  For instance, strings have a "contains" filter, while numbers have a "greater than" filter.<br/>
+<br/>
+Filter expressions can be "and" expressions, where only the rows that match all of the criteria are returned.  Alternatively, clicking on the "and" label will change the filter expression to an "or" expression.  "Or" expressions return all rows that match any of the filter parameters.<br/>
+<br/>
+Filters will update the URL, and can be bookmarked by the browser.</br>
+<br/>
+The following properties are available to manage search / filter behavior:
+<pre>
+Model:
+  "grid_require_filter": 1
+  "grid_expand_filter": 1
+  "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
+
+Field:
+  "sql_search":"c_name||' '||c_desc"
+  "sql_search_sound": "c_id in (select c_id from sdx where sdx_col='c_name' and sdx_val=soundex(%%%FIELD%%%))"
+  "disable_search": true
+  "disable_search_all": true
+  "enable_search": true
+</pre>
+
+<h4>model.grid_require_filter</h4>
+The "grid_require_filter" parameter is used on grids with a lot of computed data, where the initial query may be slow.  This will prevent the initial grid results from showing when the form is first loaded.
+
+<h4>model.grid_expand_filter</h4>
+The "grid_expand_filter" parameter will automatically open the filter when a grid is first loaded.  This is useful for grids with a lot of data that are frequently queried, such as customer listings.<br/>
+<br/>
+The "grid_expand_filter" parameter is also helpful when integrating with barcode scanners, since the search field has focus when the page is first opened.
+
+<h4>model.noresultsmessage</h4>
+The message displayed in the grid when no results are returned for a query.  By default, this is:
+<pre>
+No results found %%%FORSEARCHPHRASE%%%
+</pre>
+The %%%FORSEARCHPHRASE%%% variable will automatically be replaced with the search phrase.
+
+<h4>field.sql_search</h4>
+The field "sql_search" property can be used to customize the data that is searched.  This can be used to extend the search across additional fields.
+
+<h4>field.sql_search_sound</h4>
+Soundex implementations are used to search by pronunciation instaed of by a character string.  This is especially useful when searching for people's names, where one name can have multiple spellings, such as "Caitlyn", "Katelin",  "Kaitlin", and "Caitlin".<br/>
+<br/>
+The Soundex information is often implemented via database trigger, storing the phonetic representation in a "soundex" table:
+<pre>
+sdx :: Soundex Table
+  sdx_id        Soundex Internal ID
+  field_name    Field name that is being encoded
+  table_name    Table name of the field that is being encoded
+  table_id      Unique key in the table of the field that is being encoded
+  sdx_word      Original word
+  sdx_val       Soundex value
+</pre>
+A trigger should populate the sdx table when the target field is updated (in this case, the customer name):
+<pre>
+delete from sdx where table_name='c' and table_id=new.c_id
+insert into sdx(table_name, field_name, table_id, sdx_word, sdx_val)
+         values('c', 'c_name', new.c_id, new.c_name, soundex(new.c_name) )
+</pre>
+Then, the "sql_search_sound" expression can be used in the field to search the soundex table by pronunciation:
+<pre>
+"sql_search_sound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
+</pre>
+The %%%FIELD%%% variable will be replaced by the search query.
+
+<h4>Removing a Field from the Search Drop-down</h4>
+Setting a field's "disable_search" property to true will remove the field from the search drop-down.
+<pre>
+{
+  "fields":[
+    {"name":"c_name","caption":"Customer","disable_search":true}
+  ]
+}
+</pre>
+
+<h4>Removing a Field from the "Any..." Filter Column Search</h4>
+The "disable_search_all" property will remove the field from the "Any..." Filter Column search.  This is useful primary for performance reasons, such as in situations with data-intensive computed columns.  The "disable_search_all" property still enables users to search by the computed column individually, but removes the column from the "All Fields" search.
+<pre>
+{
+  "fields":[
+    {"name":"c_name","caption":"Customer","disable_search_all":true}
+  ]
+}
+</pre>
+
+<h4>Enabling Search on a Hidden Field</h4>
+By default, hidden fields have search disabled.  Search can be enabled on a hidden field with the "enable_search" property.  This is especially useful for searching for a hashed field, such as an SSN:
+<pre>
+{
+  "fields":[
+    {"name":"c_ssnhash","caption": "SSN","type":"hash","length":20,"salt":"c_ssnhash","enable_search":true}
+  ]
+}
+</pre>
 
 <h3>Paging</h3>
-Paging is automatically performed when the user scrolls to the bottom of the screen.  The number of rows per page can be configured via:
-<pre>"rowlimit": 50</pre>
-The Config variable "default_rowlimit" defined in app.config.js sets the default value of the rowlimit parameter:
-<pre>jsh.Config.default_rowlimit = 50;</pre>
-In certain use cases, automatic paging can be disabled via:
-<pre>"disableautoload": 1</pre>
+When the user scrolls to the bottom of the screen, the next "page" of data is automatically loaded and added to the bottom of the grid.  The number of rows per "page" can be configured per-model via the "rowlimit" property:
+<pre>
+{
+  "rowlimit": 50
+}
+</pre>
+The Config variable "default_rowlimit" in app.config.js sets the default value of the rowlimit parameter.<br/>
+<br/>
+If necessary, automatic paging can be disabled via the "disableautoload" property:
+<pre>
+{
+  "disableautoload": true
+}
+</pre>
+With automatic paging disabled, the user will need to manully click "Load More" to load the next page of data.  This can be useful in situations where multiple grid are stacked on the same screen.
+
+<h3>Number of Rows</h3>
+The total number of rows returned for the current filter can be displayed at the top of the grid by using the "grid_rowcount" property.
+<pre>
+{
+  "grid_rowcount: true
+}
+</pre>
+<%-getScreenshot('/GridBasic_Rowcount?popup=1','Grid Rowcount')%>

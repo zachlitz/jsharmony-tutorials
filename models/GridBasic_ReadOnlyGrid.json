@@ -1,7 +1,8 @@
 { 
-  "GridBasic_CL": {
+  "GridBasic_ReadOnlyGrid": {
     "table":"c",
     "layout":"grid",
+    "actions":"B",
     "caption":[0,"Customer","Customers"],
     "fields":[
       {"name":"c_id","caption": "ID"},

@@ -21,9 +21,97 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Editable Grid",
-  "Menu": ["Models","Grids"]
+  "Menu": ["Models","Grids"],
+  "Code": [
+    "/models/GridEditable_CL.json"
+  ],
+  "Demo": "/GridEditable_CL?popup=1"
 }
 </script>
-Editable Grid
 
-Grid Commit + Validation Levels (Cell / Row / Page)
+<h3>Introduction</h3>
+Editable grids provide for in-line editing of grid data.  See the <a href="/tutorials/grid_basic">Basic Grid</a> tutorial for information on how to set up a basic editable grid.
+<%-getScreenshot('/GridEditable_CL?popup=1','Editable Grid')%>
+
+<h3>Grid Commit Levels</h3>
+A commit happens when data is saved to the server.  the following commit levels are available:
+<ul>
+  <li><b>page</b> - Entire grid is saved in one transaction.  User must click the "Save" button at the top of the screen.</li>
+  <li><b>row</b> - Grid is saved once the user leaves the row</li>
+  <li><b>cell</b> - Grid is saved every time the user leaves a cell</li>
+  <li><b>none</b> - Grid is not saved (read-only)</li>
+  <li><b>auto</b> - Grid is set to row-level commits when it is the topmost model, and page-level commits when it is in a subform</li>
+</ul>
+Set the commit level using the "commitlevel" property:
+<pre>
+{
+  "commitlevel": "page"
+}
+</pre>
+
+<h3>Grid Validation Levels</h3>
+Grid validation can run at either the "row" or "cell" level.  By default, validation is run at the "row" level.
+
+<pre>
+{
+  "validationlevel": "row"
+}
+</pre>
+
+<%-getScreenshot('/GridEditable_CL?popup=1','Grid Validation', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.c_name').first().focus().val('').change().blur();
+  jshInstance.$root('.save').click();
+  window.setTimeout(resolve, 100);
+}); } })%>
+
+In order to leave the "error" state, the user must either:
+
+<ul>
+  <li>Fix the validation error, or</li>
+  <li>Delete the row, or</li>
+  <li>Press "Escape" to cancel the modification</li>
+</ul>
+
+<h3>Reselect After Edit</h3>
+If data columns, such as timestamps, are updated server-side after an insert or update using triggers, it may be necessary to reselect that data client-side after an insert or update.  The "reselectafteredit" property runs an additional "select" after each row is updated:
+<pre>
+{
+  "reselectafteredit": "row"
+}
+</pre>
+Values for "reselectafteredit" can either be "row" or "" (blank).
+
+<h3>Save Changes on Any Other Forms Before Updating</h3>
+On a form with multiple subforms / grids, there may be data dependencies between grid data and other data on the form.  In this scenario, it may be useful to require the user to save any other changes before editing data in the grid.  The "grid_save_before_update" property requires the user to save any pending changes before editing grid data.
+<pre>
+{
+  "grid_save_before_update": true
+}
+</pre>
+
+<h3>"Add" Row Position</h3>
+When the user adds a new row, by default, the row is added to the top of the grid, as the "first" row.  Alternatively, the row can instead be added to the bottom of the grid, as the "last" row, using the "newrowposition" property.  Available values are:
+<ul>
+  <li>first</li>
+  <li>last</li>
+</ul>
+
+<pre>
+{
+  "newrowposition": "first"
+}
+</pre>
+
+<%-getScreenshot('/GridEditable_CL?popup=1','Grid Add', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.xbuttonadd').click();
+  window.setTimeout(resolve, 100);
+}); } })%>
+
+<h3>"Add" Button</h3>
+The "Add" button is automatically added to any editable grid that has the "I" (Insert) action.  To hide the add button, either remove the "I" action, or use the "hide_system_buttons" property:
+<pre>
+{
+  "hide_system_buttons": ["add"]
+}
+</pre>
+More information about hiding system buttons is available in the <a href="/tutorials/model_buttons#hiding_system_buttons">Model Buttons</a> tutorial.

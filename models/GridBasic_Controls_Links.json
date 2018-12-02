@@ -1,11 +1,12 @@
 { 
-  "GridBasic_CL": {
+  "GridBasic_Controls_Links": {
     "table":"c",
     "layout":"grid",
+    "actions":"B",
     "caption":[0,"Customer","Customers"],
     "fields":[
       {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"}
+      {"name":"c_name","caption":"Customer","control":"label","link":"edit:C"}
     ]
   }
 }

@@ -42,6 +42,13 @@ jsHarmonyTutorials.prototype.Init = function(config){
 
   var curTutorial = null;
 
+  function getAnchorID(txt){
+    var rslt = (txt||'').toLowerCase().replace(/[\W_]+/g,' ').trim();
+    rslt = rslt.replace(/ /g,'_');
+    while(rslt.indexOf('__')>=0) rslt = rslt.replace(/\_\_/g,'_');
+    return rslt;
+  }
+
   function genTutorialsLOV(lov,menu,parentid){
     for(var f in menu){
       var node = {};
@@ -113,6 +120,8 @@ jsHarmonyTutorials.prototype.Init = function(config){
       //if(config.Menu) for(var i=config.Menu.length-1;i>=0;i--) displayTitle = config.Menu[i] + ' - ' + displayTitle;
       //Add History
       var url = '/tutorials/'+tutorial;
+      var anchor = window.location.hash;
+      if(anchor) url += anchor;
       
       document.title = 'Tutorial - '+displayTitle;
       if(!options.noHistory){
@@ -150,15 +159,14 @@ jsHarmonyTutorials.prototype.Init = function(config){
       jsh.$root('.tutorial_overview').html(body);
 
       //Create outline
-      var header_i = 0;
       var outline_html = '';
       jsh.$root('.tutorial_overview').find('h1,h2,h3').each(function(){
         var jobj = $(this);
         if(jobj.closest('.tutorials_intro').length) return;
-        header_i++;
-        jobj.before('<a class="tutorial_outline_anchor" name="header_'+header_i+'"></a>');
+        var header_id = getAnchorID(jobj.text());
+        jobj.before('<a class="tutorial_outline_anchor" name="'+header_id+'"></a>');
         var level = jobj.data('level');
-        outline_html += '<li class="level'+level+'"><a href="#header_'+header_i+'">'+XExt.escapeHTML(jobj.text())+'</a></li>';
+        outline_html += '<li class="level'+level+'"><a href="#'+header_id+'">'+XExt.escapeHTML(jobj.text())+'</a></li>';
       });
       if(outline_html) jsh.$root('.tutorial_overview').prepend('<ul class="tutorial_outline">'+outline_html+'</ul>');
       jsh.$root('.tutorial_overview').prepend(jsh.$root('.tutorial_overview .tutorials_intro'));
@@ -176,8 +184,16 @@ jsHarmonyTutorials.prototype.Init = function(config){
           break;
         }
       }
+
       onLayout();
       if(typeof config.scrollTop !== 'undefined') jsh.$root('.tutorial_tabs_body').scrollTop(config.scrollTop);
+      else if(anchor){
+        var anchorpos = $('a[name='+anchor.substr(1)+']');
+        if(anchorpos.length){
+          jsh.$root('.tutorial_tabs_body').scrollTop(anchorpos.offset().top-jsh.$root('.tutorial_tabs_body').offset().top);
+        }
+      }
+
       if(cb) cb();
     });
   }
@@ -253,7 +269,6 @@ jsHarmonyTutorials.prototype.Init = function(config){
   }
 
   _this.viewTutorialDemo = function(idx){
-    console.log(curTutorial.Demo[idx]);
     var windowparams = curTutorial.Demo[idx].windowparams||'height=700,width=1000';
     window.open(curTutorial.Demo[idx].url,'_blank',windowparams);
   }

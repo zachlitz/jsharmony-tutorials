@@ -20,6 +20,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
+  "ID": "model_styling",
   "Title": "Model Styling / CSS / Fonts",
   "Menu": ["Models","Models Overview"],
   "Code": [
@@ -104,7 +105,9 @@ EJS can be used to add dynamic styles based on the row index or row data.  EJS s
   <li><b>jsh</b> : The jsHarmony client-side instance</li>
   <li><b>instance</b> : The ID of the jsHarmony client-side instance</li>
 </ul>
-Additionally, "even" and "odd" classes are automatically added to each grid row.
+Additionally, "even" and "odd" classes are automatically added to each grid row.<br/>
+<br/>
+The xejs.iif and xejs.case statements can be used for conditional styles:
 <pre>
 {
   "rowstyle": "<#=xejs.iif(datarow['c_sts']=='ACTIVE','color:red;','color:black;')#>",

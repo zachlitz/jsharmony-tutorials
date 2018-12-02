@@ -1,5 +1,5 @@
 { 
-  "GridBasic_CL": {
+  "GridEditable_CL": {
     "table":"c",
     "layout":"grid",
     "caption":[0,"Customer","Customers"],

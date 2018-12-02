@@ -88,20 +88,26 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     page.setViewport({ width: params.browserWidth, height: params.browserHeight }).then(function(){
       page.goto(fullurl).then(function(){
         page.evaluate(params.onload).then(function(){
-          console.log(_this.basepath + '/public/screenshots/'+fname);
-          var screenshotParams = { path: fpath, type: 'png' };
-          if(params.height){
-            screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
+          var takeScreenshot = function(){
+            console.log(_this.basepath + '/public/screenshots/'+fname);
+            var screenshotParams = { path: fpath, type: 'png' };
+            if(params.height){
+              screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
+            }
+            else screenshotParams.fullPage = true;
+            page.screenshot(screenshotParams).then(function(){
+              _this.processScreenshot(fpath, params, function(err){
+                if(err) jsh.Log.error(err);
+                page.close().then(function () {
+                  return callback();
+                }).catch(function (err) { jsh.Log.error(err); });
+              });
+            }).catch(function (err) { jsh.Log.error(err); });
           }
-          else screenshotParams.fullPage = true;
-          page.screenshot(screenshotParams).then(function(){
-            _this.processScreenshot(fpath, params, function(err){
-              if(err) jsh.Log.error(err);
-              page.close().then(function () {
-                return callback();
-              }).catch(function (err) { jsh.Log.error(err); });
-            });
-          }).catch(function (err) { jsh.Log.error(err); });
+          if(params.beforeScreenshot){
+            params.beforeScreenshot(jsh, page, takeScreenshot);
+          }
+          else takeScreenshot();
         }).catch(function (err) { jsh.Log.error(err); });
       }).catch(function (err) { jsh.Log.error(err); });
     }).catch(function (err) { jsh.Log.error(err); });

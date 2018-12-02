@@ -28,7 +28,7 @@
     "fields": [
       {"name":"c_id","link":"edit:C_ENCRYPT"},
       {"name":"c_name","link":"edit:C_ENCRYPT"},
-      {"name":"c_einhash","type":"hash","length":20,"salt":"c_einhash","actions":"S","caption": "EIN"}
+      {"name":"c_einhash","type":"hash","length":20,"salt":"c_einhash","enable_search":true,"caption": "EIN"}
     ]
   },
   "CL_FILE": {

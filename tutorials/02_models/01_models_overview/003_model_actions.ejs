@@ -20,6 +20,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
+  "ID": "model_actions",
   "Title": "Actions / Roles",
   "Menu": ["Models","Models Overview"]
 }
@@ -93,9 +94,9 @@ By default, only the SYSADMIN and DEV roles have access to a model.  Permissions
 In order for a model to be visible on a site, the model must have roles assigned for that site.  If a model definition has no roles defined, the model will only be accessible on the "main" site to SYSADMIN and DEV users.
 
 <h4>Effective Permissions</h4>
-Effective permissions for a user are computed by intersecting the model's "actions" parameter with a union of each of the user's "role" permissions.  For example:
+Role permissions are added to each other, however they can never exceed the "actions" parameter.  For example:
 <pre>
-"actions":"BIUD",
+"actions":"BIU",
 "roles":{ 
   "SYSADMIN":"*",
   "EDIT":"BU",
@@ -104,5 +105,5 @@ Effective permissions for a user are computed by intersecting the model's "actio
 </pre>
 Will result in the following permissions:<br/>
  &nbsp; A user with only the "READONLY" role will have <b>"B"</b> access<br/>
- &nbsp; A user with both the "EDIT" and "READONLY" roles will have <b>"BU"</b> access<br/>
- &nbsp; A user with both the "SYSADMIN", "EDIT" and "READONLY" roles will have <b>"BIUD"</b> access
+ &nbsp; A user with "EDIT" and "READONLY" roles will have <b>"BU"</b> access<br/>
+ &nbsp; A user with "SYSADMIN", "EDIT" and "READONLY" roles will have <b>"BIU"</b> access

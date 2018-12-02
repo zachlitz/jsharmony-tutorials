@@ -41,11 +41,12 @@ create table c (
   c_doc_size integer,
   c_doc_utstmp text,
   c_doc_uu text,
+  c_desc text,
   foreign key (c_sts) references ucod_c_sts(codeval)
 );
-insert into c(c_id,c_sts,c_name) values (1,'DEACTIVE','ACME Industries');
-insert into c(c_id,c_sts,c_name) values (2,'ACTIVE','Creative Engineering');
-insert into c(c_id,c_sts,c_name) values (3,'ACTIVE','Coffee Brothers');
+insert into c(c_id,c_sts,c_name,c_desc) values (1,'DEACTIVE','ACME Industries','Industrial Fixtures');
+insert into c(c_id,c_sts,c_name,c_desc) values (2,'ACTIVE','Creative Engineering','');
+insert into c(c_id,c_sts,c_name,c_desc) values (3,'ACTIVE','Coffee Brothers','');
 
 /*********CC*********/
 create table cc (

@@ -1,8 +1,10 @@
 { 
-  "GridBasic_CL": {
+  "GridBasic_Rowcount": {
     "table":"c",
     "layout":"grid",
+    "actions":"B",
     "caption":[0,"Customer","Customers"],
+    "grid_rowcount":true,
     "fields":[
       {"name":"c_id","caption": "ID"},
       {"name":"c_name","caption":"Customer"}

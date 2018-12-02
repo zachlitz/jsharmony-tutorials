@@ -182,7 +182,12 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
         var tutorial = req.params[0];
         //Check if tutorial exists
         var filepath = _this.tutfolder+'/'+tutorial;
-        if(!(tutorial in _this.tutorials)) return next();
+        if(!(tutorial in _this.tutorials)){
+          if(tutorial in _this.tutids){
+            return Helper.Redirect302(res,'/tutorials/'+_this.tutids[tutorial]);
+          }
+          return next();
+        }
         HelperRender.reqGet(req, res, jshrouter.jsh, 'tutorials_home', 'jsHarmony Tutorials',
           { basetemplate: 'tutorials', params: { req: req, menu: _this.tutmenu, tutids: _this.tutids, tutorials: _this.tutorials, popups: jshrouter.jsh.Popups } }, function(){});
       },
@@ -313,7 +318,7 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
       try{
         var dataobj = JSON.parse(data);
       }
-      catch(ex){ console.log('Error parsing JSON data in '+filepath+':\n'+data); return cb(); }
+      catch(ex){ console.log('FATAL ERROR: Error parsing JSON data in '+filepath+':\n'+data); return cb(); }
       if(!dataobj) return cb();
       var tutorialname = filepath.substr(_this.tutfolder.length+1);
 
@@ -322,13 +327,18 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
         var id = dataobj.Title||'';
         if(dataobj.Menu) id = dataobj.Menu.join('_') + '_' + id;
         dataobj.ID = Helper.ReplaceAll(id,' ','_').toUpperCase();
+
+        //Handle duplicates
+        var suffixid = 0;
+        while((dataobj.ID + (suffixid?'_'+suffixid:'')) in _this.tutids){
+          if(!suffixid) suffixid += 2;
+          else suffixid++;
+        }
+        if(suffixid) dataobj.ID += '_' + suffixid;
       }
-      var suffixid = 0;
-      while((dataobj.ID + (suffixid?'_'+suffixid:'')) in _this.tutids){
-        if(!suffixid) suffixid += 2;
-        else suffixid++;
+      if(dataobj.ID in _this.tutids){
+        console.log('\nFATAL ERROR: Duplicate Tutorial ID: '+dataobj.ID+'\n');
       }
-      if(suffixid) dataobj.ID += '_' + suffixid;
 
       _this.tutids[dataobj.ID] = tutorialname;
       _this.tutlisting.push(tutorialname);

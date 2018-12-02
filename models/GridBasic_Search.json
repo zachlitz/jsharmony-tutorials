@@ -1,11 +1,12 @@
 { 
-  "GridBasic_CL": {
+  "GridBasic_Search": {
     "table":"c",
     "layout":"grid",
     "caption":[0,"Customer","Customers"],
+    "grid_expand_filter": true,
     "fields":[
       {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"}
+      {"name":"c_name","caption":"Customer","sql_search":"c_name||' '||c_desc"}
     ]
   }
 }

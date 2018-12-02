@@ -20,8 +20,8 @@
         "showcode": ["ACTIVE"],"actions":"BU"}
     ],
     "fields": [
-      {"name":"c_id", "type": "bigint", "actions":"B","key": 1},
-      {"name": "c_sts","type":"varchar","length":8,"actions": "B"}
+      {"name":"c_id", "type": "bigint", "actions":"B","key": 1,"control":"hidden"},
+      {"name": "c_sts","type":"varchar","length":8,"actions": "B","control":"hidden"}
     ]
   },
 

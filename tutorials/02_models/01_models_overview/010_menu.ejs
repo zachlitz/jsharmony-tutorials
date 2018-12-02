@@ -21,7 +21,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Menu",
-  "Menu": ["Models","Models Overview"]
+  "Menu": ["Models","Models Overview"],
+  "Demo": "/X_SMLW"
 }
 </script>
 
@@ -74,14 +75,23 @@ Each MenuItem can execute JavaScript when it is clicked, instead of navigating t
 Model / Command:  js:alert('Sample JavaScript action');
 </pre>
 
+<h3>Using Menus in Models</h3>
+Each model should define the menu that is "selected" when the model is displayed.  The selected menu is defined using the "menu" property:
+<pre>
+{
+  "menu": "MENU_ID"
+}
+</pre>
+MENU_ID can be the Menu ID of a top-level menu, or of a submenu item.
+
 <h3>jsHarmony Factory Menu Database Design</h3>
 The jsHarmony Factory database schema is shown below.  Fully custom menus can use their own database structures by overriding the jsHaronySite.menu function.
 <pre>
 jsharmony.SM :: Contains all menu items
-  SM_ID           Menu Item Database ID
-  SM_ID_Parent    Menu Item Parent Database ID
+  SM_ID           Menu Item Internal Database ID
+  SM_ID_Parent    Menu Item Parent Internal Database ID
   SM_STS          Status - ACTIVE / HOLD / CLOSED
-  SM_Name         Menu Item ID (Text ID, used in the menu system front-end)
+  SM_Name         Menu ID (Text ID, used in the menu system)
   SM_Seq          Sequence # (Sort Order)
   SM_DESC         Title - Displayed as the menu item text
   SM_DESCL        Menu Item Long Description
@@ -92,11 +102,11 @@ jsharmony.SM :: Contains all menu items
   SM_UTYPE        Whether the menu is for the Main System "S", or the Client Portal "C"
 
 jsharmony.SRM :: Main System roles, per menu item
-  SM_ID     Menu Item Database ID
+  SM_ID     Menu Item Internal Database ID
   SR_NAME   Role Name
 
 jsharmony.CRM :: Client Portal roles, per menu item
-  SM_ID     Menu Item Database ID
+  SM_ID     Menu Item Internal Database ID
   CR_NAME   Role Name
 </pre>
 Each user is assigned roles in the jsharmony.SPER / jsharmony.CPER tables.  Users will only see menu items that are assigned roles that the user has access to.
