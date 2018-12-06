@@ -148,7 +148,10 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
               config: config,
               source: {},
             };
-            rslt.data = ejs.render(rslt.data, { getScreenshot: function(url, desc, params){ return _this.getScreenshot(url, desc, params); } });
+            rslt.data = ejs.render(rslt.data, { 
+              getScreenshot: function(url, desc, params){ return _this.getScreenshot(url, desc, params); },
+              instance: req.jshsite.instance
+            });
 
             if(!config.Demo) config.Demo = [];
             if(!_.isArray(config.Demo)) config.Demo = [config.Demo];

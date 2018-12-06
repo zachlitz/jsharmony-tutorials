@@ -1,12 +1,13 @@
 { 
-  "GridBasic_Search": {
+  "GridCustom_CL": {
     "table":"c",
     "layout":"grid",
+    "actions":"B",
     "caption":[0,"Customer","Customers"],
-    "grid_expand_filter": true,
+    "templates": { "grid": ".xgrid_GridCustom_CL_template" },
     "fields":[
       {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer","sql_search":"c_name||' '||c_desc"}
+      {"name":"c_name","caption":"Customer"}
     ]
   }
 }

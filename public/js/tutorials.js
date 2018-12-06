@@ -243,7 +243,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
     //Use template to render
     var ejssource = jsh.$root('.tutorial_code_listing_template').html();
     ejssource = ejssource.replace(/<#/g,'<%').replace(/#>/g,'%>')
-    jsh.$root('.tutorial_code_listing').html(ejs.render(ejssource,{data:curTutorial,xejs:XExt.xejs}));
+    jsh.$root('.tutorial_code_listing').html(ejs.render(ejssource,{data:curTutorial,xejs:XExt.xejs,jsh:jsh}));
     onLayout();
   }
 
@@ -261,7 +261,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
     }
     var ejssource = jsh.$root('.tutorial_code_template').html();
     ejssource = ejssource.replace(/<#/g,'<%').replace(/#>/g,'%>')
-    jsh.$root('.tutorial_code').html(ejs.render(ejssource,{data:{filename:filename,source:source},xejs:XExt.xejs}));
+    jsh.$root('.tutorial_code').html(ejs.render(ejssource,{data:{filename:filename,source:source},xejs:XExt.xejs,jsh:jsh}));
     jsh.$root('.tutorial_code_source').each(function(i, block) {
       hljs.highlightBlock(block);
     });
@@ -284,7 +284,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
     //Use template to render
     var ejssource = jsh.$root('.tutorial_demo_listing_template').html();
     ejssource = ejssource.replace(/<#/g,'<%').replace(/#>/g,'%>')
-    jsh.$root('.tutorial_demo_listing').html(ejs.render(ejssource,{data:curTutorial,xejs:XExt.xejs}));
+    jsh.$root('.tutorial_demo_listing').html(ejs.render(ejssource,{data:curTutorial,xejs:XExt.xejs,jsh:jsh}));
     onLayout();
   }
 
@@ -301,7 +301,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
       if(!options.noHistory) XExt.AddHistory(url,{});
       var ejssource = jsh.$root('.tutorial_search_results_template').html();
       ejssource = ejssource.replace(/<#/g,'<%').replace(/#>/g,'%>')
-      jsh.$root('.tutorial_search_results').html(ejs.render(ejssource,{data:rslt,xejs:XExt.xejs,tutorials:tutorials}));
+      jsh.$root('.tutorial_search_results').html(ejs.render(ejssource,{data:rslt,xejs:XExt.xejs,tutorials:tutorials,jsh:jsh}));
     });
     onLayout();
   }

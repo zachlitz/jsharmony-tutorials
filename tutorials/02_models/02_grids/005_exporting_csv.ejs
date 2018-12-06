@@ -22,7 +22,45 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Exporting CSV",
   "Menu": ["Models","Grids"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": ["/models/GridExport_CL.json"],
+  "Demo": "/GridExport_CL"
 }
 </script>
-Exporting a CSV
+Export any grid to a CSV by pressing the "Export" button in the top right.
+<%-getScreenshot('/GridExport_CL?popup=1','Grid Export')%>
+
+The grid will export the data with column headers to a CSV:<br/>
+&nbsp;
+<div class="GridExport_CL_Data"></div>
+<script type="text/javascript">
+(function(jsh){
+  var jobj = jsh.$root('.GridExport_CL_Data');
+  var _ = jsh._;
+  var XExt = jsh.XExt;
+  jobj.empty();
+  jsh.XPost.prototype.XExecute('GridExport_CL',{},function(rslt){
+    if(rslt && rslt.GridExport_CL){
+      var html = '<table border="1" cellpadding="5">';
+      html += '<tr><th>ID</th><th>Customer</th></tr>';
+      _.each(rslt.GridExport_CL, function(item){
+        html += '<tr><td>'+XExt.escapeHTML(item.c_id)+'</td><td>'+XExt.escapeHTML(item.c_name)+'</td></tr>';
+      });
+      html += '</table>';
+      jobj.html(html);
+    }
+  });
+})(<%=instance%>)
+</script>
+
+<h4>Filter / Sort</h4>
+If the data is filtered and sorted, the filters and sorts will be applied to the CSV.
+
+<h4>Row Limit</h4>
+The jsHarmony config setting "export_rowlimit" in app.config.js defines the maximum number of rows returned in an export:
+<pre>
+jsh.Config.export_rowlimit = 5000;
+</pre>
+
+<h4>Export URL</h4>
+CSV exports can be linked using URLs.  For example, the CSV URL for the model GridExport_CL would be:<br/>
+<a href="/_csv/GridExport_CL">/_csv/GridExport_CL</a>

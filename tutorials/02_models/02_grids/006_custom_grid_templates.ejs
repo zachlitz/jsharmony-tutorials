@@ -21,6 +21,68 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Custom Grid Templates",
-  "Menu": ["Models","Grids"]
+  "Menu": ["Models","Grids"],
+  "Code": [
+    "/models/GridCustom_CL.json",
+    "/models/GridCustom_CL.ejs",
+    "/models/GridCustom_CL.css"
+  ],
+  "Demo": "/GridCustom_CL"
 }
 </script>
+
+Custom Grid Templates can be used to render grid data in any layout, such as a calendar, slideshow, or list of buttons.
+
+<%-getScreenshot('/GridCustom_CL?popup=1','Custom Grid')%>
+
+First, the custom grid template needs to be defined in the model.templates.grid property:
+
+<pre>
+{
+  "templates": {
+    "grid": "TEMPLATE_SELECTOR"
+  }
+}
+</pre>
+For example:
+<pre>
+{
+  "templates": {
+    "grid": ".xgrid_CL_template"
+  }
+}
+</pre>
+Next, the HTML/EJS template needs to be defined.  The EJS uses &lt# ... #&gt; escape tags.  The HTML/EJS should be defined in a MODELID.ejs file, in the same folder as MODELID.json:
+<pre>
+<div class="xelem&lt;%=model.id%&gt; xgrid_CL_placeholder"></div>
+<script class="xgrid_CL_template" type="text/x-ejs-template" data-target=".xgrid_CL_placeholder">
+  <# _.each(data, function(row){  #>
+    <div><#=row.c_name#></div>
+  <# }); #>
+</script>
+</pre>
+There are two components to the Custom Grid Template, a "placeholder" and the "template".<br/>
+<br/>
+The "placeholder" defines where the custom grid template will be rendered.  The placeholder's content will be replaced with the result of the rendered template.<br/>
+<br/>
+The template itself is a script tag, of type "text/x-ejs-template".  It should have a "data-target" tag with the name of the target placeholder where the content will be rendered.<br/>
+<br/>
+The template should always return an HTML element, and not a text node.  Raw text should always be wrapped in a SPAN or DIV element.<br/>
+<br/>
+The template is rendered with the following EJS variables:
+<pre>
+{
+  rowid       //The starting rowid (0 unless "Load More" is used)
+  data        //The data returned from the database, an array of rows, ex: { [ "c_id": 1, "c_name": "First" ], [ "c_id": 2, "c_name": "Second" ] }
+  modelid     //The current Model ID
+  jsh         //The jsHarmony object
+  instance    //The name of the jsHarmony instance
+  xform       //The XData object used in rendering the grid
+  xform_meta  //The jsHarmony XForm meta-data
+  xejs        //XExt.ejs Helper functions
+  XExt        //XExt Helper functions
+  _           //Lodash Helper functions
+  moment      //Moment.js Helper functions
+  js          //JavaScript function wrapper - used to add modelid and the jsHarmony Helper functions into the local scope of onclick events
+}
+</pre>

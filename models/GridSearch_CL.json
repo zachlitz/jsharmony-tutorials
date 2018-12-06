@@ -1,0 +1,15 @@
+{ 
+  "GridSearch_CL": {
+    "table":"c",
+    "layout":"grid",
+    "caption":[0,"Customer","Customers"],
+    "grid_expand_filter": true,
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Customer",
+       "sql_search":"c_name||' '||c_desc",
+       "sqlwhere":"(c_name like '%'||@c_name||'%' or c_desc like '%'||@c_name||'%')"
+      }
+    ]
+  }
+}

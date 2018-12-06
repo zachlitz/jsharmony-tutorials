@@ -46,7 +46,10 @@ exports.generateScreenshots = function(callback){
 
         var screenshots = [];
   
-        ejs.render(txt, { getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); } });
+        ejs.render(txt, { 
+          getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); },
+          instance: ''
+        });
 
         async.eachSeries(screenshots, function(screenshot, screenshot_cb){
           _this.generateScreenshot(browser, screenshot.url, screenshot.desc, screenshot.params, screenshot_cb);

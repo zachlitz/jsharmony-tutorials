@@ -31,7 +31,6 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/GridBasic_Controls_Links.json",
     "/models/GridBasic_HTML.json",
     "/models/GridBasic_Sort.json",
-    "/models/GridBasic_Search.json",
     "/models/GridBasic_Rowcount.json",
     "/models/GridBasic_ExtendedProperties.json"
   ],
@@ -261,95 +260,7 @@ Each filter column has a comparison type based on the datatype.  For instance, s
 <br/>
 Filter expressions can be "and" expressions, where only the rows that match all of the criteria are returned.  Alternatively, clicking on the "and" label will change the filter expression to an "or" expression.  "Or" expressions return all rows that match any of the filter parameters.<br/>
 <br/>
-Filters will update the URL, and can be bookmarked by the browser.</br>
-<br/>
-The following properties are available to manage search / filter behavior:
-<pre>
-Model:
-  "grid_require_filter": 1
-  "grid_expand_filter": 1
-  "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
-
-Field:
-  "sql_search":"c_name||' '||c_desc"
-  "sql_search_sound": "c_id in (select c_id from sdx where sdx_col='c_name' and sdx_val=soundex(%%%FIELD%%%))"
-  "disable_search": true
-  "disable_search_all": true
-  "enable_search": true
-</pre>
-
-<h4>model.grid_require_filter</h4>
-The "grid_require_filter" parameter is used on grids with a lot of computed data, where the initial query may be slow.  This will prevent the initial grid results from showing when the form is first loaded.
-
-<h4>model.grid_expand_filter</h4>
-The "grid_expand_filter" parameter will automatically open the filter when a grid is first loaded.  This is useful for grids with a lot of data that are frequently queried, such as customer listings.<br/>
-<br/>
-The "grid_expand_filter" parameter is also helpful when integrating with barcode scanners, since the search field has focus when the page is first opened.
-
-<h4>model.noresultsmessage</h4>
-The message displayed in the grid when no results are returned for a query.  By default, this is:
-<pre>
-No results found %%%FORSEARCHPHRASE%%%
-</pre>
-The %%%FORSEARCHPHRASE%%% variable will automatically be replaced with the search phrase.
-
-<h4>field.sql_search</h4>
-The field "sql_search" property can be used to customize the data that is searched.  This can be used to extend the search across additional fields.
-
-<h4>field.sql_search_sound</h4>
-Soundex implementations are used to search by pronunciation instaed of by a character string.  This is especially useful when searching for people's names, where one name can have multiple spellings, such as "Caitlyn", "Katelin",  "Kaitlin", and "Caitlin".<br/>
-<br/>
-The Soundex information is often implemented via database trigger, storing the phonetic representation in a "soundex" table:
-<pre>
-sdx :: Soundex Table
-  sdx_id        Soundex Internal ID
-  field_name    Field name that is being encoded
-  table_name    Table name of the field that is being encoded
-  table_id      Unique key in the table of the field that is being encoded
-  sdx_word      Original word
-  sdx_val       Soundex value
-</pre>
-A trigger should populate the sdx table when the target field is updated (in this case, the customer name):
-<pre>
-delete from sdx where table_name='c' and table_id=new.c_id
-insert into sdx(table_name, field_name, table_id, sdx_word, sdx_val)
-         values('c', 'c_name', new.c_id, new.c_name, soundex(new.c_name) )
-</pre>
-Then, the "sql_search_sound" expression can be used in the field to search the soundex table by pronunciation:
-<pre>
-"sql_search_sound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
-</pre>
-The %%%FIELD%%% variable will be replaced by the search query.
-
-<h4>Removing a Field from the Search Drop-down</h4>
-Setting a field's "disable_search" property to true will remove the field from the search drop-down.
-<pre>
-{
-  "fields":[
-    {"name":"c_name","caption":"Customer","disable_search":true}
-  ]
-}
-</pre>
-
-<h4>Removing a Field from the "Any..." Filter Column Search</h4>
-The "disable_search_all" property will remove the field from the "Any..." Filter Column search.  This is useful primary for performance reasons, such as in situations with data-intensive computed columns.  The "disable_search_all" property still enables users to search by the computed column individually, but removes the column from the "All Fields" search.
-<pre>
-{
-  "fields":[
-    {"name":"c_name","caption":"Customer","disable_search_all":true}
-  ]
-}
-</pre>
-
-<h4>Enabling Search on a Hidden Field</h4>
-By default, hidden fields have search disabled.  Search can be enabled on a hidden field with the "enable_search" property.  This is especially useful for searching for a hashed field, such as an SSN:
-<pre>
-{
-  "fields":[
-    {"name":"c_ssnhash","caption": "SSN","type":"hash","length":20,"salt":"c_ssnhash","enable_search":true}
-  ]
-}
-</pre>
+Filters will update the URL, and can be bookmarked by the browser.
 
 <h3>Paging</h3>
 When the user scrolls to the bottom of the screen, the next "page" of data is automatically loaded and added to the bottom of the grid.  The number of rows per "page" can be configured per-model via the "rowlimit" property:
