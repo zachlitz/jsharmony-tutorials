@@ -1,11 +1,13 @@
 { 
-  "GridBasic_Sort": {
+  "ModelSQL_Grid": {
     "table":"c",
     "layout":"grid",
     "caption":[0,"Customer","Customers"],
+    "grid_rowcount":1,
     "fields":[
       {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer","sqlsort":"ifnull(c_name,c_id)"}
+      {"name":"c_name","caption":"Customer"},
+      {"name":"c_sts","caption":"Status"}
     ]
   }
 }

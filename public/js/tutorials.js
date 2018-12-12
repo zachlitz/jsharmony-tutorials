@@ -31,7 +31,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
   var $ = jsh.$;
   var _ = jsh._;
   var moment = jsh.moment;
-  var XPost = jsh.XPost;
+  var XForm = jsh.XForm;
   var XExt = jsh.XExt;
 
   for(var key in config) if(key in _this) _this[key] = config[key];
@@ -112,7 +112,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
 
   _this.loadTutorial = function(tutorial,options,cb){
     if(!options) options = {};
-    XPost.prototype.XExecute('../_tutorials/'+tutorial,{}, function (rslt) {
+    XForm.prototype.XExecute('../_tutorials/'+tutorial,{}, function (rslt) {
       var config = rslt.config;
       if(typeof options.scrollTop != 'undefined') config.scrollTop = options.scrollTop;
       config.id = tutorial;
@@ -294,7 +294,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
     jsh.$root('.tutorial_tabs_body').children().hide();
     jsh.$root('.tutorial_search_results').empty().show();
     jsh.$root('.tutorial_tabs').children().hide();
-    XPost.prototype.XExecute('../_search',{ query: query }, function (rslt) {
+    XForm.prototype.XExecute('../_search',{ query: query }, function (rslt) {
       document.title = 'Tutorial - Search Results - ' + query;
 
       var url = '/search/?'+$.param({query:query});

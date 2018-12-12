@@ -268,13 +268,13 @@ URL: /CL?action=edit&C_ID=1tabs={"CW":"C_CCL"}
 Buttons can run JavaScript by prefixing the link attribute with "js:"<br/>
 The following variables are added to the JavaScript namespace:
 <ul>
-  <li><b>xformid</b>: The model id of the form where the button is located</li>
+  <li><b>modelid</b>: The model id of the form where the button is located</li>
 </ul>
 <pre>
 {
   "buttons":[
     {
-      "link": "js:XExt.Alert('The current model is '+xformid);",
+      "link": "js:XExt.Alert('The current model is '+modelid);",
       "text": "Current Model ID"
     }
   ]
@@ -309,7 +309,7 @@ Note: If the window width and height is not specified, it will default to:
         1. The model.popup size if available
         2. 1000 x 600
 
-Example: XExt.popupForm('CW','edit',{'c_id':XForms[xformid].c_id()},{width:850,height:600});
+Example: XExt.popupForm('CW','edit',{'c_id':XModels[modelid].controller.form.Data.c_id()},{width:850,height:600});
 </pre>
 
 <h4>XExt.popupReport (modelid, params, windowparams, win)</h4>

@@ -54,7 +54,7 @@ For example:
 </pre>
 Next, the HTML/EJS template needs to be defined.  The EJS uses &lt# ... #&gt; escape tags.  The HTML/EJS should be defined in a MODELID.ejs file, in the same folder as MODELID.json:
 <pre>
-<div class="xelem&lt;%=model.id%&gt; xgrid_CL_placeholder"></div>
+<div class="xelem&lt;%=model.class%&gt; xgrid_CL_placeholder"></div>
 <script class="xgrid_CL_template" type="text/x-ejs-template" data-target=".xgrid_CL_placeholder">
   <# _.each(data, function(row){  #>
     <div><#=row.c_name#></div>
@@ -77,8 +77,7 @@ The template is rendered with the following EJS variables:
   modelid     //The current Model ID
   jsh         //The jsHarmony object
   instance    //The name of the jsHarmony instance
-  xform       //The XData object used in rendering the grid
-  xform_meta  //The jsHarmony XForm meta-data
+  xmodel      //The jsHarmony Model instance
   xejs        //XExt.ejs Helper functions
   XExt        //XExt Helper functions
   _           //Lodash Helper functions

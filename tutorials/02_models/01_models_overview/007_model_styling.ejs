@@ -227,14 +227,16 @@ Per-model styles are not publicly accessible.
 The jsHarmony page is composed of six primary HTML components:
 <ul>
   <li><b>xhead</b>: Logo and menu bar</li>
-  <li><b>xbody_TOPMODELID</b>: SPA container - recreated each time the model is loaded</li>
+  <li><b>xbody_TOPMODELCLASS</b>: SPA container - recreated each time the model is loaded</li>
   <li style="margin-left:20px;"><b>bcrumbs</b>: Breadcrumbs</li>
   <li style="margin-left:20px;"><b>xtitle</b>: Topmost title</li>
   <li style="margin-left:20px;"><b>xactions</b>: Buttons</li>
-  <li style="margin-left:20px;"><b>xformMODELID</b>: Each model's content</li>
+  <li style="margin-left:20px;"><b>xformMODELCLASS</b>: Each model's content</li>
 </ul>
 
-Each form and grid field has the classes: "xform_ctrl FIELDNAME xelemMODELID".
+Each form and grid field has the classes: "xform_ctrl FIELDNAME xelemMODELCLASS".<br/>
+<br/>
+The MODELCLASS is defined by the "model.class" attribute.  This defaults to the model ID.
 
 <h3>Popup Windows</h3>
 The "popup" attribute defines whether a model should be opened as a popup window.  Popup windows are used in a variety of situations, for instance when a user clicks on an Add or Edit link.<br/>

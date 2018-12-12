@@ -189,7 +189,7 @@ Model:
   //Model's Default Sort Order - Alternate Syntax
   "sort": [ "^E_Name", "vC_Name" ]
 Field:
-  "sql_sort": "ifnull(c_name,c_id)"
+  "sqlsort": "ifnull(c_name,c_id)"
   "disable_sort": true
 </pre>
 
@@ -207,14 +207,14 @@ The model's default sort order is defined using the "sort" property - an array o
   </li>
 </ul>
 
-<h4>field.sql_sort</h4>
+<h4>field.sqlsort</h4>
 
-Each field can have a custom SQL sort expression using the "sql_sort" property:
+Each field can have a custom SQL sort expression using the "sqlsort" property:
 <pre>
 {
   "fields":[
     {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Customer","sql_sort":"ifnull(c_name,c_id)"}
+    {"name":"c_name","caption":"Customer","sqlsort":"ifnull(c_name,c_id)"}
   ]
 }
 </pre>

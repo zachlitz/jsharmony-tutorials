@@ -10,7 +10,7 @@ jsh.App[modelid] = new (function(){
   this.dragStartTime = 0;
   this.dragDestination = null;
 
-  this.oninit = function(xform){
+  this.oninit = function(xmodel){
     //Bind event handlers
     $(document).bind('mousemove', _this.onmousemove);
     $(document).bind('mouseup', _this.onmouseup);
@@ -30,7 +30,7 @@ jsh.App[modelid] = new (function(){
 
   this.loadData = function(onComplete){
     //Execute the C_CUSTOM_GET_C model
-    XPost.prototype.XExecutePost('C_CUSTOM_GET_C', { }, function (rslt) { //On Success
+    XForm.prototype.XExecutePost('C_CUSTOM_GET_C', { }, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Populate arrays + Render
         _this.C = rslt.C_CUSTOM_GET_C[0];
@@ -47,7 +47,7 @@ jsh.App[modelid] = new (function(){
 
   this.updateStatus = function(c_id, c_sts, onComplete){
     //Execute the C_CUSTOM_GET_C model
-    XPost.prototype.XExecutePost('C_CUSTOM_UPDATE_C_STS', { c_id: c_id, c_sts: c_sts }, function (rslt) { //On Success
+    XForm.prototype.XExecutePost('C_CUSTOM_UPDATE_C_STS', { c_id: c_id, c_sts: c_sts }, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Re-render
         _this.loadData(onComplete);
@@ -69,7 +69,7 @@ jsh.App[modelid] = new (function(){
       data.C_STS.push(_.extend({}, c_sts, { C: c_per_sts }));
     });
     //Render the EJS template
-    var tmpl = jsh.$root('#C_CUSTOM_template').html();
+    var tmpl = jsh.$root('.C_CUSTOM_template').html();
     var jcontainer = jsh.$root('.C_CUSTOM_container');
     jcontainer.html(jsh.ejs.render(tmpl, { data: data, _: _, jsh: jsh }));
     //Bind mousedown event for dragging

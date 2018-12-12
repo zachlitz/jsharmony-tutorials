@@ -37,8 +37,8 @@ Model:
   "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
 
 Field:
-  "sql_search":"c_name||' '||c_desc"
-  "sql_search_sound": "c_id in (select c_id from sdx where sdx_col='c_name' and sdx_val=soundex(%%%FIELD%%%))"
+  "sqlsearch":"c_name||' '||c_desc"
+  "sqlsearchsound": "c_id in (select c_id from sdx where sdx_col='c_name' and sdx_val=soundex(%%%FIELD%%%))"
   "disable_search": true
   "disable_search_all": true
   "enable_search": true
@@ -59,10 +59,10 @@ No results found %%%FORSEARCHPHRASE%%%
 </pre>
 The %%%FORSEARCHPHRASE%%% variable will automatically be replaced with the search phrase.
 
-<h4>field.sql_search</h4>
-The field "sql_search" property can be used to customize the data that is searched.  This can be used to extend the search across additional fields.
+<h4>field.sqlsearch</h4>
+The field "sqlsearch" property can be used to customize the data that is searched.  This can be used to extend the search across additional fields.
 
-<h4>field.sql_search_sound</h4>
+<h4>field.sqlsearchsound</h4>
 Soundex implementations are used to search by pronunciation instaed of by a character string.  This is especially useful when searching for people's names, where one name can have multiple spellings, such as "Caitlyn", "Katelin",  "Kaitlin", and "Caitlin".<br/>
 <br/>
 The Soundex information is often implemented via database trigger, storing the phonetic representation in a "soundex" table:
@@ -81,9 +81,9 @@ delete from sdx where table_name='c' and table_id=new.c_id
 insert into sdx(table_name, field_name, table_id, sdx_word, sdx_val)
          values('c', 'c_name', new.c_id, new.c_name, soundex(new.c_name) )
 </pre>
-Then, the "sql_search_sound" expression can be used in the field to search the soundex table by pronunciation:
+Then, the "sqlsearchsound" expression can be used in the field to search the soundex table by pronunciation:
 <pre>
-"sql_search_sound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
+"sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
 </pre>
 The %%%FIELD%%% variable will be replaced by the search query.
 

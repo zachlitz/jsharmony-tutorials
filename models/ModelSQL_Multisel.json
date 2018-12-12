@@ -1,0 +1,13 @@
+{ 
+  "ModelSQL_Multisel": {
+    "table":"cf",
+    "layout":"multisel",
+    "onecolumn":true,
+    "caption":[0,"Customer","Customers"],
+    "fields":[
+      {"name":"c_id"},
+      {"name":"cf_id"},
+      {"name":"cf_type","caption":"Flag"}
+    ]
+  }
+}

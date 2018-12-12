@@ -22,29 +22,471 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "ID": "model_database_sql",
   "Title": "Database / SQL",
-  "Menu": ["Models","Models Overview"]
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelSQL_Grid.json",
+    "/models/ModelSQL_Form.json",
+    "/models/ModelSQL_Form_m.json",
+    "/models/ModelSQL_Multisel.json",
+    "/models/ModelSQL_Exec.json",
+    "/models/ModelSQL_Exec_multirecordset.json",
+    "/models/ModelSQL_Grid_sqlselect_sort.json",
+    "/models/ModelSQL_Field_sqlselect.json"
+  ]
 }
 </script>
-  
+
+<h3>Overview</h3>
+One of the key features of jsHarmony is its database integration.  Not only is the SQL automatically generated in most instances, but forms and grids can also have datatypes and controls automatically chosen based on the database schema.<br/>
+<br/>
+Enterprise systems, however, often require a high level of customization.  The automatic SQL expressions may need to be customized in different scenarios.  A variety of model and field properties are available for custom SQL behavior.
+
+<h3>Model Datasource</h3>
+The model datasource is set using the "table" property.  The value of the "table" property can be either a table or view.  Insert / Update / Delete statements will be automatically generated for that table or view.<br/>
+<br/>
+Schemas can be used in the table property by setting the value to SCHEMA.TABLE:
 <pre>
-Model ::
-  db
-  table
-  sqlselect
-    custom sort expressions (prioritize field on top)
-    custom search expressions
-  sqldownloadselect
-  sqlinsertencrypt
-  sqlinsert
-  sqlupdate
-  sqldelete
-  sqlrowcount
-  sqlexec
-
-  sqltype
-
-sqlwhere
-
-nokey
-unbound
+{
+  "table": "public.c"
+}
 </pre>
+
+<h4>Selecting from Multiple Tables</h4>
+In order to select data from multiple tables, it will be necessary to either:
+<ul>
+  <li>Create a view based on multiple tables, and set the model's "table" property to the name of the view</li>
+  <li>If the fields are read-only, use a "field.sqlselect" expression for each field that selects data from the other table.</li>
+  <li>If using a form, create a subform to access the other table</li>
+</ul>
+In many databases, views are read-only by default.  There are two options for making views updateable:
+<ul>
+  <li>Use triggers, views can be made updateable at the database-level</li>
+  <li>Custom sqlselect, sqlinsert, sqlupdate, and sqldelete statements can be written (see below)</li>
+</ul>
+
+<h3>Custom SQL</h3>
+Custom SQL expressions can be used to replace any of the generated SQL.  View the raw SQL for any model by turning on database debugging in app.config.js:<br/>
+<pre>
+config.debug_params.db_requests = true;
+</pre>
+
+Below is an overview of the SQL expressions that are generated.  Any of the escape
+<pre>
+sqlselect
+  Grid: select [i]fields[/i] from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%
+  Form: select [i]fields[/i] from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% and [i]key=@key[/i]
+  Form-m: select [i]fields[/i] from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% and [i]key=@key[/i] order by %%%SORT%%%
+  Multisel: select [i]fields[/i] from [i]table[/i] full outer join (%%%LOVSQL%%%) multiparent ... where 1=1 %%%DATALOCKS%%%
+sqlrowcount
+  select count(*) as cnt from [i]table[/i] where 1=1 %%%DATALOCKS%%% %%%SEARCH%%% order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%
+sqlinsert
+  insert into %%%TABLE%%%(%%%FIELDS%%%) values(%%%VALUES%%%);select scope_identity() as CHG_ID;
+sqlinsertencrypt
+  update [i]table[/i] set [i]field=@field[/i] where 1=1 %%%DATALOCKS%%% and [i]key=@key[/i]
+sqlupdate
+  Form: update [i]table[/i] set [i]field=@field[/i] where 1=1 %%%DATALOCKS%%% and [i]key=@key[/i]
+  Multisel: delete from [i]table[/i] where and [i]key=@key[/i] and [i]field[/i] not in (...) %%%DATALOCKS%%%
+            insert into [i]table[/i] select from %%%LOVSQL%%% where [i]field[/i] in (...) and [i]field[/i] not in (...) %%%DATALOCKS%%%
+sqldelete
+  delete from [i]table[/i] where 1=1 %%%DATALOCKS%%% and [i]key=@key[/i]
+sqldownloadselect
+  select [i]fields[/i] from [i]table[/i] where 1=1 %%%DATALOCKS%%% and [i]key=@key[/i]
+sqlexec
+  %%%DATALOCKS%%%
+
+For any models except "exec" models, the %%%SQL%%% variable can be used to prepend or append to the entire generated SQL string
+</pre>
+
+<h4>model.sqlselect / model.sqlwhere / model.sqlrowcount</h4>
+The "sqlselect" property can be used to override the full select SQL statement.  Since grids implement sorting, search, and paging, the following variables are available:
+<ul>
+  <li>%%%SQLWHERE%%% - The combined model.sqlwhere and field.sqlwhere statements</li>
+  <li>%%%DATALOCKS%%% - Datalocks generated for this model</li>
+  <li>%%%SEARCH%%% - The search query based on the Grid filters</li>
+  <li>%%%SORT%%% - Sort expression</li>
+  <li>%%%ROWCOUNT%%% - Number of rows to be returned per page</li>
+  <li>%%%ROWSTART%%% - Page offset</li>
+</ul>
+Since "multisel" joins against the List of Values (LOV), the %%%LOVSQL%%% parameter additionally provides the SQL for the List of Values.<br/>
+<br/>
+Custom "required" filters are most easily implemented using the model's "sqlwhere" property:
+<pre>
+{
+  "sqlwhere": "c_sts='ACTIVE'"
+}
+</pre>
+
+Simple sort expressions can be built using model.sort, as described in the <a href="/tutorials/grid_basic#sort">Basic Grid</a> tutorial.<br/>
+<br/>
+Additional permanent prefixed or suffixed sort expressions can be added using "model.sqlselect", for instance to always display "ACTIVE" customers on top:
+<pre>
+{
+  "sqlselect":"select c_id, c_name,c_sts from c where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by (case when c_sts='ACTIVE' then 0 else 1 end),%%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%"
+}
+</pre>
+
+<h4>model.sqlrowcount</h4>
+The "sqlrowcount" statement is executed during Grid select statements to return the total number of results.<br/>
+<br/>
+The <a href="/tutorials/grid_basic#number_of_rows">Basic Grid</a> tutorial has a screenshot of a grid with the "grid_rowcount" property enabled.
+
+<h4>model.sqlinsert / model.sqlinsertencrypt</h4>
+When grid or form data is saved, the "sqlinsert" and "sqlinsertencrypt" sql statements are executed.  The "sqlinsert" statement is first executed to create the row.<br/>
+<br/>
+If encrypted data is being saved, the primary key is used as part of the encryption algorithm, so any encrypted fields need to be saved in a subsequent "sqlinsertencrypt" update statement.<br/>
+<br/>
+The sqlinsert statement should return the new primary key.  This will be used to reselect the data.<br/>
+<br/>
+The sqlinsertencrypt statement should return the # of rows that were updated.  This validates that the update completed successfully.
+<pre>
+  Sample sqlinsert:
+    with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+  Sample sqlinsertencrypt:
+    with xrslt as (update c set c_ssn=@c_ssn,c_ssnhash=@c_ssnhash where 1=1 and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+</pre>
+
+<h4>model.sqlupdate</h4>
+The "sqlupdate" statement is executed for Grid, Form, Form-m, and Multisel updates.  The sqlupdate statement should return the # of rows that were updated.  This validates that the update completed successfully.
+
+<h4>model.sqldelete</h4>
+The "sqldelete" statement is executed for Grid, Form, and Form-m deletes.  The sqldelete statement should return the # of rows that were deleted.  This validates that the delete completed successfully.
+
+<h4>model.sqldownloadselect</h4>
+The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" controls.  The SQL statement should return the FILE_NAME and FILE_EXT.  The names of the FILE_NAME and FILE_EXT columns are defiend in the field.controlparams property.
+<pre>
+select d_id,d_ext,(('D'::text || d.d_id::character varying::text) || COALESCE(d.d_ext, ''::character varying)::text) as "d_filename" from jsharmony.D where 1=1  and d_id=@d_id
+</pre>
+
+<h4>model.sqlexec</h4>
+
+
+<h3>SQL Parameters / Order of Execution</h3>
+There are three ways SQL statements can be executed:
+<ul>
+  <li>
+    <b>Standard Non-transaction</b><br/>
+    SQL statements are executed in parallel.  All SQL parameters are passed-in, either via the Query String or Parent / Child Bindings.
+  </li>
+    <b>Transaction</b><br/>
+    SQL statements are executed in serial.  The results from one SQL statement are passed in to be available as parameters to the next SQL statement.<br/>
+    Parameters that should be resolved based on SQL results should have their value set to %%%FIELD%%%
+  <li>
+    <b>Waterfall Non-transaction</b><br/>
+    SQL statements can be grouped into batches.  SQL statements in each individual batch will be executed in parallel, and then aggregated and passed to the next batch.
+  </li>
+</ul>
+Save statements are executed in transactions.  In forms with parent / subforms, parents are saved first, and then results of the operation are passed to the subform.  This is done so that primary keys can be passed to the child forms.<br/>
+<br/>
+Form "select" statements are executed as waterfall non-transaction statements.  The primary "sqlselect" statement is executed first, and the result is then passed to the Title, Breadcrumb, Default Parameter, and LOV sql statements.  This enables results from the initial select to be fed back as parameters into the subsequent statements.<br/>
+<br/>
+All other statements are executed as standard non-transaction statements.<br/>
+<br/>
+In parent / child forms, the "select" statements are executed as an asynchronous tree, with the Parent "select" performed first.  Then any bindings from the Parent "select" statement can be applied to the parameters of the Child forms.
+
+<h3>Primary Key / No Key / Unbound</h3>
+Primary keys are pulled from the Querystring or from the Parent Form's bindings.  In insert statements, the Primary Key should be returned from the insert operation, so that the row can be reselected.
+
+<h4>model.nokey</h4>
+If no primary key exists for the model, for instance in a Grid without a primary key, the "model.nokey" attribute should be set:
+<pre>
+{
+  "nokey": true
+}
+</pre>
+
+A model with the "nokey" attribute will still execute the "select" SQL statements.
+
+<h4>model.unbound</h4>
+A model with the "unbound" attribute will not execute any SQL statements.
+<pre>
+{
+  "unbound": true
+}
+</pre>
+
+<h3>Sample Grid SQL</h3>
+For the model:
+<pre>
+{
+  "table":"c",
+  "layout":"grid",
+  "caption":[0,"Customer","Customers"],
+  "grid_rowcount":1,
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Customer"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+
+<pre>
+On Load:
+  sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1   order by c_id asc limit 51 offset 0
+  sqlrowcount: select count(*) as cnt from c where  1=1
+  LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+
+On Filter:
+  sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1   and ( c_name ilike @search_0_c_name) order by c_id asc limit 51 offset 0
+             @search_0_c_name:"%ACME%"
+  sqlrowcount: select count(*) as cnt from c where  1=1   and ( c_name ilike @search_0_c_name)
+             @search_0_c_name:"%ACME%"
+
+On Add:
+  sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+
+On Update:
+  sqlupdate: with xrslt as (update c set c_name=@c_name,c_sts=@c_sts where 1=1 and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+
+On Delete:
+  sqldelete: with xrslt as (delete from c where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+</pre>
+
+<h3>Sample Form SQL</h3>
+For the model:
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":[0,"Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+
+<pre>
+On Load:
+  Add:
+    LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+  Edit:
+    sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1  and c_id=@c_id
+    LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+
+On Add:
+  sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+
+On Update:
+  sqlupdate: with xrslt as (update c set c_name=@c_name,c_sts=@c_sts where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+
+On Delete:
+  sqldelete: with xrslt as (delete from c where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+</pre>
+
+<h3>Sample Form-m SQL</h3>
+For the model:
+<pre>
+{
+  "table":"c",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption":[0,"Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+
+<pre>
+On Load:
+  sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1  order by c_id asc
+  LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+
+On Add:
+  sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+
+On Update:
+  sqlupdate: with xrslt as (update c set c_name=@c_name,c_sts=@c_sts where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+
+On Delete:
+  sqldelete: with xrslt as (delete from c where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+</pre>
+
+<h3>Sample Multisel SQL</h3>
+For the model:
+<pre>
+{
+  "table":"cf",
+  "layout":"multisel",
+  "onecolumn":true,
+  "caption":[0,"Customer","Customers"],
+  "fields":[
+    {"name":"c_id"},
+    {"name":"cf_id"},
+    {"name":"cf_type","caption":"Flag"}
+  ]
+}
+</pre>
+
+<pre>
+On Load:
+  sqlselect: select cf_type ,coalesce(codeval::text,cf_type::text) codeval,coalesce(coalesce(codetxt::text,codeval::text),cf_type::text) codetxt from (select * from cf where 1=1  and c_id=@c_id) cf full outer join (select codeval,codetxt,codseq from UCOD_cf_type where (CODETDT is null or CODETDT>current_date)) multiparent on multiparent.codeval = cf.cf_type order by codseq,codetxt
+
+On Save:
+  with xrslt_delete as (delete from cf where 1=1  and c_id=@c_id and cf_type::text not in (@multisel0,@multisel1)  returning 1),xrslt_insert as (insert into cf(c_id,cf_type) select @c_id,codeval from (select codeval,codetxt,codseq from UCOD_cf_type where (CODETDT is null or CODETDT>current_date)) multiparent where codeval::text in (@multisel0,@multisel1) and codeval not in (select cf_type from cf where 1=1  and c_id=@c_id ) returning 1) select (select count(*) from xrslt_delete)+(select count(*) from xrslt_insert) xrowcount;
+    @multisel0: "SELECTED_VALUE_0"
+    @multisel1: "SELECTED_VALUE_1"
+</pre>
+
+<h3>Sample Exec SQL</h3>
+For the model:
+<pre>
+{
+  "table":"c",
+  "layout":"exec",
+  "onecolumn":true,
+  "caption":[0,"Customer","Customers"],
+  "sqlexec": "select @c_sts as status", 
+  "fields":[
+    {"name":"c_sts","caption":"Status"},
+    {"name":"RUN","control":"button","value":"Run","caption":"",
+      "onclick":"jsh.XPage.RunDBFunc(this,function(rslt){ XExt.Alert(rslt[modelid][0].status); }, { noMessage: true });"}
+  ]
+}
+</pre>
+
+<pre>
+On Load:
+  LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+
+On Button Click:
+  sqlexec: select @c_sts as status
+</pre>
+
+<h3>SQL Return Type - model.sqltype</h3>
+"Exec" models can return either a single table/resultset, or multiple tables/resultsets.  If the query should return multiple tables, change the "sqltype" to "multirecordset" instead of the default "recordset".
+<pre>
+{
+  "layout":"exec",
+  "sqlexec": [
+    "select * from c where c_id=@c_id;",
+    "select * from cf where c_id=@c_id;"
+  ],
+  "sqltype":"multirecordset",
+  "table":"c",
+  "fields":[
+    {"name":"c_id","actions":"BIU"}
+  ]
+}
+</pre>
+
+<h3>Field-level Properties</h3>
+SQL can be customized on a per-field basis, if a field requires a custom SQL expression for a select, insert, or update operation.
+
+<h4>field.sqlselect</h4>
+For select statements, replace FIELD with EXPRESSION
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_modified","sqlselect":"current_timestamp"}
+  ]
+}
+
+Resulting SQL
+-------------
+select c_id, current_timestamp from c
+</pre>
+
+<h4>field.sqlwhere</h4>
+For select statements, if field is in querystring / bindings, use this WHERE expression
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_name","sqlwhere":"(c_name like '%'||@c_name||'%' or c_desc like '%'||@c_name||'%')"}
+  ]
+}
+
+Resulting SQL
+-------------
+select c_id,c_name from c where (c_name like '%'||@c_name||'%' or c_desc like '%'||@c_name||'%')
+</pre>
+
+<h4>field.sqlinsert</h4>
+For insert statements, replace FIELD_VALUE with EXPRESSION
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_modified","sqlinsert":"current_timestamp"}
+  ]
+}
+
+Resulting SQL
+-------------
+insert into c(c_modified) values(current_timestamp);
+</pre>
+
+<h4>field.sqlupdate</h4>
+For update statements, replace FIELD_VALUE with EXPRESSION
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_modified","sqlupdate":"current_timestamp"}
+  ]
+}
+
+Resulting SQL
+-------------
+update c set c_modified=current_timestamp
+</pre>
+
+<h4>field.sqlsearch</h4>
+For grids, use the specified filter expression.
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_name","sqlsearch":"(c_name||' '||c_desc)"}
+  ]
+}
+
+Resulting SQL
+-------------
+If the user searches the c_name field for any rows containing "ACME":
+  select c_id,c_name from c where (c_name||' '||c_desc) like '%ACME%'
+</pre>
+
+<h4>field.sqlsearchsound</h4>
+For grids, use the specified Soundex filter expression.
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_name","sqlsearchsound":"c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"}
+  ]
+}
+
+Resulting SQL
+-------------
+If the user searches the c_name field for any rows that sound like "John":
+  select c_id,c_name from c where c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex('John'))
+</pre>
+
+<h3>Multiple Databases</h3>
+One jsHarmony project can connect to multiple databases.  Each model has a "db" value that can be set to the database connection.<br/>
+<br/>
+First, define the second database in app.config.js:
+<pre>
+dbconfig['secondary'] = { 
+  server: "server.domain.com", 
+  database: "DBNAME", 
+  user: "DBUSER", 
+  password: "DBPASS", 
+  _driver: new pgsqlDBDriver()
+}
+</pre>
+Then, set the target model's "db" property to the new database:
+<pre>
+{
+  "db": "secondary"
+}
+</pre>
+The default database is named "default".  If using the jsHarmony Factory, the Factory will be initialized into the "default" database.

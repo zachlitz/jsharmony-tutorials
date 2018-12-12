@@ -8,7 +8,7 @@
     "roles": {
       "main": {"*":"*"}
     },
-    "oninit": "_this.oninit(xform);",
+    "oninit": "_this.oninit(xmodel);",
     "ondestroy": "_this.ondestroy();",
     "buttons": [
       { "link": "js:_this.help();", "icon": "help", "text": "", "actions": "B" }

@@ -38,7 +38,7 @@ The grid will export the data with column headers to a CSV:<br/>
   var _ = jsh._;
   var XExt = jsh.XExt;
   jobj.empty();
-  jsh.XPost.prototype.XExecute('GridExport_CL',{},function(rslt){
+  jsh.XForm.prototype.XExecute('GridExport_CL',{},function(rslt){
     if(rslt && rslt.GridExport_CL){
       var html = '<table border="1" cellpadding="5">';
       html += '<tr><th>ID</th><th>Customer</th></tr>';
