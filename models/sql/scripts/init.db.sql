@@ -42,11 +42,12 @@ create table c (
   c_doc_utstmp text,
   c_doc_uu text,
   c_desc text,
+  c_start_dt text,
   foreign key (c_sts) references ucod_c_sts(codeval)
 );
-insert into c(c_id,c_sts,c_name,c_desc) values (1,'DEACTIVE','ACME Industries','Industrial Fixtures');
-insert into c(c_id,c_sts,c_name,c_desc) values (2,'ACTIVE','Creative Engineering','');
-insert into c(c_id,c_sts,c_name,c_desc) values (3,'ACTIVE','Coffee Brothers','');
+insert into c(c_id,c_sts,c_name,c_desc,c_start_dt) values (1,'DEACTIVE','ACME Industries','Industrial Fixtures',date('now', 'localtime'));
+insert into c(c_id,c_sts,c_name,c_desc,c_start_dt) values (2,'ACTIVE','Creative Engineering','',date('now', 'localtime'));
+insert into c(c_id,c_sts,c_name,c_desc,c_start_dt) values (3,'ACTIVE','Coffee Brothers','',date('now', 'localtime'));
 
 /*********CC*********/
 create table cc (

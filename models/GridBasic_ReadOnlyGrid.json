@@ -3,7 +3,7 @@
     "table":"c",
     "layout":"grid",
     "actions":"B",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "fields":[
       {"name":"c_id","caption": "ID"},
       {"name":"c_name","caption":"Customer"}

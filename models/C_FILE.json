@@ -9,8 +9,8 @@
   "menu": "clients",
   "popup":[1000,700],
   "fields": [
-    {"name":"c_id", "type": "bigint", "actions":"B","key": 1},
-    {"name": "c_name","type": "varchar","length": 50,"actions": "BIU","nl": 1,"control": "textbox",
+    {"name":"c_id", "type": "bigint", "actions":"B","key": 1,"control":"hidden"},
+    {"name": "c_name","type": "varchar","length": 50,"actions": "BIU","control": "textbox",
      "caption": "Customer Name","captionstyle": "width:120px;text-align:right;"},
 
     {"name":"c_doc","type":"file","actions":"BIU","nl":1,
@@ -31,9 +31,9 @@
      "control":"label_VS","caption":"Extension","captionstyle":"width:72px;text-align:right;"},
 	  {"name":"c_doc_size","type":"bigint","actions":"B",
      "control":"label_S","caption":"Bytes"},
-    {"name":"c_doc_utstmp","type":"datetime","length":7},
-    {"name":"c_doc_uu","type":"varchar","length": 20},
-    {"name":"c_doc_filename","type":"varchar","sqlselect":"c_id||c_doc_ext","actions":"B"}
+    {"name":"c_doc_utstmp","type":"datetime","length":7,"control":"hidden"},
+    {"name":"c_doc_uu","type":"varchar","length": 20,"control":"hidden"},
+    {"name":"c_doc_filename","type":"varchar","sqlselect":"c_id||c_doc_ext","actions":"B","control":"hidden"}
     
   ]
 }

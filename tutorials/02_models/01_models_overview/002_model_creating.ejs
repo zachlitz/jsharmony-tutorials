@@ -70,10 +70,16 @@ Two models will be created - named "MODELID1" and "MODELID2".  The filename is i
   "table":"c",
   "layout":"grid",
   "title":"All Customers",
-  "caption":[0,"Customer","Customers"]
+  "caption":["Customer","Customers"]
 }
 </pre>
 The page heading can be configured via the <b>"title"</b> property.<br/>
 <br/>
-The <b>"caption"</b> property describes the data the model is editing, and is used primarily in system-generated messages.  The caption is defined as an array, with caption[1] as the singular form and caption[2] as the plural form:
+The <b>"caption"</b> property describes the data the model is editing, and is used primarily in system-generated messages.<br/>
+<br/>
+If "caption" is defined as a three-element array, caption[1] is used the singular form and caption[2] as the plural form:
 <pre>[0,"singular","plural"]</pre>
+If "caption" is defined as a two-element array, caption[0] is used the singular form and caption[1] as the plural form:
+<pre>["singular","plural"]</pre>
+If "caption" is defined as a one-element array, caption[0] is used for both the singular form and plural forms:
+<pre>["singular/plural"]</pre>

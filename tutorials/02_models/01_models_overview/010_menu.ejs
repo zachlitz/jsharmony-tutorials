@@ -22,7 +22,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Menu",
   "Menu": ["Models","Models Overview"],
-  "Demo": "/X_SMLW"
+  "Demo": "jsHarmonyFactory/X_SMLW"
 }
 </script>
 
@@ -40,22 +40,22 @@ The jsHarmony menu system can be most easily leveraged using the jsHarmony Facto
 </ul>
 
 The two-level horizontal menu features a top-level menu, and a sub-menu for each top-level menu:
-<%-getScreenshot('/PEL','Top Menu', { height: 135 })%>
+<%-getScreenshot('jsHarmonyFactory/PEL','Top Menu', { height: 135 })%>
 
 When more items are displayed than will fit on the screen, "More" side-menus are automatically generated:
-<%-getScreenshot('/PEL','Top Menu More', { width:710, height: 135 })%>
-<%-getScreenshot('/PEL','Top Menu More Expanded', { width:710, onload:function(){ return new Promise(function(resolve){
+<%-getScreenshot('jsHarmonyFactory/PEL','Top Menu More', { width:710, height: 135 })%>
+<%-getScreenshot('jsHarmonyFactory/PEL','Top Menu More Expanded', { width:710, onload:function(){ return new Promise(function(resolve){
   jshInstance.$('.xmenu_more').click()
   return resolve();
 }); } })%>
-<%-getScreenshot('/PEL','Sub Menu More Expanded', { width:710, onload:function(){ return new Promise(function(resolve){
+<%-getScreenshot('jsHarmonyFactory/PEL','Sub Menu More Expanded', { width:710, onload:function(){ return new Promise(function(resolve){
   jshInstance.$('.xsubmenu_more').click()
   return resolve();
 }); } })%>
 
 <h3>Built-in jsHarmony Factory Menu Administration</h3>
 Menu administration is available in the jsHarmony Factory Developer tab:
-<%-getScreenshot('/X_SMLW','Menu Administration')%>
+<%-getScreenshot('jsHarmonyFactory/X_SMLW','Menu Administration')%>
 Right-click on a menu to add a child menu item or to delete a menu item.  There are two menu levels:
 <ul>
   <li>Top-level menu items can be added under "Main System" or "Customer"</li>
@@ -64,10 +64,10 @@ Right-click on a menu to add a child menu item or to delete a menu item.  There 
 The Menu ID should be unique across the system.  "Sequence #" will update the sort order.<br/>
 <br/>
 Additionally, a "List" view is available for quick entry:
-<%-getScreenshot('/X_SML','Menu Administration - List View', { height: 400 })%>
+<%-getScreenshot('jsHarmonyFactory/X_SML','Menu Administration - List View', { height: 400 })%>
 
 Each menu item is visible to users with only the specified roles.  Menu roles can be managed by clicking "Privileges":
-<%-getScreenshot('/X_SRMSELR_HW?action=edit&sm_id=3','Menu Administration - Roles')%>
+<%-getScreenshot('jsHarmonyFactory/X_SRMSELR_HW?action=edit&sm_id=3','Menu Administration - Roles')%>
 
 <h3>JavaScript Actions</h3>
 Each MenuItem can execute JavaScript when it is clicked, instead of navigating to a link.  Use the "js:" prefix to execute javascript:

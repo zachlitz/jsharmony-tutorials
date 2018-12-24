@@ -3,7 +3,7 @@
     "table":"c",
     "layout":"grid",
     "title":"All Customers",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "actions":"B", 
     "css": ".xbody_ModelStyle_CL .xform_title { color: red; }",
     "fields":[

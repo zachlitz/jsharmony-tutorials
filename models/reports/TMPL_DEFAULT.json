@@ -15,6 +15,6 @@
                   "<hr/><h3 align='center' style=\"font-size:14px;font-family:'Droid Sans';\">Page <%=pageNum%> / <%=numPages%></h3>"],
   "reportdata" : {
     "HOUSE": { "sql": ["select HOUSE_NAME,isnull('PHONE  '+HOUSE_BPHONE,'') HOUSE_BPHONE,isnull('FAX  '+HOUSE_FAX,'') HOUSE_FAX,isnull('EMAIL  '+HOUSE_EMAIL,'') HOUSE_EMAIL, ",
-                       " HOUSE_FULL_ADDR from v_house"], "nodatalock": ["C_ID"] }
+                       " HOUSE_FULL_ADDR from v_house"], "nodatalock": ["c_id"] }
   }
 }

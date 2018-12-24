@@ -1,0 +1,15 @@
+{ 
+  "FormBasic_Controls": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Name","control":"textzoom"},
+      {"name":"c_sts","caption":"Status","control":"dropdown_L"},
+      {"name":"c_start_dt","caption":"Start Date","control":"date_mmddyy"},
+      {"name":"c_desc","caption":"Notes","control":"textarea"}
+    ]
+  }
+}

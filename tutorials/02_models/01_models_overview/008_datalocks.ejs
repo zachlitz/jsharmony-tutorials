@@ -109,8 +109,8 @@ config.datalocks = {
       "cc_id":"cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)",
       "cf_id":"cf_id in (select cf_id from cf where cf.c_id=@datalock_c_id)",
       "e_id":"e_id in (select e_id from e where e.c_id=@datalock_c_id)",
-      "ALWAYS": "1=1",
-      "NEVER": "1=2"
+      "always": "1=1",
+      "never": "1=2"
     }
   }
 };
@@ -132,14 +132,14 @@ Datalocks are defined per-field.  Any key fields, foreign key fields, and List o
   ]
 }
 </pre>
-DATALOCK_NAME can be any of the keys defined in the datalocks array for the DATALOCK_KEY_FIELD.  The DATALOCK_NAME should usually be the same as the field name, however occassionally the developer may want to use a custom datalock, such as "ALWAYS" that enables the customer to access all table records.<br/>
+DATALOCK_NAME can be any of the keys defined in the datalocks array for the DATALOCK_KEY_FIELD.  The DATALOCK_NAME should usually be the same as the field name, however occassionally the developer may want to use a custom datalock, such as "always" that enables the customer to access all table records.<br/>
 <br/>
 For example:
 <pre>
 {
   "fields":[
     {"name":"o_id","type":"bigint","key":1,"datalock":{ "c_id": "o_id" } },
-    {"name":"other_field","type":"bigint","foreignkey":1,"datalock":{ "c_id": "ALWAYS" } }
+    {"name":"other_field","type":"bigint","foreignkey":1,"datalock":{ "c_id": "always" } }
   ]
 }
 </pre>

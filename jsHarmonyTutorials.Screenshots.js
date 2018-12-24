@@ -68,6 +68,7 @@ exports.generateScreenshots = function(callback){
 exports.generateScreenshot = function(browser, url, desc, params, callback){
   var _this = this;
   var jsh = _this.jsh;
+  if(!url || (url[0] != '/')) url = '/' + url;
   var fname = this.getScreenshotFilename(url, desc, params);
   var fpath = _this.basepath + '/public/screenshots/'+fname;
 

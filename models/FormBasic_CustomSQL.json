@@ -1,0 +1,15 @@
+{ 
+  "FormBasic_CustomSQL": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "sqlinsert":"%%%SQL%%%; update c set c_start_dt = date('now', 'localtime');",
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Name"},
+      {"name":"c_sts","caption":"Status"},
+      {"name":"c_start_dt","caption":"Start Date","control":"label"}
+    ]
+  }
+}

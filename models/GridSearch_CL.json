@@ -2,7 +2,7 @@
   "GridSearch_CL": {
     "table":"c",
     "layout":"grid",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "grid_expand_filter": true,
     "fields":[
       {"name":"c_id","caption": "ID"},

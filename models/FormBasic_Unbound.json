@@ -1,0 +1,10 @@
+{ 
+  "FormBasic_Unbound": {
+    "layout":"form",
+    "unbound":1,
+    "title":"Message",
+    "fields":[
+      {"control":"html","value":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+    ]
+  }
+}

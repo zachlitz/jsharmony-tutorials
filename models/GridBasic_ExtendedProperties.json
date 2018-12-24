@@ -3,7 +3,7 @@
     "table":"c",
     "layout":"grid", 
     "title":"All Customers",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "actions":"B", 
     "roles": {"C_B":"B","C_X":"*"},
     "sort":["^c_name"],

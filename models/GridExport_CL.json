@@ -2,7 +2,7 @@
   "GridExport_CL": {
     "table":"c",
     "layout":"grid",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "fields":[
       {"name":"c_id","caption": "ID"},
       {"name":"c_name","caption":"Customer"}

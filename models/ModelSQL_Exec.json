@@ -3,7 +3,7 @@
     "table":"c",
     "layout":"exec",
     "onecolumn":true,
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "sqlexec": "select @c_sts as status", 
     "fields":[
       {"name":"c_sts","caption":"Status"},

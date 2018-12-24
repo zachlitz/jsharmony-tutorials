@@ -3,7 +3,7 @@
     "table":"c",
     "layout":"grid",
     "actions":"B",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "templates": { "grid": ".xgrid_GridCustom_CL_template" },
     "fields":[
       {"name":"c_id","caption": "ID"},

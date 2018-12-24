@@ -32,18 +32,18 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/ModelButtons_Icons.onroute.js"
   ],
   "Demo": [
-    { "url": "/ModelButtons_CL", "title": "Grid Buttons" },
-    { "url": "/ModelButtons_C?action=edit&c_id=2", "title": "Form Buttons" },
-    { "url": "/ModelButtons_CL_Grouped", "title": "Buttons w/ Drop-down Groups" },
-    { "url": "/ModelButtons_CL_JavaScript", "title": "JavaScript Button Links" },
-    { "url": "/ModelButtons_Icons", "title": "Icon Listing" }
+    { "url": "jsHarmonyTutorials/ModelButtons_CL", "title": "Grid Buttons" },
+    { "url": "jsHarmonyTutorials/ModelButtons_C?action=edit&c_id=2", "title": "Form Buttons" },
+    { "url": "jsHarmonyTutorials/ModelButtons_CL_Grouped", "title": "Buttons w/ Drop-down Groups" },
+    { "url": "jsHarmonyTutorials/ModelButtons_CL_JavaScript", "title": "JavaScript Button Links" },
+    { "url": "jsHarmonyTutorials/ModelButtons_Icons", "title": "Icon Listing" }
   ]
 }
 </script>
 
 <h3>Buttons Overview</h3>
 Buttons are displayed in the top-right of each model.  
-<%-getScreenshot('/ModelButtons_CL?popup=1','Model Buttons')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelButtons_CL?popup=1','Model Buttons')%>
 
 Custom buttons can be added to the button toolbar by adding to the model.buttons array:
 <pre>
@@ -81,7 +81,7 @@ Buttons have a variety of properties for configuring text, icon, and style:
   Icon images are loaded via "/images/icon_ICONNAME.png".  For instance, the "add" icon can be overwritten by uploading a new image to "public/images/icon_add.png" in the Application root.<br/>
   <br/>
   The following built-in icons are available in jsHarmony:
-  <%-getScreenshot('/ModelButtons_Icons?popup=1','Model Buttons')%>
+  <%-getScreenshot('jsHarmonyTutorials/ModelButtons_Icons?popup=1','Model Buttons')%>
 </div>
 <div style="padding-bottom:15px;">
   <b>button.style</b><br/>
@@ -107,7 +107,7 @@ config.default_buttons = {
 
 <h3>Button Groups</h3>
 Button Groups combine buttons into a drop-down menu.
-<%-getScreenshot('/ModelButtons_CL_Grouped?popup=1','Model Buttons',{ onload:function(){     return new Promise(function(resolve){
+<%-getScreenshot('jsHarmonyTutorials/ModelButtons_CL_Grouped?popup=1','Model Buttons',{ onload:function(){     return new Promise(function(resolve){
   jshInstance.$('.xelemModelButtons_CL_Grouped.xactions_dropdown').click()
   return resolve();
 }); } })%>
@@ -234,12 +234,12 @@ The model id and action parameter are generated based on the link target above. 
   "buttons":[
     {
       "link": "edit:CW",
-      "bindings": { "C_ID": "C_ID_BILLTO" }
+      "bindings": { "c_id": "c_id_billto" }
     }
   ]
 }
-//When C_ID_BILLTO is "5" on the parent form
-URL: /CW?action=edit&C_ID=5
+//When c_id_billto is "5" on the parent form
+URL: /CW?action=edit&c_id=5
 
 {
   "buttons":[
@@ -256,12 +256,12 @@ URL: /E?action=edit&E_ID=3
   "buttons":[
     {
       "link": "edit:CW&tabs={\"CW\":\"C_CCL\"}",
-      "bindings": { "C_ID": "C_ID" }
+      "bindings": { "c_id": "c_id" }
     }
   ]
 }
-//When C_ID is "1" on the parent form
-URL: /CL?action=edit&C_ID=1tabs={"CW":"C_CCL"}
+//When c_id is "1" on the parent form
+URL: /CL?action=edit&c_id=1tabs={"CW":"C_CCL"}
 </pre>
 
 <h3>JavaScript</h3>
@@ -288,7 +288,7 @@ Redirects to a target URL
 @param string url : The target URL
 @return false
 
-Example: XExt.navTo('/CW?C_ID=4')
+Example: XExt.navTo('/CW?c_id=4')
 </pre>
 
 <h4>XExt.popupForm(modelid, action, params, windowparams, win)</h4>
@@ -315,7 +315,7 @@ Example: XExt.popupForm('CW','edit',{'c_id':XModels[modelid].controller.form.Dat
 <h4>XExt.popupReport (modelid, params, windowparams, win)</h4>
 <pre>
 Opens a report PDF in a popup window
-@param string modelid      : The target report model id (without the _report_ prefix)
+@param string modelid      : The target report model id
 @param object params       : Querystring parameters for the report, ex. { "c_id": 4 }
 @param object windowparams : Parameters passed to window.open
                              Default: { width: 1000, height: 600, resizable: 1, scrollbars: 1 }

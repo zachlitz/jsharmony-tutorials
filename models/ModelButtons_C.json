@@ -4,7 +4,7 @@
   "actions": "BIUD", 
   "caption": [ "", "Customer", "Customers" ],
   "buttons":[
-    {"link":"edit:CW&tabs={\"CW\":\"C_CCL\"}","actions":"U","text":"Edit Contacts"},
+    {"link":"edit:CW&tabs={\"jsHarmonyTutorials/CW\":\"jsHarmonyTutorials/C_CCL\"}","actions":"U","text":"Edit Contacts"},
     {"link":"js:XExt.popupForm('CW','edit',{'c_id':XModels[modelid].controller.form.Data.c_id},{width:850,height:600})","text":"Edit Customer Via JavaScript","actions":"U"}
   ],
   "popup":[1000,700],

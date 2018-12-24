@@ -147,7 +147,7 @@ Reports consist of two components: the form to enter the report parameters, and 
   </li>
   <li>
     Client downloads the report model definition from the server<br/>
-    <div class="url">/_model/_report_:modelid</div><br/>
+    <div class="url">/_model/:modelid</div><br/>
     The report model definition consists of:
     <ul>
       <li>Report parameters, controls, and validation</li>
@@ -157,7 +157,7 @@ Reports consist of two components: the form to enter the report parameters, and 
   <li>Client generates the user interface based on the model definition</li>
   <li>
     Based on the querystring or current state, Client requests the report model data from the server<br/>
-    <div class="url">/_d/_report_:modelid</div> &nbsp;(GET)<br/>
+    <div class="url">/_d/:modelid</div> &nbsp;(GET)<br/>
     The report model data record consists of:
     <ul>
       <li>Drop-down List of Values (LOV)</li>
@@ -169,15 +169,15 @@ Reports consist of two components: the form to enter the report parameters, and 
     User enters the report parameters and Client runs the report with one of the following methods:
     <ul>
       <li>
-        <div class="url">/_d/_report/:reportid/</div> &nbsp;(GET)<br/>
+        <div class="url">/_d/_report/:modelid/</div> &nbsp;(GET)<br/>
         Generates a PDF version of the report via PhantomJS and returns it to the Client
       </li>
       <li>
-        <div class="url">/_d/_report_html/:reportid/</div> &nbsp;(GET)<br/>
+        <div class="url">/_d/_report_html/:modelid/</div> &nbsp;(GET)<br/>
         Generates an HTML version of the report via PhantomJS and returns it to the Client
       </li>
       <li>
-        <div class="url">/_d/_reportjob/:reportid/</div> &nbsp;(GET)<br/>
+        <div class="url">/_d/_reportjob/:modelid/</div> &nbsp;(GET)<br/>
         Queues the report for batch job processing
       </li>
     </ul>

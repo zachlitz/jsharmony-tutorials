@@ -24,24 +24,222 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Menu": ["Models","Forms"],
   "Code": ["/models/C.json","/models/C.js"],
   "Demo": [
-    { "url": "/C?action=add", "windowparams": "width=1000,height=700" }
+    { "url": "jsHarmonyTutorials/C?action=add", "windowparams": "width=1000,height=700" }
   ]
 }
 </script>
-Forms are located in the "models" folder.  Except in cases of routes or inheritance, each form has its own file.<br/>
+
+<h3>Introduction</h3>
+Forms enable editing data, one record at a time.  Grids usually list rows, and then link to forms for further editing.<br/>
 <br/>
-<%-getScreenshot('/CL','Standard Grid')%>
-<%-getScreenshot('/CW?action=edit&c_id=1','Standard Form')%>
-Forms are named FORMNAME.json, where FORMNAME is the name of the form.  Form names should consist of alpha-numeric characters and underscores.<br/>
+Forms are defined by setting the "layout" to "form".
+
+<h4>Standard Form</h4>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=2&popup=1','Basic Form')%>
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+
+<h4>Form with Subforms</h4>
+Forms can contain subforms:
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Subform_C?action=edit&c_id=1&popup=1','Form w/Subform')%>
+<pre>
+//Parent Form
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "CA"}
+  ]
+}
+
+//Subform
+"CA": {
+  "table":"ca",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption":["Address","Addresses"],
+  "fields":[
+    {"name":"ca_country","caption":"Country"},
+    {"name":"ca_addr1","caption":"Address"},
+    {"name":"ca_addr2","caption":""},
+    {"name":"ca_city","caption":"City"},
+    {"name":"ca_state","caption":"State"},
+    {"name":"ca_zip","caption":"Zip"}
+  ]
+}
+</pre>
+
+<h4>Tabbed Forms</h4>
+Forms can be tabbed:
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Tabbed_CW?action=edit&c_id=1&popup=1','Tabbed Form')%>
+<pre>
+//Tabbed Parent Form
+"FormBasic_Tabbed_CW": {
+  "table":"c",
+  "layout":"form",
+  "caption":["Customer","Customers"],
+  "tabpanelstyle":"min-width:500px;",
+  "tabs":[
+    {"name":"Overview","target":"FormBasic_Tabbed_C"},
+    {"name":"Contacts","caption": "Contacts","target":"FormBasic_Tabbed_CCL"}
+  ]
+}
+
+//Overview Tab
+"FormBasic_Tabbed_C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+
+//Contacts Tab
+"FormBasic_Tabbed_CCL": {
+  "table":"cc",
+  "layout":"grid",
+  "caption":["Contact","Contacts"],
+  "fields":[
+    {"name":"cc_name","caption":"Name"},
+    {"name":"cc_title","caption":"Title"},
+    {"name":"cc_phone","caption":"Phone"},
+    {"name":"cc_email","caption":"Email"}
+  ]
+}
+</pre>
+
+<h4>Unbound Forms</h4>
+Unbound forms are fully disconnected from any database access, except via JavaScript API calls.
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Unbound?popup=1','Unbound Form')%>
+<pre>
+{
+  "layout":"form",
+  "unbound":1,
+  "title":"Message",
+  "fields":[
+    {"control":"html","value":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+  ]
+}
+</pre>
+
+<h4>Fully Custom Forms</h4>
+Forms can also use fully custom JS / HTML.  More information is available in the <a href="/tutorials/form_custom">Custom Form</a> tutorial.
+
+<h3>Form SQL / Datasource</h3>
+A form's datasource is a table or view.  The database table or view is defined by the "table" property.  The database statements (Browse / Insert / Update / Delete) are automatically generated based on the table and fields.<br/>
 <br/>
-<h3>Empty Form</h3>
-In the most basic example, let's create an empty form using the code below, and save it as 01_FORM_EMPTY.json
-<br/><pre>
-{ }
-</pre><br/>
-<h3>Layout / Title / Caption</h3>
-<h3>Database Tables</h3>
-<h3>Roles / Actions</h3>
-<h3>Controls</h3>
-<h3>Linking to a Grid</h3>
-<h3>New vs Edit Mode</h3>
+It is best practice to use a table, since primary keys and foreign keys can be automatically read from the database.  However, editable views can also be used if the primary / foreign keys are defined in the models using the "key" and "foreignkey" properties.
+
+<h4>Custom SQL</h4>
+Custom SQL can be used to override any of the SQL statements.  For example:
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "sqlinsert":"%%%SQL%%%; update c set c_start_dt = date('now', 'localtime');",
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"name":"c_start_dt","caption":"Start Date","control":"label"}
+  ]
+}
+</pre>
+Please note, custom SQL should generally not be used.  Database-level business logic should be implemented using database triggers.<br/>
+<br/>
+More information on custom SQL is available in the <a href="/tutorials/model_database_sql">Database / SQL</a> tutorial.
+
+<h3>Form Fields / Controls</h3>
+The "fields" property defines the fields that are selected from the database.<br/>
+<br/>
+Primary keys are automatically added to the table, if they are defined as primary keys in the database.  Foreign keys for tables are automatically added when required by bindings.<br/>
+<br/>
+A variety of controls are available.  The control can be set using the "control" property:
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Controls?action=edit&c_id=1&popup=1','Form Controls')%>
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name","control":"textzoom"},
+    {"name":"c_sts","caption":"Status","control":"dropdown_L"},
+    {"name":"c_start_dt","caption":"Start Date","control":"date_mmddyy"},
+    {"name":"c_desc","caption":"Notes","control":"textarea"}
+  ]
+}
+</pre>
+More information about form fields and controls is available in the <a href="/tutorials/fields_overview">Fields</a> tutorials.
+
+<h3>HTML Content</h3>
+Additional HTML can be added to a form by creating a MODEL.ejs file.
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_HTMLContent?popup=1','Form HTML Content')%>
+<pre>
+//FORM.json
+{
+  "layout":"form",
+  "unbound":1,
+  "title":"HTML Content"
+}
+
+//FORM.ejs
+<h2>Sample Content</h2>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+</pre>
+
+<h3>Querystring</h3>
+
+<h3 data-level="2">Add vs Edit Mode</h3>
+Forms can be acccessed in either "add" or "edit" mode.
+
+<h4>Add Mode</h4>
+Add mode is accessed by adding "?action=add" to the querystring:<br/>
+<br/>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=add" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=add</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=add&popup=1','Form Add Mode')%>
+
+<h4>Edit Mode</h4>
+Edit mode is accessed by adding "?action=edit&PRIMARYKEY=VALUE" to the querystring:<br/>
+<br/>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=edit&amp;c_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=1&popup=1','Form Edit Mode')%>
+
+<h3 data-level="2">Default Values</h3>
+Default values can be set on insert by adding the field value to the querystring:<br/>
+<br/>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=add&c_sts=ACTIVE" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=add&amp;c_sts=ACTIVE</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=add&c_sts=ACTIVE&popup=1','Form Add Mode Default Value')%>
+
+<h4>Always Editable on Insert</h4>
+Passing a default value will make the field read-only.  In order to keep the field editable, use the "always_editable_on_insert" property:
+
+<pre>
+{
+  "fields":[
+    { "name":"c_sts", "caption":"Status", "always_editable_on_insert":1 }
+  ]
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_EditableDefault?action=add&c_sts=ACTIVE&popup=1','Form Add Mode Default Value Editable')%>

@@ -26,16 +26,16 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 
 <h3>Types of Model Layouts</h3>
-There are five basic model layouts: "grid", "form", "form-m", "multisel", and "exec".  These five building blocks work together to create complex layouts in jsHarmony applications.
+There are six basic model layouts: "grid", "form", "form-m", "multisel", "exec", and "report".  These six building blocks work together to create complex layouts in jsHarmony applications.
 
 <h3 data-level="2">Grid Layout</h3>
 Grids are the heart of a jsHarmony application.  Grids enable a user to view, add, or edit data, multiple records at a time.  Grids may be designed with either editable controls or read-only rows, and can link to a popup form for further editing.<br/>
 
 <h4>Editable Grid:</h4>
-<%-getScreenshot('/CL_EDITABLE?popup=1','Editable Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/CL_EDITABLE?popup=1','Editable Grid')%>
 
 <h4>Read-only Grid:</h4>
-<%-getScreenshot('/CL?popup=1','Read-only Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/CL?popup=1','Read-only Grid')%>
 
 Most systems will start with a grid, and then progress to forms for editing data.
 
@@ -47,10 +47,10 @@ Forms consists of fields and additional child forms.  Child forms can be embedde
 All parent and child form data will be saved in one transaction, and only the topmost writable parent form will have a "Save" button.
 
 <h4>Simple Form:</h4>
-<%-getScreenshot('/C?c_id=1','Simple Form')%>
+<%-getScreenshot('jsHarmonyTutorials/C?c_id=1','Simple Form')%>
 
 <h4>Parent / Child Subforms:</h4>
-<%-getScreenshot('/CW?c_id=1&action=edit','Parent / Child Subforms')%>
+<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=edit','Parent / Child Subforms')%>
 The above example consists of 4 forms:
 <ul>
   <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
@@ -60,7 +60,7 @@ The above example consists of 4 forms:
 </ul>
 
 <h4>Parent / Child Grid:</h4>
-<%-getScreenshot('/CW?c_id=1&action=edit&tabs=%7B"CW"%3A"C_CCL"%7D','Parent / Child Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/CW?action=edit&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_CCL"%7D','Parent / Child Grid')%>
 The above example consists of 2 forms:
 <ul>
   <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
@@ -71,18 +71,20 @@ The above example consists of 2 forms:
 Form-m enables a user to view, add, or edit multiple records.  Data is edited one record at a time, using backward / forward navigation.<br/>
 <br/>
 A "form-m" is typically used for navigating a small subset of data, and is implemented as a subform of a parent form (ex. editing multiple addresses of a Customer).  All new or modified data is saved in one transaction.
-<%-getScreenshot('/C_CA_CONTAINER?c_id=1&action=edit','Form-m')%>
+<%-getScreenshot('jsHarmonyTutorials/C_CA_CONTAINER?c_id=1&action=edit','Form-m')%>
 
 <h3 data-level="2">Multisel Layout</h3>
 A multisel displays a checkbox-based List of Values, where multiple values can be selected per "key".  Multisels are primarily used to enter data in many-to-many relationships.
-<%-getScreenshot('/CW?c_id=2&action=edit&tabs=%7B"CW"%3A"C_CF"%7D','Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/CW?action=edit&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_EXEC"%7D','Multisel')%>
 
 <h3 data-level="2">Exec Layout</h3>
 Exec forms are unbound, except during initial load.  Exec forms can be used for:
 <ul>
-  <li>Entering Parameters before running a Report</li>
   <li>API Endpoints for SQL Operations / Procedures</li>
   <li>Custom User Interfaces</li>
 </ul>
-<screenshot of report runner>
-<%-getScreenshot('/_report/RPE?popup=1','Parent / Child Grid')%>
+<%-getScreenshot('jsHarmonyFactory/reports/RPE?popup=1','Parent / Child Grid')%>
+
+<h3 data-level="2">Report Layout</h3>
+Reports have two components - the form used to enter report parameters, and the actual report, which is a PDF rendered from generated HTML.
+<%-getScreenshot('jsHarmonyFactory/reports/RPE?popup=1','Parent / Child Grid')%>

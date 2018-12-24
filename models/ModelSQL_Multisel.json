@@ -3,7 +3,7 @@
     "table":"cf",
     "layout":"multisel",
     "onecolumn":true,
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "fields":[
       {"name":"c_id"},
       {"name":"cf_id"},

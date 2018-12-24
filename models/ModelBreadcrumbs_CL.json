@@ -4,7 +4,7 @@
     "layout":"grid",
     "actions":"B", 
     "title":"All Customers",
-    "caption":[0,"Customer","Customers"],
+    "caption":["Customer","Customers"],
     "breadcrumbs": {
       "parents": []
     },

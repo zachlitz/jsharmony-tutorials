@@ -33,8 +33,9 @@ var express = require('jsharmony/lib/express');
 var ejs = require('ejs');
 var menu = require('jsharmony-factory/models/_menu.js');
 
-function jsHarmonyTutorials(){
+function jsHarmonyTutorials(name){
   var _this = this;
+  if(name) _this.name = name;
   _this.Config = new jsHarmonyTutorialsConfig();
   _this.typename = 'jsHarmonyTutorials';
   _this.basepath = path.dirname(module.filename);
@@ -159,6 +160,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
               if(_.isString(config.Demo[i])){
                 config.Demo[i] = { url: config.Demo[i], title: config.Demo[i] };
               }
+              if(config.Demo[i].url && (config.Demo[i].url[0] != '/')) config.Demo[i].url = req.baseurl + config.Demo[i].url;
             }
 
             if(!config.Code) config.Code = [];

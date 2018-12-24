@@ -8,8 +8,8 @@
       "c_id": {
         "c_id": "c_id=@datalock_c_id",
         "cf_id": "cf_id in (select cf_id from cf where c_id=@datalock_c_id)",
-        "ALWAYS": "1=1",
-        "NEVER": "1=2"
+        "always": "1=1",
+        "never": "1=2"
       }
     }
   },
