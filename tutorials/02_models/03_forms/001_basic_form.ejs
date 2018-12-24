@@ -22,9 +22,26 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Basic Form",
   "Menu": ["Models","Forms"],
-  "Code": ["/models/C.json","/models/C.js"],
+  "Code": [
+    "/models/FormBasic_Standard.json",
+    "/models/FormBasic_Subform.json",
+    "/models/FormBasic_Tabbed.json",
+    "/models/FormBasic_Unbound.json",
+    "/models/FormBasic_CustomSQL.json",
+    "/models/FormBasic_Controls.json",
+    "/models/FormBasic_HTMLContent.json",
+    "/models/FormBasic_HTMLContent.ejs",
+    "/models/FormBasic_EditableDefault.json"
+  ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/C?action=add", "windowparams": "width=1000,height=700" }
+    { "url": "jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=1", "title": "Standard Form" },
+    { "url": "jsHarmonyTutorials/FormBasic_Subform_C?action=edit&c_id=1", "title": "Parent / Subform" },
+    { "url": "jsHarmonyTutorials/FormBasic_Tabbed_CW?action=edit&c_id=1", "title": "Tabbed Form", "windowparams": "width=1200,height=700" },
+    { "url": "jsHarmonyTutorials/FormBasic_Unbound", "title": "Unbound Form" },
+    { "url": "jsHarmonyTutorials/FormBasic_CustomSQL?action=add", "title": "Custom SQL" },
+    { "url": "jsHarmonyTutorials/FormBasic_Controls?action=edit&c_id=1", "title": "Form Controls" },
+    { "url": "jsHarmonyTutorials/FormBasic_HTMLContent", "title": "HTML Content" },
+    { "url": "jsHarmonyTutorials/FormBasic_EditableDefault?action=add&c_sts=ACTIVE", "title": "Editable Default Querystring Value" }
   ]
 }
 </script>
