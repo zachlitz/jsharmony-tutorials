@@ -1,0 +1,17 @@
+{ 
+  "FormMBasic_Standard": {
+    "table":"ca",
+    "layout":"form-m",
+    "onecolumn":true,
+    "caption":["Address","Addresses"],
+    "fields":[
+      {"name":"c_id","control":"hidden"},
+      {"name":"ca_country","caption":"Country"},
+      {"name":"ca_addr1","caption":"Address"},
+      {"name":"ca_addr2","caption":""},
+      {"name":"ca_city","caption":"City"},
+      {"name":"ca_state","caption":"State"},
+      {"name":"ca_zip","caption":"Zip"}
+    ]
+  }
+}

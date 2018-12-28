@@ -21,7 +21,56 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Basic Form-m",
-  "Menu": ["Models","Forms"]
+  "Menu": ["Models","Forms"],
+  "Code": [
+    "/models/FormMBasic_Standard.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FormMBasic_Standard?action=edit&c_id=1", "title": "Basic Form-m" }
+  ]
 }
 </script>
-Basic Form-m
+
+<h3>Overview</h3>
+The "form-m" layout provides an interface to update multiple records in one save operation.  This layout is primarily used as a subform to edit a parent/child relationship.<br/>
+<br/>
+Navigation buttons are displayed for paging between records.  No data is saved until the "Save" button is pressed.
+<%-getScreenshot('jsHarmonyTutorials/FormMBasic_Standard?action=edit&c_id=1&popup=1','Basic Form-m')%>
+<pre>
+{
+  "table":"ca",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption":["Address","Addresses"],
+  "fields":[
+    {"name":"c_id","control":"hidden"},
+    {"name":"ca_country","caption":"Country"},
+    {"name":"ca_addr1","caption":"Address"},
+    {"name":"ca_addr2","caption":""},
+    {"name":"ca_city","caption":"City"},
+    {"name":"ca_state","caption":"State"},
+    {"name":"ca_zip","caption":"Zip"}
+  ]
+}
+</pre>
+
+<h3>Canonical Syntax</h3>
+The form-m should have at least a primary key.  In most instances, it should also have a foreign key for use in parent/child bindings:
+<pre>
+{
+  "table":"ca",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption":["Address","Addresses"],
+  "fields":[
+    {"name":"ca_id","key": 1,"control":"hidden"},
+    {"name":"c_id","actions":"I","foreignkey": 1,"control":"hidden"},
+    {"name":"ca_country","caption":"Country"},
+    {"name":"ca_addr1","caption":"Address"},
+    {"name":"ca_addr2","caption":""},
+    {"name":"ca_city","caption":"City"},
+    {"name":"ca_state","caption":"State"},
+    {"name":"ca_zip","caption":"Zip"}
+  ]
+}
+</pre>

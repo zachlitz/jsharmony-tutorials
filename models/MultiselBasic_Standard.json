@@ -1,0 +1,11 @@
+{ 
+  "MultiselBasic_Standard": {
+    "table":"cf",
+    "layout":"multisel",
+    "caption":["Customer Flag","Customers Flags"],
+    "fields":[
+      {"name":"c_id"},
+      {"name":"cf_type","caption":"Flag"}
+    ]
+  }
+}

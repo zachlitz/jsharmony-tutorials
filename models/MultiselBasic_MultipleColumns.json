@@ -1,0 +1,23 @@
+{ 
+  "MultiselBasic_MultipleColumns": {
+    "table":"cf",
+    "layout":"multisel",
+    "caption":["Customer Flag","Customers Flags"],
+    "fields":[
+      {"name":"c_id"},
+      {"name":"cf_type","caption":"Flag"},
+      {"control":"html","value":"Flagged Customers","link":"edit:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
+    ]
+  },
+  "MultiselBasic_MultipleColumns_CL": {
+    "sqlselect":"select c.c_id,c_name,cf_type from c inner join cf on c.c_id=cf.c_id %%%SQLSUFFIX%%%",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "popup":[500,300],
+    "fields":[
+      {"name":"c_id","control":"hidden"},
+      {"name":"c_name","caption":"Customer Name"},
+      {"name":"cf_type","caption":"Flag","foreignkey":1}
+    ]
+  }
+}
