@@ -21,8 +21,44 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Popup Forms",
-  "Menu": ["Models","Forms"],
-  "Code": ["/models/CL.json"]
+  "Menu": ["Models","Forms"]
 }
 </script>
-Popup Forms
+
+<h3>Overview</h3>
+Popup forms are rendered using a "popup" template - a stripped down version of the system template without menus or toolbars.<br/>
+<br/>
+Popup forms are primarily used for "detail" views of data.  When the system displays a grid listing of data, the popup form can be used to edit an individual item.<br/>
+<br/>
+There are several benefits to using popup forms instead of in-page links when editing data:
+<ul>
+  <li>Multiple records can be edited and compared at the same time</li>
+  <li>Data can be copied / pasted between records</li>
+  <li>The user does not have to reload their paged position within the grid when pressing the back button</li>
+</ul>
+
+<h3>Using Popup Forms</h3>
+xxxxxxxxxxxxxxxxxxxxxx
+
+<h3>Linking to Popup Forms</h3>
+When linking using the field.link or button.link properties, the system will automatically review the target model and add code to open the target in a popup window if the "popup" property is set on the target model.
+<pre>
+//Link to the C form from a grid column
+{
+  "fields":[
+    {"name":"c_name","caption":"Customer","link":"edit:C"}
+  ]
+}
+
+//C form
+{
+  "popup": [800, 600]
+}
+</pre>
+
+<h3>Opening Popup Forms Via JavaScript</h3>
+
+<pre>
+XExt.popupForm('CW','edit',{'c_id':XModels[modelid].controller.form.Data.c_id},{width:850,height:600})
+</pre>
+
