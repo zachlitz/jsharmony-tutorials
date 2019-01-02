@@ -1,0 +1,10 @@
+{
+  "FormExec_API_Multirecordset": {
+    "layout": "exec",
+    "sqlexec": [
+      "select c_id,c_name,c_sts from c;",
+      "select codeval,codetxt from ucod_c_sts where (CODETDT is null or CODETDT>datetime('now','localtime')) order by codseq;"
+    ],
+    "sqltype": "multirecordset"
+  }
+}

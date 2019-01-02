@@ -29,12 +29,13 @@ jsh.App[modelid] = new (function(){
   }
 
   this.loadData = function(onComplete){
+    var emodelid = xmodel.namespace+'C_CUSTOM_GET_C';
     //Execute the C_CUSTOM_GET_C model
-    XForm.prototype.XExecutePost('C_CUSTOM_GET_C', { }, function (rslt) { //On Success
+    XForm.prototype.XExecutePost(emodelid, { }, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Populate arrays + Render
-        _this.C = rslt.C_CUSTOM_GET_C[0];
-        _this.LOV.C_STS = rslt.C_CUSTOM_GET_C[1];
+        _this.C = rslt[emodelid][0];
+        _this.LOV.C_STS = rslt[emodelid][1];
 
         _this.render();
         if (onComplete) onComplete();
@@ -47,7 +48,7 @@ jsh.App[modelid] = new (function(){
 
   this.updateStatus = function(c_id, c_sts, onComplete){
     //Execute the C_CUSTOM_GET_C model
-    XForm.prototype.XExecutePost('C_CUSTOM_UPDATE_C_STS', { c_id: c_id, c_sts: c_sts }, function (rslt) { //On Success
+    XForm.prototype.XExecutePost(xmodel.namespace+'C_CUSTOM_UPDATE_C_STS', { c_id: c_id, c_sts: c_sts }, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Re-render
         _this.loadData(onComplete);
@@ -71,7 +72,7 @@ jsh.App[modelid] = new (function(){
     //Render the EJS template
     var tmpl = jsh.$root('.C_CUSTOM_template').html();
     var jcontainer = jsh.$root('.C_CUSTOM_container');
-    jcontainer.html(jsh.ejs.render(tmpl, { data: data, _: _, jsh: jsh }));
+    jcontainer.html(XExt.renderClientEJS(tmpl, { data: data, _: _, jsh: jsh }));
     //Bind mousedown event for dragging
     jcontainer.find('.C_CUSTOM_customer').mousedown(function(e){
       if(e.which==1){//left mouse button

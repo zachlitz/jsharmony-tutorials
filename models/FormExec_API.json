@@ -1,0 +1,6 @@
+{
+  "FormExec_API": {
+    "layout": "exec",
+    "sqlexec": "select c_id,c_name from c"
+  }
+}

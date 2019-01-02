@@ -22,7 +22,100 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Exec Forms",
   "Menu": ["Models","Forms"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": [
+    "/models/FormExec_Launcher.json",
+    "/models/FormExec_API.json",
+    "/models/FormExec_API_Consumer.json",
+    "/models/FormExec_API_Consumer.js",
+    "/models/FormExec_API_Multirecordset.json",
+    "/models/FormExec_API_Multirecordset_Consumer.json",
+    "/models/FormExec_API_Multirecordset_Consumer.js"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FormExec_Launcher", "title": "Launcher Form" },
+    { "url": "jsHarmonyTutorials/FormExec_Launcher?c_id=1", "title": "Launcher Form with Querystring Parameter" },
+    { "url": "jsHarmonyTutorials/FormExec_API_Consumer", "title": "API Request" },
+    { "url": "jsHarmonyTutorials/FormExec_API_Multirecordset_Consumer", "title": "Multirecordset API Request" }
+  ]
 }
 </script>
-"Exec" forms for executing a stored procedure
+
+<h3>Overview</h3>
+"Exec" forms have two primary uses:
+<ul>
+  <li>
+    <b>Launcher</b><br/>
+    Provide an interface to "launch" or execute system operations
+  </li>
+  <li>
+    <b>Database API Endpoint</b><br/>
+    Provide an API endpoint for SQL queries, commands, or stored procedures
+  </li>
+</ul>
+As opposed to unbound forms, "exec" forms connect to the database on load to populate List of Values drop-downs and other bound controls.
+
+<h3>Launcher</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormExec_Launcher?popup=1','Exec Launcher')%>
+<pre>
+{
+  "layout": "exec", 
+  "onecolumn":true,
+  "title": "Activate Customer",
+  "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
+  "fields": [
+    {"name":"c_id","caption":"Customer","control":"dropdown",
+     "lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true },
+     "validate": ["Required"]
+    },
+    {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc();"}
+  ]
+}
+</pre>
+The launcher provides fields for input, and one or more "button" controls for executing actions with the input values.  The "button" controls can execute any JavaScript.  Here, the button executes "RunDBFunc", which reads the values from the form and passes them to the API endpoint to execute the "sqlexec" function.
+
+<h4>Prepopulating Parameters</h4>
+Launcher parameter values can be hard-coded in the URL:<br/>
+<br/>
+<a href="/jsHarmonyTutorials/FormExec_Launcher?c_id=1" target="_blank">/jsHarmonyTutorials/FormExec_Launcher?c_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormExec_Launcher?c_id=1&popup=1','Exec Launcher with Parameters')%>
+
+<h3>Database API Endpoint</h3>
+Exec models can also be used as API endpoints for database calls.  Roles can be used to limit access to each API call by user permissions.<br/>
+<br/>
+The database calls can consist of any SQL.  If the SQL returns result recordsets, they will be returned to the user.<br/>
+<br/>
+<pre>
+//jsHarmonyTutorials/FormExec_API
+{
+  "layout": "exec",
+  "sqlexec": "select c_id,c_name from c"
+}
+</pre>
+JavaScript can be used to access the API endpoint:
+<pre>
+$.ajax('/_d/jsHarmonyTutorials/FormExec_API', {
+  type: 'POST',
+  dataType: 'json',
+  success: function(rslt){
+    //Handle the resulting JSON data
+  }
+});
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/FormExec_API_Consumer?popup=1','Exec API')%>
+
+<h4>Returning Multiple Recordsets</h4>
+The API can also return multiple recordsets by setting the "sqltype" property to "multirecordset".  This will return multiple arrays instead of combining all the query results into one array.
+
+<pre>
+{
+  "layout": "exec",
+  "sqlexec": [
+    "select c_id,c_name,c_sts from c;",
+    "select codeval,codetxt from ucod_c_sts where (CODETDT is null or CODETDT>datetime('now','localtime')) order by codseq;"
+  ],
+  "sqltype": "multirecordset"
+}
+</pre>
+In the example above, two queries are returned in one API call:
+<%-getScreenshot('jsHarmonyTutorials/FormExec_API_Multirecordset_Consumer?popup=1','Exec API Multirecordset')%>
+The SQL statements should be separated by semicolons.  SQL statements can be split into an array for editing purposes, as in the example above.  When evaluated, the SQL statements will be joined with a space character, and sent to the database in one command.

@@ -1,0 +1,13 @@
+{
+  "layout": "exec", 
+  "onecolumn":true,
+  "title": "Activate Customer",
+  "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
+  "fields": [
+    {"name":"c_id","caption":"Customer","control":"dropdown",
+     "lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true },
+     "validate": ["Required"]
+    },
+    {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc();"}
+  ]
+}
