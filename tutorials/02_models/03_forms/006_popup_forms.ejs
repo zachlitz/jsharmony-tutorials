@@ -21,7 +21,17 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Popup Forms",
-  "Menu": ["Models","Forms"]
+  "Menu": ["Models","Forms"],
+  "Code": [
+    "/models/FormPopup_C.json",
+    "/models/FormPopup_CL.json",
+    "/models/FormPopup_JavaScript.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FormPopup_C?action=edit&c_id=1", "title": "Popup Form", "windowparams": "width=600,height=400" },
+    { "url": "jsHarmonyTutorials/FormPopup_CL", "title": "Linking to a Popup Form from a Grid" },
+    { "url": "jsHarmonyTutorials/FormPopup_JavaScript?action=edit&c_id=1", "title": "Opening a Popup Form via JavaScript" }
+  ]
 }
 </script>
 
@@ -36,12 +46,34 @@ There are several benefits to using popup forms instead of in-page links when ed
   <li>Data can be copied / pasted between records</li>
   <li>The user does not have to reload their paged position within the grid when pressing the back button</li>
 </ul>
+When used on a tablet or phone, the popup forms will be opened as a new tab.
 
 <h3>Using Popup Forms</h3>
-xxxxxxxxxxxxxxxxxxxxxx
+Popup forms are defined by setting the model.popup property to the width and height of the popup:
+<pre>
+{
+  "popup":[WIDTH, HEIGHT]
+}
+</pre>
+For example:
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "popup":[600,400],
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/FormPopup_C?c_id=2&action=edit','Popup Form', { width:600, height:400 })%>
 
 <h3>Linking to Popup Forms</h3>
-When linking using the field.link or button.link properties, the system will automatically review the target model and add code to open the target in a popup window if the "popup" property is set on the target model.
+When linking using the field.link or button.link properties, the system will automatically read the target model and add code to open the target in a popup window if the "popup" property is set on the target model.
 <pre>
 //Link to the C form from a grid column
 {
@@ -49,16 +81,26 @@ When linking using the field.link or button.link properties, the system will aut
     {"name":"c_name","caption":"Customer","link":"edit:C"}
   ]
 }
-
-//C form
-{
-  "popup": [800, 600]
-}
 </pre>
 
-<h3>Opening Popup Forms Via JavaScript</h3>
-
+<h3>Opening Popup Forms via JavaScript</h3>
+Popup forms can also be opened via custom JavaScript:
 <pre>
-XExt.popupForm('CW','edit',{'c_id':XModels[modelid].controller.form.Data.c_id},{width:850,height:600})
+// XExt.popupForm :: Open the target model as a popup
+//
+// Parameters
+//   modelid (string):           The full path to the model, including any namespace
+//   action (string):            Either "add" or "edit"
+//   querystringParams (object): Querystring parameters appended to the model URL
+//   windowParams (object):      JavaScript window.open parameters, as an object
+//   existingWindow (Window):    (Optional) Existing JavaScript Window to use instead of opening a new window
+//
+// Returns
+//   (Window) Either the newly created popup window, or the existing window passed as an input parameter
+//
+XExt.popupForm(modelid, action, querystringParams, windowParams, existingWindow)
 </pre>
-
+For example:
+<pre>
+XExt.popupForm('C', 'edit', {'c_id':XModels[modelid].controller.form.Data.c_id}, {width:850,height:600});
+</pre>

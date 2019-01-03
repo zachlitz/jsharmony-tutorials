@@ -1,0 +1,14 @@
+{ 
+  "FormPopup_JavaScript": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "actions":"B",
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Name"},
+      {"control":"button","value":"Edit","onclick":"XExt.popupForm(xmodel.namespace+'FormPopup_C', 'edit', {'c_id':XModels[modelid].controller.form.Data.c_id})"}
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{ 
+  "FormPopup_C": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "popup":[600,400],
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Name"},
+      {"name":"c_sts","caption":"Status"}
+    ]
+  }
+}
