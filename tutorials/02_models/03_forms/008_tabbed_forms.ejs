@@ -1,0 +1,138 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Tabbed Forms",
+  "Menu": ["Models","Forms"],
+  "Code": [
+    "/models/FormTabbed_Standard.json",
+    "/models/FormTabbed_Standard_Top.json",
+    "/models/FormTabbed_Dynamic.json",
+    "/models/FormTabbed_Removed_Tab.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FormTabbed_Standard?action=edit&c_id=1", "title": "Standard Tabbed Form with Tabs Below Content" },
+    { "url": "jsHarmonyTutorials/FormTabbed_Standard?action=add", "title": "Standard Tabbed Form in Add Mode" },
+    { "url": "jsHarmonyTutorials/FormTabbed_Standard_Top?action=edit&c_id=1", "title": "Tabbed Form with Tabs Above Content" },
+    { "url": "jsHarmonyTutorials/FormTabbed_Dynamic_WithHelp?action=edit&c_id=1", "title": "Tabbed Form with Dynamic Tabs" },
+    { "url": "jsHarmonyTutorials/FormTabbed_Removed_Tab?action=edit&c_id=1", "title": "Inherited Tabbed Form with a Removed Tab" }
+  ]
+}
+</script>
+
+<h3>Overview</h3>
+One set of tabbed forms can be added to each model, either above or below the form content.  Only one tab will be loaded at a time; switching between tabs will reload the model and all data.
+
+<%-getScreenshot('jsHarmonyTutorials/FormTabbed_Standard?action=edit&c_id=1&popup=1','Tabbed Form')%>
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "tabpanelstyle":"width:540px;",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"","control":"label_h3"}
+  ],
+  "tabs": [
+    { "name": "Overview", "target": "FormTabbed_Standard_C" },
+    { "name": "Contacts", "target": "FormTabbed_Standard_CCL" }
+  ]
+}
+</pre>
+
+<h3>Syntax</h3>
+Tabs are defined as an array in the model.tab property:
+<pre>
+{
+  "tabs": [
+    //Tab 1
+    { 
+      "name": "[i]TAB_ID[/i]",
+      "caption": "[i]TAB_BUTTON_CAPTION[/i]",
+      "target": "[i]MODELID[/i]",
+      "bindings": { "[i]child_column1[/i]": "[i]parent_column1[/i]", "[i]child_column2[/i]": "[i]parent_column2[/i]", ... },
+      "showcode": [ "[i]tabcode_value_1[/i]", "[i]tabcode_value_2[/i]", ... ],
+      "roles": {
+        "[i]site1[/i]": [ "role1", "role2", ... ],
+        ...
+      }
+    },
+    //Tab 2
+    ...
+  ],
+  "tabcode": "[i]FIELD_NAME[/i]", //The field name used with "showcode" for hiding or showing tabs.  If used, the field must be defined in the fields section
+  "tabpos": "bottom" //"top" or "bottom" (default)
+}
+</pre>
+If the "caption" is not specified, the "name" property will be used as the caption.
+
+<h3>Disabling Tabs in "Add" Mode</h3>
+Tabs are automatically disabled in "add" mode, until the new record is saved:
+
+<%-getScreenshot('jsHarmonyTutorials/FormTabbed_Standard?action=add&popup=1','Tabbed Form in Add Mode')%>
+
+<h3>Tab Position</h3>
+By default, tabs are displayed below the model content.  By setting the "tabpos" property to "top" instead of "bottom", tabs can be displayed above the content:
+<%-getScreenshot('jsHarmonyTutorials/FormTabbed_Standard_Top?action=edit&c_id=1&popup=1','Tabbed Form Top')%>
+<pre>
+{
+  "tabpos":"top"
+}
+</pre>
+
+<h3>Dynamic Tabs Based on Form Data</h3>
+Tabs can be dynamically displayed based on database data.  For example, if a status field is set to "INACTIVE", certain tabs can be hidden.<br/>
+<br/>
+If using dynamic tabs, the model.tabcode property should be set to the field name whose value will be used for showing / hiding tabs.<br/>
+<br/>
+Then, for each tab that can be displayed based on the tabcode field, the tab.showcode property should be set to the values for which the tab should be shown.<br/>
+<br/>
+In the following example, the "Contacts" tab will be hidden if the status is not "ACTIVE":
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "tabpanelstyle":"width:540px;",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"","control":"label_h3"},
+    {"name":"c_sts","control":"hidden"}
+  ],
+  "tabcode":"c_sts",
+  "tabs": [
+    { "name": "Overview", "target": "C" },
+    { "name": "Contacts", "target": "CCL", "showcode": ["ACTIVE"] }
+  ]
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/FormTabbed_Dynamic?action=edit&c_id=1&popup=1','Tabbed Form with Dynamic Tabs')%>
+
+
+<h3>Hiding Tabs in Inherited Forms</h3>
+Tabs can be removed in inherited forms by using the "__REMOVE__" property:
+<pre>
+{
+  "inherits":"FormTabbed_Standard",
+  "tabs": [
+    { "name": "Contacts", "__REMOVE__": true }
+  ]
+}
+</pre>

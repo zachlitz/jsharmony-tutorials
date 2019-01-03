@@ -1,0 +1,6 @@
+{
+  "FormTabbed_Standard_Top": {
+    "inherits":"FormTabbed_Standard",
+    "tabpos":"top"
+  }
+}

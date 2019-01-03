@@ -1,0 +1,8 @@
+{
+  "FormTabbed_Removed_Tab": {
+    "inherits":"FormTabbed_Standard",
+    "tabs": [
+      { "name": "Contacts", "__REMOVE__": true }
+    ]
+  }
+}
