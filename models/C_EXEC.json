@@ -3,7 +3,7 @@
   "layout": "exec", 
   "title": "Customer Function",
   "table": "c",
-  "actions": "BIUD", 
+  "actions": "BU", 
   "roles": {"C_B":"B","C_X":"*"},
   "caption": [ "", "Customer", "Customers" ],
   "menu": "clients",

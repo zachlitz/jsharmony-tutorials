@@ -4,7 +4,7 @@
     "layout": "form", 
     "title": "Customer Information",
     "table": "c",
-    "actions": "B", 
+    "actions": "BIUD", 
     "roles": {"C_B":"B","C_X":"*"},
     "caption": [ "", "Customer", "Customers" ],
     "menu": "clients",

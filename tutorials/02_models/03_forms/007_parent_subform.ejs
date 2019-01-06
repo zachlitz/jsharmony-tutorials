@@ -25,8 +25,191 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Code": ["/models/C.json","/models/C.js"]
 }
 </script>
-Parent / Subform Form<br/>
-Parent / Subform Grid<br/>
-Parent / Subform Multisel<br/>
-Parent / Subform Form-m<br/>
-Parent / Subform / Subform
+
+<h3>Overview</h3>
+There are several types of subforms that can be embedded within a model:
+<ul>
+  <li>
+    <b>Subform Controls</b><br/>
+    Subforms that can be embedded at any location within a model
+  </li>
+  <li>
+    <b>Tabbed Subforms</b><br/>
+    Subforms organized into tabs, displayed one at a time.  More information is available in the <a href="/tutorials/forms_tabbed">Tabbed Forms</a> tutorial.
+  </li>
+  <li>
+    <b>Duplicate Record Subforms</b><br/>
+    A subform used to duplicate the current record.  More information is available in the <a href="/tutorials/duplicating_record">Duplicating a Record</a> tutorial.
+  </li>
+  <li>
+    <b>Popup List of Values Subforms</b><br/>
+    A popup grid used to select a value.  More information is available in the <a href="/tutorials/list_of_values_popup_lov">Popup LOV</a> tutorial.
+  </li>
+</ul>
+This tutorial focuses on subform controls.<br/>
+<br/>
+Subform controls can be embedded within the following model layouts:
+<ul>
+  <li>Form</li>
+  <li>Exec</li>
+  <li>Report</li>
+</ul>
+
+<h3>Subform Examples</h3>
+Subform controls can link to models with form, form-m, grid, multisel, and exec layouts.
+
+<h3 data-level="2">Subform Layout: Form</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_C?c_id=1&action=edit&popup=1','Subform Form')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_DOC","actions": "BU"}
+  ]
+}
+
+"C_DOC": {
+  "table":"c",
+  "layout":"form",
+  "caption":["Document","Documents"],
+  "fields":[
+    {"name":"c_doc","type":"file","caption":"Document","controlparams": {"data_folder": "c_doc"} }
+  ]
+}
+</pre>
+Subforms that link to another Form layout are used to model 1-to-1 relationships.  This is generally a rare occurrence, and should usually be handled by adding the fields directly to the parent form and linking to the database with an updateable view.<br/>
+<br/>
+If using subforms with a Form layout, it is necessary to set the "action" on the subform control.  If the parent and subform both link to the same table, the subform should not be available on Insert, since otherwise two insert statements on the same table will be executed.
+
+<h3 data-level="2">Subform Layout: Form-m</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=edit&popup=1','Subform Form-m')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_CA"}
+  ]
+},
+"C_CA": {
+  "table":"ca",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption":["Address","Addresses"],
+  "fields":[
+    {"name":"ca_country","caption":"Country"},
+    {"name":"ca_addr1","caption":"Address"},
+    {"name":"ca_addr2","caption":""},
+    {"name":"ca_city","caption":"City"},
+    {"name":"ca_state","caption":"State"},
+    {"name":"ca_zip","caption":"Zip"}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Subform Layout: Grid</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Grid_C?c_id=1&action=edit&popup=1','Subform Grid')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_CC"}
+  ]
+},
+"C_CC": {
+  "table":"cc",
+  "layout":"grid",
+  "caption":["Contact","Contacts"],
+  "fields":[
+    {"name":"cc_name","caption":"Name"},
+    {"name":"cc_title","caption":"Title"},
+    {"name":"cc_email","caption":"Email"}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Subform Layout: Multisel</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Multisel_C?c_id=1&action=edit&popup=1','Subform Multisel')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_CF"}
+  ]
+},
+"C_CF": {
+  "table":"cf",
+  "layout":"multisel",
+  "caption":["Customer Flag","Customers Flags"],
+  "fields":[
+    {"name":"c_id"},
+    {"name":"cf_type","caption":"Flag"}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Subform Layout: Exec</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Exec_C?c_id=1&action=edit&popup=1','Subform Exec')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_Activate"}
+  ]
+},
+"C_Activate": {
+  "layout": "exec", 
+  "onecolumn":true,
+  "title": "Activate Customer",
+  "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
+  "fields": [
+    {"name":"c_id","control":"hidden"},
+    {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc(function(){jsh.XPage.Refresh();});"}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Nested Subforms</h3>
+
+<h3>Bindings</h3>
+** Automatic
+
+<h3>Two Subforms of the same Model</h3>
+
+<h3>Database Transactions</h3>
+
+<h3>Add vs Edit Mode</h3>
+
+<h3>Actions / Roles</h3>
+Actions / Roles at the control level
+Browse forms with editable subforms
+
+<h3>Styling Subforms</h3>
+
+
+
+** Inheritance -- XBaseModel
