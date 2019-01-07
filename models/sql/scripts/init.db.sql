@@ -5,6 +5,7 @@ begin;
 drop table if exists alltypes;
 drop view if exists v_cc;
 drop view if exists v_c;
+drop table if exists e;
 drop table if exists cf;
 drop table if exists ca;
 drop table if exists cc;
@@ -92,6 +93,19 @@ insert into cf(c_id,cf_type) values (1,'PREF');
 insert into cf(c_id,cf_type) values (1,'PAPER');
 insert into cf(c_id,cf_type) values (1,'DEDIREP');
 insert into cf(c_id,cf_type) values (2,'CRDTRISK');
+
+/*********E*********/
+create table e (
+  e_id integer primary key autoincrement not null,
+  c_id integer not null,
+  e_k text not null,
+  e_name text not null,
+  unique(c_id,e_k),
+  foreign key (c_id) references c(c_id)
+);
+insert into e(c_id,e_k,e_name) values (1,'A392','Maier C6');
+insert into e(c_id,e_k,e_name) values (1,'A214','Maier ML-26');
+insert into e(c_id,e_k,e_name) values (2,'515-231','Milwaukee Portable Drill Press');
 
 /*********V_C*********/
 create view v_c as

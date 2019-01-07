@@ -1,0 +1,35 @@
+{ 
+  "FormSubform_Nested_E": {
+    "table":"e",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Equipment","Equipment"],
+    "fields":[
+      {"name":"e_k","caption":"ID"},
+      {"name":"e_name","caption":"Name"},
+      {"name":"c_id","caption":"Customer","lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true } },
+      {"control": "subform","target": "FormSubform_Nested_C","actions":"BU"}
+    ]
+  },
+  "FormSubform_Nested_C": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"c_name","caption":"Name"},
+      {"name":"c_sts","caption":"Status"},
+      {"control": "subform","target": "FormSubform_Nested_CC"}
+    ]
+  },
+  "FormSubform_Nested_CC": {
+    "table":"cc",
+    "layout":"grid",
+    "caption":["Contact","Contacts"],
+    "fields":[
+      {"name":"cc_name","caption":"Name"},
+      {"name":"cc_title","caption":"Title"},
+      {"name":"cc_email","caption":"Email"}
+    ]
+  }
+}

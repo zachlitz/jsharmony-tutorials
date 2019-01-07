@@ -7,7 +7,7 @@
     "buttons":[{"link":"add:ModelBreadcrumbs_CC"}],
     "fields": [
       {"name":"cc_id","type":"bigint","actions":"B","key":1,"caption":"ID" },
-      {"name":"c_id","type":"bigint","actions":"BIU","foreignkey":1,"control":"hidden" },
+      {"name":"c_id","type":"bigint","actions":"BI","foreignkey":1,"control":"hidden" },
       {"name":"cc_name","type":"varchar","length":"100","caption":"Name","actions":"B","link":"edit:ModelBreadcrumbs_CC" }
     ]
   }
