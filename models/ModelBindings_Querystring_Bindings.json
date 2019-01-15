@@ -1,0 +1,14 @@
+{
+  "ModelBindings_Querystring_Bindings": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "bindings": { "c_id": "customer_id" },
+    "fields":[
+      {"name":"c_id","control":"hidden"},
+      {"name":"c_name","caption":"Name"},
+      {"name":"c_sts","caption":"Status"}
+    ]
+  }
+}

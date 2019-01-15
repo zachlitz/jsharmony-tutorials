@@ -102,14 +102,14 @@ The "sqlselect" property can be used to override the full select SQL statement. 
 <ul>
   <li>%%%SQLWHERE%%% - The combined model.sqlwhere and field.sqlwhere statements</li>
   <li>%%%DATALOCKS%%% - Datalocks generated for this model</li>
-  <li>%%%SEARCH%%% - The search query based on the Grid filters</li>
+  <li>%%%SEARCH%%% - The search query based on the Grid search</li>
   <li>%%%SORT%%% - Sort expression</li>
   <li>%%%ROWCOUNT%%% - Number of rows to be returned per page</li>
   <li>%%%ROWSTART%%% - Page offset</li>
 </ul>
 Since "multisel" joins against the List of Values (LOV), the %%%LOVSQL%%% parameter additionally provides the SQL for the List of Values.<br/>
 <br/>
-Custom "required" filters are most easily implemented using the model's "sqlwhere" property:
+Custom "required" search clauses are most easily implemented using the model's "sqlwhere" property:
 <pre>
 {
   "sqlwhere": "c_sts='ACTIVE'"
@@ -226,7 +226,7 @@ On Load:
   sqlrowcount: select count(*) as cnt from c where  1=1
   LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
 
-On Filter:
+On Search:
   sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1   and ( c_name ilike @search_0_c_name) order by c_id asc limit 51 offset 0
              @search_0_c_name:"%ACME%"
   sqlrowcount: select count(*) as cnt from c where  1=1   and ( c_name ilike @search_0_c_name)
@@ -439,7 +439,7 @@ update c set c_modified=current_timestamp
 </pre>
 
 <h4>field.sqlsearch</h4>
-For grids, use the specified filter expression.
+For grids, use the specified search expression.
 <pre>
 {
   "fields":[
@@ -455,7 +455,7 @@ If the user searches the c_name field for any rows containing "ACME":
 </pre>
 
 <h4>field.sqlsearchsound</h4>
-For grids, use the specified Soundex filter expression.
+For grids, use the specified Soundex search expression.
 <pre>
 {
   "fields":[

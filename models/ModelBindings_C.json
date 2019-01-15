@@ -1,0 +1,26 @@
+{ 
+  "ModelBindings_C": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"c_id","control":"hidden"},
+      {"name":"c_name","caption":"Name"},
+      {"name":"c_sts","caption":"Status"},
+      {"control": "subform","target": "ModelBindings_CC","bindings":{ "c_id": "c_id" } }
+    ]
+  },
+  "ModelBindings_CC": {
+    "table":"cc",
+    "layout":"grid",
+    "caption":["Contact","Contacts"],
+    "fields":[
+      {"name":"cc_id","control":"hidden"},
+      {"name":"c_id","control":"hidden"},
+      {"name":"cc_name","caption":"Name"},
+      {"name":"cc_title","caption":"Title"},
+      {"name":"cc_email","caption":"Email"}
+    ]
+  } 
+}

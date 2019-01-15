@@ -20,20 +20,20 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
-  "Title": "Grid Filter",
+  "Title": "Grid Search",
   "Menu": ["Models","Grids"],
   "Code": ["/models/GridSearch_CL.json"],
   "Demo": "jsHarmonyTutorials/GridSearch_CL"
 }
 </script>
 
-<h3>Grid Filter Customizations</h3>
+<h3>Grid Search Customizations</h3>
 
-The following properties are available to manage search / filter behavior:
+The following properties are available to manage search behavior:
 <pre>
 Model:
-  "grid_require_filter": 1
-  "grid_expand_filter": 1
+  "grid_require_search": 1
+  "grid_expand_search": 1
   "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
 
 Field:
@@ -44,13 +44,13 @@ Field:
   "enable_search": true
 </pre>
 
-<h4>model.grid_require_filter</h4>
-The "grid_require_filter" parameter is used on grids with a lot of computed data, where the initial query may be slow.  This will prevent the initial grid results from showing when the form is first loaded.
+<h4>model.grid_require_search</h4>
+The "grid_require_search" parameter is used on grids with a lot of computed data, where the initial query may be slow.  This will prevent the initial grid results from showing when the form is first loaded.
 
-<h4>model.grid_expand_filter</h4>
-The "grid_expand_filter" parameter will automatically open the filter when a grid is first loaded.  This is useful for grids with a lot of data that are frequently queried, such as customer listings.<br/>
+<h4>model.grid_expand_search</h4>
+The "grid_expand_search" parameter will automatically open the search when a grid is first loaded.  This is useful for grids with a lot of data that are frequently queried, such as customer listings.<br/>
 <br/>
-The "grid_expand_filter" parameter is also helpful when integrating with barcode scanners, since the search field has focus when the page is first opened.
+The "grid_expand_search" parameter is also helpful when integrating with barcode scanners, since the search field has focus when the page is first opened.
 
 <h4>model.noresultsmessage</h4>
 The message displayed in the grid when no results are returned for a query.  By default, this is:
@@ -97,8 +97,8 @@ Setting a field's "disable_search" property to true will remove the field from t
 }
 </pre>
 
-<h4>Removing a Field from the "Any..." Filter Column Search</h4>
-The "disable_search_all" property will remove the field from the "Any..." Filter Column search.  This is useful primary for performance reasons, such as in situations with data-intensive computed columns.  The "disable_search_all" property still enables users to search by the computed column individually, but removes the column from the "All Fields" search.
+<h4>Removing a Field from the "Any..." Column Search</h4>
+The "disable_search_all" property will remove the field from the "Any..." Column search.  This is useful primary for performance reasons, such as in situations with data-intensive computed columns.  The "disable_search_all" property still enables users to search by the computed column individually, but removes the column from the "All Fields" search.
 <pre>
 {
   "fields":[
@@ -118,11 +118,11 @@ By default, hidden fields have search disabled.  Search can be enabled on a hidd
 </pre>
 
 
-<h3>SQL Filter</h3>
-Additionally, filters can be hard-coded in the SQL expression using "model.sqlwhere" and "field.sqlwhere".
+<h3>SQL Where Clauses</h3>
+Additionally, where clauses can be hard-coded in the SQL expression using "model.sqlwhere" and "field.sqlwhere".
 
 <h4>model.sqlwhere</h4>
-A custom SQL filter expression can be added to a grid using the model's "sqlwhere" property.  In the following example, the grid will only show Active customers:
+A custom SQL where expression can be added to a grid using the model's "sqlwhere" property.  In the following example, the grid will only show Active customers:
 <pre>
 {
   "sqlwhere":"c_sts='ACTIVE'"
@@ -130,11 +130,11 @@ A custom SQL filter expression can be added to a grid using the model's "sqlwher
 </pre>
 
 <h4>field.sqlwhere</h4>
-If a field is in the querystring or in a binding, the grid will be filtered by that field.  By default, the filter expression is:
+If a field is in the querystring or in a binding, the grid will be filtered by that field.  By default, the sql "where" expression is:
 <pre>
 FIELD_NAME=@FIELD_NAME
 </pre>
-This filter expression can be customized using the field's "sqlwhere" property.  For example, the Customer Name can be queried over multiple fields:
+This sql "where" expression can be customized using the field's "sqlwhere" property.  For example, the Customer Name can be queried over multiple fields:
 <pre>
 {
   "fields":[

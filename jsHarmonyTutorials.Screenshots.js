@@ -47,8 +47,10 @@ exports.generateScreenshots = function(callback){
         var screenshots = [];
   
         ejs.render(txt, { 
+          req: null,
           getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); },
-          instance: ''
+          instance: '',
+          _: _
         });
 
         async.eachSeries(screenshots, function(screenshot, screenshot_cb){

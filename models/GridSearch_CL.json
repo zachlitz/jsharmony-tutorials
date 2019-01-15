@@ -3,7 +3,7 @@
     "table":"c",
     "layout":"grid",
     "caption":["Customer","Customers"],
-    "grid_expand_filter": true,
+    "grid_expand_search": true,
     "fields":[
       {"name":"c_id","caption": "ID"},
       {"name":"c_name","caption":"Customer",

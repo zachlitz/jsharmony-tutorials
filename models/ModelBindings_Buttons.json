@@ -1,0 +1,44 @@
+{
+  "ModelBindings_Buttons_CCL": {
+    "table":"cc",
+    "layout":"grid",
+    "caption":["Contact","Contacts"],
+    "actions":"B",
+    "buttons":[{"link":"add:ModelBindings_Buttons_C"},{"link":"add:ModelBindings_Buttons_CC"}],
+    "fields":[
+      {"name":"c_id","control":"hidden"},
+      {"name":"cc_name","caption": "Contact Name","link":"edit:ModelBindings_Buttons_CC"},
+      {"control":"linkbutton","caption": "Edit Customer","link":"edit:ModelBindings_Buttons_C"},
+      {"control":"button","caption": "Edit Contact","link":"edit:ModelBindings_Buttons_CC"},
+      {"control":"linkbutton","caption": "Edit Contact","link":"edit:ModelBindings_Buttons_CC"}
+
+    ]
+  },
+  "ModelBindings_Buttons_C": {
+    "layout": "form", 
+    "table": "c",
+    "onecolumn":true,
+    "caption": [ "Customer", "Customers" ],
+    "popup":[1000,700],
+    "fields": [
+      {"name": "c_name","caption": "Customer Name"},
+      {"name":"c_sts","caption": "Status"}
+    ]
+  },
+  "ModelBindings_Buttons_CC": {
+    "layout": "form", 
+    "table": "cc",
+    "onecolumn":true,
+    "caption": [ "Contact", "Contacts" ],
+    "buttons":[
+      {"link":"edit:ModelBindings_Buttons_C","actions":"U","text":"Edit Customer"}
+    ],
+    "popup":[1000,700],
+    "fields": [
+      {"name":"c_id","caption":"Customer","lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true }, "actions":"BI" },
+      {"name":"cc_name","caption": "Contact Name"},
+      {"name":"cc_title","caption":"Title"},
+      {"name":"cc_email","caption":"Email"}
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{ 
+  "FormSubform_TwoInstances_CC": {
+    "table":"cc",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer Contact","Customer Contacts"],
+    "actions":"BU",
+    "fields":[
+      {"name":"cc_name","caption":"Name"},
+      {"name":"cc_title","caption":"Title"},
+      {"name":"cc_email","caption":"Email"},
+      {"control": "subform","target": "FormSubform_TwoInstances_CC_CA_Billing","bindings":{ "ca_id":"ca_id_billing" },"actions":"BU"},
+      {"control": "subform","target": "FormSubform_TwoInstances_CC_CA_Shipping","bindings":{ "ca_id":"ca_id_shipping" },"actions": "BU"}
+    ]
+  },
+  "FormSubform_TwoInstances_CC_CA": {
+    "table":"ca",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Address","Addresses"],
+    "fields":[
+      {"name":"ca_country","caption":"Country"},
+      {"name":"ca_addr1","caption":"Address"},
+      {"name":"ca_addr2","caption":""},
+      {"name":"ca_city","caption":"City"},
+      {"name":"ca_state","caption":"State"},
+      {"name":"ca_zip","caption":"Zip"}
+    ]
+  },
+  "FormSubform_TwoInstances_CC_CA_Billing": {
+    "inherits":"FormSubform_TwoInstances_CC_CA",
+    "title": "Billing Address"
+  },
+  "FormSubform_TwoInstances_CC_CA_Shipping": {
+    "inherits":"FormSubform_TwoInstances_CC_CA",
+    "title": "Shipping Address"
+  }
+}

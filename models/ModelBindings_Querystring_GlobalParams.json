@@ -1,0 +1,16 @@
+{
+  "ModelBindings_Querystring_GlobalParams": {
+    "table":"jsharmony.pe",
+    "layout":"form",
+    "onecolumn":true,
+    "title":"User Settings",
+    "actions":"BU",
+    "querystring": { "&action":"edit", "&pe_id": "@user_id" },
+    "onupdate": "jsh.XPage.Reload({ force: true, browserRefresh: true });",
+    "fields":[
+      {"name":"pe_id","control":"hidden"},
+      {"name":"pe_fname","caption":"First Name"},
+      {"name":"pe_lname","caption":"Last Name"}
+    ]
+  }
+}

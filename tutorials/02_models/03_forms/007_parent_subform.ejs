@@ -194,20 +194,108 @@ If using subforms with a Form layout, it is necessary to set the "action" on the
 </pre>
 
 <h3 data-level="2">Nested Subforms</h3>
-E> C > CA
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Nested_E?e_id=1&action=edit&popup=1','Subform Nested')%>
+<pre>
+"E": {
+  "table":"e",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Equipment","Equipment"],
+  "fields":[
+    {"name":"e_k","caption":"ID"},
+    {"name":"e_name","caption":"Name"},
+    {"name":"c_id","caption":"Customer","lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true } },
+    {"control": "subform","target": "C","actions":"BU"}
+  ]
+},
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "CC"}
+  ]
+},
+"CC": {
+  "table":"cc",
+  "layout":"grid",
+  "caption":["Contact","Contacts"],
+  "fields":[
+    {"name":"cc_name","caption":"Name"},
+    {"name":"cc_title","caption":"Title"},
+    {"name":"cc_email","caption":"Email"}
+  ]
+}
+</pre>
 
 <h3>Bindings</h3>
-** Automatic
+Bindings define how to filter / select subform data based on the parent form.  Often bindings can be automatically generated.<br/>
+<br/>
+More information on bindings can be found in the <a href="/tutorials/model_bindings">Model Bindings</a> tutorials.
 
 <h3>Two Subforms of the same Model</h3>
+If a model needs to be displayed twice on the same page, it is necessary to create a second instance of that model through inheritance:
+
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_CC?action=edit&cc_id=1&popup=1','Two Subforms')%>
+<pre>
+"CC": {
+  "table":"cc",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer Contact","Customer Contacts"],
+  "actions":"BU",
+  "fields":[
+    {"name":"cc_name","caption":"Name"},
+    {"name":"cc_title","caption":"Title"},
+    {"name":"cc_email","caption":"Email"},
+    {"control": "subform","target": "CC_CA_Billing","bindings":{ "ca_id":"ca_id_billing" },"actions":"BU"},
+    {"control": "subform","target": "CC_CA_Shipping","bindings":{ "ca_id":"ca_id_shipping" },"actions": "BU"}
+  ]
+},
+"CC_CA": {
+  "table":"ca",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Address","Addresses"],
+  "fields":[
+    {"name":"ca_country","caption":"Country"},
+    {"name":"ca_addr1","caption":"Address"},
+    {"name":"ca_addr2","caption":""},
+    {"name":"ca_city","caption":"City"},
+    {"name":"ca_state","caption":"State"},
+    {"name":"ca_zip","caption":"Zip"}
+  ]
+},
+"CC_CA_Billing": {
+  "inherits":"CC_CA",
+  "title": "Billing Address"
+},
+"CC_CA_Shipping": {
+  "inherits":"CC_CA",
+  "title": "Shipping Address"
+}
+</pre>
+In the example above, the two address records would need to be created dynamically via a database trigger when a contact is inserted.
 
 <h3>Database Transactions</h3>
+When using subforms or tabbed forms, all operations are saved in one atomic commit transaction.  Top-level insert statements are executed first, and then the generated key is passed through bindings to the subforms.
 
-<h3>Add vs Edit Mode</h3>
+xxxxxxxxxxxxxxxx
+Example of how the transaction tbl is passed / escaped
+xxxxxxxxxxxxxxxx
 
-<h3>Actions / Roles</h3>
+<h3></h3>
+
+<h3>Actions / Roles / Add vs Edit Mode</h3>
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Actions / Roles at the control level
 Browse forms with editable subforms
+Description of how subforms are not displayed in add mode if they do not have the "I" action.
+Subforms that would perform an update action must not be displayed
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 <h3>Styling Subforms</h3>
 

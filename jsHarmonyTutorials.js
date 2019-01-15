@@ -67,7 +67,7 @@ jsHarmonyTutorials.Application = function(){ return (new jsHarmonyTutorials()).A
 jsHarmonyTutorials.prototype.InitTutorialsDB = function(cb){
   var _this = this;
   var db = _this.jsh.DB['default'];
-  db.RunScripts(_this.jsh, ['jsHarmonyTutorials','init'], {}, function(err, rslt){
+  db.RunScripts(_this.jsh, ['jsHarmonyTutorials','init'], { }, function(err, rslt){
     if(rslt && rslt.length && rslt[0].length) console.log(JSON.stringify(rslt, null, 4));
     if(err){ console.log('Error initializing database'); console.log(err); }
     else console.log('Database ready');
@@ -79,16 +79,19 @@ jsHarmonyTutorials.prototype.InitFactoryDB = function(cb){
   var _this = this;
   //Initialize Database
   var db = _this.jsh.DB['default'];
-  db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{},function(err,rslt){
+  var sqlFuncs = [];
+  sqlFuncs['INIT_DB_ADMIN_EMAIL'] = 'admin@jsharmony.com';
+
+  db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{ },function(err,rslt){
     if(err || !rslt){
       console.log('Initializing database tables, please wait...');
-      db.RunScripts(_this.jsh, ['*','init','init'], {}, function(err, rslt){
+      db.RunScripts(_this.jsh, ['*','init','init'], { }, function(err, rslt){
         console.log('Initializing database functions, please wait...');
         if(err){ console.log('Error initializing database'); console.log(err); return; }
-        db.RunScripts(_this.jsh, ['*','restructure'], {}, function(err, rslt){
+        db.RunScripts(_this.jsh, ['*','restructure'], { }, function(err, rslt){
           console.log('Initializing database data, please wait...');
           if(err){ console.log('Error initializing database'); console.log(err); return; }
-          db.RunScripts(_this.jsh, ['*','init_data'], {}, function(err, rslt){
+          db.RunScripts(_this.jsh, ['*','init_data'], { sqlFuncs: sqlFuncs }, function(err, rslt){
             if(err){ console.log('Error initializing database'); console.log(err); return; }
             _this.InitTutorialsDB(cb);
           });
@@ -104,10 +107,32 @@ jsHarmonyTutorials.prototype.Init = function(cb){
   _this.LoadTutorials(cb);
 }
 
+jsHarmonyTutorials.prototype.Auth = function(){
+  var _this = this;
+  var jsh = _this.jsh;
+  var auth_salt = HelperFS.staticSalt('static_login');
+  return {
+    onAuth: function(req, res, onSuccess, onFail){
+      req.isAuthenticated = true;
+      req.user_id = 1;
+      req._DBContext = 'system';
+      req._roles = {'SYSADMIN':'SYSADMIN', 'DEV':'DEV'};
+
+      jsh.AppSrv.ExecRow('login', 'select '+jsh.map.user_firstname+','+jsh.map.user_lastname+' from jsharmony.pe where '+jsh.map.user_id+'=@user_id', [jsh.AppSrv.DB.types.BigInt], { 'user_id': req.user_id }, function(err,rslt){
+        if(rslt && rslt[0]){
+          req.user_name = rslt[0][jsh.map.user_firstname] + ' ' + rslt[0][jsh.map.user_lastname];
+        }
+        else req.user_name = 'System';
+        if(onSuccess) onSuccess();
+      });
+    }
+  };
+}
+
 jsHarmonyTutorials.prototype.getFactoryConfig = function(){
   var _this = this;
   return { 
-    auth: false,
+    auth: _this.Auth(),
     menu: menu.bind(null, 'S'),
     public_apps: [
       { '*':  express.static(path.join(_this.basepath, 'public')) },
@@ -150,8 +175,10 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
               source: {},
             };
             rslt.data = ejs.render(rslt.data, { 
+              req: req,
               getScreenshot: function(url, desc, params){ return _this.getScreenshot(url, desc, params); },
-              instance: req.jshsite.instance
+              instance: req.jshsite.instance,
+              _: _
             });
 
             if(!config.Demo) config.Demo = [];

@@ -19,14 +19,233 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
 <script type="text/x-tutorial-info">
-  {
-    "Title": "Bindings",
-    "Menu": ["Models","Models Overview"]
+{
+  "ID": "model_bindings",
+  "Title": "Bindings",
+  "Menu": ["Models","Models Overview"]
+}
+</script>
+
+<pre>
+Standard Bindings
+Top-level bindings
+Required / Optional querystring values
+</pre>
+
+<h3>Overview</h3>
+Bindings are primarily used to link from parent forms to child forms.  When a parent form links to a child form, it will usually need to filter the records of the child form, often by a foreign or primary key.<br/>
+<br/>
+For example, bindings cab be used in the following scenarios:
+<ul>
+  <li>
+    <b>Tabs</b><br/>
+    A parent form that has a tab for a child form<br/>
+    Example: An "Edit Customer" form, that has a tab for editing Customer Addresses<br/>
+    Parent: Multi-tab "Edit Customer" form<br/>
+    Child: Customer Addresses form<br/>
+    Binding: Customer ID
+  </li>
+  <li>
+    <b>Subforms</b><br/>
+    A parent form that has a subform grid, filtered by the key<br/>
+    Example: An "Edit Customer" form, that has a subform grid listing all of the customer's personnel<br/>
+    Parent: Edit Customer<br/>
+    Child: Customer Personnel Listing<br/>
+    Binding: Customer ID
+  </li>
+  <li>
+    <b>Buttons</b><br/>
+    A parent form has a button to open a report<br/>
+    Example: An "Edit Customer" form has a button to generate a Sales Order Template report, that takes the customer type as a parameter<br/>
+    Parent: Edit Customer<br/>
+    Child: Sales Order Template report<br/>
+    Binding: Customer Type
+  </li>
+</ul>
+
+<h3>Syntax</h3>
+Bindings can be declared as follows:
+<pre>
+"bindings": { 
+  "[i]child_column1[/i]": "[i]parent_column1[/i]",    //Bind child column to a column in the parent model
+  "[i]child_column2[/i]": "[i]'CONSTANT_VALUE'[/i]",  //Bind child column to a constant value - must be in single quotes
+  ...
+}
+</pre>
+
+Below is an example of bindings in a subform:
+<%-getScreenshot('jsHarmonyTutorials/ModelBindings_C?c_id=1&action=edit&popup=1','Model Bindings')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","control":"hidden","key":1},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "CC","bindings":{ "c_id": "c_id" } }
+  ]
+},
+"CC": {
+  "table":"cc",
+  "layout":"grid",
+  "caption":["Contact","Contacts"],
+  "fields":[
+    {"name":"cc_id","control":"hidden","key":1},
+    {"name":"c_id","control":"hidden"},
+    {"name":"cc_name","caption":"Name"},
+    {"name":"cc_title","caption":"Title"},
+    {"name":"cc_email","caption":"Email"}
+  ]
+}
+</pre>
+The subform field in C has bindings defined, connection the "c_id" column in the subform to the "c_id" column in the parent form.<br/>
+<br/>
+Bindings are defined for the following elements:
+<ul>
+  <li>tab.bindings</li>
+  <li>button.bindings</li>
+  <li>duplicate.bindings</li>
+  <li>field[subform].bindings</li>
+  <li>field[popuplov].bindings</li>
+  <li>model.bindings (for top-most forms binding to querystring values)</li>
+</ul>
+The bindings define the relationship between the element target and the parent form.
+
+<h3>Querystring Bindings</h3>
+By default, form fields that are set in the querystring will have the querystring values applied to the form.  However, in certain instances, it may be necessary to explicitly define how the querystring values will be passed to the form.
+
+<h3 data-level="2">model.bindings</h3>
+If the model is the top-level model on a page, the bindings in model.bindings will be applied on save.  For example, the following model.bindings:
+<pre>
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "bindings": { "c_id": "customer_id" },
+  "fields":[
+    {"name":"c_id","control":"hidden"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+Will populate the "c_id" field with the querystring value for "customer_id":<br/>
+<br/>
+<a href="/jsHarmonyTutorials/ModelBindings_Querystring_Bindings?action=edit&customer_id=1">/jsHarmonyTutorials/ModelBindings_TopLevel?action=edit&amp;customer_id=1</a>
+
+<h3 data-level="2">model.querystring</h3>
+The model.querystring property can be used to override or lock querystring values.  The syntax is as follows:
+<pre>
+"querystring":: {
+  "&[i]required_parameter1[/i]": "[i]value[/i]",
+  "&[i]required_parameter2[/i]": "[i]value[/i]",
+  "|[i]optional_parameter1[/i]": "[i]value[/i]",
+  "|[i]optional_parameter2[/i]": "[i]value[/i]",
+  ...
+}
+[i]value[/i] :=
+  [i]constant_value[/i], or
+  @[i]global_param[/i], defined in jsHarmonySite.globalparams
+</pre>
+Optional querystring parameters will default the querystring value if it does not exist.<br/>
+Required querystring parameters will always override the value.<br/>
+<br/>
+The global_params are defined in jsHarmonySite.globalparams, and can be viewed in the "jshInstance.globalparams" client-side variable:
+<pre class="bindings_globalparams">
+<%-(req ? JSON.stringify(req.jshsite.getGlobalParams(req), null, 4) : '{}')%>
+</pre>
+<br/>
+The model.querystring property can be used to override a form so that it always opens in "edit" mode by setting the "action" parameter:
+<pre>
+"querystring": { "&action": "edit" }
+</pre>
+Additionally, the model.querystring property can be used to always open a form to edit a particular record, for instance the current user's settings:
+<pre>
+{
+  "table":"jsharmony.pe",
+  "layout":"form",
+  "onecolumn":true,
+  "title":"User Settings",
+  "actions":"BU",
+  "querystring": { "&action":"edit", "&pe_id": "@user_id" },
+  "onupdate": "jsh.XPage.Reload({ force: true, browserRefresh: true });",
+  "fields":[
+    {"name":"pe_id","control":"hidden","key":1},
+    {"name":"pe_fname","caption":"First Name"},
+    {"name":"pe_lname","caption":"Last Name"}
+  ]
+}
+</pre>
+In the above example, the page is forced to reload after update, so that the User Name in the top-right corner will be updated.
+
+<h3>Automatic Bindings</h3>
+In most cases, bindings can be automatically generated by the system.  Automatic bindings are enabled by the following app.config.js parameter:
+<pre>
+config.system_settings.automatic_bindings = true;
+</pre>
+
+<h4>model.tabs, model.duplicate, field[subform], field[popuplov]</h4>
+For tabs, duplicate forms, subforms, and popup LOVs, automatic bindings are generated as follows:
+<ul>
+  <li>If the parent form's key fields exist in the target form, use the parent form's key fields</li>
+  <li>Otherwise, if the target form's key fields exist in the parent form, use the target form's key fields</li>
+  <li>Otherwise, generate an error</li>
+</ul>
+
+<h4>model.buttons</h4>
+For buttons, on "add" links, the following fields are automatically added to the bindings:
+<ul>
+  <li>Any fields defined in model.querystring</li>
+  <li>Any of the model's bindings</li>
+  <li>Any query string fields except "action" and "tabs"</li>
+  <li>In form, form-m, and exec models, any fields that exist in both the parent model and link target models, except for the link target's key fields</li>
+</ul>
+On "edit" and "savenew" links, the following fields are automatically added to the bindings:
+<ul>
+  <li>The link target's key fields</li>
+</ul>
+
+<h4>Automatic Generation of Key Fields</h4>
+Key fields are automatically added if the config.system_settings.automatic_schema.keys is set to true.  If a foreign key necessary for an automatic binding is defined in the target or parent table schema, but not in the form, the field will be automatically added to the model as a hidden field.
+
+<h3>Dynamic Bindings</h3>
+Dynamic bindings are a more advanced form of automatic bindings.  General-purpose components, such as jsHarmony Factory's Notes, can be used by multiple application models.<br/>
+<br/>
+For instance, there could be an application with Customer Notes (C), and Contact Notes (CT).  Dynamic bindings can be used to automatically bind Notes to the Customer and Contact models by defining them in one place, without writing out the bindings each time they are used.<br/>
+<br/>
+Dynamic bindings are defined in app.config.js:
+<pre>
+config.dynamic_bindings = {
+  "MODELID_OR_MODEL_GROUP": {
+    //Add a binding from CHILD_FIELD to the Parent Form's Key Field:
+    "CHILD_FIELD": "key"
+    //Add a binding from CHILD_FIELD to the Parent's PARENT_FIELD:
+    "CHILD_FIELD": "PARENT_FIELD"
+    //Add a binding from CHILD_FIELD to the character string 'CONSTANT':
+    "CHILD_FIELD": "'CONSTANT'"
+    //Add a conditional binding based on the name of the Parent Form's Key.  Multiple conditions can be defined, one per PARENT_KEY:
+    "CHILD_FIELD": {
+      //If the parent form's key name is "PARENT_KEY", set the binding from CHILD_FIELD to the character string 'CONSTANT':
+      "key:PARENT_KEY": "'CONSTANT'", 
+      //If the parent form's key name is "PARENT_KEY", set the binding from CHILD_FIELD to the Parent's PARENT_FIELD:
+      "key:PARENT_KEY": "PARENT_FIELD"
+    }
   }
-  </script>
-  
-  <pre>
-  Standard Bindings
-  Top-level querystring bindings
-  Required / Optional querystring values
-  </pre>
+}
+</pre>
+For example:
+<pre>
+config.dynamic_bindings = {
+  "JSHARMONY_NOTES": {   //Model ID or Model Group (from config.model_groups)
+    "n_scope_id": "key", //Bind the "n_scope_id" column to the parent form's key
+    "n_scope": {         //Bind the "n_scope" column based on the parent form's key name
+      "key:c_id": "'C'", //If the parent form's key name is "c_id", set the binding to the character string 'C'
+      "key:ct_id": "'CT'"
+    }
+  }
+}
+</pre>

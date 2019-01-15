@@ -10,7 +10,7 @@
       {"text":"Current Model ID","link":"js:js:XExt.Alert('The current model is '+modelid);","icon":"search"},
       {"text":"Active Users Report","link":"js:XExt.popupReport('RPE',{ 'pe_sts': 'ACTIVE' },{width:850,height:600});","icon":"export"}
     ],
-    "hide_system_buttons":["export","filter","print"],
+    "hide_system_buttons":["export","search","print"],
     "fields":[
       {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
       {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"edit:ModelButtons_C"}
