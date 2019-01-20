@@ -394,11 +394,12 @@ If datalocks should be ignored for a title's sql statement, add the DATALOCK_KEY
 {
   "title": { "sql":"select getdate()", "nodatalock": ["c_id"] }
 }
-//Or, for separate add/edit titles
+//Or, for separate insert/browse/update titles
 {
   "title": { 
-    "add": { "sql":"select getdate()", "nodatalock": ["c_id"] },
-    "edit": { "sql":"select getdate()", "nodatalock": ["c_id"] }
+    "insert": { "sql":"select getdate()", "nodatalock": ["c_id"] },
+    "browse": { "sql":"select getdate()", "nodatalock": ["c_id"] },
+    "update": { "sql":"select getdate()", "nodatalock": ["c_id"] }
   }
 }
 </pre>

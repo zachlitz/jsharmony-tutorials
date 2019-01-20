@@ -7,43 +7,43 @@
     "actions":"B", 
     "roles": {"C_B":"B","C_X":"*"},
     "sort":["^c_name"], 
-    "buttons":[{"link":"add:C"}],
+    "buttons":[{"link":"insert:C"}],
     "menu":"clients",
     "fields":[
-      {"name":"c_id","type":"bigint","actions":"B","key":1,"link":"edit:C","caption": "ID"},
+      {"name":"c_id","type":"bigint","actions":"B","key":1,"link":"update:C","caption": "ID"},
       {"name":"c_sts_txt","type":"varchar","length":"8","caption":"Status","actions":"B"},
-      {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"edit:C"}
+      {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"update:C"}
     ]
   },
   "CL_TABS": {
     "inherits": "CL",
-    //"buttons":[{"link":"add:CW"}],
+    //"buttons":[{"link":"insert:CW"}],
     "fields": [
-      {"name":"c_id","link":"edit:CW"},
-      {"name":"c_name","link":"edit:CW"}
+      {"name":"c_id","link":"update:CW"},
+      {"name":"c_name","link":"update:CW"}
     ]
   },
   "CL_ENCRYPT": {
     "inherits": "CL",
     "fields": [
-      {"name":"c_id","link":"edit:C_ENCRYPT"},
-      {"name":"c_name","link":"edit:C_ENCRYPT"},
+      {"name":"c_id","link":"update:C_ENCRYPT"},
+      {"name":"c_name","link":"update:C_ENCRYPT"},
       {"name":"c_einhash","type":"hash","length":20,"salt":"c_einhash","enable_search":true,"caption": "EIN"}
     ]
   },
   "CL_FILE": {
     "inherits": "CL",
     "fields": [
-      {"name":"c_id","link":"edit:C_FILE"},
-      {"name":"c_name","link":"edit:C_FILE"}
+      {"name":"c_id","link":"update:C_FILE"},
+      {"name":"c_name","link":"update:C_FILE"}
     ]
   },
   "CL_DEV": {
     "inherits": "CL",
-    "buttons":[{"link":"add:CW_DEV"}],
+    "buttons":[{"link":"insert:CW_DEV"}],
     "fields": [
-      {"name":"c_id","link":"edit:CW_DEV"},
-      {"name":"c_name","link":"edit:CW_DEV"}
+      {"name":"c_id","link":"update:CW_DEV"},
+      {"name":"c_name","link":"update:CW_DEV"}
     ]
   }
 }

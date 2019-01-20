@@ -27,8 +27,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/MultiselBasic_MultipleColumns.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/MultiselBasic_Standard?action=edit&c_id=2", "title": "Basic Multisel" },
-    { "url": "jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=edit&c_id=2", "title": "Multisel w/Multiple Columns" }
+    { "url": "jsHarmonyTutorials/MultiselBasic_Standard?action=update&c_id=2", "title": "Basic Multisel" },
+    { "url": "jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=update&c_id=2", "title": "Multisel w/Multiple Columns" }
   ]
 }
 </script>
@@ -39,7 +39,7 @@ The multisel layout provides an interface for editing many-to-many relationships
 The multisel enables a user to add a link connecting the keys of two different tables.  For example, in the situation where there is one table of Flags (Inactive, Credit Risk, etc), and another table of Customers, the multisel layout allows the user to select multiple Flags for each Customer record.
 
 <h3>Standard Multisel</h3>
-<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_Standard?action=edit&c_id=2&popup=1','Basic Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_Standard?action=update&c_id=2&popup=1','Basic Multisel')%>
 <pre>
 { 
   "MultiselBasic_Standard": {
@@ -57,7 +57,7 @@ The "cf" table contains two foreign keys - c_id (Customer ID), and cf_type (Flag
 
 <h3>Multiple Columns</h3>
 The multisel can support multiple display columns, as well as links in the display columns:
-<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=edit&c_id=2&popup=1','Multisel w/ Multiple Columns')%>
+<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=update&c_id=2&popup=1','Multisel w/ Multiple Columns')%>
 <pre>
 {
   "table":"cf",
@@ -66,7 +66,7 @@ The multisel can support multiple display columns, as well as links in the displ
   "fields":[
     {"name":"c_id"},
     {"name":"cf_type","caption":"Flag"},
-    {"control":"html","value":"Flagged Customers","link":"edit:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
+    {"control":"html","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
   ]
 }
 </pre>

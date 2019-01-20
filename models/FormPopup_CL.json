@@ -6,7 +6,7 @@
     "caption":["Customer","Customers"],
     "fields":[
       {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer","control":"label","link":"edit:FormPopup_C"}
+      {"name":"c_name","caption":"Customer","control":"label","link":"update:FormPopup_C"}
     ]
   }
 }

@@ -22,15 +22,21 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "ID": "model_bindings",
   "Title": "Bindings",
-  "Menu": ["Models","Models Overview"]
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelBindings_Subform.json",
+    "/models/ModelBindings_Querystring_Bindings.json",
+    "/models/ModelBindings_Querystring_GlobalParams.json",
+    "/models/ModelBindings_Automatic.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/ModelBindings_Subform_C?c_id=1&action=update", "title": "Subform Bindings" },
+    { "url": "jsHarmonyTutorials/ModelBindings_Querystring_Bindings?action=update&customer_id=1", "title": "Querystring Bindings" },
+    { "url": "jsHarmonyTutorials/ModelBindings_Querystring_GlobalParams", "title": "Querystring GlobalParams (Current User Settings)" },
+    { "url": "jsHarmonyTutorials/ModelBindings_Automatic_CCL", "title": "Automatic Bindings" }
+  ]
 }
 </script>
-
-<pre>
-Standard Bindings
-Top-level bindings
-Required / Optional querystring values
-</pre>
 
 <h3>Overview</h3>
 Bindings are primarily used to link from parent forms to child forms.  When a parent form links to a child form, it will usually need to filter the records of the child form, often by a foreign or primary key.<br/>
@@ -74,7 +80,7 @@ Bindings can be declared as follows:
 </pre>
 
 Below is an example of bindings in a subform:
-<%-getScreenshot('jsHarmonyTutorials/ModelBindings_C?c_id=1&action=edit&popup=1','Model Bindings')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelBindings_C?c_id=1&action=update&popup=1','Model Bindings')%>
 <pre>
 "C": {
   "table":"c",
@@ -135,7 +141,7 @@ If the model is the top-level model on a page, the bindings in model.bindings wi
 </pre>
 Will populate the "c_id" field with the querystring value for "customer_id":<br/>
 <br/>
-<a href="/jsHarmonyTutorials/ModelBindings_Querystring_Bindings?action=edit&customer_id=1">/jsHarmonyTutorials/ModelBindings_TopLevel?action=edit&amp;customer_id=1</a>
+<a href="/jsHarmonyTutorials/ModelBindings_Querystring_Bindings?action=update&customer_id=1">/jsHarmonyTutorials/ModelBindings_TopLevel?action=update&amp;customer_id=1</a>
 
 <h3 data-level="2">model.querystring</h3>
 The model.querystring property can be used to override or lock querystring values.  The syntax is as follows:
@@ -159,9 +165,9 @@ The global_params are defined in jsHarmonySite.globalparams, and can be viewed i
 <%-(req ? JSON.stringify(req.jshsite.getGlobalParams(req), null, 4) : '{}')%>
 </pre>
 <br/>
-The model.querystring property can be used to override a form so that it always opens in "edit" mode by setting the "action" parameter:
+The model.querystring property can be used to override a form so that it always opens in "update" mode by setting the "action" parameter:
 <pre>
-"querystring": { "&action": "edit" }
+"querystring": { "&action": "update" }
 </pre>
 Additionally, the model.querystring property can be used to always open a form to edit a particular record, for instance the current user's settings:
 <pre>
@@ -171,7 +177,7 @@ Additionally, the model.querystring property can be used to always open a form t
   "onecolumn":true,
   "title":"User Settings",
   "actions":"BU",
-  "querystring": { "&action":"edit", "&pe_id": "@user_id" },
+  "querystring": { "&action":"update", "&pe_id": "@user_id" },
   "onupdate": "jsh.XPage.Reload({ force: true, browserRefresh: true });",
   "fields":[
     {"name":"pe_id","control":"hidden","key":1},
@@ -197,14 +203,14 @@ For tabs, duplicate forms, subforms, and popup LOVs, automatic bindings are gene
 </ul>
 
 <h4>model.buttons</h4>
-For buttons, on "add" links, the following fields are automatically added to the bindings:
+For buttons, on "insert" links, the following fields are automatically added to the bindings:
 <ul>
   <li>Any fields defined in model.querystring</li>
   <li>Any of the model's bindings</li>
   <li>Any query string fields except "action" and "tabs"</li>
   <li>In form, form-m, and exec models, any fields that exist in both the parent model and link target models, except for the link target's key fields</li>
 </ul>
-On "edit" and "savenew" links, the following fields are automatically added to the bindings:
+On "browse", "update", and "savenew" links, the following fields are automatically added to the bindings:
 <ul>
   <li>The link target's key fields</li>
 </ul>

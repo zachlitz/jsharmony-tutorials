@@ -8,7 +8,7 @@
     "css": ".xbody_ModelStyle_CL .xform_title { color: red; }",
     "fields":[
       {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"edit:ModelButtons_C"}
+      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"update:ModelButtons_C"}
     ]
   }
 }

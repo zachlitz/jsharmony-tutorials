@@ -7,12 +7,12 @@
     "actions":"B", 
     "menu":"clients",
     "buttons":[
-      {"group":"Actions","link":"add:ModelButtons_C","icon":"add"},
-      {"group":"Actions","link":"edit:ModelButtons_CL","icon":"search","text":"View Customers"}
+      {"group":"Actions","link":"insert:ModelButtons_C","icon":"insert"},
+      {"group":"Actions","link":"update:ModelButtons_CL","icon":"search","text":"View Customers"}
     ],
     "fields":[
       {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"edit:ModelButtons_C"}
+      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"update:ModelButtons_C"}
     ]
   }
 }

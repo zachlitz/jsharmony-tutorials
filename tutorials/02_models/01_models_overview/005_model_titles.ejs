@@ -34,9 +34,9 @@ If the title is not defined, the model.caption will be used as the title.  If th
 
 <h4>Browser Window Title (document.title)</h4>
 The topmost form's title will be used as the window title. (ex., "Customer Information")
-<%-getScreenshot('jsHarmonyTutorials/C_SUB?c_id=1&action=edit','Parent / Child Grid',{ height: 300 })%>
+<%-getScreenshot('jsHarmonyTutorials/C_SUB?c_id=1&action=update','Parent / Child Grid',{ height: 300 })%>
 On a tabbed form, if the parent form's title is set to blank, the window title will be set to the title of the selected tab. (ex., "Customer Information")
-<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=edit','Parent / Child Grid',{ height: 300 })%>
+<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=update','Parent / Child Grid',{ height: 300 })%>
 
 <h3 data-level="2">Static Text</h3>
 In the simplest scenario, a model can have a text title:
@@ -46,13 +46,14 @@ In the simplest scenario, a model can have a text title:
 }
 </pre>
 
-<h3 data-level="2">Different titles for "Add" and "Edit" modes</h3>
-Titles on forms can be customized based on whether the user is adding or editing a record:
+<h3 data-level="2">Different titles for "Insert", "Browse", and "Update" modes</h3>
+Titles on forms can be customized based on whether the user is inserting, browsing, or updating a record:
 <pre>
 {
   "title": {
-    "add": "Add Customer",
-    "edit": "Edit Customer"
+    "insert": "Add Customer",
+    "browse": "View Customer",
+    "update": "Edit Customer"
   }
 }
 </pre>
@@ -110,16 +111,19 @@ Keys and foreign keys that are defined in model.fields can be used as SQL parame
 }
 </pre>
 
-<h4>Add / Edit Titles</h4>
-Different titles can be displayed when adding or editing data:
+<h4>Insert / Browse / Update Titles</h4>
+Different titles can be displayed when inserting, browsing, or updating data:
 <pre>
 {
   "title": {
-    "add": "New Customer",
-    "edit": {"sql": "select c_name from c where c_id=@c_id" }
+    "insert": "New Customer",
+    "browse": {"sql": "select c_name||' (Read-only)' from c where c_id=@c_id" },
+    "update": {"sql": "select c_name from c where c_id=@c_id" }
   }
 }
 </pre>
+On an update action, if the "update" title is not set, the "browse" title will be used.<br/>
+Similarly, on a browse action, if the "browse" title is not set, the "update" title will be used.<br/>
 
 <h4>Ignoring datalocks:</h4>
 In some instances, the developer may choose to ignore datalocks in the query:

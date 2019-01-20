@@ -28,9 +28,9 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FormPopup_JavaScript.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FormPopup_C?action=edit&c_id=1", "title": "Popup Form", "windowparams": "width=600,height=400" },
+    { "url": "jsHarmonyTutorials/FormPopup_C?action=update&c_id=1", "title": "Popup Form", "windowparams": "width=600,height=400" },
     { "url": "jsHarmonyTutorials/FormPopup_CL", "title": "Linking to a Popup Form from a Grid" },
-    { "url": "jsHarmonyTutorials/FormPopup_JavaScript?action=edit&c_id=1", "title": "Opening a Popup Form via JavaScript" }
+    { "url": "jsHarmonyTutorials/FormPopup_JavaScript?action=update&c_id=1", "title": "Opening a Popup Form via JavaScript" }
   ]
 }
 </script>
@@ -70,7 +70,7 @@ For example:
   ]
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/FormPopup_C?c_id=2&action=edit','Popup Form', { width:600, height:400 })%>
+<%-getScreenshot('jsHarmonyTutorials/FormPopup_C?c_id=2&action=update','Popup Form', { width:600, height:400 })%>
 
 <h3>Linking to Popup Forms</h3>
 When linking using the field.link or button.link properties, the system will automatically read the target model and add code to open the target in a popup window if the "popup" property is set on the target model.
@@ -78,7 +78,7 @@ When linking using the field.link or button.link properties, the system will aut
 //Link to the C form from a grid column
 {
   "fields":[
-    {"name":"c_name","caption":"Customer","link":"edit:C"}
+    {"name":"c_name","caption":"Customer","link":"update:C"}
   ]
 }
 </pre>
@@ -90,7 +90,7 @@ Popup forms can also be opened via custom JavaScript:
 //
 // Parameters
 //   modelid (string):           The full path to the model, including any namespace
-//   action (string):            Either "add" or "edit"
+//   action (string):            Either "insert", "update", or "browse"
 //   querystringParams (object): Querystring parameters appended to the model URL
 //   windowParams (object):      JavaScript window.open parameters, as an object
 //   existingWindow (Window):    (Optional) Existing JavaScript Window to use instead of opening a new window
@@ -102,5 +102,5 @@ XExt.popupForm(modelid, action, querystringParams, windowParams, existingWindow)
 </pre>
 For example:
 <pre>
-XExt.popupForm('C', 'edit', {'c_id':XModels[modelid].controller.form.Data.c_id}, {width:850,height:600});
+XExt.popupForm('C', 'update', {'c_id':XModels[modelid].controller.form.Data.c_id}, {width:850,height:600});
 </pre>

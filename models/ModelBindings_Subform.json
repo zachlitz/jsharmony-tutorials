@@ -1,5 +1,5 @@
 { 
-  "ModelBindings_C": {
+  "ModelBindings_Subform_C": {
     "table":"c",
     "layout":"form",
     "onecolumn":true,
@@ -8,10 +8,10 @@
       {"name":"c_id","control":"hidden"},
       {"name":"c_name","caption":"Name"},
       {"name":"c_sts","caption":"Status"},
-      {"control": "subform","target": "ModelBindings_CC","bindings":{ "c_id": "c_id" } }
+      {"control": "subform","target": "ModelBindings_Subform_CC","bindings":{ "c_id": "c_id" } }
     ]
   },
-  "ModelBindings_CC": {
+  "ModelBindings_Subform_CC": {
     "table":"cc",
     "layout":"grid",
     "caption":["Contact","Contacts"],

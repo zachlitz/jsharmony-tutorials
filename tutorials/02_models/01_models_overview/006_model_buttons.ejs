@@ -33,7 +33,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   ],
   "Demo": [
     { "url": "jsHarmonyTutorials/ModelButtons_CL", "title": "Grid Buttons" },
-    { "url": "jsHarmonyTutorials/ModelButtons_C?action=edit&c_id=2", "title": "Form Buttons" },
+    { "url": "jsHarmonyTutorials/ModelButtons_C?action=update&c_id=2", "title": "Form Buttons" },
     { "url": "jsHarmonyTutorials/ModelButtons_CL_Grouped", "title": "Buttons w/ Drop-down Groups" },
     { "url": "jsHarmonyTutorials/ModelButtons_CL_JavaScript", "title": "JavaScript Button Links" },
     { "url": "jsHarmonyTutorials/ModelButtons_Icons", "title": "Icon Listing" }
@@ -49,7 +49,7 @@ Custom buttons can be added to the button toolbar by adding to the model.buttons
 <pre>
 {
   "buttons":[
-    {"link":"add:C"}
+    {"link":"insert:C"}
   ],
 }
 </pre>
@@ -60,11 +60,11 @@ Buttons have a variety of properties for configuring text, icon, and style:
 {
   "buttons":[
     {
-      "link":"add:C",
+      "link":"insert:C",
       "text":"Add %%%CAPTION%%%",
-      "icon":"add",
+      "icon":"insert",
       "style":"border:2px solid black;",
-      "class":"CL_buttonAddC",
+      "class":"CL_buttonInsertC",
       "nl":1
     }
   ],
@@ -78,7 +78,7 @@ Buttons have a variety of properties for configuring text, icon, and style:
   <b>button.icon</b><br/>
   The icon attribute changes the button icon.  Set the icon to "none" to hide the icon and display only text.<br/>
   <br/>
-  Icon images are loaded via "/images/icon_ICONNAME.png".  For instance, the "add" icon can be overwritten by uploading a new image to "public/images/icon_add.png" in the Application root.<br/>
+  Icon images are loaded via "/images/icon_ICONNAME.png".  For instance, the "insert" icon can be overwritten by uploading a new image to "public/images/icon_insert.png" in the Application root.<br/>
   <br/>
   The following built-in icons are available in jsHarmony:
   <%-getScreenshot('jsHarmonyTutorials/ModelButtons_Icons?popup=1','Model Buttons')%>
@@ -97,12 +97,9 @@ Buttons have a variety of properties for configuring text, icon, and style:
 </div>
 
 <h3>Default Button Styles</h3>
-Button styles are automatically applied to any button links beginning with "add:" or "edit:".  The default button styles can be modified in app.config.js.
+Button styles are automatically applied to any button links beginning with "insert:", "browse:", or "update:".  The default button styles can be modified in app.config.js.
 <pre>
-config.default_buttons = {
-  "add": { "icon": "add", "text": "Add %%%CAPTION%%%", "actions": "I", "class": "xbuttonadd" },
-  "edit": { "icon": "edit", "text": "Edit %%%CAPTION%%%" } 
-}
+config.default_buttons = <%=JSON.stringify((req?req.getJSH().Config.default_buttons:null),null,4)%>
 </pre>
 
 <h3>Button Groups</h3>
@@ -115,7 +112,7 @@ Button groups can be defined via the "group" attribute, that specifies the name 
 <pre>
 {
   "buttons":[
-    {"group":"Actions","link":"add:ModelButtons_C","icon":"add"},
+    {"group":"Actions","link":"insert:ModelButtons_C","icon":"insert"},
     {"group":"Actions","link":"ModelButtons_CL","icon":"search","text":"View Customers"}
   ]
 }
@@ -124,8 +121,9 @@ Button groups can be defined via the "group" attribute, that specifies the name 
 <h3>Link / Bindings</h3>
 The "link" attribute sets the button's action and target model.  Links have the following syntax:
 <pre>
-add:MODELID&amp;[i]parameter[/i]
-edit:MODELID&amp;[i]parameter[/i]
+insert:MODELID&amp;[i]parameter[/i]
+browse:MODELID&amp;[i]parameter[/i]
+update:MODELID&amp;[i]parameter[/i]
 savenew:MODELID&amp;[i]parameter[/i]
 
 [i]parameter[/i] :=
@@ -136,19 +134,24 @@ The parameter is currently only used to set tabs on the button link.<br/>
 Each of the three actions generate a different URL:
 <ul>
   <li>
-    <b>add:</b><br/>
+    <b>insert:</b><br/>
     Opens a form for adding new data<br/>
-    /MODELID?action=add
+    /MODELID?action=insert
   </li>
   <li>
-    <b>edit:</b><br/>
-    Opens a form for editing data, or viewing a grid<br/>
-    /MODELID?action=edit
+    <b>browse:</b><br/>
+    Opens a form for read-only viewing data, or viewing a grid<br/>
+    /MODELID?action=browse
+  </li>
+  <li>
+    <b>update:</b><br/>
+    Opens a form for updating data, or viewing a grid<br/>
+    /MODELID?action=update
   </li>
   <li>
     <b>savenew:</b><br/>
     Saves the data first, and on success, opens a form for adding new data<br/>
-    /MODELID?action=add
+    /MODELID?action=insert
   </li>
 </ul>
 
@@ -161,7 +164,7 @@ Bindings define the querystring parameters that will be passed in the button lin
 </pre>
 In the example above, assuming that the value of PARENT_FIELD was "5", the bindings would generate the following URL:
 <pre>
-/MODELID?action=edit&CHILD_FIELD1=5&CHILD_FIELD2=CONSTANT
+/MODELID?action=update&CHILD_FIELD1=5&CHILD_FIELD2=CONSTANT
 </pre>
 
 If bindings are not defined, the system will automatically try to generate them.  The algorithm for automatic bindings can be found in the <a href="/tutorials/model_bindings#automatic_bindings">Automatic Bindings</a> tutorial<br/>
@@ -182,35 +185,35 @@ The model id and action parameter are generated based on the link target above. 
 {
   "buttons":[
     {
-      "link": "edit:CW",
+      "link": "update:CW",
       "bindings": { "c_id": "c_id_billto" }
     }
   ]
 }
 //When c_id_billto is "5" on the parent form
-URL: /CW?action=edit&c_id=5
+URL: /CW?action=update&c_id=5
 
 {
   "buttons":[
     {
-      "link": "edit:EW",
+      "link": "update:EW",
       "bindings": { "E_ID": "E_ID" }
     }
   ]
 }
 //When E_ID is "3" on the parent form
-URL: /E?action=edit&E_ID=3
+URL: /E?action=update&E_ID=3
 
 {
   "buttons":[
     {
-      "link": "edit:CW&tabs={\"CW\":\"C_CCL\"}",
+      "link": "update:CW&tabs={\"CW\":\"C_CCL\"}",
       "bindings": { "c_id": "c_id" }
     }
   ]
 }
 //When c_id is "1" on the parent form
-URL: /CL?action=edit&c_id=1tabs={"CW":"C_CCL"}
+URL: /CL?action=update&c_id=1tabs={"CW":"C_CCL"}
 </pre>
 
 <h3>JavaScript</h3>
@@ -244,7 +247,7 @@ Example: XExt.navTo('/CW?c_id=4')
 <pre>
 Opens a model in a popup window
 @param string modelid      : The target model id
-@param string action       : The model action, must be "add" or "edit"
+@param string action       : The model action, must be "insert", "update", or "browse"
 @param object params       : Querystring parameters for the popup, ex. { "c_id": 4 }
 @param object windowparams : Parameters passed to window.open
                              Default: { width: 1000, height: 600, resizable: 1, scrollbars: 1 }
@@ -258,7 +261,7 @@ Note: If the window width and height is not specified, it will default to:
         1. The model.popup size if available
         2. 1000 x 600
 
-Example: XExt.popupForm('CW','edit',{'c_id':XModels[modelid].controller.form.Data.c_id()},{width:850,height:600});
+Example: XExt.popupForm('CW','update',{'c_id':XModels[modelid].controller.form.Data.c_id()},{width:850,height:600});
 </pre>
 
 <h4>XExt.popupReport (modelid, params, windowparams, win)</h4>
@@ -287,7 +290,7 @@ Buttons can be restricted to be hidden based on the current action, or based on 
 {
   "buttons":[
     {
-      "link":"edit:CW",
+      "link":"update:CW",
       "actions":"BIU",
       "roles": {
         "main":{"DADMIN":"*"},
@@ -299,8 +302,9 @@ Buttons can be restricted to be hidden based on the current action, or based on 
 </pre>
 
 <ul>
-  <li>If the querystring action is set to "add", only buttons with the "B" or "I" actions will be shown.</li>
-  <li>If the querystring action is set to "edit" (Browse / Update), only buttons with the "B" or "U" actions will be shown.</li>
+  <li>If the querystring action is set to "insert", only buttons with the "B" or "I" actions will be shown.</li>
+  <li>If the querystring action is set to "update", only buttons with the "B" or "U" actions will be shown.</li>
+  <li>If the querystring action is set to "browse", only buttons with the "B" actions will be shown.</li>
   <li>Otherwise, only buttons with the "B" action will be shown.</li>
 </ul>
 
@@ -309,11 +313,11 @@ Roles can be used to further limit button access.  When roles are defined, they 
 Users without role access will not see the button.  Users with DEV or SYSADMIN access have access to all buttons.
 
 <h4>Hiding Based on the Link Target (hide_when_target_inaccessible)</h4>
-By default, buttons with links starting with "add:" will be hidden if the user does not have "I" access to the link target.  Disable this functionality by setting hide_when_target_inaccessible to false:
+By default, buttons with links starting with "insert:" will be hidden if the user does not have "I" access to the link target.  Disable this functionality by setting hide_when_target_inaccessible to false:
 <pre>
 {
   "buttons":[
-    "link":"add:C",
+    "link":"insert:C",
     "hide_when_target_inaccessible": false
   ]
 }
@@ -324,7 +328,7 @@ All models have built-in buttons, based on the model layout.  The built-in syste
 <pre>
 {
 
-  "hide_system_buttons": ["export","search","print","add"]
+  "hide_system_buttons": ["export","search","print","insert"]
 }
 </pre>
 The following system buttons can be hidden, depending on the model layout:
@@ -335,7 +339,7 @@ The following system buttons can be hidden, depending on the model layout:
   <li><b>search</b></li>
   <li><b>print</b></li>
   <li><b>export</b> <i>(Automatically hidden in Popup LOV and Duplicate)</i></li>
-  <li><b>add</b></li>
+  <li><b>insert</b></li>
   <li><b>help</b></li>
 </ul>
 

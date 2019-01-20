@@ -89,7 +89,7 @@ On a form with multiple subforms / grids, there may be data dependencies between
 }
 </pre>
 
-<h3>"Add" Row Position</h3>
+<h3>New Row Position</h3>
 When the user adds a new row, by default, the row is added to the top of the grid, as the "first" row.  Alternatively, the row can instead be added to the bottom of the grid, as the "last" row, using the "newrowposition" property.  Available values are:
 <ul>
   <li>first</li>
@@ -102,16 +102,16 @@ When the user adds a new row, by default, the row is added to the top of the gri
 }
 </pre>
 
-<%-getScreenshot('jsHarmonyTutorials/GridEditable_CL?popup=1','Grid Add', { onload:function(){ return new Promise(function(resolve){
-  jshInstance.$root('.xbuttonadd').click();
+<%-getScreenshot('jsHarmonyTutorials/GridEditable_CL?popup=1','Grid Insert', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.xbuttoninsert').click();
   window.setTimeout(resolve, 100);
 }); } })%>
 
-<h3>"Add" Button</h3>
-The "Add" button is automatically added to any editable grid that has the "I" (Insert) action.  To hide the add button, either remove the "I" action, or use the "hide_system_buttons" property:
+<h3>"insert" Button</h3>
+The "insert" button is automatically added to any editable grid that has the "I" (Insert) action.  To hide the "insert" button, either remove the "I" action, or use the "hide_system_buttons" property:
 <pre>
 {
-  "hide_system_buttons": ["add"]
+  "hide_system_buttons": ["insert"]
 }
 </pre>
 More information about hiding system buttons is available in the <a href="/tutorials/model_buttons#hiding_system_buttons">Model Buttons</a> tutorial.

@@ -59,7 +59,7 @@ Subform controls can be embedded within the following model layouts:
 Subform controls can link to models with form, form-m, grid, multisel, and exec layouts.
 
 <h3 data-level="2">Subform Layout: Form</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_C?c_id=1&action=edit&popup=1','Subform Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_C?c_id=1&action=update&popup=1','Subform Form')%>
 <pre>
 "C": {
   "table":"c",
@@ -87,7 +87,7 @@ Subforms that link to another Form layout are used to model 1-to-1 relationships
 If using subforms with a Form layout, it is necessary to set the "action" on the subform control.  If the parent and subform both link to the same table, the subform should not be available on Insert, since otherwise two insert statements on the same table will be executed.
 
 <h3 data-level="2">Subform Layout: Form-m</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=edit&popup=1','Subform Form-m')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=update&popup=1','Subform Form-m')%>
 <pre>
 "C": {
   "table":"c",
@@ -117,7 +117,7 @@ If using subforms with a Form layout, it is necessary to set the "action" on the
 </pre>
 
 <h3 data-level="2">Subform Layout: Grid</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Grid_C?c_id=1&action=edit&popup=1','Subform Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Grid_C?c_id=1&action=update&popup=1','Subform Grid')%>
 <pre>
 "C": {
   "table":"c",
@@ -143,7 +143,7 @@ If using subforms with a Form layout, it is necessary to set the "action" on the
 </pre>
 
 <h3 data-level="2">Subform Layout: Multisel</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Multisel_C?c_id=1&action=edit&popup=1','Subform Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Multisel_C?c_id=1&action=update&popup=1','Subform Multisel')%>
 <pre>
 "C": {
   "table":"c",
@@ -168,7 +168,7 @@ If using subforms with a Form layout, it is necessary to set the "action" on the
 </pre>
 
 <h3 data-level="2">Subform Layout: Exec</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Exec_C?c_id=1&action=edit&popup=1','Subform Exec')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Exec_C?c_id=1&action=update&popup=1','Subform Exec')%>
 <pre>
 "C": {
   "table":"c",
@@ -194,7 +194,7 @@ If using subforms with a Form layout, it is necessary to set the "action" on the
 </pre>
 
 <h3 data-level="2">Nested Subforms</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Nested_E?e_id=1&action=edit&popup=1','Subform Nested')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Nested_E?e_id=1&action=update&popup=1','Subform Nested')%>
 <pre>
 "E": {
   "table":"e",
@@ -239,7 +239,7 @@ More information on bindings can be found in the <a href="/tutorials/model_bindi
 <h3>Two Subforms of the same Model</h3>
 If a model needs to be displayed twice on the same page, it is necessary to create a second instance of that model through inheritance:
 
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_CC?action=edit&cc_id=1&popup=1','Two Subforms')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_CC?action=update&cc_id=1&popup=1','Two Subforms')%>
 <pre>
 "CC": {
   "table":"cc",
@@ -281,19 +281,55 @@ If a model needs to be displayed twice on the same page, it is necessary to crea
 In the example above, the two address records would need to be created dynamically via a database trigger when a contact is inserted.
 
 <h3>Database Transactions</h3>
-When using subforms or tabbed forms, all operations are saved in one atomic commit transaction.  Top-level insert statements are executed first, and then the generated key is passed through bindings to the subforms.
+When using subforms or tabbed forms, all operations are saved in one atomic commit transaction.  Top-level insert statements are executed first, and then the primary key from the newly inserted data is passed through bindings to the subforms.
 
-xxxxxxxxxxxxxxxx
-Example of how the transaction tbl is passed / escaped
-xxxxxxxxxxxxxxxx
+<h4>Transactions: Client-side</h4>
+In the client-side API calls, in the Form-m example above, the following data would be sent during insert:
+<pre>
+[
+  {
+		"model": "C",
+    "method": "put",
+		"query": "",
+		"post": "c_name=ACME+Industries&c_sts=DEACTIVE"
+  }, 
+  {
+    "model": "CA",
+    "method": "put",
+		"query": "",
+		"post": "ca_country=USA&ca_addr1=123+Test+St.&ca_addr2=&ca_city=Chicago&ca_state=IL&ca_zip=60103&c_id=%25%25%25c_id%25%25%25"
+	}
+]
+</pre>
+The value for c_id in the "CA" model is passed as "%%%c_id%%%".
 
-<h3></h3>
+<h4>Transactions: Server-side</h4>
+Internally, after the C insert is complete, the resulting c_id is passed back via a select statement and stored in transtbl (any data passed back from a SQL statement in a transaction is stored in transtbl).  Then the CA insert is processed as follows:
+<pre>
+dbtasks['CA'] = function(dbtrans, callback, transtbl){
+  sql_params = _this.ApplyTransTblEscapedParameters(sql_params, transtbl);
+  db.Row(dbcontext, sql, sql_ptypes, sql_params, dbtrans, function (err, rslt, stats) {
+    ...
+  });
+};
+</pre>
+The AppSrv.ApplyTransTblEscapedParameters function replaces %%%c_id%%% in sql_params with the c_id from transtbl.
 
-<h3>Actions / Roles / Add vs Edit Mode</h3>
+<h3>Actions / Roles / Insert vs Browse vs Update Mode</h3>
+There are four types of Actions used in determining subform behavior:
+<ul>
+  <li>Top-level querystring "action": insert vs browse vs update</li>
+  <li>Parent model effective actions (after roles are applied)</li>
+  <li>Subform control effective actions (after roles are applied)</li>
+  <li>Subform model effective actions (after roles are applied)</li>
+</ul>
+
+
+** Rules for hiding subforms
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Actions / Roles at the control level
 Browse forms with editable subforms
-Description of how subforms are not displayed in add mode if they do not have the "I" action.
+Description of how subforms are not displayed in insert mode if they do not have the "I" action.
 Subforms that would perform an update action must not be displayed
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

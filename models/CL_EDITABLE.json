@@ -7,7 +7,7 @@
     "actions":"BIU", 
     "roles": {"C_B":"B","C_X":"*"},
     "sort":["^c_name"], 
-    "buttons":[{"link":"add:C"}],
+    "buttons":[{"link":"insert:C"}],
     "menu":"clients",
     "commitlevel":"row",
     "fields":[

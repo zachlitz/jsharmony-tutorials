@@ -6,12 +6,12 @@
   "actions":"B", 
   "roles": {"C_B":"B","C_X":"*"},
   "sort":["^cc_name"], 
-  "buttons":[{"link":"add:C_CC", "bindings": { "c_id": "c_id" } }],
+  "buttons":[{"link":"insert:C_CC", "bindings": { "c_id": "c_id" } }],
   "menu":"clients",
   "fields":[
     {"name":"c_id","type":"bigint","foreignkey": 1,"control":"hidden"},
-    {"name":"cc_id","type":"bigint","actions":"B","key":1,"link":"edit:C_CC","caption": "ID"},
-    {"name":"cc_name","type":"varchar","length":"100","caption":"Name","actions":"B","link":"edit:C_CC"},
+    {"name":"cc_id","type":"bigint","actions":"B","key":1,"link":"update:C_CC","caption": "ID"},
+    {"name":"cc_name","type":"varchar","length":"100","caption":"Name","actions":"B","link":"update:C_CC"},
     {"name":"cc_title","type":"varchar","length":"50","caption":"Title","actions":"B"},
     {"name":"cc_phone","type":"varchar","length":"50","caption":"Phone","actions":"B"},
     {"name":"cc_email","type":"varchar","length":"100","caption":"Email","actions":"B"}

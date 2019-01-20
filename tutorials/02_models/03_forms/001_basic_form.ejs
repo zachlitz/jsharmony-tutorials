@@ -34,14 +34,14 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FormBasic_EditableDefault.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=1", "title": "Standard Form" },
-    { "url": "jsHarmonyTutorials/FormBasic_Subform_C?action=edit&c_id=1", "title": "Parent / Subform" },
-    { "url": "jsHarmonyTutorials/FormBasic_Tabbed_CW?action=edit&c_id=1", "title": "Tabbed Form", "windowparams": "width=1200,height=700" },
+    { "url": "jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=1", "title": "Standard Form" },
+    { "url": "jsHarmonyTutorials/FormBasic_Subform_C?action=update&c_id=1", "title": "Parent / Subform" },
+    { "url": "jsHarmonyTutorials/FormBasic_Tabbed_CW?action=update&c_id=1", "title": "Tabbed Form", "windowparams": "width=1200,height=700" },
     { "url": "jsHarmonyTutorials/FormBasic_Unbound", "title": "Unbound Form" },
-    { "url": "jsHarmonyTutorials/FormBasic_CustomSQL?action=add", "title": "Custom SQL" },
-    { "url": "jsHarmonyTutorials/FormBasic_Controls?action=edit&c_id=1", "title": "Form Controls" },
+    { "url": "jsHarmonyTutorials/FormBasic_CustomSQL?action=insert", "title": "Custom SQL" },
+    { "url": "jsHarmonyTutorials/FormBasic_Controls?action=update&c_id=1", "title": "Form Controls" },
     { "url": "jsHarmonyTutorials/FormBasic_HTMLContent", "title": "HTML Content" },
-    { "url": "jsHarmonyTutorials/FormBasic_EditableDefault?action=add&c_sts=ACTIVE", "title": "Editable Default Querystring Value" }
+    { "url": "jsHarmonyTutorials/FormBasic_EditableDefault?action=insert&c_sts=ACTIVE", "title": "Editable Default Querystring Value" }
   ]
 }
 </script>
@@ -52,7 +52,7 @@ Forms enable editing data, one record at a time.  Grids usually list rows, and t
 Forms are defined by setting the "layout" to "form".
 
 <h4>Standard Form</h4>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=2&popup=1','Basic Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=2&popup=1','Basic Form')%>
 <pre>
 {
   "table":"c",
@@ -69,7 +69,7 @@ Forms are defined by setting the "layout" to "form".
 
 <h4>Form with Subforms</h4>
 Forms can contain subforms:
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Subform_C?action=edit&c_id=1&popup=1','Form w/Subform')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Subform_C?action=update&c_id=1&popup=1','Form w/Subform')%>
 <pre>
 //Parent Form
 "C": {
@@ -103,7 +103,7 @@ Forms can contain subforms:
 
 <h4>Tabbed Forms</h4>
 Forms can be tabbed:
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Tabbed_CW?action=edit&c_id=1&popup=1','Tabbed Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Tabbed_CW?action=update&c_id=1&popup=1','Tabbed Form')%>
 <pre>
 //Tabbed Parent Form
 "FormBasic_Tabbed_CW": {
@@ -191,7 +191,7 @@ The "fields" property defines the fields that are selected from the database.<br
 Primary keys are automatically added to the table, if they are defined as primary keys in the database.  Foreign keys for tables are automatically added when required by bindings.<br/>
 <br/>
 A variety of controls are available.  The control can be set using the "control" property:
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Controls?action=edit&c_id=1&popup=1','Form Controls')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Controls?action=update&c_id=1&popup=1','Form Controls')%>
 <pre>
 {
   "table":"c",
@@ -227,26 +227,32 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 <h3>Querystring</h3>
 
-<h3 data-level="2">Add vs Edit Mode</h3>
-Forms can be acccessed in either "add" or "edit" mode.
+<h3 data-level="2">Insert vs Browse vs Update Mode</h3>
+Forms can be acccessed in either "insert", "browse", or "update" mode.
 
-<h4>Add Mode</h4>
-Add mode is accessed by adding "?action=add" to the querystring:<br/>
+<h4>Insert Mode</h4>
+Insert mode is accessed by adding "?action=insert" to the querystring:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormBasic_Standard?action=add" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=add</a>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=add&popup=1','Form Add Mode')%>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=insert" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=insert</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=insert&popup=1','Form Insert Mode')%>
 
-<h4>Edit Mode</h4>
-Edit mode is accessed by adding "?action=edit&PRIMARYKEY=VALUE" to the querystring:<br/>
+<h4>Browse Mode</h4>
+Browse mode is accessed by adding "?action=browse&PRIMARYKEY=VALUE" to the querystring:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=edit&amp;c_id=1</a>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=edit&c_id=1&popup=1','Form Edit Mode')%>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=browse&c_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=browse&amp;c_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=browse&c_id=1&popup=1','Form Browse Mode')%>
+
+<h4>Update Mode</h4>
+Update mode is accessed by adding "?action=update&PRIMARYKEY=VALUE" to the querystring:<br/>
+<br/>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=update&amp;c_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=1&popup=1','Form Update Mode')%>
 
 <h3 data-level="2">Default Values</h3>
 Default values can be set on insert by adding the field value to the querystring:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormBasic_Standard?action=add&c_sts=ACTIVE" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=add&amp;c_sts=ACTIVE</a>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=add&c_sts=ACTIVE&popup=1','Form Add Mode Default Value')%>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=insert&c_sts=ACTIVE" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=insert&amp;c_sts=ACTIVE</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=insert&c_sts=ACTIVE&popup=1','Form Insert Mode Default Value')%>
 
 <h4>Always Editable on Insert</h4>
 Passing a default value will make the field read-only.  In order to keep the field editable, use the "always_editable_on_insert" property:
@@ -258,4 +264,4 @@ Passing a default value will make the field read-only.  In order to keep the fie
   ]
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_EditableDefault?action=add&c_sts=ACTIVE&popup=1','Form Add Mode Default Value Editable')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_EditableDefault?action=insert&c_sts=ACTIVE&popup=1','Form Insert Mode Default Value Editable')%>

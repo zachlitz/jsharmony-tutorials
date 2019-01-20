@@ -26,7 +26,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 }
 </script>
 Grid Links<br/>
-&nbsp; &nbsp; Add / Edit / Download<br/>
+&nbsp; &nbsp; Insert / Browse / Update / Download<br/>
 &nbsp; &nbsp; Custom Links<br/>
 Form Links<br/>
 &nbsp; &nbsp; Custom Links
@@ -34,8 +34,9 @@ Form Links<br/>
 
 <h3>Link / Bindings</h3>
 <pre>
-add:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
-edit:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
+insert:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
+browse:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
+update:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
 savenew:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
 download:MODELID&amp;DOWNLOAD_FIELD=KEY_VALUE_FIELD
 
@@ -49,8 +50,8 @@ If the link's target model is the same as the current model, all querystring par
 
 <h4>Examples</h4>
 <pre>
-edit:CW&c_id=c_id_billto
-edit:EW&e_id
-add:POPUP_EXEC_CREATE_GCOD&codeschema=codeschema&codename=codename&codemean=codemean
-add:T_POPUP_PLE&ple_id,e_id,pl_type
+update:CW&c_id=c_id_billto
+update:EW&e_id
+insert:POPUP_EXEC_CREATE_GCOD&codeschema=codeschema&codename=codename&codemean=codemean
+insert:T_POPUP_PLE&ple_id,e_id,pl_type
 </pre>

@@ -1,20 +1,20 @@
 {
-  "ModelBindings_Buttons_CCL": {
+  "ModelBindings_Automatic_CCL": {
     "table":"cc",
     "layout":"grid",
     "caption":["Contact","Contacts"],
     "actions":"B",
-    "buttons":[{"link":"add:ModelBindings_Buttons_C"},{"link":"add:ModelBindings_Buttons_CC"}],
+    "buttons":[{"link":"insert:ModelBindings_Automatic_C"},{"link":"insert:ModelBindings_Automatic_CC"}],
     "fields":[
       {"name":"c_id","control":"hidden"},
-      {"name":"cc_name","caption": "Contact Name","link":"edit:ModelBindings_Buttons_CC"},
-      {"control":"linkbutton","caption": "Edit Customer","link":"edit:ModelBindings_Buttons_C"},
-      {"control":"button","caption": "Edit Contact","link":"edit:ModelBindings_Buttons_CC"},
-      {"control":"linkbutton","caption": "Edit Contact","link":"edit:ModelBindings_Buttons_CC"}
+      {"name":"cc_name","caption": "Contact Name","link":"update:ModelBindings_Automatic_CC"},
+      {"control":"linkbutton","caption": "Edit Customer","link":"update:ModelBindings_Automatic_C"},
+      {"control":"button","caption": "Edit Contact","link":"update:ModelBindings_Automatic_CC"},
+      {"control":"linkbutton","caption": "Edit Contact","link":"update:ModelBindings_Automatic_CC"}
 
     ]
   },
-  "ModelBindings_Buttons_C": {
+  "ModelBindings_Automatic_C": {
     "layout": "form", 
     "table": "c",
     "onecolumn":true,
@@ -25,13 +25,13 @@
       {"name":"c_sts","caption": "Status"}
     ]
   },
-  "ModelBindings_Buttons_CC": {
+  "ModelBindings_Automatic_CC": {
     "layout": "form", 
     "table": "cc",
     "onecolumn":true,
     "caption": [ "Contact", "Contacts" ],
     "buttons":[
-      {"link":"edit:ModelBindings_Buttons_C","actions":"U","text":"Edit Customer"}
+      {"link":"update:ModelBindings_Automatic_C","actions":"U","text":"Edit Customer"}
     ],
     "popup":[1000,700],
     "fields": [

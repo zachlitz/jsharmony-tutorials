@@ -6,9 +6,9 @@
   "caption": ["","Item","Items"],
   "actions": "B",
   "sort": ["^x_primary"],
-  "buttons": [{"link":"add:ALLTYPES_form"}],
+  "buttons": [{"link":"insert:ALLTYPES_form"}],
   "fields": [
-    {"name":"x_primary", "type":"int", "caption":"x_primary", "key":1, "actions":"B", "link":"edit:ALLTYPES_form"},
+    {"name":"x_primary", "type":"int", "caption":"x_primary", "key":1, "actions":"B", "link":"update:ALLTYPES_form"},
     {"name":"x_bigint", "type":"bigint", "caption":"x_bigint", "actions":"B"},
     {"name":"x_integer", "type":"integer", "caption":"x_integer", "actions":"B"},
     {"name":"x_smallint", "type":"smallint", "caption":"x_smallint", "actions":"B"},

@@ -39,15 +39,15 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   ],
   "Demo": [
     { "url": "jsHarmonyTutorials/ModelStyle_css", "title": "model.css" },
-    { "url": "jsHarmonyTutorials/ModelStyle_tabpanelstyle?c_id=2&action=edit", "title": "model.tabpanelstyle" },
+    { "url": "jsHarmonyTutorials/ModelStyle_tabpanelstyle?c_id=2&action=update", "title": "model.tabpanelstyle" },
     { "url": "jsHarmonyTutorials/ModelStyle_tablestyle", "title": "model.tablestyle" },
     { "url": "jsHarmonyTutorials/ModelStyle_rowstyle", "title": "model.rowstyle" },
-    { "url": "jsHarmonyTutorials/ModelStyle_formstyle?c_id=1&action=edit", "title": "model.formstyle" },
+    { "url": "jsHarmonyTutorials/ModelStyle_formstyle?c_id=1&action=update", "title": "model.formstyle" },
     { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_grid", "title": "Grid: field.captionstyle / field.captionclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_form?c_id=1&action=edit", "title": "Form: field.captionstyle / field.captionclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_form?c_id=1&action=update", "title": "Form: field.captionstyle / field.captionclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_cellstyle_grid", "title": "Grid: field.cellstyle / field.cellclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_grid", "title": "Form: field.controlstyle / field.controlclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=edit", "title": "Form: field.controlstyle / field.controlclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update", "title": "Form: field.controlstyle / field.controlclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_CL", "title": "Custom CSS Files" }
   ]
 }
@@ -80,7 +80,7 @@ The "tabpanelstyle" property is applied to the tab panel container.
   "tabpanelstyle": "border: 2px dashed red;"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_tabpanelstyle?c_id=2&action=edit&popup=1','Model Style - tabpanelstyle')%>
+<%-getScreenshot('/ModelStyle_tabpanelstyle?c_id=2&action=update&popup=1','Model Style - tabpanelstyle')%>
 
 <h3>Grid Properties</h3>
 
@@ -139,7 +139,7 @@ The "formstyle" property is applied to the DIV containing the form elements.
   "formstyle": "border: 2px solid red;"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_formstyle?c_id=1&action=edit&popup=1','Model Style - formstyle')%>
+<%-getScreenshot('/ModelStyle_formstyle?c_id=1&action=update&popup=1','Model Style - formstyle')%>
 
 <h3>Field Properties</h3>
 Field properties can be defined for each field in the model.
@@ -154,7 +154,7 @@ In grid layouts, the "captionstyle" and "captionclass" properties are applied to
 }
 </pre>
 <%-getScreenshot('/ModelStyle_captionstyle_grid','Model Style - captionstyle - grid')%>
-<%-getScreenshot('/ModelStyle_captionstyle_form?c_id=1&action=edit&popup=1','Model Style - captionstyle - form')%>
+<%-getScreenshot('/ModelStyle_captionstyle_form?c_id=1&action=update&popup=1','Model Style - captionstyle - form')%>
 
 <h3 data-level="2">field.cellstyle / field.cellclass</h3>
 On grid and multisel layouts, the "cellstyle" and "cellclass" properties are applied to the "style" and "class" of the TD data row cells.
@@ -176,7 +176,7 @@ In grid and multisel layouts, the "controlstyle" and "controlclass" properties a
 }
 </pre>
 <%-getScreenshot('/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
-<%-getScreenshot('/ModelStyle_controlstyle_form?c_id=1&action=edit&popup=1','Model Style - controlstyle - form')%>
+<%-getScreenshot('/ModelStyle_controlstyle_form?c_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
 
 <h3>Custom CSS Files</h3>
 Custom CSS files can be defined either sitewide or per-model.
@@ -239,7 +239,7 @@ Each form and grid field has the classes: "xform_ctrl FIELDNAME xelemMODELCLASS"
 The MODELCLASS is defined by the "model.class" attribute.  This defaults to the model ID.
 
 <h3>Popup Windows</h3>
-The "popup" attribute defines whether a model should be opened as a popup window.  Popup windows are used in a variety of situations, for instance when a user clicks on an Add or Edit link.<br/>
+The "popup" attribute defines whether a model should be opened as a popup window.  Popup windows are used in a variety of situations, for instance when a user clicks on an Insert or Update link.<br/>
 <br/>
 If the "popup" attribute is defined, the model is rendered without a menu or header.
 <pre>

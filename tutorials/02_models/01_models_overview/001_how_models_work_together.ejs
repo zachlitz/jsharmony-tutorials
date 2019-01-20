@@ -50,7 +50,7 @@ All parent and child form data will be saved in one transaction, and only the to
 <%-getScreenshot('jsHarmonyTutorials/C?c_id=1','Simple Form')%>
 
 <h4>Parent / Child Subforms:</h4>
-<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=edit','Parent / Child Subforms')%>
+<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=update','Parent / Child Subforms')%>
 The above example consists of 4 forms:
 <ul>
   <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
@@ -60,7 +60,7 @@ The above example consists of 4 forms:
 </ul>
 
 <h4>Parent / Child Grid:</h4>
-<%-getScreenshot('jsHarmonyTutorials/CW?action=edit&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_CCL"%7D','Parent / Child Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/CW?action=update&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_CCL"%7D','Parent / Child Grid')%>
 The above example consists of 2 forms:
 <ul>
   <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
@@ -71,11 +71,11 @@ The above example consists of 2 forms:
 Form-m enables a user to view, add, or edit multiple records.  Data is edited one record at a time, using backward / forward navigation.<br/>
 <br/>
 A "form-m" is typically used for navigating a small subset of data, and is implemented as a subform of a parent form (ex. editing multiple addresses of a Customer).  All new or modified data is saved in one transaction.
-<%-getScreenshot('jsHarmonyTutorials/C_CA_CONTAINER?c_id=1&action=edit','Form-m')%>
+<%-getScreenshot('jsHarmonyTutorials/C_CA_CONTAINER?c_id=1&action=update','Form-m')%>
 
 <h3 data-level="2">Multisel Layout</h3>
 A multisel displays a checkbox-based List of Values, where multiple values can be selected per "key".  Multisels are primarily used to enter data in many-to-many relationships.
-<%-getScreenshot('jsHarmonyTutorials/CW?action=edit&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_EXEC"%7D','Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/CW?action=update&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_EXEC"%7D','Multisel')%>
 
 <h3 data-level="2">Exec Layout</h3>
 Exec forms are unbound, except during initial load.  Exec forms can be used for:

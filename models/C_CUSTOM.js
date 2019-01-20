@@ -25,7 +25,7 @@ jsh.App[modelid] = new (function(){
   }
 
   this.help = function(){
-    XExt.popupForm('HSHOWL', 'edit', { hp_code: 'C_CUSTOM' });
+    XExt.popupForm('HSHOWL', 'update', { hp_code: 'C_CUSTOM' });
   }
 
   this.loadData = function(onComplete){

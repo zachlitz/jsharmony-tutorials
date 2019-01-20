@@ -6,10 +6,10 @@
     "caption": [ "", "Customer", "Customers" ],
     "breadcrumbs": {
       "parents": ["ModelBreadcrumbs_CL"],
-      "add": {
+      "insert": {
         "title": "New Customer"
       },
-      "edit": {
+      "browse": {
         "sql": "select c_name from c where c_id=@c_id",
         "title": "<#=bcrumbs.c_name#>"
       }

@@ -5,7 +5,7 @@
     "onecolumn":true,
     "title":"User Settings",
     "actions":"BU",
-    "querystring": { "&action":"edit", "&pe_id": "@user_id" },
+    "querystring": { "&action":"update", "&pe_id": "@user_id" },
     "onupdate": "jsh.XPage.Reload({ force: true, browserRefresh: true });",
     "fields":[
       {"name":"pe_id","control":"hidden"},

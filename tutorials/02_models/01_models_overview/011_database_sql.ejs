@@ -232,7 +232,7 @@ On Search:
   sqlrowcount: select count(*) as cnt from c where  1=1   and ( c_name ilike @search_0_c_name)
              @search_0_c_name:"%ACME%"
 
-On Add:
+On Insert:
   sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
 
 On Update:
@@ -260,13 +260,13 @@ For the model:
 
 <pre>
 On Load:
-  Add:
+  Insert:
     LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
-  Edit:
+  Browse/Update:
     sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1  and c_id=@c_id
     LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
 
-On Add:
+On Insert:
   sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
 
 On Update:
@@ -297,7 +297,7 @@ On Load:
   sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1  order by c_id asc
   LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
 
-On Add:
+On Insert:
   sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
 
 On Update:

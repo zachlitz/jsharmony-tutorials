@@ -37,7 +37,7 @@ Breadcrumbs are links rendered at the top of the form, to show the hierarchy of 
 </br>
 User interface best practices recommend using breadcrumbs on all second-level pages (excluding popup windows / tabs).
 
-<%-getScreenshot('jsHarmonyTutorials/ModelBreadcrumbs_CC?action=edit&cc_id=2&popup=1','Breadcrumbs')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelBreadcrumbs_CC?action=update&cc_id=2&popup=1','Breadcrumbs')%>
 
 <h3>Breadcrumbs Syntax</h3>
 <pre>
@@ -55,7 +55,7 @@ User interface best practices recommend using breadcrumbs on all second-level pa
 
 [i]breadcrumb_expression[/i] :=
   "MODELID", or
-  "HTML/EJS String", for example "<a href='CW?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
+  "HTML/EJS String", for example "<a href='CW?action=update&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
 
 Any EJS in breadcrumb_expression is escaped with <# #>, and is evaluated with the following parameters:
 {
@@ -72,29 +72,35 @@ Any EJS in breadcrumb_expression is escaped with <# #>, and is evaluated with th
 
 Breadcrumb parents are generally rendered as links.  The final breadcrumb (the current page) is rendered as follows:
 <ol>
-  <li>Use "model.breadcrumbs.title" / "model.breadcrumbs.add.title" / "model.breadcrumbs.edit.title", if it exists</li>
-  <li>Otherwise, use "model.title" / "model.add.title" / "model.edit.title", if it is a string and not a SQL expression</li>
+  <li>Use "model.breadcrumbs.title" / "model.breadcrumbs.insert.title" / "model.breadcrumbs.browse.title" / "model.breadcrumbs.update.title", if it exists</li>
+  <li>Otherwise, use "model.title" / "model.insert.title" / "model.browse.title" / "model.update.title", if it is a string and not a SQL expression</li>
 </ol>
 
-<h3 data-level="2">Different breadcrumbs for "Add" and "Edit" modes</h3>
-Breadcrumbs can be customized based on whether the user is adding or editing a record:
+<h3 data-level="2">Different breadcrumbs for "insert", "browse", and "update" modes</h3>
+Breadcrumbs can be customized based on whether the user is inserting, viewing, or updating a record:
 
 <pre>
 {
   "breadcrumbs": {
     "parents": ["CL"],
-    "add": {
+    "insert": {
       "title": "New Customer"
     },
-    "edit": {
+    "browse": {
+      "sql": "select c_name from c where c_id=@c_id",
+      "title": "<#=bcrumbs.c_name#>"
+    },
+    "update": {
       "sql": "select c_name from c where c_id=@c_id",
       "title": "<#=bcrumbs.c_name#>"
     }
   }
 }
 </pre>
-
-Any of the breadcrumb parameters for "model.breadcrumbs.add" or "model.breadcrumbs.edit" will fall back to "model.breadcrumbs" if they are not set.
+On an update action, if the "update" breadcrumb is not set, the "browse" breadcrumb will be used.<br/>
+Similarly, on a browse action, if the "browse" breadcrumb is not set, the "update" breadcrumb will be used.<br/>
+<br/>
+Any of the breadcrumb parameters for "model.breadcrumbs.insert", "model.breadcrumbs.browse" or "model.breadcrumbs.update" will fall back to "model.breadcrumbs" if they are not set.
 
 <h3>Breadcrumb Expressions</h3>
 Breadcrumbs can be defined a variety of ways:
@@ -122,16 +128,16 @@ The breadcrumb can be custom HTML, for instance when linking to a the parent mod
 <h4>Using Breadcrumb SQL Data (Linking to a Model with Parameters)</h4>
 If the parent form has parameters and should open to a specific record, use an EJS expression.  Any breadcrumbs SQL results are loaded into the "bcrumbs" parameter.<br/>
 <br/>
-In the example below, a different SQL expression needs to be used for "add" and "edit" breadcrumbs, because the key field is not available during an "add" operation.
+In the example below, a different SQL expression needs to be used for "insert" and "browse" breadcrumbs, because the key field is not available during an "insert" operation.
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_C?action=edit&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"],
-    "add": {
+    "parents": ["<a href='/ModelBreadcrumbs_C?action=update&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"],
+    "insert": {
       "sql": "select c_id,c_name from c where c_id=@c_id",
       "title": "New Contact"
     },
-    "edit": {
+    "browse": {
       "sql": "select cc.c_id,c_name,cc_name from cc inner join c on cc.c_id=c.c_id where cc_id=@cc_id",
       "title": "<#=bcrumbs.cc_name#>"
     }
@@ -144,7 +150,7 @@ Tabs are specified as a querystring parameter, in the format: { "PARENT_MODEL": 
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/CW?action=edit&c_id=<#=bcrumbs.c_id#>&tabs={\"CW\":\"C_CCL\"}'><#=bcrumbs.c_name#></a>"],
+    "parents": ["<a href='/CW?action=update&c_id=<#=bcrumbs.c_id#>&tabs={\"CW\":\"C_CCL\"}'><#=bcrumbs.c_name#></a>"],
   }
 }
 </pre>
@@ -154,11 +160,11 @@ If the breadcrumbs can be initialied via form / querystring data, use the "data"
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_C?action=edit&c_id=<#=data.c_id#>'>Edit Customer</a>"],
-    "add": {
+    "parents": ["<a href='/ModelBreadcrumbs_C?action=update&c_id=<#=data.c_id#>'>Edit Customer</a>"],
+    "insert": {
       "title": "New Contact"
     },
-    "edit": {
+    "update": {
       "title": "<#=data.cc_name#>"
     }
   }
@@ -176,11 +182,11 @@ Although not recommended since it limits how a form can be used as a subform, qu
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_C?action=edit&c_id=<#=_GET.c_id#>'>Edit Customer</a>"],
-    "add": {
+    "parents": ["<a href='/ModelBreadcrumbs_C?action=update&c_id=<#=_GET.c_id#>'>Edit Customer</a>"],
+    "insert": {
       "title": "New Contact"
     },
-    "edit": {
+    "update": {
       "title": "Edit Contact"
     }
   }
