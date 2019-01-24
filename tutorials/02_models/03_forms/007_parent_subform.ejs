@@ -22,7 +22,36 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Parent / Subform",
   "Menu": ["Models","Forms"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": [
+    "/models/FormSubform_Form_PrimaryKey.json",
+    "/models/FormSubform_Form_ForeignKey.json",
+    "/models/FormSubform_FormM.json",
+    "/models/FormSubform_Grid.json",
+    "/models/FormSubform_Multisel.json",
+    "/models/FormSubform_Exec.json",
+    "/models/FormSubform_Nested.json",
+    "/models/FormSubform_InsertLink.json",
+    "/models/FormSubform_TwoInstances.json",
+    "/models/FormSubform_ReadOnlyParent.json",
+    "/models/FormSubform_SameTable.json",
+    "/models/FormSubform_Unbound.json",
+    "/models/FormSubform_Styling.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FormSubform_Form_PrimaryKey_C?c_id=1&action=update", "title": "Subform - Form Layout - Via Primary Key" },
+    { "url": "jsHarmonyTutorials/FormSubform_Form_ForeignKey_C?c_id=2&action=update", "title": "Subform - Form Layout - Via Foreign Key" },
+    { "url": "jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=update", "title": "Subform - Form-m Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Grid_C?c_id=1&action=update", "title": "Subform - Grid Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Multisel_C?c_id=1&action=update", "title": "Subform - Multisel Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Exec_C?c_id=1&action=update", "title": "Subform - Exec Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Nested_E?e_id=1&action=update", "title": "Multi-level Nested Subforms" },
+    { "url": "jsHarmonyTutorials/FormSubform_InsertLink_C?c_id=2&action=update", "title": "Custom 'Insert' Link" },
+    { "url": "jsHarmonyTutorials/FormSubform_TwoInstances_C?action=update&c_id=1", "title": "Two Subforms of the Same Model" },
+    { "url": "jsHarmonyTutorials/FormSubform_ReadOnlyParent_CW?action=insert", "title": "Subform with Read-only Parent (Insert)" },
+    { "url": "jsHarmonyTutorials/FormSubform_SameTable_C?action=insert", "title": "Subform targeting the same table as the parent (Insert)" },
+    { "url": "jsHarmonyTutorials/FormSubform_Unbound_C?c_id=1&action=update", "title": "Unbound Subform" },
+    { "url": "jsHarmonyTutorials/FormSubform_Styling_C?c_id=1&action=update", "title": "Subform Container Style" }
+  ]
 }
 </script>
 
@@ -59,7 +88,12 @@ Subform controls can be embedded within the following model layouts:
 Subform controls can link to models with form, form-m, grid, multisel, and exec layouts.
 
 <h3 data-level="2">Subform Layout: Form</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_C?c_id=1&action=update&popup=1','Subform Form')%>
+Subforms that link to another Form layout are used to model 1-to-1 relationships.  The easiest solution is to avoid the subform altogether and create an updateable view.  If that is not an option, "form" subforms can be either linked to a subform's Primary Key or a subform's Foreign Key.<br/>
+<br/>
+If using subforms with a Form layout, it is necessary to set the "action" on the subform control.  If the parent and subform both link to the same table, the subform should not be available on Insert, since otherwise two insert statements on the same table will be executed.
+
+<h4>Primary Key</h4>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_PrimaryKey_C?c_id=1&action=update&popup=1','Subform Form')%>
 <pre>
 "C": {
   "table":"c",
@@ -69,22 +103,54 @@ Subform controls can link to models with form, form-m, grid, multisel, and exec 
   "fields":[
     {"name":"c_name","caption":"Name"},
     {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_DOC","actions": "BU"}
+    {"control": "subform","target": "C_EXT","actions":"BIU"}
   ]
-}
-
-"C_DOC": {
-  "table":"c",
+},
+"C_EXT": {
+  "table":"c_ext",
   "layout":"form",
-  "caption":["Document","Documents"],
+  "onecolumn":true,
+  "popup": [500,250],
+  "caption":["Information","Information"],
   "fields":[
-    {"name":"c_doc","type":"file","caption":"Document","controlparams": {"data_folder": "c_doc"} }
+    {"name":"c_ext_desc","caption":"Description","control":"textarea"}
   ]
 }
 </pre>
-Subforms that link to another Form layout are used to model 1-to-1 relationships.  This is generally a rare occurrence, and should usually be handled by adding the fields directly to the parent form and linking to the database with an updateable view.<br/>
-<br/>
-If using subforms with a Form layout, it is necessary to set the "action" on the subform control.  If the parent and subform both link to the same table, the subform should not be available on Insert, since otherwise two insert statements on the same table will be executed.
+
+<h4>Foreign Key</h4>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_ForeignKey_C?c_id=1&action=update&popup=1','Subform Form')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "CA","actions":"BIU","bindings":{ "c_id":"c_id","ca_type":"'BILLING'" }}
+  ]
+},
+"CA": {
+  "table":"ca",
+  "layout":"form",
+  "onecolumn":true,
+  "popup": [550,300],
+  "caption":["Address","Addresses"],
+  "fields":[
+    {"name":"c_id","key":1,"control":"hidden","actions":"BI"},
+    {"name":"ca_type","key":1,"control":"hidden","actions":"BI"},
+    {"name":"ca_country","caption":"Country"},
+    {"name":"ca_addr1","caption":"Address"},
+    {"name":"ca_addr2","caption":""},
+    {"name":"ca_city","caption":"City"},
+    {"name":"ca_state","caption":"State"},
+    {"name":"ca_zip","caption":"Zip"}
+  ]
+}
+</pre>
+If using foreign keys for the bindings, it is necessary to specify the bindings manually, and to mark the foreign keys as primary keys on the subform.  It may also be necessary to designate the "BI" action on the foreign key fields, so that the columns are included in the insert statement.
 
 <h3 data-level="2">Subform Layout: Form-m</h3>
 <%-getScreenshot('jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=update&popup=1','Subform Form-m')%>
@@ -236,31 +302,68 @@ Bindings define how to filter / select subform data based on the parent form.  O
 <br/>
 More information on bindings can be found in the <a href="/tutorials/model_bindings">Model Bindings</a> tutorials.
 
-<h3>Two Subforms of the same Model</h3>
-If a model needs to be displayed twice on the same page, it is necessary to create a second instance of that model through inheritance:
-
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_CC?action=update&cc_id=1&popup=1','Two Subforms')%>
+<h3>Subform "Insert" Link</h3>
+When using a subform with a "form" layout, when the subform record does not exist, an "Insert" link will be displayed:
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_InsertLink_C?c_id=2&action=update&popup=1','Subform Form - Insert Link')%>
+By default, the insert button links to "insert:MODELID", where "MODELID" is the model ID of the subform.  Bindings from the parent form are passed in the querystring parameters.<br/>
+<br/>
+It is recommended to add the model.popup property to the child subform, so that the "Insert" link will open in a new window, and the existing record will stay open.<br/>
+<br/>
+The insert link URL can be customized using the field.insert_link property on the subform control.  In the example below, the Description field is given a default value via the insert link:
 <pre>
-"CC": {
-  "table":"cc",
+"C": {
+  "table":"c",
   "layout":"form",
   "onecolumn":true,
-  "caption":["Customer Contact","Customer Contacts"],
-  "actions":"BU",
+  "caption":["Customer","Customers"],
   "fields":[
-    {"name":"cc_name","caption":"Name"},
-    {"name":"cc_title","caption":"Title"},
-    {"name":"cc_email","caption":"Email"},
-    {"control": "subform","target": "CC_CA_Billing","bindings":{ "ca_id":"ca_id_billing" },"actions":"BU"},
-    {"control": "subform","target": "CC_CA_Shipping","bindings":{ "ca_id":"ca_id_shipping" },"actions": "BU"}
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_EXT","actions":"BIU","insert_link":"insert:C_EXT&c_ext_desc='Sample'"}
   ]
 },
-"CC_CA": {
+"C_EXT": {
+  "table":"c_ext",
+  "layout":"form",
+  "onecolumn":true,
+  "popup": [500,250],
+  "caption":["Information","Information"],
+  "fields":[
+    {"name":"c_ext_desc","caption":"Description","control":"textarea"}
+  ]
+}
+</pre>
+
+<h3>Multiple Subforms of the same Model</h3>
+If a model needs to be displayed twice on the same page, it is necessary to create a second instance of that model through inheritance:
+
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_C?action=update&c_id=1&popup=1','Two Subforms of the Same Model')%>
+
+If the subform records have not yet been created, an "Insert" link is displayed:
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_C?action=update&c_id=2&popup=1','Two Subforms of the Same Model')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "actions":"BIU",
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_CA_Billing","bindings":{ "c_id":"c_id", "ca_type":"'BILLING'" },"actions":"BU"},
+    {"control": "subform","target": "C_CA_Shipping","bindings":{ "c_id":"c_id", "ca_type":"'SHIPPING'" },"actions": "BU"}
+  ]
+},
+"C_CA": {
   "table":"ca",
   "layout":"form",
   "onecolumn":true,
+  "popup": [550,300],
   "caption":["Address","Addresses"],
   "fields":[
+    {"name":"c_id","key":1,"control":"hidden"},
+    {"name":"ca_type","key":1,"control":"hidden"},
     {"name":"ca_country","caption":"Country"},
     {"name":"ca_addr1","caption":"Address"},
     {"name":"ca_addr2","caption":""},
@@ -269,16 +372,15 @@ If a model needs to be displayed twice on the same page, it is necessary to crea
     {"name":"ca_zip","caption":"Zip"}
   ]
 },
-"CC_CA_Billing": {
-  "inherits":"CC_CA",
+"C_CA_Billing": {
+  "inherits":"C_CA",
   "title": "Billing Address"
 },
-"CC_CA_Shipping": {
-  "inherits":"CC_CA",
+"C_CA_Shipping": {
+  "inherits":"C_CA",
   "title": "Shipping Address"
 }
 </pre>
-In the example above, the two address records would need to be created dynamically via a database trigger when a contact is inserted.
 
 <h3>Database Transactions</h3>
 When using subforms or tabbed forms, all operations are saved in one atomic commit transaction.  Top-level insert statements are executed first, and then the primary key from the newly inserted data is passed through bindings to the subforms.
@@ -318,23 +420,148 @@ The AppSrv.ApplyTransTblEscapedParameters function replaces %%%c_id%%% in sql_pa
 <h3>Actions / Roles / Insert vs Browse vs Update Mode</h3>
 There are four types of Actions used in determining subform behavior:
 <ul>
-  <li>Top-level querystring "action": insert vs browse vs update</li>
-  <li>Parent model effective actions (after roles are applied)</li>
-  <li>Subform control effective actions (after roles are applied)</li>
-  <li>Subform model effective actions (after roles are applied)</li>
+  <li><b>querystring.action</b>: Top-level querystring "action": insert, browse, or update</li>
+  <li><b>parent_model.actions</b>: Parent model effective actions (after roles are applied)</li>
+  <li><b>parent_field.actions</b>: Subform control effective actions (after roles are applied) - </li>
+  <li><b>child_model.actions</b>: Subform model effective actions (after roles are applied)</li>
 </ul>
+The subform's effective actions depend only on the querystring.action, and not on the parent model or parent control.<br/>
+<br/>
+The parent model and parent control are only used to determine when to hide the subform.  The subform is displayed when:
+<pre>
+If querystring.action = "insert" and child_model.layout is "form", "form-m", or "grid"
+  When parent_model.actions has "I"
+    and parent_field.actions has "I"
+    and child_model.actions has "B" or "I"
 
+If querystring.action = "insert" and child_model.layout is "multisel", "exec", or "report"
+  When parent_model.actions has "I"
+    and parent_field.actions has "I"
+    and child_model.actions has "B" or "U"
 
-** Rules for hiding subforms
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Actions / Roles at the control level
-Browse forms with editable subforms
-Description of how subforms are not displayed in insert mode if they do not have the "I" action.
-Subforms that would perform an update action must not be displayed
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+If querystring.action = "browse"
+  When parent_model.actions has "B"
+    and parent_field.actions has "B"
+    and child_model.actions has "B"
+
+If querystring.action = "update"
+  When parent_model.actions has "B" or "U"
+    and parent_field.actions has "B" or "U"
+    and child_model.actions has "B" or "U"
+</pre>
+
+<h3 data-level="2">Read-only Parent with Editable Child</h3>
+Since the subform's actions are independent of the parent model and parent control, it is possible to have a read-only parent with an editable child.  Parent fields are rendered empty on insert.
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_ReadOnlyParent_CW?action=insert&popup=1','Form / Subform - Read Only Parent')%>
+<pre>
+"C_HEAD": {
+  "table":"c",
+  "layout":"form",
+  "actions":"B",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"control": "subform","target": "C","actions":"BIU"}
+  ]
+},
+"C": {
+  "table":"c",
+  "layout":"form",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Parent Form and Child Form that reference the same table</h3>
+
+If the Parent Form and Child Form reference the same table, the subform field should not have the "I" action, so that the subform will be hidden on insert:
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_SameTable_C?action=insert&popup=1','Form / Subform - Same Table - Insert')%>
+
+The subform will then be automatically displayed once the record is saved:
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_SameTable_C?c_id=1&action=update&popup=1','Form / Subform - Same Table - Update')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "C_DOC","actions": "BU"}
+  ]
+}
+
+"C_DOC": {
+  "table":"c",
+  "layout":"form",
+  "caption":["Document","Documents"],
+  "fields":[
+    {"name":"c_doc","type":"file","caption":"Document","controlparams": {"data_folder": "c_doc"} }
+  ]
+}
+</pre>
+
+<h3 data-level="2">Parent Form with Unbound Subform</h3>
+A parent form can contain a subform that is linked without any bindings:
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Unbound_C?c_id=1&action=update&popup=1','Form / Subform - Unbound')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"control": "subform","target": "CL_INFO","bindings":{}}
+  ]
+},
+"CL_INFO": {
+  "layout":"grid",
+  "caption":["Key Customers"],
+  "sort":["ve_cnt"],
+  "sqlselect":"select c.c_id,c_name,count(e_id) e_cnt from c left outer join e on e.c_id=c.c_id where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% group by c.c_id order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%",
+  "fields":[
+    {"name":"c_name", "caption":"Customer Name" },
+    {"name":"e_cnt", "caption":"# Equipment" }
+  ]
+}
+</pre>
 
 <h3>Styling Subforms</h3>
-
-
-
-** Inheritance -- XBaseModel
+The subform components can be styled via the model styles available in the <a href="/tutorials/model_styling">Model Styling Tutorials</a>.<br/>
+<br/>
+Additionally, the subform container can be styled using the subform field's "controlclass" and "controlstyle" attributes:
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Styling_C?c_id=1&action=update&popup=1','Subform Container Style')%>
+<pre>
+"C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {
+      "control": "subform",
+      "target": "CC",
+      "controlstyle": "border: 4px dashed black;",
+      "controlclass": "fieldWithErrors"
+    }
+  ]
+},
+"CC": {
+  "table":"cc",
+  "layout":"grid",
+  "caption":["Contact","Contacts"],
+  "fields":[
+    {"name":"cc_name","caption":"Name"},
+    {"name":"cc_title","caption":"Title"},
+    {"name":"cc_email","caption":"Email"}
+  ]
+}
+</pre>

@@ -70,15 +70,19 @@ Custom SQL expressions can be used to replace any of the generated SQL.  View th
 config.debug_params.db_requests = true;
 </pre>
 
-Below is an overview of the SQL expressions that are generated.  Any of the escape
+Below is an overview of the SQL expressions that are generated.
 <pre>
 sqlselect
   Grid: select [i]fields[/i] from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%
+        ** or **
+        select [i]fields[/i] from [i]table[/i] %%%SQLSUFFIX%%%
   Form: select [i]fields[/i] from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% and [i]key=@key[/i]
   Form-m: select [i]fields[/i] from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% and [i]key=@key[/i] order by %%%SORT%%%
   Multisel: select [i]fields[/i] from [i]table[/i] full outer join (%%%LOVSQL%%%) multiparent ... where 1=1 %%%DATALOCKS%%%
 sqlrowcount
-  select count(*) as cnt from [i]table[/i] where 1=1 %%%DATALOCKS%%% %%%SEARCH%%% order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%
+  select count(*) as cnt from [i]table[/i] where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%%
+  ** or **
+  select count(*) as cnt from [i]table[/i] %%%SQLSUFFIX%%%
 sqlinsert
   insert into %%%TABLE%%%(%%%FIELDS%%%) values(%%%VALUES%%%);select scope_identity() as CHG_ID;
 sqlinsertencrypt
@@ -106,6 +110,11 @@ The "sqlselect" property can be used to override the full select SQL statement. 
   <li>%%%SORT%%% - Sort expression</li>
   <li>%%%ROWCOUNT%%% - Number of rows to be returned per page</li>
   <li>%%%ROWSTART%%% - Page offset</li>
+  <li>
+    %%%SQLSUFFIX%%% - Substitute for all of the above (to simplify custom SQL definition).  Translates to:<br/>
+    &nbsp; &nbsp; <b>model.sqlselect:</b> where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%<br/>
+    &nbsp; &nbsp; <b>model.sqlrowcount:</b> where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%%
+  </li>
 </ul>
 Since "multisel" joins against the List of Values (LOV), the %%%LOVSQL%%% parameter additionally provides the SQL for the List of Values.<br/>
 <br/>

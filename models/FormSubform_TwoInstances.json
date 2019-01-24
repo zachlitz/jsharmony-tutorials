@@ -1,24 +1,26 @@
 { 
-  "FormSubform_TwoInstances_CC": {
-    "table":"cc",
+  "FormSubform_TwoInstances_C": {
+    "table":"c",
     "layout":"form",
     "onecolumn":true,
-    "caption":["Customer Contact","Customer Contacts"],
-    "actions":"BU",
+    "caption":["Customer","Customers"],
+    "actions":"BIU",
     "fields":[
-      {"name":"cc_name","caption":"Name"},
-      {"name":"cc_title","caption":"Title"},
-      {"name":"cc_email","caption":"Email"},
-      {"control": "subform","target": "FormSubform_TwoInstances_CC_CA_Billing","bindings":{ "ca_id":"ca_id_billing" },"actions":"BU"},
-      {"control": "subform","target": "FormSubform_TwoInstances_CC_CA_Shipping","bindings":{ "ca_id":"ca_id_shipping" },"actions": "BU"}
+      {"name":"c_name","caption":"Name"},
+      {"name":"c_sts","caption":"Status"},
+      {"control": "subform","target": "FormSubform_TwoInstances_C_CA_Billing","bindings":{ "c_id":"c_id", "ca_type":"'BILLING'" },"actions":"BU"},
+      {"control": "subform","target": "FormSubform_TwoInstances_C_CA_Shipping","bindings":{ "c_id":"c_id", "ca_type":"'SHIPPING'" },"actions": "BU"}
     ]
   },
-  "FormSubform_TwoInstances_CC_CA": {
+  "FormSubform_TwoInstances_C_CA": {
     "table":"ca",
     "layout":"form",
     "onecolumn":true,
+    "popup": [550,300],
     "caption":["Address","Addresses"],
     "fields":[
+      {"name":"c_id","key":1,"control":"hidden"},
+      {"name":"ca_type","key":1,"control":"hidden"},
       {"name":"ca_country","caption":"Country"},
       {"name":"ca_addr1","caption":"Address"},
       {"name":"ca_addr2","caption":""},
@@ -27,12 +29,12 @@
       {"name":"ca_zip","caption":"Zip"}
     ]
   },
-  "FormSubform_TwoInstances_CC_CA_Billing": {
-    "inherits":"FormSubform_TwoInstances_CC_CA",
+  "FormSubform_TwoInstances_C_CA_Billing": {
+    "inherits":"FormSubform_TwoInstances_C_CA",
     "title": "Billing Address"
   },
-  "FormSubform_TwoInstances_CC_CA_Shipping": {
-    "inherits":"FormSubform_TwoInstances_CC_CA",
+  "FormSubform_TwoInstances_C_CA_Shipping": {
+    "inherits":"FormSubform_TwoInstances_C_CA",
     "title": "Shipping Address"
   }
 }

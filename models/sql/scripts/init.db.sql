@@ -9,6 +9,7 @@ drop table if exists e;
 drop table if exists cf;
 drop table if exists cc;
 drop table if exists ca;
+drop table if exists c_ext;
 drop table if exists c;
 drop table if exists ucod_cf_type;
 drop table if exists ucod_c_sts;
@@ -50,6 +51,15 @@ insert into c(c_id,c_sts,c_name,c_desc,c_start_dt) values (1,'DEACTIVE','ACME In
 insert into c(c_id,c_sts,c_name,c_desc,c_start_dt) values (2,'ACTIVE','Creative Engineering','',date('now', 'localtime'));
 insert into c(c_id,c_sts,c_name,c_desc,c_start_dt) values (3,'ACTIVE','Coffee Brothers','',date('now', 'localtime'));
 
+/*********c_ext*********/
+create table c_ext (
+  c_id integer primary key not null,
+  c_ext_desc text null,
+  foreign key (c_id) references c(c_id)
+);
+insert into c_ext(c_id,c_ext_desc) values (1,'Extended Description');
+
+
 /*********ca*********/
 create table ca (
   ca_id integer primary key autoincrement not null,
@@ -60,12 +70,13 @@ create table ca (
   ca_state text not null,
   ca_zip text null,
   ca_country text not null,
+  ca_type text null,
   foreign key (c_id) references c(c_id),
   foreign key (ca_country) references jsharmony_ucod_country(codeval),
   foreign key (ca_country, ca_state) references jsharmony_ucod2_country_state(codeval1, codeval2)
 );
-insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country) values (1,'123 Test St','Chicago','IL','60103','USA');
-insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country) values (1,'234 Main St','Chicago','IL','60103','USA');
+insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country,ca_type) values (1,'123 Test St','Chicago','IL','60103','USA','BILLING');
+insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country,ca_type) values (1,'234 Main St','Chicago','IL','60103','USA','SHIPPING');
 
 /*********CC*********/
 create table cc (
@@ -82,7 +93,7 @@ create table cc (
   foreign key (ca_id_shipping) references ca(ca_id),
   foreign key (ca_id_billing) references ca(ca_id)
 );
-insert into cc(c_id,cc_name,cc_title,ca_id_shipping,ca_id_billing) values (1,'John Smith','General Manager',1,2);
+insert into cc(c_id,cc_name,cc_title) values (1,'John Smith','General Manager');
 insert into cc(c_id,cc_name,cc_title) values (1,'Jessie Blane','CFO');
 insert into cc(c_id,cc_name,cc_title) values (2,'Jason Gant','Engineering Manager');
 

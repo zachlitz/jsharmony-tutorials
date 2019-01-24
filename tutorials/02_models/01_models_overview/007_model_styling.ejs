@@ -69,7 +69,7 @@ The property value can either be a string or an array of strings.  Arrays of str
   ]
 }
 </pre>
-<%-getScreenshot('/ModelStyle_css?popup=1','Model Style - css')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_css?popup=1','Model Style - css')%>
 
 <h3>Tab Properties</h3>
 
@@ -80,7 +80,7 @@ The "tabpanelstyle" property is applied to the tab panel container.
   "tabpanelstyle": "border: 2px dashed red;"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_tabpanelstyle?c_id=2&action=update&popup=1','Model Style - tabpanelstyle')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_tabpanelstyle?c_id=2&action=update&popup=1','Model Style - tabpanelstyle')%>
 
 <h3>Grid Properties</h3>
 
@@ -91,7 +91,7 @@ The "tablestyle" property defines the style of the grid's HTML table.
   "tablestyle": "border: 2px solid red;"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_tablestyle?popup=1','Model Style - tablestyle')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_tablestyle?popup=1','Model Style - tablestyle')%>
 
 <h3 data-level="2">model.rowstyle / model.rowclass</h3>
 The "rowstyle" and "rowclass" properties are applied to the "style" and "class" of each TR data row of the grid.<br/>
@@ -114,7 +114,7 @@ The xejs.iif and xejs.case statements can be used for conditional styles:
   "rowclass": "<#-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')#>"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_rowstyle?popup=1','Model Style - rowstyle')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_rowstyle?popup=1','Model Style - rowstyle')%>
 The following built-in row classes are available:<br/>
 &nbsp;
 <table class="xtbl" style="border-top:1px solid black;">
@@ -139,7 +139,7 @@ The "formstyle" property is applied to the DIV containing the form elements.
   "formstyle": "border: 2px solid red;"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_formstyle?c_id=1&action=update&popup=1','Model Style - formstyle')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_formstyle?c_id=1&action=update&popup=1','Model Style - formstyle')%>
 
 <h3>Field Properties</h3>
 Field properties can be defined for each field in the model.
@@ -153,8 +153,8 @@ In grid layouts, the "captionstyle" and "captionclass" properties are applied to
   "captionclass": "fieldWithErrors"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_captionstyle_grid','Model Style - captionstyle - grid')%>
-<%-getScreenshot('/ModelStyle_captionstyle_form?c_id=1&action=update&popup=1','Model Style - captionstyle - form')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_captionstyle_grid','Model Style - captionstyle - grid')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_captionstyle_form?c_id=1&action=update&popup=1','Model Style - captionstyle - form')%>
 
 <h3 data-level="2">field.cellstyle / field.cellclass</h3>
 On grid and multisel layouts, the "cellstyle" and "cellclass" properties are applied to the "style" and "class" of the TD data row cells.
@@ -164,7 +164,7 @@ On grid and multisel layouts, the "cellstyle" and "cellclass" properties are app
   "cellclass": "fieldWithErrors"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_cellstyle_grid','Model Style - cellstyle - grid')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_cellstyle_grid','Model Style - cellstyle - grid')%>
 
 <h3 data-level="2">field.controlstyle / field.controlclass</h3>
 In form, form-m, and exec layouts, the "controlstyle" and "controlclass" properties are applied to the "style" and "class" of the field's control.<br/>
@@ -175,8 +175,8 @@ In grid and multisel layouts, the "controlstyle" and "controlclass" properties a
   "controlclass": "fieldWithErrors"
 }
 </pre>
-<%-getScreenshot('/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
-<%-getScreenshot('/ModelStyle_controlstyle_form?c_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
 
 <h3>Custom CSS Files</h3>
 Custom CSS files can be defined either sitewide or per-model.
@@ -219,7 +219,7 @@ Per-model styles are not publicly accessible.
 .xformCL td { color: red; }
 .xformCL thead tr { background-color: green; }
 </pre>
-<%-getScreenshot('/ModelStyle_CL?popup=1','Model Style')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_CL?popup=1','Model Style')%>
 
 <h3>CSS Architecture</h3>
 
