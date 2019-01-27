@@ -470,12 +470,19 @@ site.rootcss = '';              //CSS Prefix for styles
 site.show_system_errors = true; //Whether to display debug information in the system errors (should be set to false for production)
 site.cookiesalt = '';           //Salt used by cookieParser to prevent user from modifying cookie data
 
-//Site menu generator
-site.menu = function(req,res,jsh,params,onComplete){ 
+//Menu System
+site.menu = function(req, res, jsh, params, onComplete){ 
   params.showlisting = true; 
   params.menudata = { MainMenu:[], SubMenus:{} }; 
   onComplete(); 
 }
+
+//Help System
+site.help = function(req, res, jsh, helpid, onComplete){
+  var helpurl = '';
+  var helpurl_onclick = req.jshsite.instance+'.XExt.Alert(\'Help System not initialized.\'); return false;';
+  return onComplete(helpurl, helpurl_onclick);
+};
 
 //Global parameters available to the JS client front-end
 //If defined as functions, they will be evaluated on each request
