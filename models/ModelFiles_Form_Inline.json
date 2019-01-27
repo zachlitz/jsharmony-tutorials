@@ -1,0 +1,16 @@
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "oninit":"_this.oninit(xmodel);",
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ],
+  "ejs": "<div class='<%=model.class%>_sample'>Sample div</div>",
+  "css": ".<%=model.class%>_sample { color:green; }",
+  "js": "jsh.App[modelid] = new (function(){ var _this = this; this.oninit = function(xmodel) { XExt.Alert('Form Initialized'); } })();",
+  "onroute": "var model = jsh.getModelClone(req, modelid); model.title = 'Title Override'; req.jshlocal.Models[modelid] = model; return callback();"
+}

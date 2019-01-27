@@ -241,15 +241,6 @@ config.dynamic_bindings = {
   }
 };
 
-//Mapping between Site ID and the Model ID that will be used for the "Help" buttons
-config.help_view = {
-  "main": "HSHOWL",
-  "client": "C_HSHOWL"
-};
-
-//Key field that will be passed to the help_view, containing the ID of the model where the help button was pressed
-config.help_panelid = "hp_code";
-
 //Default buttons - assigned based on link action (add/edit/download/select)
 config.default_buttons = {
   "insert": { "icon": "insert", "text": "Add %%%CAPTION%%%", "actions": "I", "class": "xbuttoninsert" },
@@ -585,7 +576,17 @@ configFactory.maincookiesalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 </pre>
 
 
+<h3 data-level="2">Help System</h3>
+<pre>
+//Mapping between Site ID and the Model ID that will be used for the "Help" buttons
+configFactory.help_view = {
+  "main": "HSHOWL",
+  "client": "C_HSHOWL"
+};
 
+//Key field that will be passed to the help_view, containing the ID of the model where the help button was pressed
+configFactory.help_panelid = "hp_code";
+</pre>
 
 <h3 data-level="2">Job Processor</h3>
 <pre>

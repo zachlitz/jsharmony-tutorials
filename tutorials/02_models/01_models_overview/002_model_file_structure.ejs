@@ -1,0 +1,314 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Model File Structure",
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelFiles_Form_Basic.json",
+
+    "/models/ModelFiles_Form_SeparateFiles.json",
+    "/models/ModelFiles_Form_SeparateFiles.js",
+    "/models/ModelFiles_Form_SeparateFiles.css",
+    "/models/ModelFiles_Form_SeparateFiles.ejs",
+    "/models/ModelFiles_Form_SeparateFiles.onroute.js",
+
+    "/models/ModelFiles_Form_Inline.json",
+
+    "/models/ModelFiles_MultipleModels.json",
+    "/models/ModelFiles_MultipleModels_C.ejs",
+    "/models/ModelFiles_MultipleModels_CC.ejs",
+
+    "/models/ModelFiles_Report_Basic.json",
+    "/models/ModelFiles_Report_Basic.ejs",
+
+    "/models/ModelFiles_Report_SeparateFiles.json",
+    "/models/ModelFiles_Report_SeparateFiles.ejs",
+    "/models/ModelFiles_Report_SeparateFiles.header.ejs",
+    "/models/ModelFiles_Report_SeparateFiles.footer.ejs",
+    "/models/ModelFiles_Report_SeparateFiles.js",
+    "/models/ModelFiles_Report_SeparateFiles.form.css",
+    "/models/ModelFiles_Report_SeparateFiles.form.ejs",
+    "/models/ModelFiles_Report_SeparateFiles.onroute.js",
+
+    "/models/ModelFiles_Report_Inline.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/ModelFiles_Form_Basic?c_id=1&action=update", "title": "Form - Basic" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Form_SeparateFiles?c_id=1&action=update", "title": "Form - Separate Code Files" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Form_Inline?c_id=1&action=update", "title": "Form - Inline Code" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Report_Basic", "title": "Report - Basic" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Report_SeparateFiles", "title": "Report - Separate Code Files" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Report_Inline", "title": "Report - Inline Code" }
+  ]
+}
+</script>
+
+<h3>Overview</h3>
+Models are defined in files under the "models" folder.
+
+<h3>Form / Form-m / Multisel / Exec Models</h3>
+Form / Form-m / Multisel / Exec models are defined differently than report models.
+
+<h3>Basic Model</h3>
+A basic model consists of the model definition as JSON in one file:
+<pre>
+//MODELID.json
+{
+  "table": "c",
+  ...
+}
+</pre>
+
+<h3 level="2">Comments</h3>
+The JSON syntax in jsHarmony has been extended to allow for commenting a line by using two forward slashes:
+<pre>
+{
+  //Comment
+  "table": "c",
+  ...
+}
+</pre>
+
+<h3 data-level="2">Separate JS / CSS / EJS / Onroute Files</h3>
+In addition to the basic model definition, a model can contain JS, CSS, EJS, and "OnRoute" extensions.  These files should be named the same as the Model ID:
+<pre>
+//MODELID.json
+{
+  "table": "c",
+  ...
+  "oninit":"_this.oninit(xmodel);"
+}
+
+//MODELID.js
+jsh.App[modelid] = new (function(){
+  var _this = this;
+
+  //Member variables
+  this.localVar = [];
+
+  this.oninit = function(xmodel){
+    //Sample event / method
+    XExt.Alert('Form Initialized');
+  }
+
+})();
+
+//MODELID.css
+.&lt;%=model.class%&gt;_sample {
+  color:green;
+}
+
+//MODELID.ejs
+<div class='&lt;%=model.class%&gt;_sample'>Sample div</div>
+
+//MODELID.onroute.js
+//Parameters: (routetype, req, res, callback, require, jsh, modelid, params)
+(function(){
+  //Clone the base model
+  var model = jsh.getModelClone(req, modelid);
+
+  //Update the model
+  model.title = 'Title Override';
+
+  //Save model to current request
+  req.jshlocal.Models[modelid] = model;
+
+  //Continue processing
+  return callback();
+})();
+
+</pre>
+
+<h3 data-level="2">In-line</h3>
+When the models are loaded, the additional JS, CSS, and EJS files are concatenated to the following model properties:
+<ul>
+  <li><b>MODELID.js</b>: model.js </li>
+  <li><b>MODELID.css</b>: model.css </li>
+  <li><b>MODELID.ejs</b>: model.ejs </li>
+  <li><b>MODELID.onroute.js</b>: model.onroute </li>
+</ul>
+
+The model properties could be directly assigned instead of using the external files:
+<pre>
+//MODELID.json
+{
+  ...
+  "ejs": "<div class='&lt;%=model.class%&gt;_sample'>Sample div</div>",
+  "css": ".&lt;%=model.class%&gt;_sample { color:green; }",
+  "js": "jsh.App[modelid] = new (function(){ var _this = this; this.oninit = function(xmodel) { XExt.Alert('Form Initialized'); } })();",
+  "onroute": "var model = jsh.getModelClone(req, modelid); model.title = 'Title Override'; req.jshlocal.Models[modelid] = model; return callback();"
+}
+</pre>
+
+<h3 data-level="2">Multiple Models per File</h3>
+Multiple models can be stored in one file:
+<pre>
+//FILENAME.json
+{
+  "MODELID1": {
+    ...
+  },
+  "MODELID2": {
+  }
+}
+</pre>
+If multiple models are stored in one file, the separate JS, CSS, EJS files would be looked up based on the MODELID, without any namespace:
+<pre>
+//MODELID1.ejs
+<div>Model 1</div>
+
+//MODELID2.ejs
+<div>Model 2</div>
+</pre>
+
+<h3>Report Models</h3>
+Reports consist of both an "Exec" form, and the Report EJS template.
+
+<h3 data-level="2">Basic Report</h3>
+A basic report consists of at least one JSON report definition file, and one Report EJS template with the report layout.
+<pre>
+//MODELID.json
+{
+  "layout": "report",
+  "caption":["Customer Report"],
+  "fields":[
+    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+  ],
+  "reportdata": {
+    "C": { "sql": "select c_id,c_name from c" }
+  }
+}
+
+//MODELID.ejs
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+  &lt;% _.each(data.C,function(C,C_idx){  %&gt;
+    <div>&lt;%=C.c_name%&gt;</div>
+  &lt;% }); %&gt;
+</body>
+</html>
+</pre>
+
+<h3 data-level="2">Separate EJS / JS / CSS / Onroute Files</h3>
+
+<pre>
+//MODELID.json
+{
+  "layout": "report",
+  "caption":["Customer Report"],
+  "oninit":"_this.oninit(xmodel);",
+  "fields":[
+    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+  ],
+  "reportdata": {
+    "C": { "sql": "select c_id,c_name from c" }
+  }
+}
+
+//MODELID.ejs
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+  &lt;% _.each(data.C,function(C,C_idx){  %&gt;
+    <div>&lt;%=C.c_name%&gt;</div>
+  &lt;% }); %&gt;
+</body>
+</html>
+
+//MODELID.header.ejs
+Report Header
+
+//MODELID.footer.ejs
+Page <span class='pageNumber'></span> / <span class='totalPages'></span>
+
+//MODELID.js
+jsh.App[modelid] = new (function(){
+  var _this = this;
+
+  //Member variables
+  this.localVar = [];
+
+  this.oninit = function(xmodel){
+    //Sample event / method
+    XExt.Alert('Form Initialized');
+  }
+
+})();
+
+//MODELID.form.css
+.&lt;%=model.class%&gt;_sample {
+  color:green;
+}
+
+//MODELID.form.ejs
+<div class='&lt;%=model.class%&gt;_sample'>Sample div</div>
+
+//MODELID.onroute.js
+//Parameters: (routetype, req, res, callback, require, jsh, modelid, params)
+(function(){
+  //Clone the base model
+  var model = jsh.getModelClone(req, modelid);
+
+  //Update the model
+  model.title = 'Title Override';
+
+  //Save model to current request
+  req.jshlocal.Models[modelid] = model;
+
+  //Continue processing
+  return callback();
+})();
+</pre>
+
+<h3 data-level="2">In-line</h3>
+When the models are loaded, the additional JS, CSS, and EJS files are concatenated to the following model properties:
+<ul>
+  <li><b>MODELID.ejs</b>: model.reportbody </li>
+  <li><b>MODELID.header.ejs</b>: model.pageheader </li>
+  <li><b>MODELID.footer.ejs</b>: model.pagefooter </li>
+  <li><b>MODELID.js</b>: model.js </li>
+  <li><b>MODELID.form.css</b>: model.css </li>
+  <li><b>MODELID.form.ejs</b>: model.ejs </li>
+  <li><b>MODELID.onroute.js</b>: model.onroute </li>
+</ul>
+
+The model properties could be directly assigned instead of using the external files:
+<pre>
+//MODELID.json
+{
+  ...
+  "reportbody": "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' /></head><body>&lt;% _.each(data.C,function(C,C_idx){  %&gt;<div>&lt;%=C.c_name%&gt;</div>&lt;% }); %&gt;</body></html>",
+  "pageheader": "Report Header",
+  "pagefooter": "Page <span class='pageNumber'></span> / <span class='totalPages'></span>",
+  "ejs": "<div class='&lt;%=model.class%&gt;_sample'>Sample div</div>",
+  "css": ".&lt;%=model.class%&gt;_sample { color:green; }",
+  "js": "jsh.App[modelid] = new (function(){ var _this = this; this.oninit = function(xmodel) { XExt.Alert('Form Initialized'); } })();",
+  "onroute": "var model = jsh.getModelClone(req, modelid); model.title = 'Title Override'; req.jshlocal.Models[modelid] = model; return callback();"
+}
+</pre>

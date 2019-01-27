@@ -1,0 +1,20 @@
+{
+  "ModelFiles_MultipleModels_C": {
+    "table":"c",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Customer"}
+    ]
+  },
+  "ModelFiles_MultipleModels_CC": {
+    "table":"cc",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cc_id","caption": "ID"},
+      {"name":"cc_name","caption":"Contact"}
+    ]
+  }
+}

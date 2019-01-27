@@ -7,7 +7,9 @@
     "fields":[
       {"name":"c_name","caption":"Name"},
       {"name":"c_sts","caption":"Status"},
-      {"control": "subform","target": "FormSubform_InsertLink_C_EXT","actions":"BIU","insert_link":"insert:FormSubform_InsertLink_C_EXT&c_ext_desc='Sample'"}
+      {"control": "subform","target": "FormSubform_InsertLink_C_EXT","actions":"BIU",
+       "controlparams":{ "insert_link":"insert:FormSubform_InsertLink_C_EXT&c_ext_desc='Sample'" }
+      }
     ]
   },
   "FormSubform_InsertLink_C_EXT": {

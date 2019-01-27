@@ -169,7 +169,7 @@ select d_id,d_ext,(('D'::text || d.d_id::character varying::text) || COALESCE(d.
 <h4>model.sqlexec</h4>
 
 
-<h3>SQL Parameters / Order of Execution</h3>
+<h3>SQL Parameters / Order of Execution / sql_params</h3>
 There are three ways SQL statements can be executed:
 <ul>
   <li>
@@ -190,7 +190,14 @@ Form "select" statements are executed as waterfall non-transaction statements.  
 <br/>
 All other statements are executed as standard non-transaction statements.<br/>
 <br/>
-In parent / child forms, the "select" statements are executed as an asynchronous tree, with the Parent "select" performed first.  Then any bindings from the Parent "select" statement can be applied to the parameters of the Child forms.
+In parent / child forms, the "select" statements are executed as an asynchronous tree, with the Parent "select" performed first.  Then any bindings from the Parent "select" statement can be applied to the parameters of the Child forms.<br/>
+
+<h4>sql_params</h4>
+The model.breadcrumbs, field.lov, and field.default properties additionally have an "sql_params" property.  This is used to keep track of the SQL parameters required for the respective SQL statement.<br/>
+<br/>
+In most cases, sql_params is automatically generated on system load, by parsing the model fields and checking which fields are present as parameters in the SQL.  If these are not automatically recognized, it may be necessary to manually populate the sql_params array.<br/>
+<br/>
+The values for sql_params are found from the querystring.  If the value is not passed in the querystring, the resulting values from previous SQL statements in the same request are used.  For instance, in "form" models, SQL parameters for List of Values can be based on values of fields retrieved in the SQL select statement, since the LOV / Default / Breadcrumb queries are executed after the SQL select.
 
 <h3>Primary Key / No Key / Unbound</h3>
 Primary keys are pulled from the Querystring or from the Parent Form's bindings.  In insert statements, the Primary Key should be returned from the insert operation, so that the row can be reselected.

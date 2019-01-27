@@ -1,0 +1,18 @@
+{
+  "layout": "report",
+  "caption":["Customer Report"],
+  "oninit":"_this.oninit(xmodel);",
+  "fields":[
+    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+  ],
+  "reportdata": {
+    "C": { "sql": "select c_id,c_name from c" }
+  },
+  "reportbody": "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><link href='file:///<%=jsh.Config.moduledir%>/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' /></head><body><% _.each(data.C,function(C,C_idx){  %><div><%=C.c_name%></div><% }); %></body></html>",
+  "pageheader": "Report Header",
+  "pagefooter": "Page <span class='pageNumber'></span> / <span class='totalPages'></span>",
+  "ejs": "<div class='<%=model.class%>_sample'>Sample div</div>",
+  "css": ".<%=model.class%>_sample { color:green; }",
+  "js": "jsh.App[modelid] = new (function(){ var _this = this; this.oninit = function(xmodel) { XExt.Alert('Form Initialized'); } })();",
+  "onroute": "var model = jsh.getModelClone(req, modelid); model.title = 'Title Override'; req.jshlocal.Models[modelid] = model; return callback();"
+}

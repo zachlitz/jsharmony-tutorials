@@ -1,0 +1,12 @@
+{ 
+  "ModelHelp_Standard_CL": {
+    "table":"c",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "helpid":"ModelHelp_CL",
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Customer"}
+    ]
+  }
+}

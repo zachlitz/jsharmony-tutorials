@@ -1,0 +1,10 @@
+{
+  "layout": "report",
+  "caption":["Customer Report"],
+  "fields":[
+    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+  ],
+  "reportdata": {
+    "C": { "sql": "select c_id,c_name from c" }
+  }
+}

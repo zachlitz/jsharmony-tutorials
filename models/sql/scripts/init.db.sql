@@ -180,8 +180,12 @@ insert into jsharmony.pe(pe_id,pe_fname,pe_lname,pe_email,pe_startdt,pe_pw1,pe_p
   select 1, 'Admin', 'User', 'admin@jsharmony.com', datetime('now','localtime'),'******','******'
   where not exists(select * from jsharmony.pe where pe_id=1);
 
+insert into jsharmony.hp(hp_code, hp_desc)
+  select 'ModelHelp_CL', 'Help Example - CL'
+  where not exists(select * from jsharmony.hp where hp_code = 'ModelHelp_CL');
 
-
-
+insert into jsharmony.h(hp_code, h_title, h_text, h_index_a, h_index_p)
+  select 'ModelHelp_CL', 'Customer Listing', '<p><strong>Sample</strong> Help Content</p><p>&nbsp\;</p>', 1, 1
+  where not exists(select * from jsharmony.h where hp_code = 'ModelHelp_CL');
 
 end;

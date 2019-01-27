@@ -309,7 +309,7 @@ By default, the insert button links to "insert:MODELID", where "MODELID" is the 
 <br/>
 It is recommended to add the model.popup property to the child subform, so that the "Insert" link will open in a new window, and the existing record will stay open.<br/>
 <br/>
-The insert link URL can be customized using the field.insert_link property on the subform control.  In the example below, the Description field is given a default value via the insert link:
+The insert link URL can be customized using the field.controlparams.insert_link property on the subform control.  In the example below, the Description field is given a default value via the insert link:
 <pre>
 "C": {
   "table":"c",
@@ -319,7 +319,9 @@ The insert link URL can be customized using the field.insert_link property on th
   "fields":[
     {"name":"c_name","caption":"Name"},
     {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_EXT","actions":"BIU","insert_link":"insert:C_EXT&c_ext_desc='Sample'"}
+    {"control": "subform","target": "C_EXT","actions":"BIU",
+     "controlparams":{ "insert_link":"insert:C_EXT&c_ext_desc='Sample'" }
+    }
   ]
 },
 "C_EXT": {

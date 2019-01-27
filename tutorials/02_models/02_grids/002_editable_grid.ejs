@@ -82,10 +82,14 @@ If data columns, such as timestamps, are updated server-side after an insert or 
 Values for "reselectafteredit" can either be "row" or "" (blank).
 
 <h3>Save Changes on Any Other Forms Before Updating</h3>
-On a form with multiple subforms / grids, there may be data dependencies between grid data and other data on the form.  In this scenario, it may be useful to require the user to save any other changes before editing data in the grid.  The "grid_save_before_update" property requires the user to save any pending changes before editing grid data.
+On a form with multiple subforms / grids, there may be data dependencies between grid data and other data on the form.  In this scenario, it may be useful to require the user to save any other changes before editing data in the grid.  The field.controlparams.grid_save_before_update property requires the user to save any pending changes before editing grid data.<br/>
+<br/>
+The "grid_save_before_update" property is set on the subform control that links to the grid.
 <pre>
 {
-  "grid_save_before_update": true
+  "control":"subform",
+  "target": "GRID_MODEL_ID",
+  "controlparams": { "grid_save_before_update": true }
 }
 </pre>
 
