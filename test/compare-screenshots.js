@@ -1,55 +1,61 @@
-// var assert = require('assert');
 var gm = require('gm');
-    // gm.options({imageMagick: true});
+var imageMagick = gm.subClass({ imageMagick: true });
 var should = require('should');
 const fs = require("fs");
 // before(function() {
 //     console.log('before generate screenshots');
 //
 // });
-let dir_path = 'public/screenshots';
-
+let live_screenshots_path = 'public/screenshots';
+let regenerated_screenshots_path = 'test/screenshots';
+let full_path_live = __dirname+'/../'+live_screenshots_path;
+let full_path_regenerated = __dirname+'/../'+regenerated_screenshots_path;
 
 describe('Compare Screenshots', function() {
-    it('should directory: public/screenshots exist and have files', function() {
-        fs.existsSync(dir_path).should.equal(true);
-        fs.lstatSync(dir_path).isDirectory().should.equal(true);
-        fs.readdirSync(dir_path).length.should.greaterThan(0);
+    it('should directory: public/screenshots exist and have files', async function() {
+        await checkDirectory(live_screenshots_path)
+    });
+
+    it('should directory: test/screenshots exist and have files', async function() {
+        await checkDirectory(full_path_regenerated)
+    });
+
+    it('should existing and generated images be equal', async function() {
+        let isImagesEqual=false;
+        let files = fs.readdirSync(live_screenshots_path);
+        let imageName='';
+        for( let i=0; i<files.length; i++){
+            isImagesEqual=false;
+            imageName = files[i];
+            let message='Compared Image "'+imageName+'" not the same.';
+            try {
+                isImagesEqual = await compareScreenshots(imageName,0);
+            }catch (e) {
+                message = 'Comparing Error: '+e.toString();
+            }
+            isImagesEqual.should.equal(true,message);
+        }
     });
 });
-let path1 = 'C:/Users/dkomsa/js/fork-js-tutorials/public'+'/jsHarmonyFactory_H_action_update_h_id_1_Help_Administration_Edit.png';
-let path2 = 'C:/Users/dkomsa/js/fork-js-tutorials/public'+'/jsHarmonyFactory_HL_Help_Administration_Listing.png';
 
+async function checkDirectory(dir_name) {
+    fs.existsSync(dir_name).should.equal(true,'Directory: '+dir_name+' not exist');
+    fs.lstatSync(dir_name).isDirectory().should.equal(true,'Path: '+dir_name+' not directory');
+    fs.readdirSync(dir_name).length.should.greaterThan(0,'Directory: '+dir_name+' is empty');
+}
 
-describe('Compare Screenshots2', function() {
-    describe('directory present', function() {
-        it('should return -1 when the value is not present', function() {
+async function compareScreenshots(imageName, options) {
+    return await gmCompareImagesWrapper(full_path_live+'/'+imageName,full_path_regenerated+'/'+imageName,options)
+}
 
-            var options = {
-                highlightColor: 'yellow', // optional. Defaults to red
-                file: 'C:/Users/dkomsa/js/fork-js-tutorials/public'+'/diff.png' // required
-            };
-            // gm.compare(path1, path2, options, function (err) {
-            //     if (err) throw err;
-            // });
-            // console.log(gm.compare(path1,path2,(err, isEqual, equality, raw) => {
-            //     console.log('teeeee');
-            //     if (err) throw err;
-            //     isEqual.should.equal(true);
-            //     console.log('The images are equal: %s', isEqual);
-            //     console.log('Actual equality: %d', equality);
-            //     console.log('Raw output was: %j', raw);
-            //     return isEqual;
-            // }));
+function gmCompareImagesWrapper(path1, path2, options) {
+    return new Promise((resolve, reject)=> {
+        imageMagick().compare(path1, path2, 0, function (err, isEqual, equality, raw) {
+            if (err) reject(err);
+            // console.log('The images are equal: %s', isEqual);
+            // console.log('Actual equality: %d', equality);
+            // console.log('Raw output was: %j', raw);
+            return resolve(isEqual);
         });
-    });
-});
-
-// describe('Array', function() {
-//     describe('#indexOf()', function() {
-//         it('should return -1 when the value is not present', function() {
-//             [1,2,3].indexOf(5).should.equal(-1);
-//             [1,2,3].indexOf(0).should.equal(-1);
-//         });
-//     });
-// });
+    })
+}
