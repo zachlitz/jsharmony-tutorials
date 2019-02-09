@@ -72,7 +72,8 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   var jsh = _this.jsh;
   if(!url || (url[0] != '/')) url = '/' + url;
   var fname = this.getScreenshotFilename(url, desc, params);
-  var fpath = _this.basepath + '/public/screenshots/'+fname;
+  var def_screenshot_folder = (jsh.def_screenshot_folder)? jsh.def_screenshot_folder:'/public/screenshots/';
+  var fpath = path.join(_this.basepath, def_screenshot_folder ,fname);
 
   //Do not generate screenshot if image already exists
   if(fs.existsSync(fpath)) return callback();
@@ -95,7 +96,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
       page.goto(fullurl).then(function(){
         page.evaluate(params.onload).then(function(){
           var takeScreenshot = function(){
-            console.log(_this.basepath + '/public/screenshots/'+fname);
+            // console.log(_this.basepath + '/public/screenshots/'+fname); todo remove
             var screenshotParams = { path: fpath, type: 'png' };
             if(params.height){
               screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
