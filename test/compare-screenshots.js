@@ -17,7 +17,7 @@ afterEach(function() {
 });
 
 before(function(done) {
-  this.timeout(120000); // set test timeout long process to generate screenshots
+  this.timeout(600000); // set test timeout long process to generate screenshots
   console.log('\n\rBefore Test global');
   create_dir(data_dir);
   create_dir(regenerated_screenshots_path);
@@ -46,14 +46,12 @@ before(function(done) {
 
 after(function () {
   console.log('after');
-  delete_directory(data_dir);
   if (global_test_state === 'passed') {
+    delete_directory(data_dir);
     delete_directory(regenerated_screenshots_path);
     delete_directory(diff_screenshots_path);
-    // delete_directory(data_dir);
-    // delete_directory(regenerated_screenshots_path);
+    delete_directory(path.join(test_dir,'models'));
   }
-  delete_directory(path.join(test_dir,'models'));
 });
 
 
@@ -62,31 +60,48 @@ describe('Compare Screenshots', function() {
     await checkDirectory(live_screenshots_path)
   });
 
-  it('should directory: test/screenshots exist and have files', async function() {
-    await checkDirectory(regenerated_screenshots_path)
-  });
+  // it('should directory: test/screenshots exist and have files', async function() {
+  //   await checkDirectory(regenerated_screenshots_path)
+  // });
 
   it('should existing and generated images be equal', async function() {
+    this.timeout(600000);
     let isImagesEqual=false;
     let files = fs.readdirSync(live_screenshots_path);
+    console.log('# of existing images to test '+files.length);
+    console.log('# of generated images to test '+fs.readdirSync(regenerated_screenshots_path).length);
     let imageName='';
+    let failImages = [];
     for( let i=0; i<files.length; i++){
       isImagesEqual=false;
       imageName = files[i];
-      fs.existsSync(path.join(regenerated_screenshots_path,imageName)).should.equal(true,'File: '+imageName+' not exist');
+      if(!fs.existsSync(path.join(regenerated_screenshots_path,imageName))){
+        failImages[imageName]={name:imageName,reason:'New image not exist'};
+        continue;
+      }
+
+        // .should.equal(true,'File: '+imageName+' not exist');
       let message='Compared Image "'+imageName+'" not the same.';
       try {
         isImagesEqual = await compareScreenshots(imageName,0.01);
         if (!isImagesEqual){
+          failImages[imageName]={name:imageName,reason: 'Images not the same.'};
           await compareScreenshots(imageName,{file: path.join(diff_screenshots_path,imageName)})
         }
       }catch (e) {
-        message = 'Comparing Error: '+e.toString();
+        failImages[imageName]={name:imageName, reason: 'Comparing Error: '+e.toString()};
+        // message = 'Comparing Error: '+e.toString();
       }
 
-
-      isImagesEqual.should.equal(true,message);
     }
+    // console.log(failImages);
+    await generateFailImagesResultPage(failImages);
+
+    Object.keys(failImages).length.should
+      .lessThan(
+        1,
+        "Where "+Object.keys(failImages).length+" generated images not equal. <a href='"+path.join(test_dir,'..','public','comparing-screenshots-test.html')+"' >here</a>"
+    );
   });
 });
 
@@ -94,6 +109,25 @@ async function checkDirectory(dir_name) {
   fs.existsSync(dir_name).should.equal(true,'Directory: '+dir_name+' not exist');
   fs.lstatSync(dir_name).isDirectory().should.equal(true,'Path: '+dir_name+' not directory');
   fs.readdirSync(dir_name).length.should.greaterThan(0,'Directory: '+dir_name+' is empty');
+}
+
+async function generateFailImagesResultPage(failImages){
+  return new Promise((resolve,reject)=>{
+    let imagesHtml = '';
+    for(const key in failImages){
+      // console.log(image.name);
+      console.log(failImages[key].reason);
+      imagesHtml += handleFailImage(failImages[key]);
+    }
+    resolve(imagesHtml);
+  })
+}
+
+async function handleFailImage(img){
+  return new Promise((resolve, reject)=>{
+    let h = img.name+'<img src="'+'C:/wk/fork-jsharmony-tutorials/public/'+img.name+'">';
+    resolve(h);
+  });
 }
 
 async function compareScreenshots(imageName, options) {

@@ -22,8 +22,7 @@ exports = module.exports = function(jsh, config, dbconfig){
   config.onServerReady.push(function(cb, servers){
     var port = jsh.Config.server.http_port;
     if(jsh.Servers['default'] && jsh.Servers['default'].servers && jsh.Servers['default'].servers.length) port = jsh.Servers['default'].servers[0].address().port;
-    jsh.def_screenshot_folder= '/test/screenshots/';
-    jsh.Modules.jsHarmonyTutorials.generateScreenshots(function () {
+    jsh.Modules.jsHarmonyTutorials.generateScreenshots({screenshot_folder:'/test/screenshots/'},function () {
         process.exit(0);
     });
     return cb();
