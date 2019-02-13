@@ -160,6 +160,7 @@ jsHarmonyTutorials.prototype.Init = function(config){
 
       //Create outline
       var outline_html = '';
+      var outline_count = 0;
       jsh.$root('.tutorial_overview').find('h1,h2,h3').each(function(){
         var jobj = $(this);
         if(jobj.closest('.tutorials_intro').length) return;
@@ -167,8 +168,9 @@ jsHarmonyTutorials.prototype.Init = function(config){
         jobj.before('<a class="tutorial_outline_anchor" name="'+header_id+'"></a>');
         var level = jobj.data('level');
         outline_html += '<li class="level'+level+'"><a href="#'+header_id+'">'+XExt.escapeHTML(jobj.text())+'</a></li>';
+        outline_count++;
       });
-      if(outline_html) jsh.$root('.tutorial_overview').prepend('<ul class="tutorial_outline">'+outline_html+'</ul>');
+      if(outline_html && (outline_count > 1)) jsh.$root('.tutorial_overview').prepend('<ul class="tutorial_outline">'+outline_html+'</ul>');
       jsh.$root('.tutorial_overview').prepend(jsh.$root('.tutorial_overview .tutorials_intro'));
 
       //Select tab

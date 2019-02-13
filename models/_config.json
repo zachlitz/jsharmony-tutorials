@@ -14,9 +14,11 @@
     }
   },
   "salts": {
-    "c_einhash": "kasldjr v2k3j5h2 q43kljhqvwenovyN RHNIOHRnIUASFHQ@(#*$V!#$UIYOQSNIHWEadftawer1"
+    "c_einhash": "kasldjr v2k3j5h2 q43kljhqvwenovyN RHNIOHRnIUASFHQ@(#*$V!#$UIYOQSNIHWEadftawer1",
+    "alltypes_x_hash_salt": "92875giaulrnho82q74g5ynwgeoirfh2a35WEF@GA#%Qr9g8124gFwrt#^YRGGHWR145135sadfw5@#$%@#%sf"
   },
   "passwords": {
-    "c_ein": "sdkjfvhqnw35o3y812jNOFHNOWQIERVNO@Q#N#%O&YNEQHWrjkhwdvherfv23vr2efvewf"
+    "c_ein": "sdkjfvhqnw35o3y812jNOFHNOWQIERVNO@Q#N#%O&YNEQHWrjkhwdvherfv23vr2efvewf",
+    "alltypes_x_encascii_password": "ewefeihia2gg35A@EFGDt981uxc@Q$^#DGvdscfkwhdkKjhev1kl3j5hdAcdv1V@#$@dwedf@#%@DF"
   }
 }

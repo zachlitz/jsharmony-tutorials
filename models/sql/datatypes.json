@@ -1,0 +1,13 @@
+{
+  "money":{ 
+    "sql_from_db": "%%%SQL%%%",
+    "sqlsearch": "cast(%%%SQL%%% as real)",
+    "sqlsearch_to_db": "cast(%%%SQL%%% as real)",
+    "sqlsort": "cast(%%%SQL%%% as real)",
+    "type": "decimal",
+    "format": ["decimalcomma",2],
+    "datatype_config": {
+      "validate": ["IsDecimalComma"]
+    }
+  }
+}

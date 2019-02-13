@@ -28,3 +28,13 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 Form / Popup LOV<br/>
 Grid / Popup LOV
+
+"popuplov": {  //Enable POPUPLOV, requires target grid
+  "target":  "J",
+  "codeval": "j_id",
+  "popupstyle": "height:200px;",
+  "popup_copy_results": { "c_name": "c_name" },
+  "base_readonly":  1,
+  "onpopup": "console.log('popup');", //(popupmodelid, parentmodelid, fieldid, onComplete)
+  "popupiconstyle": "display:none;",
+ },

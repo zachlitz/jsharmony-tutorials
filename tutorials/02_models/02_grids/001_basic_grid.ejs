@@ -80,17 +80,17 @@ The model caption described the singular and plural names of the data items.  If
 <br/>
 Each grid field's "name" should match the database column name.  The field caption will be displayed as the column heading.<br/>
 
-<h3>Datatypes and Primary Key</h3>
-Each grid field needs a datatype.  Grids with insert / update / delete statements also require a primary key.  Read-only grids can operation without a primary key, however the "nokey" attribute should be set to true so that it does not generate warnings that the primary key is missing.  In most scenarios, the primary key and datatypes can be automatically recognized based on the database schema, if Config.system_settings.automatic_schema is enabled.<br/>
+<h3>Data Types and Primary Key</h3>
+Each grid field needs a datatype.  Grids with insert / update / delete statements also require a primary key.  Read-only grids can operation without a primary key, however the "nokey" attribute should be set to true so that it does not generate warnings that the primary key is missing.  In most scenarios, the primary key and data types can be automatically recognized based on the database schema, if Config.system_settings.automatic_schema is enabled.<br/>
 <br/>
-Datatypes can alternatively be manually defined as follows:
+Data types can alternatively be manually defined as follows:
 <pre>
 "fields": [
   {"name":"c_id","type":"bigint","key":1,"caption": "ID"},
   {"name":"c_name","type":"varchar","length":"50","caption":"Customer"}
 ]
 </pre>
-Additional information, including a list of all datatypes, is available in the <a href="/tutorials/field_datatypes">Field Datatypes</a> tutorial.
+Additional information, including a list of all data types, is available in the <a href="/tutorials/field_datatypes">Field Data Types</a> tutorial.
 
 <h3>Actions and Read-only Fields and Grids</h3>
 Actions define whether the data can be "B" (Browsed), "I" (Inserted), "U" (Updated), or "D" (Deleted).  Actions can be defined at the field or model level.<br/>

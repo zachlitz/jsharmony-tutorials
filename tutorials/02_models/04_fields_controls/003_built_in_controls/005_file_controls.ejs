@@ -20,9 +20,51 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
+  "ID": "field_control_file",
   "Title": "File / Image Controls",
   "Menu": ["Models","Fields / Controls","Built-in Controls"],
   "Code": ["/models/CL.json"]
 }
 </script>
-File Controls
+file_upload
+file_download - How to do it in a grid, and in a form
+
+{"sqlparams": {"FILE_SIZE": "d_size",  //file_upload params - File Size
+          "FILE_EXT": "d_ext", //File Extension
+          "FILE_UTSTMP": "d_utstmp", //Upload Timestamp - will be combined with TSTMP sql
+          "FILE_UU": "d_uu", //Upload User - will be combined with CUSER sql
+          "FILE_NAME": "d_filename" //Target file name for download
+        },
+        "image": {
+          "crop": [800,600], //Use either crop or resize
+          "resize": [800,600],
+          "resize": [225,75,{ "upsize": true, "extend":  true }], //upsize = increase size if smaller, extend = increase size to max, center content
+          "format": "jpg", //jpg or png
+        },
+        "thumbnails": {
+          "D_Medium": { //Key = file name
+            "crop": [800,600], //Use either crop or resize
+            "resize": [800,600],
+            "resize": [225,75,{ "upsize": true, "extend":  true }],
+            "format": "jpg", //jpg or png
+          } 
+        },
+        "download_button": "Download Document", //Text for download button
+        "preview_button": "View Image", //Text for preview button - opens within new browser window
+        "upload_button": "Upload New File", //Text for upload button
+        "delete_button": "Delete File", //Text for delete button
+        "data_folder": "D",//Folder for files, must be unique per model
+        "save_file_with_extension": true, //Slower because a directory search is required on each request.  Automatically set to true if sqlparams.FILE_EXT not set
+  }, 
+
+images
+file extensions in config
+temp folder / upload process
+parameters on Config
+
+validation
+  extension
+  file size
+
+
+

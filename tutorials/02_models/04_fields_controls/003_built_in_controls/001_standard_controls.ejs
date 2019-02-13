@@ -27,3 +27,36 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 }
 </script>
 Standard Controls
+
+label
+  .value -> ?? Rendered ??
+  .link -> Links tutorial
+html
+  .value
+  .link -> Links tutorial
+textbox
+textzoom
+dropdown
+date
+  { "dateformat": "mm/dd/y" }
+textarea
+hidden
+password
+button
+  .value / .caption
+  .link -> Links tutorial
+linkbutton
+  .value / .caption
+  .link -> Links tutorial
+checkbox
+  {"value_true":"ON",   //checkbox params
+  "value_false":"OFF",
+  "value_hidden":""
+  },
+
+** Which controls are grid-only???
+  'hidden','label','html','textbox','textzoom','date','textarea','dropdown','checkbox','button','linkbutton'
+  *** Add password to make all of the standard controls grid-editable
+
+** Which controls are supported on multisel??
+  Just "hidden" - Everything else is a label
