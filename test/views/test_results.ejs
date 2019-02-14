@@ -1,0 +1,13 @@
+<style>
+  .comp{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .comp img{
+
+  }
+</style>
+<% for(var k in failImages){ %>
+  <%- include('screenshot_compare_block',{img:failImages[k]}); %>
+<% } %>

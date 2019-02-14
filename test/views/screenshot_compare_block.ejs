@@ -1,0 +1,12 @@
+<div class="comp">
+    <h2>Screenshot name: <%= img.name; %></h2>
+    <img src="<%= live_screenshots_path%>/<%= img.name; %>"><br>
+    <b>Reason of fail: <span style="color: red;"><%= img.reason; %></span> </b>
+    <% if (img.reason == 'Images not the same.'){ %>
+        <h3>Regenerated image:</h3>
+        <img src="<%= regenerated_screenshots_path%>/<%= img.name; %>">
+        <h3>Differences:</h3>
+        <img src="<%= diff_screenshots_path%>/<%= img.name; %>">
+    <% } %>
+    <hr>
+</div>
