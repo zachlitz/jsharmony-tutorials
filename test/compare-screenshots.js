@@ -3,8 +3,10 @@ var imageMagick = gm.subClass({ imageMagick: true });
 var should = require('should');
 const fs = require("fs");
 const path = require("path");
-var test_dir = path.dirname(__filename);
-var data_dir = path.join(test_dir+'/data');
+const ejs = require('ejs');
+const test_dir = path.dirname(__filename);
+const data_dir = path.join(test_dir,'test-app','data');
+const result_file = path.join(test_dir,'comparing-screenshots-test.html');
 let live_screenshots_path = path.join(test_dir,'..','public','screenshots');
 let regenerated_screenshots_path = path.join(test_dir,'screenshots');
 let diff_screenshots_path = path.join(test_dir,'diff_screenshots');
@@ -24,7 +26,7 @@ before(function(done) {
   delete_directory(diff_screenshots_path);
   create_dir(diff_screenshots_path);
   var cp = require('child_process');
-  var n = cp.fork(test_dir + '/app.test.js');
+  var n = cp.fork(test_dir + '/test-app/app.test.js');
   n.addListener('exit',function (err) {
     var m= 'Finished Image Generation';
     if (err){
@@ -35,13 +37,6 @@ before(function(done) {
       done();
     }
   });
-  // n.addListener('error',function (err) {
-  //   var m= 'Finished Image Generation';
-  //   if (err) m+= ' with Error: '+ err.toString();
-  //   console.log(m);
-  //   done(new Error(m));
-  // });
-
 });
 
 after(function () {
@@ -50,7 +45,7 @@ after(function () {
     delete_directory(data_dir);
     delete_directory(regenerated_screenshots_path);
     delete_directory(diff_screenshots_path);
-    delete_directory(path.join(test_dir,'models'));
+    delete_directory(path.join(test_dir,'test-app','models'));
   }
 });
 
@@ -59,10 +54,6 @@ describe('Compare Screenshots', function() {
   it('should directory: public/screenshots exist and have files', async function() {
     await checkDirectory(live_screenshots_path)
   });
-
-  // it('should directory: test/screenshots exist and have files', async function() {
-  //   await checkDirectory(regenerated_screenshots_path)
-  // });
 
   it('should existing and generated images be equal', async function() {
     this.timeout(600000);
@@ -79,9 +70,6 @@ describe('Compare Screenshots', function() {
         failImages[imageName]={name:imageName,reason:'New image not exist'};
         continue;
       }
-
-        // .should.equal(true,'File: '+imageName+' not exist');
-      let message='Compared Image "'+imageName+'" not the same.';
       try {
         isImagesEqual = await compareScreenshots(imageName,0.01);
         if (!isImagesEqual){
@@ -90,17 +78,17 @@ describe('Compare Screenshots', function() {
         }
       }catch (e) {
         failImages[imageName]={name:imageName, reason: 'Comparing Error: '+e.toString()};
-        // message = 'Comparing Error: '+e.toString();
       }
-
     }
-    // console.log(failImages);
-    await generateFailImagesResultPage(failImages);
-
+    let html = await generateFailImagesResultPage(failImages);
+    fs.writeFile(result_file, html, function(err, data){
+      if (err) console.log(err);
+      console.log("Successfully Written to File.");
+    });
     Object.keys(failImages).length.should
       .lessThan(
         1,
-        "Where "+Object.keys(failImages).length+" generated images not equal. <a href='"+path.join(test_dir,'..','public','comparing-screenshots-test.html')+"' >here</a>"
+        "Where "+Object.keys(failImages).length+" generated images not equal. <a href='"+result_file+"' >here</a>"
     );
   });
 });
@@ -113,21 +101,21 @@ async function checkDirectory(dir_name) {
 
 async function generateFailImagesResultPage(failImages){
   return new Promise((resolve,reject)=>{
-    let imagesHtml = '';
-    for(const key in failImages){
-      // console.log(image.name);
-      console.log(failImages[key].reason);
-      imagesHtml += handleFailImage(failImages[key]);
-    }
-    resolve(imagesHtml);
+    ejs.renderFile(
+      path.join(test_dir,'/views/test_results.ejs'),
+      {
+        live_screenshots_path:live_screenshots_path,
+        regenerated_screenshots_path: regenerated_screenshots_path,
+        diff_screenshots_path:diff_screenshots_path,
+        failImages: failImages,
+      },
+      {async:false},
+      function(err, str){
+        if(err)reject(err);
+        resolve(str);
+      }
+    );
   })
-}
-
-async function handleFailImage(img){
-  return new Promise((resolve, reject)=>{
-    let h = img.name+'<img src="'+'C:/wk/fork-jsharmony-tutorials/public/'+img.name+'">';
-    resolve(h);
-  });
 }
 
 async function compareScreenshots(imageName, options) {
