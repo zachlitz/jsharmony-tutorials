@@ -111,7 +111,13 @@ The "sqlsearchsound" property is used in grids, when the "search" tool is used t
 }
 Resulting SQL Expression: select c_id,c_name from c where (c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=@search_0_c_name_soundex))
 </pre>
-In this example, the "sdx" table contains the Soundex index of all data in the "c" table.  The sdx table should be updated via trigger on any insert / update into the "c" table.
+In this example, the "sdx" table contains the Soundex index of all data in the "c" table.  The sdx table should be updated via trigger on any insert / update into the "c" table.<br/>
+<br/>
+The sqlsearchsound property supports the following variables:
+<ul>
+  <li>%%%FIELD%%% - Will be replaced by the search query</li>
+  <li>%%%SOUNDEX%%% - Will be replaced by a Soundex of the search query</li>
+</ul>
 
 <h4>Example</h4>
 Form with fields using sqlselect, sqlinsert, and sqlupdate:

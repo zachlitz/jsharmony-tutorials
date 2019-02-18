@@ -22,11 +22,119 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "ID": "fields_standard_controls",
   "Title": "Standard Controls",
-  "Menu": ["Models","Fields / Controls","Built-in Controls"],
-  "Code": ["/models/CL.json"]
+  "Menu": ["Models","Fields / Controls","Built-in Controls"]
 }
 </script>
-Standard Controls
+
+<h3>Overview</h3>
+jsHarmony has a variety of standard controls that are available in form, form-m, and grid layouts.
+
+<h3>Label</h3>
+The label control is a read-only display of data.  Label controls are wrapped within a div tag, and re-rendered each time the data is selected from the database.
+
+<h4>Standard Label - Render Database Column as Text</h4>
+When used without the "value" property, a label field will render a database column as text:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Label', { cropToSelector: '.x_label' })%>
+<pre>
+{
+  "name":"x_label",
+  "control":"label"
+}
+</pre>
+
+<h4>Static Label - Render Static HTML Content</h4>
+If a label has a "value" property, it will be rendered as a static label.  A label can contain static HTML, and be used for advanced elements such as links and images.  A static label will wrap the HTML content in a DIV.<br/>
+<br/>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static Label', { cropToSelector: '.static_label' })%>
+<pre>
+{
+  "control":"label",
+  "value":"<b>Static</b> Label"
+}
+</pre>
+
+<h4>Static Label with EJS - Render Dynamic EJS / HTML Content</h4>
+Static labels can also contain EJS.  This will be evaluated and re-rendered each time the model data is selected from the database.  The EJS is escaped with  &lt# and #&gt.
+<br/>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static Label with EJS', { cropToSelector: '.static_label_with_ejs' })%>
+<pre>
+{
+  "control":"label",
+  "value":"<b>Static w/EJS:</b> <#=data.x_label#>"
+}
+</pre>
+
+<h3>HTML</h3>
+The HTML control can be used to either insert HTML directly into the form, or render database data as HTML.
+
+<h4>HTML - Render Database Column as HTML</h4>
+When used without the "value" property, an HTML field will render a database column as HTML:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - HTML', { cropToSelector: '.x_html' })%>
+<pre>
+{
+  "name":"x_html",
+  "control":"html"
+}
+</pre>
+
+<h4>HTML - Render Database Column with Dynamic EJS / HTML</h4>
+Database columns can also contain EJS, which will be evaluated client-side.  The EJS is escaped with  &lt# and #&gt.
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - HTML with EJS', { cropToSelector: '.html_with_ejs' })%>
+<pre>
+{
+  "control":"html",
+  "sqlselect":"('<b>Dynamic DB EJS</b> <#=data.x_label#>')",
+  "type":"varchar",
+  "caption":"HTML from DB w/EJS"
+}
+</pre>
+
+<h4>HTML - Render Static HTML Content</h4>
+If an HTML element has a "value" property, the field.value will be rendered directly into the page as HTML, without any bounding container (as opposed to the label, which uses a container div).
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static HTML', { cropToSelector: '.static_html' })%>
+<pre>
+{
+  "control":"html",
+  "value":"<b>Static</b> HTML"
+}
+</pre>
+
+<h4>HTML - Containers</h4>
+Since the static HTML element does not create a container control when used with field.value, the html field can be used to create HTML containers around other controls:
+<%-getScreenshot('/jsHarmonyTutorials/FieldStandardControls_HTMLContainer?popup=1&action=update&x_primary=1','Standard Controls - HTML Container')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<div style='border:3px solid red;float:left;'>"},
+      {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+      {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
+      {"name":"x_dropdown", "control":"dropdown"},
+    {"control":"html","value":"</div>"}
+  ]
+}
+</pre>
+
+<h3>Textbox</h3>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textbox', { cropToSelector: '.x_textbox' })%>
+
+<h3>Textzoom</h3>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textzoom', { cropToSelector: '.x_textzoom,.xtextzoom' })%>
+
+<h4>Textarea</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textarea B', { cropToSelector: '.x_textarea' })%>
+
+1. Create all_controls table (1)
+2. Create form / grid for "all_controls" (1)
+3. form with multiple date formats (0.5)
+4. Checkbox with varchar value - Y/N (1)
+5. Checkbox with value_hidden
+6. ** Dynamic clips based on divs (1)
+9. ** Add static dropdown values
 
 label
   .value -> ?? Rendered ??
@@ -55,7 +163,8 @@ checkbox
   },
 
 ** Which controls are grid-only???
-  'hidden','label','html','textbox','textzoom','date','textarea','dropdown','checkbox','button','linkbutton'
+  'label','html','textbox','textzoom','dropdown','date','textarea','hidden','button','linkbutton','checkbox'
+  + 'file_download'
   *** Add password to make all of the standard controls grid-editable
 
 ** Which controls are supported on multisel??

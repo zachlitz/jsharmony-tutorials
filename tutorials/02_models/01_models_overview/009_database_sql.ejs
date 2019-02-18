@@ -471,7 +471,11 @@ If the user searches the c_name field for any rows containing "ACME":
 </pre>
 
 <h4>field.sqlsearchsound</h4>
-For grids, use the specified Soundex search expression.
+For grids, use the specified Soundex search expression.  The field supports the following variables:
+<ul>
+  <li>%%%FIELD%%% - Will be replaced by the search query</li>
+  <li>%%%SOUNDEX%%% - Will be replaced by a Soundex of the search query</li>
+</ul>
 <pre>
 {
   "fields":[

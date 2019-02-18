@@ -1,0 +1,14 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<div style='border:3px solid red;float:left;'>"},
+      {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+      {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
+      {"name":"x_dropdown", "control":"dropdown"},
+    {"control":"html","value":"</div>"}
+  ]
+}

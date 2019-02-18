@@ -2,6 +2,7 @@ pragma foreign_keys = ON;
 
 begin;
 
+drop table if exists allcontrols;
 drop table if exists alltypes;
 drop view if exists v_cc;
 drop view if exists v_c;
@@ -251,6 +252,58 @@ insert into alltypes(
   'Test3',
   X'001100'
 );
+
+/*********ALLCONTROLS*********/
+create table allcontrols (
+  x_primary integer primary key autoincrement not null,
+  x_label text,
+  x_html text,
+  x_textbox text,
+  x_textzoom text,
+  x_dropdown text,
+  x_date text,
+  x_textarea text,
+  x_hidden text,
+  x_checkbox integer,
+  x_password text
+);
+insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_date, x_textarea, x_hidden, x_checkbox, x_password)
+values (
+  'Test Label',
+  '<b>Test</b> HTML',
+  'Test Textbox',
+  'Test Textzoom
+Test Line 2
+Test Line 3',
+  'VALUE1',
+  '2019-01-19',
+  'Test Textarea
+Test Line 2
+Test Line 3
+Test Line 4
+Test Line 5',
+  'Test Hidden Field',
+  '1',
+  'Test Password'
+);
+insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_date, x_textarea, x_hidden, x_checkbox, x_password)
+values (
+  'Test Label',
+  '<b>Test</b> HTML',
+  'Test Textbox',
+  'Test Textzoom
+Test Line 2
+Test Line 3',
+  'VALUE1',
+  '2019-01-19',
+  'Test Textarea
+Test Line 2
+Test Line 3',
+  'Test Hidden Field',
+  '0',
+  'Test Password'
+);
+
 
 insert into jsharmony.pe(pe_id,pe_fname,pe_lname,pe_email,pe_startdt,pe_pw1,pe_pw2)
   select 1, 'Admin', 'User', 'admin@jsharmony.com', datetime('now','localtime'),'******','******'

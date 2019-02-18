@@ -85,7 +85,8 @@ Then, the "sqlsearchsound" expression can be used in the field to search the sou
 <pre>
 "sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
 </pre>
-The %%%FIELD%%% variable will be replaced by the search query.
+The %%%FIELD%%% variable will be replaced by the search query.<br/>
+The %%%SOUNDEX%%% variable will be replaced by a Soundex of the search query
 
 <h4>Removing a Field from the Search Drop-down</h4>
 Setting a field's "disable_search" property to true will remove the field from the search drop-down.
