@@ -4,6 +4,8 @@ var should = require('should');
 const fs = require("fs");
 const path = require("path");
 const ejs = require('ejs');
+var async = require('async');
+var HelperFS = require('jsharmony/HelperFS');
 const test_dir = path.dirname(__filename);
 const data_dir = path.join(test_dir,'test-app','data');
 const result_file = path.join(test_dir,'comparing-screenshots-test.html');
@@ -21,10 +23,11 @@ afterEach(function() {
 before(function(done) {
   this.timeout(600000); // set test timeout long process to generate screenshots
   console.log('\n\rBefore Test global');
-  create_dir(data_dir);
-  create_dir(regenerated_screenshots_path);
-  delete_directory(diff_screenshots_path);
-  create_dir(diff_screenshots_path);
+  HelperFS.createFolderIfNotExistsSync(data_dir);
+  HelperFS.rmdirRecursiveSync(regenerated_screenshots_path);
+  HelperFS.createFolderIfNotExistsSync(regenerated_screenshots_path);
+  HelperFS.rmdirRecursiveSync(diff_screenshots_path);
+  HelperFS.createFolderIfNotExistsSync(diff_screenshots_path);
   var cp = require('child_process');
   var n = cp.fork(test_dir + '/test-app/app.test.js');
   n.addListener('exit',function (err) {
@@ -42,10 +45,10 @@ before(function(done) {
 after(function () {
   console.log('after');
   if (global_test_state === 'passed') {
-    delete_directory(data_dir);
-    delete_directory(regenerated_screenshots_path);
-    delete_directory(diff_screenshots_path);
-    delete_directory(path.join(test_dir,'test-app','models'));
+    HelperFS.rmdirRecursiveSync(data_dir);
+    HelperFS.rmdirRecursiveSync(regenerated_screenshots_path);
+    HelperFS.rmdirRecursiveSync(diff_screenshots_path);
+    HelperFS.rmdirRecursiveSync(path.join(test_dir,'test-app','models'));
   }
 });
 
@@ -132,24 +135,4 @@ function gmCompareImagesWrapper(path1, path2, options) {
       return resolve(isEqual);
     });
   })
-}
-
-function delete_directory(dir_path) {
-  if (fs.existsSync(dir_path)) {
-    fs.readdirSync(dir_path).forEach(function(entry) {
-      var entry_path = path.join(dir_path, entry);
-      if (fs.lstatSync(entry_path).isDirectory()) {
-        delete_directory(entry_path);
-      } else {
-        fs.unlinkSync(entry_path);
-      }
-    });
-    fs.rmdirSync(dir_path);
-  }
-}
-
-function create_dir(dir) {
-  if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
-  }
 }
