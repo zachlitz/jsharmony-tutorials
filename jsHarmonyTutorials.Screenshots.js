@@ -96,7 +96,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
       page.goto(fullurl).then(function(){
         page.evaluate(params.onload).then(function(){
           var takeScreenshot = function(){
-            console.log(_this.basepath + '/public/screenshots/'+fname);
+            console.log(_this.basepath + _this.options.screenshot_folder+fname);
             var screenshotParams = { path: fpath, type: 'png' };
             if(params.height){
               screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
