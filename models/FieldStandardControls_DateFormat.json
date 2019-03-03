@@ -1,0 +1,11 @@
+{
+  "layout":"form",
+  "unbound":true,
+  "onecolumn":true,
+  "caption": ["Date Format", "Date Formats"],
+  "fields": [
+    {"control":"date", "format": ["date", "YYYY-MM-DD"], "value": "2019-02-21", "caption":"YYYY-MM-DD"},
+    {"control":"date", "format": ["date", "MM/DD/YYYY"], "value": "2019-02-21", "caption":"MM/DD/YYYY"},
+    {"control":"date", "format": ["date", "ddd MM/DD/YY"], "value": "2019-02-21", "caption":"ddd MM/DD/YY"}
+  ]
+}

@@ -8,7 +8,7 @@
     {"control":"html","value":"<div style='border:3px solid red;float:left;'>"},
       {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
       {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
-      {"name":"x_dropdown", "control":"dropdown"},
+      {"name":"x_dropdown", "control":"dropdown","caption":"Dropdown"},
     {"control":"html","value":"</div>"}
   ]
 }

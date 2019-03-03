@@ -32,7 +32,7 @@ module.exports = exports = {};
 |    SCREENSHOTS   |
 *******************/
 
-exports.DEFAULT_SCREENSHOT_SIZE = [950, 400];
+exports.DEFAULT_SCREENSHOT_SIZE = [950, 700];
 
 exports.generateScreenshots = function(callback){
   var _this = this;
@@ -84,6 +84,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     height: null,
     trim: true,
     resize: null, //{ width: xxx, height: yyy }
+    postClip: null, //{ x: 0, y: 0, width: xxx, height: yyy }
     cropToSelector: null, //Selector
     onload: function(){},
     waitBeforeScreenshot: 0
@@ -135,8 +136,8 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
               setTimeout(function(){
                 console.log(_this.basepath + '/public/screenshots/'+fname);
                 var screenshotParams = { path: fpath, type: 'png' };
-                if(cropRectangle) screenshotParams.clip = cropRectangle;
-                else if(params.height){
+                if(cropRectangle) params.postClip = cropRectangle;
+                if(params.height){
                   screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
                 }
                 else screenshotParams.fullPage = true;
@@ -151,7 +152,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
               }, params.waitBeforeScreenshot);
             }
             if(params.beforeScreenshot){
-              params.beforeScreenshot(jsh, page, takeScreenshot);
+              params.beforeScreenshot(jsh, page, takeScreenshot, cropRectangle);
             }
             else takeScreenshot();
           }).catch(function (err) { jsh.Log.error(err); });
@@ -164,6 +165,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
 exports.processScreenshot = function(fpath, params, callback){
   var _this = this;
   var img = imagick(fpath);
+  if(params.postClip) img.crop(params.postClip.width, params.postClip.height, params.postClip.x, params.postClip.y);
   if(params.trim) img.trim();
   if(params.resize){
     img.resize(params.resize.width||null, params.resize.height||null);

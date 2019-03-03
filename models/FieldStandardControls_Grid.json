@@ -4,18 +4,20 @@
   "caption": ["Item", "Items"],
   "popup":[900,400],
   "fields": [
+    {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+    {"name":"x_textarea", "control":"textarea", "caption":"Textarea"},    
+    {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
+    {"name":"x_dropdown", "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" } },"caption":"Dropdown"},
+    {"name":"x_date", "control":"date", "caption":"Date"},
+    {"name":"x_checkbox", "control":"checkbox", "caption":"Checkbox"},
     {"name":"x_label", "control":"label","caption":"Label"},
+    {"control":"label","sqlselect":"x_label","type":"varchar", "link":"update:FieldStandardControls_Form", "caption":"Label with Link"},
     {"control":"label","value":"<b>Static</b> Label","caption":"Static Label","controlclass":"static_label"},
     {"control":"label","value":"<b>Static w/EJS:</b> <#=data.x_label#>","caption":"Static Label w/EJS","controlclass":"static_label_with_ejs"},
     {"name":"x_html", "control":"html","caption":"HTML from DB"},
     {"control":"html","sqlselect":"('<b>Dynamic DB EJS</b> <#=data.x_label#>')","type":"varchar","caption":"HTML from DB w/EJS","controlclass":"html_with_ejs"},
     {"control":"html","value":"<span class='static_html'><b>Static</b> HTML</span>","caption":"Static HTML"},
-    {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
-    {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
-    {"name":"x_dropdown", "control":"dropdown", "lov": { "values": { "VALUE1": "Element 1", "VALUE2": "Element 2" } }},
-    {"name":"x_date", "control":"date"},
-    {"name":"x_textarea", "control":"textarea"},
-    {"name":"x_hidden", "control":"hidden"},
-    {"name":"x_checkbox", "control":"checkbox"}
+    {"control":"html","value":"<img src='/images/icon_edit.png' height=12 />", "link":"update:FieldStandardControls_Form", "caption":"Static HTML with Link","cellstyle":"text-align:center;"},
+    {"name":"x_hidden", "control":"hidden"}    
   ]
 }
