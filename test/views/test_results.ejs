@@ -9,5 +9,16 @@
   }
 </style>
 <% for(var k in failImages){ %>
-  <%- include('screenshot_compare_block',{img:failImages[k]}); %>
+  <div class="comp">
+    <h2>Screenshot name: <%= failImages[k].name; %></h2>
+    <img src="<%= live_screenshots_path%>/<%= failImages[k].name; %>"><br>
+    <b>Reason of fail: <span style="color: red;"><%= failImages[k].reason; %></span> </b>
+    <% if (failImages[k].reason == 'Images not the same.'){ %>
+      <h3>Regenerated image:</h3>
+      <img src="<%= regenerated_screenshots_path%>/<%= failImages[k].name; %>">
+      <h3>Differences:</h3>
+      <img src="<%= diff_screenshots_path%>/<%= failImages[k].name; %>">
+    <% } %>
+    <hr>
+  </div>
 <% } %>
