@@ -155,8 +155,8 @@ function generateFailImagesResultPage(failImages){
       },
       {async:false},
       function(err, str){
-        if(err)reject(err);
-        resolve(str);
+        if(err) return reject(err);
+        return resolve(str);
       }
     );
   })
