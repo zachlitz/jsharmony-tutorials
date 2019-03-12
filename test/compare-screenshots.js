@@ -1,6 +1,7 @@
 var gm = require('gm');
 var imageMagick = gm.subClass({ imageMagick: true });
 var im = imageMagick();
+var _ = require('lodash');
 const fs = require("fs");
 const path = require("path");
 const ejs = require('ejs');
@@ -42,9 +43,6 @@ after(function () {
   }
 });
 
-
-
-
 describe('Compare Screenshots', function() {
   it('should directory: public/screenshots exist and have files', function() {
     checkDirectory(live_screenshots_path);
@@ -54,54 +52,7 @@ describe('Compare Screenshots', function() {
     checkDirectory(test_screenshots_path);
   });
 
-  // wait for done to be called (compares 5 images at the time)
-  it.skip('should existing and generated images be equal DONE', function(done) {
-    this.timeout(60000);
-    let files = fs.readdirSync(live_screenshots_path);
-    console.log('# of existing images to test '+files.length);
-    console.log('# of generated images to test '+fs.readdirSync(test_screenshots_path).length);
-    let failImages = [];
-    async.eachLimit(
-      files,
-      5,
-      function(imageName,callback){
-        compareScreenshots(imageName,0.01).then(function (isEqual) {
-          // console.log('isEqual: '+isEqual);
-          if (!isEqual){
-            failImages.push({name:imageName,reason: 'Images not the same.'});
-          }
-          callback(null,failImages);
-        }).catch(function (err) {
-          failImages.push({name:imageName,reason:'New image not exist'});
-          callback(null,failImages);
-        });
-      }
-      ,function (err) {
-        if(err){
-          done(new Error('Comparison fails. Error:'+er));
-        }else{
-          if(failImages.length == 0) return done();
-          else{
-            console.log('# of fail images(not generated and not the same): '+failImages.length);
-            generateFailImagesResultPage(failImages).then(
-              function (html) {
-                fs.writeFile(result_file, html,{}, function(err, data){
-                  if (err) console.log(err);
-                  console.log("Result successfully written to File.");
-                  done(new Error('Some fails. Please check : '+result_file));
-                });
-              }
-            ).catch(function (er) {
-              done(new Error('Some fails, but can\'t generate errors file. Error:'+er));
-            });
-          }
-        }
-      }
-    )
-  });
-
-  // waits for return of promise (compares elem in sync way)
-  it('should existing and generated images be equal ASYNC', function(done) {
+  it('should existing and generated images be equal', function(done) {
     this.timeout(600000);
     let files = fs.readdirSync(live_screenshots_path);
     console.log('# of existing images to test '+files.length);
@@ -123,14 +74,13 @@ describe('Compare Screenshots', function() {
         compareScreenshots(imageName,{file: path.join(diff_screenshots_path,imageName)}).then(function(){ return file_cb(); }).catch(function(e){ return file_cb(); });
       });
     }, function(err){
-      console.log('# fail: '+Object.keys(failImages).length);
-
+      console.log('# fail: '+_.keys(failImages).length);
       generateFailImagesResultPage(failImages).then(function(html){
         fs.writeFile(result_file, html, function(err, data){
           if (err) console.log(err);
           console.log("Successfully Written to File.");
         });
-        assert(Object.keys(failImages).length==0,"Where "+Object.keys(failImages).length+" generated images not equal. <a href='"+result_file+"' >here</a>");
+        assert(_.keys(failImages).length===0,"Where "+_.keys(failImages).length+" generated images not equal. <a href='"+result_file+"' >here</a>");
         return done();
       }).catch(done);
     });
@@ -153,7 +103,7 @@ function generateFailImagesResultPage(failImages){
         diff_screenshots_path:diff_screenshots_path,
         failImages: failImages,
       },
-      {async:false},
+      {},
       function(err, str){
         if(err) return reject(err);
         return resolve(str);
@@ -161,8 +111,6 @@ function generateFailImagesResultPage(failImages){
     );
   })
 }
-
-
 
 function gmCompareImagesWrapper(srcpath, cmppath, options) {
   return new Promise((resolve, reject)=> {
@@ -175,7 +123,7 @@ function gmCompareImagesWrapper(srcpath, cmppath, options) {
         if (err) return reject(err);
         return resolve(isEqual);
       });
-    }
+    };
     //Check for differences without generating a difference image
     if(!options.file) return fcmp();
     else{
@@ -217,7 +165,6 @@ function gmCompareImagesWrapper(srcpath, cmppath, options) {
 }
 
 function start_harmony(cb) {
-  // var jsHarmonyTutorials = require('./../jsHarmonyTutorials.js');
   var jsHarmonyTutorials = require('./../index.js');
   var jsh = new jsHarmonyTutorials.Application();
   jsh.Config.appbasepath = path.join(__dirname,'test-app');
