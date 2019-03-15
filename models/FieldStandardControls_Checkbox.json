@@ -1,0 +1,13 @@
+{
+  "layout":"form",
+  "unbound":true,
+  "onecolumn":true,
+  "caption": ["Checkbox"],
+  "fields": [
+    {"control":"checkbox", "controlparams":{"value_true":"ACTIVE","value_false":"INACTIVE"}, "default": "ACTIVE", "caption":"Varchar Checkbox - On"},
+    {"control":"checkbox", "controlparams":{"value_true":"ACTIVE","value_false":"INACTIVE"}, "default": "INACTIVE", "caption":"Varchar Checkbox - Off"},
+    {"control":"checkbox", "controlparams":{"value_true":"Y","value_false":"N","value_hidden":""}, "default": "Y", "caption":"Hidable Checkbox - On"},
+    {"control":"checkbox", "controlparams":{"value_true":"Y","value_false":"N","value_hidden":""}, "default": "N", "caption":"Hidable Checkbox - Off"},
+    {"control":"checkbox", "controlparams":{"value_true":"Y","value_false":"N","value_hidden":""}, "default": "", "caption":"Hidable Checkbox - Hidden"}
+  ]
+}

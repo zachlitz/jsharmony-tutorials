@@ -11,14 +11,22 @@
     {"name":"x_dropdown", "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" } },"caption":"Dropdown"},
     {"name":"x_date", "control":"date", "caption":"Date"},
     {"name":"x_checkbox", "control":"checkbox", "caption":"Checkbox"},
+    {"control":"button","link":"update:FieldStandardControls_Form", "caption":"Button", "controlclass":"x_button"},
+    {"control":"linkbutton","link":"update:FieldStandardControls_Form", "caption":"Linkbutton", "controlclass":"x_linkbutton"},
+    {"name":"x_password", "control":"password","caption":"Password"},
+    {"control":"password","caption":"Confirm Password","unbound":true,"validate":["Equals:x_password"]},
     {"name":"x_label", "control":"label","caption":"Label"},
     {"control":"label","sqlselect":"x_label","type":"varchar", "link":"update:FieldStandardControls_Form", "caption":"Label with Link", "controlclass": "label_with_link"},
+    {"control":"label","sqlselect":"x_label","type":"varchar", "link":"js:XExt.Alert('Sample popup');", "caption":"Label with JavaScript Link", "controlclass": "label_with_javascript_link"},
+    {"control":"label","sqlselect":"x_label","type":"varchar", "onclick":"window.open('/','_blank');", "caption":"Label with JavaScript Click Event", "controlclass": "label_with_javascript_click_event"},
     {"control":"label","value":"<b>Static</b> Label","caption":"Static Label","controlclass":"static_label"},
     {"control":"label","value":"<b>Static w/EJS:</b> <#=data.x_label#>","caption":"Static Label w/EJS","controlclass":"static_label_with_ejs"},
     {"name":"x_html", "control":"html","caption":"HTML from DB"},
     {"control":"html","sqlselect":"('<b>Dynamic DB EJS</b> <#=data.x_label#>')","type":"varchar","caption":"HTML from DB w/EJS","controlclass":"html_with_ejs"},
     {"control":"html","value":"<span class='static_html'><b>Static</b> HTML</span>","caption":"Static HTML"},
     {"control":"html","value":"<img class='html_with_link' src='/images/icon_edit.png' height=12 />", "link":"update:FieldStandardControls_Form", "caption":"Static HTML with Link"},
+    {"control":"html","sqlselect":"'HTML from DB '||x_primary","type":"varchar","link":"js:XExt.Alert('Sample popup');", "caption":"HTML from DB with JavaScript Link"},
+    {"control":"html","sqlselect":"'HTML from DB '||x_primary","type":"varchar","onclick":"window.open('/','_blank');", "caption":"HTML from DB with JavaScript Click Event"},
     {"name":"x_hidden", "control":"hidden"}
   ]
 }

@@ -290,7 +290,7 @@ insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_da
 values (
   'Test Label',
   '<b>Test</b> HTML',
-  'Test Textbox',
+  'Textbox Second Row',
   'Test Textzoom
 Test Line 2
 Test Line 3',
