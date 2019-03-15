@@ -34,9 +34,10 @@ module.exports = exports = {};
 
 exports.DEFAULT_SCREENSHOT_SIZE = [950, 700];
 
-exports.generateScreenshots = function(callback){
+exports.generateScreenshots = function(options,callback){
   var _this = this;
   var jsh = _this.jsh;
+  _this.options = _.extend({ screenshot_folder: path.join('public','screenshots')}, options);
 
   puppeteer.launch({ ignoreHTTPSErrors: true, ignoreDefaultArgs: [ '--hide-scrollbars' ] /*, headless: false*/ }).then(function(browser){
     HelperFS.funcRecursive(_this.tutfolder,function(filepath, file_cb){
@@ -53,7 +54,7 @@ exports.generateScreenshots = function(callback){
           _: _
         });
 
-        async.eachSeries(screenshots, function(screenshot, screenshot_cb){
+        async.eachLimit(screenshots, 4, function(screenshot, screenshot_cb){
           _this.generateScreenshot(browser, screenshot.url, screenshot.desc, screenshot.params, screenshot_cb);
         }, function(err){
           if(err){ jsh.Log.error(err); }
@@ -72,7 +73,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   var jsh = _this.jsh;
   if(!url || (url[0] != '/')) url = '/' + url;
   var fname = this.getScreenshotFilename(url, desc, params);
-  var fpath = _this.basepath + '/public/screenshots/'+fname;
+  var fpath = path.join(_this.basepath, _this.options.screenshot_folder ,fname);
 
   //Do not generate screenshot if image already exists
   if(fs.existsSync(fpath)) return callback();
