@@ -23,7 +23,529 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "ID": "fields_standard_controls",
   "Title": "Standard Controls",
   "Menu": ["Models","Fields / Controls","Built-in Controls"],
-  "Code": ["/models/CL.json"]
+  "Code": [
+    "/models/FieldStandardControls_Form.json",
+    "/models/FieldStandardControls_Grid.json",
+    "/models/FieldStandardControls_DateFormat.json",
+    "/models/FieldStandardControls_Checkbox.json",
+    "/models/FieldStandardControls_Button.json",
+    "/models/FieldStandardControls_Linkbutton.json",
+    "/models/FieldStandardControls_HTMLContainer.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldStandardControls_Form?action=update&x_primary=1", "title": "Standard Controls - Form" },
+    { "url": "jsHarmonyTutorials/FieldStandardControls_Grid", "title": "Standard Controls - Grid" },
+    { "url": "jsHarmonyTutorials/FieldStandardControls_DateFormat", "title": "Date Formatting" },
+    { "url": "jsHarmonyTutorials/FieldStandardControls_Checkbox", "title": "Checkbox States" },
+    { "url": "jsHarmonyTutorials/FieldStandardControls_Button?action=update&x_primary=1", "title": "Button Events" },
+    { "url": "jsHarmonyTutorials/FieldStandardControls_Linkbutton?action=update&x_primary=1", "title": "Linkbutton Events" },
+    { "url": "jsHarmonyTutorials/FieldStandardControls_HTMLContainer?action=update&x_primary=1", "title": "HTML Wrappers / Containers" }
+  ]
 }
 </script>
-Standard Controls
+
+<h3>Overview</h3>
+jsHarmony has a variety of standard controls that are available in form, form-m, and grid layouts.
+
+<h3>Textbox</h3>
+The textbox control is used for both entering and displaying data:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textbox', { cropToSelector: '.x_textbox' })%>
+<pre>
+{
+  "name":"x_textbox",
+  "control":"textbox"
+}
+</pre>
+
+<h3>Textarea</h3>
+The textarea control renders a multiline textbox.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textarea', { cropToSelector: '.x_textarea' })%>
+
+<pre>
+{
+  "name":"x_textarea",
+  "control":"textarea"
+}
+</pre>
+
+<h3>Textzoom</h3>
+The textzoom control is a compromise between the textarea and the textbox controls.  The textzoom displays the data in one line, and has a popup window for editing longer or multiline data.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textzoom', { cropToSelector: '.x_textzoom,.xtextzoom' })%>
+
+<pre>
+{
+  "name":"x_textzoom",
+  "control":"textzoom"
+}
+</pre>
+
+Clicking on the magnifying glass will open a popup with a multiline textbox:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Textzoom Popup', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.x_textzoom').next().click();
+  window.setTimeout(function(){
+    return resolve();
+  }, 100);
+}); }
+})%>
+
+<h3>Dropdown</h3>
+
+The dropdown control is used to select from a List of Values.  More information about configuring List of Values can be found in the <a href="/tutorials/list_of_values_basic">List of Values</a> tutorial.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Dropdown', { cropToSelector: '.x_dropdown' })%>
+
+<pre>
+{
+  "name":"x_dropdown",
+  "control":"dropdown",
+  "lov": {
+    "values": {
+      "VALUE1": "Display Text 1",
+      "VALUE2": "Display Text 2"
+    }
+  }
+}
+</pre>
+
+Clicking on the dropdown will open the list of values:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1', 'Standard Controls - Dropdown Open', { cropToSelector: '.x_dropdown', waitBeforeScreenshot: 100, beforeScreenshot:function(jsh, page, cb, cropRectangle){
+  if(cropRectangle) cropRectangle.height += 65;
+  page.click('.x_dropdown').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
+
+
+<h3>Date</h3>
+
+The date control is used for selecting a date from a calendar control.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Date', { cropToSelector: '.x_date' })%>
+
+<pre>
+{
+  "name":"x_date",
+  "control":"date"
+}
+</pre>
+
+An input mask is applied to the date textbox.  Clicking on the date textbox will open a date picker:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Date Dropdown', { cropToSelector: '.x_date, .ui-datepicker', onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.x_date').datepicker('show');
+  window.setTimeout(function(){
+    return resolve();
+  }, 100);
+}); }
+})%>
+
+The date control should not be used for combined date/time fields, since the date control does not support the time component.<br/>
+<br/>
+The date control uses the jQuery UI Datepicker, and the date format is configured via the field.format property, which is defined as follows:
+<pre>
+{
+  "name":"x_date",  
+  "control":"date",
+  "format": ["date", "YYYY-MM-DD"]
+}
+
+The date format uses Moment.js, and supports the following tokens:
+D     - day of month (no leading zero)
+DD    - day of month (two digit)
+DDD   - day of the year (no leading zeros)
+DDDD  - day of the year (three digit)
+ddd   - day name short
+dddd  - day name long
+M     - month of year (no leading zero)
+MM    - month of year (two digit)
+MMM   - month name short
+MMMM  - month name long
+YY    - year (two digit)
+YYYY  - year (four digit)
+X     - Unix timestamp (ms since 01/01/1970)
+
+For example:
+"M/D/YY" => "3/1/19"
+</pre>
+
+The following example uses the date control on unbound fields:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_DateFormat?popup=1','Standard Controls - Date Formatting')%>
+<pre>
+{
+  "layout":"form",
+  "unbound":true,
+  "onecolumn":true,
+  "caption": ["Date Format", "Date Formats"],
+  "fields": [
+    {"control":"date", "format": ["date", "YYYY-MM-DD"], "default": "2019-02-21", "caption":"YYYY-MM-DD"},
+    {"control":"date", "format": ["date", "MM/DD/YYYY"], "default": "2019-02-21", "caption":"MM/DD/YYYY"},
+    {"control":"date", "format": ["date", "ddd MM/DD/YY"], "default": "2019-02-21", "caption":"ddd MM/DD/YY"}
+  ]
+}
+</pre>
+
+<h3>Checkbox</h3>
+
+The checkbox is used for selecting an on/off value.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Checkbox', { cropToSelector: '.x_checkbox' })%>
+
+<pre>
+{
+  "name":"x_checkbox",
+  "control":"checkbox"
+}
+</pre>
+
+The checkbox has the following controlparams:
+
+<pre>
+{
+  "name":"x_checkbox",
+  "control":"checkbox",
+  "controlparams": {
+    "value_true":"ON",
+    "value_false":"OFF",
+    "value_hidden":""
+  },
+}
+</pre>
+
+The checkbox controlparams can be used to customize the on/off/hidden state based on database data.
+<ul>
+  <li><b>value_true</b> defines the database value that will cause the column to be checked</li>
+  <li><b>value_false</b> defines the database value that will cause the column to be unchecked</li>
+  <li><b>value_hidden</b> (optional) defines the database value that will hide the checkbox</li>
+</ul>
+
+The following example uses the checkbox with unbound fields:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Checkbox?popup=1','Standard Controls - Checkbox Custom Parameters')%>
+<pre>
+{
+  "layout":"form",
+  "unbound":true,
+  "onecolumn":true,
+  "caption": ["Checkbox"],
+  "fields": [
+    {"control":"checkbox", "controlparams":{"value_true":"ACTIVE","value_false":"INACTIVE"}, "default": "ACTIVE", "caption":"Varchar Checkbox - On"},
+    {"control":"checkbox", "controlparams":{"value_true":"ACTIVE","value_false":"INACTIVE"}, "default": "INACTIVE", "caption":"Varchar Checkbox - Off"},
+    {"control":"checkbox", "controlparams":{"value_true":"Y","value_false":"N","value_hidden":""}, "default": "Y", "caption":"Hidable Checkbox - On"},
+    {"control":"checkbox", "controlparams":{"value_true":"Y","value_false":"N","value_hidden":""}, "default": "N", "caption":"Hidable Checkbox - Off"},
+    {"control":"checkbox", "controlparams":{"value_true":"Y","value_false":"N","value_hidden":""}, "default": "", "caption":"Hidable Checkbox - Hidden"}
+  ]
+}
+</pre>
+
+<h3>Button</h3>
+The button control renders a button that can run JavaScript or open another form:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Button', { cropToSelector: '.x_button' })%>
+
+<pre>
+{
+  "control":"button",
+  "link":"update:FieldStandardControls_Form",
+  "caption":"Button"
+}
+</pre>
+
+<ul>
+  <li>The field.value property can be used to set the button text.  If field.value is not set, then field.caption or field.name will be used as the button text.</li>
+  <li>The field.link property can be used to open another form or run JavaScript (via the js: prefix) when the button is clicked</li>
+  <li>The field.onclick property can be used to run JavaScript when the button is clicked</li>
+</ul>
+Setting the field.onclick property will override the field.link property.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Button?popup=1&action=update&x_primary=1','Standard Controls - Button Links')%>
+<pre>
+{
+  "table":"allcontrols",
+  "layout":"form",
+  "caption": ["Button"],
+  "fields": [
+    {"name":"x_primary","control":"label","eol":1},
+    {"control":"button", "value":"Edit Record", "link":"update:FieldStandardControls_Form"},
+    {"control":"button", "value":"Run JavaScript", "link":"js:XExt.Alert('Sample Popup');"},
+    {"control":"button", "value":"Open URL", "onclick":"window.open('/','_blank');"}
+  ]
+}
+</pre>
+
+More information about setting the field.link property can be found in the <a href="/tutorials/field_links">Field Links</a> tutorial.
+
+<h3>Linkbutton</h3>
+The linkbutton control renders standard link that can run JavaScript or open another form:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Linkbutton', { cropToSelector: '.x_linkbutton' })%>
+
+<pre>
+{
+  "control":"linkbutton",
+  "link":"update:FieldStandardControls_Form",
+  "caption":"Linkbutton"
+}
+</pre>
+
+<ul>
+  <li>The field.value property can be used to set the link text.  If field.value is not set, then field.caption or field.name will be used as the link text.</li>
+  <li>The field.link property can be used to open another form or run JavaScript (via the js: prefix) when the link is clicked</li>
+  <li>The field.onclick property can be used to run JavaScript when the link is clicked</li>
+</ul>
+Setting the field.onclick property will override the field.link property.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Linkbutton?popup=1&action=update&x_primary=1','Standard Controls - Linkbutton Links')%>
+<pre>
+{
+  "table":"allcontrols",
+  "layout":"form",
+  "caption": ["Linkbutton"],
+  "fields": [
+    {"name":"x_primary","control":"label","eol":1},
+    {"control":"linkbutton", "value":"Edit Record", "link":"update:FieldStandardControls_Form"},
+    {"control":"linkbutton", "value":"Run JavaScript", "link":"js:XExt.Alert('Sample Popup');"},
+    {"control":"linkbutton", "value":"Open URL", "onclick":"window.open('/','_blank');"}
+  ]
+}
+</pre>
+
+<h3>Password</h3>
+The password control renders a textbox where the content is hidden as the user types:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Password', { cropToSelector: '.x_password', onload:function(){ return new Promise(function(resolve){
+  document.querySelector('.x_password').value = 'password';
+  window.setTimeout(function(){
+    return resolve();
+  }, 100);
+}); }
+})%>
+
+<pre>
+{
+  "name":"x_password",
+  "control":"password",
+  "caption":"Password"
+}
+</pre>
+
+By default, a password control that is bound to a database field will have the following properties set:
+<pre>
+{
+  "controlparams": {"update_when_blank": false},
+  "actions":"IU",
+  "validate":[
+    {"function":"Required","actions":"I"},
+    "MinLength:8"
+  ]
+}
+</pre>
+
+<ul>
+  <li><b>controlparams</b>: The "update_when_blank" controlparam excludes the password from being saved during update, if it is blank.  The default value is "false", so that the password update will be optional.</li>
+  <li><b>actions</b>: The "B" action will not be enabled by default, so that passwords will not be downloaded from the database</li>
+  <li>
+    <b>validate</b>: Two validators will be added:<br/>
+    &nbsp; &nbsp; A "Required" validator for the insert operation (or all operations if controlparams.update_when_blank is true)<br/>
+    &nbsp; &nbsp; A "MinLength" validator, requiring a minimum password length of 8
+  </li>
+</ul>
+
+An unbound field will not have the field.validate and field.actions parameters automatically added.
+
+<h4>Confirm Password</h4>
+Most password implementations have an additional field requiring the user to confirm the password:
+<pre>
+{
+  "control":"password",
+  "caption":"Confirm Password",
+  "unbound":true,
+  "validate":["Equals:x_password"]
+},
+</pre>
+
+<h4>Security</h4>
+It is recommended not to store plain-text passwords in the database.  Tables with passwords should have a trigger that generates a hash, and then clears out the value of the password field.
+
+<h3>Label</h3>
+The label control provides a read-only display of data.  Label controls are wrapped within a div tag, and re-rendered each time the data is selected from the database.
+
+<h4>Standard Label - Render Database Column as Text</h4>
+A label control without the field.value property will render the database value as text, and escape any special characters:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Label', { cropToSelector: '.x_label' })%>
+<pre>
+{
+  "name":"x_label",
+  "control":"label"
+}
+</pre>
+
+<h4>Label with Link</h4>
+Labels can link to other forms by using the field.link property:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Label with Link', { cropToSelector: '.label_with_link' })%>
+<pre>
+{
+  "name":"x_label",
+  "control":"label",
+  "link":"update:FieldStandardControls_Form"
+}
+</pre>
+More information about setting the field.link property can be found in the <a href="/tutorials/field_links">Field Links</a> tutorial.
+
+<h4>Label with JavaScript Link</h4>
+Labels with links can run JavaScript by prefixing the field.link property with "js:":
+<pre>
+{
+  "name":"x_label",
+  "control":"label",
+  "link":"js:XExt.Alert('Sample Popup');"
+}
+</pre>
+
+<h4>Label with JavaScript Click Event</h4>
+Labels can execute JavaScript when they are clicked by setting the field.onclick property.  Setting the field.onclick property will override the field.link property.
+<pre>
+{
+  "name":"x_label",
+  "control":"label",
+  "onclick":"window.open('/','_blank');"
+}
+</pre>
+
+<h4>Static Label - Render Static HTML Content</h4>
+A label control with a field.value property will render the field.value property as the contents of the label ("static label").  A label can contain static HTML, and be used for advanced elements such as links and images.  A static label will wrap the HTML content in a DIV.<br/>
+<br/>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static Label', { cropToSelector: '.static_label' })%>
+<pre>
+{
+  "control":"label",
+  "value":"<b>Static</b> Label"
+}
+</pre>
+
+<h4>Static Label with EJS - Render Dynamic EJS / HTML Content</h4>
+Static labels can also contain EJS.  The field.value will be evaluated and re-rendered each time the model data is selected from the database.  The EJS is escaped with  &lt# and #&gt.
+<br/>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static Label with EJS', { cropToSelector: '.static_label_with_ejs' })%>
+<pre>
+{
+  "control":"label",
+  "value":"<b>Static w/EJS:</b> <#=data.x_label#>"
+}
+</pre>
+
+<h3>HTML</h3>
+The HTML control can be used to either insert HTML directly into the form, or render database data as HTML.
+
+<h4>HTML Control - Render Database Column as HTML</h4>
+When used without the "value" property, an HTML field will render a database column as HTML:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - HTML', { cropToSelector: '.x_html' })%>
+<pre>
+{
+  "name":"x_html",
+  "control":"html"
+}
+</pre>
+
+<h4>HTML Control - Render Database Column with Dynamic EJS / HTML</h4>
+Database columns can also contain EJS, which will be evaluated client-side.  The EJS is escaped with  &lt# and #&gt.
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - HTML with EJS', { cropToSelector: '.html_with_ejs' })%>
+<pre>
+{
+  "control":"html",
+  "sqlselect":"('<b>Dynamic DB EJS</b> <#=data.x_label#>')",
+  "type":"varchar",
+  "caption":"HTML from DB w/EJS"
+}
+</pre>
+
+<h4>HTML Control - Render Static HTML Content</h4>
+If an HTML control has a "value" property, the field.value will be rendered directly into the page as HTML, without any bounding container (as opposed to the label, which uses a container div).
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static HTML', { cropToSelector: '.static_html' })%>
+<pre>
+{
+  "control":"html",
+  "value":"<b>Static</b> HTML"
+}
+</pre>
+
+<h4>HTML Control - Static HTML with Link</h4>
+HTML controls can link to other forms by using the field.link property:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_Form?popup=1&action=update&x_primary=1','Standard Controls - Static HTML with Link', { cropToSelector: '.html_with_link' })%>
+<pre>
+{
+  "control":"html",
+  "value":"<img src='/images/icon_edit.png' height=12 />",
+  "link":"update:FieldStandardControls_Form"
+}
+</pre>
+More information about setting the field.link property can be found in the <a href="/tutorials/field_links">Field Links</a> tutorial.
+
+<h4>HTML Control - HTML from DB with JavaScript Link</h4>
+HTML controls with links can run JavaScript by prefixing the field.link property with "js:":
+<pre>
+{
+  "control":"html",
+  "sqlselect":"'HTML from DB '||x_primary",
+  "type":"varchar",
+  "link":"js:XExt.Alert('Sample Popup');"
+}
+</pre>
+
+<h4>HTML Control - HTML from DB with JavaScript Click Event</h4>
+HTML controls can execute JavaScript when they are clicked by setting the field.onclick property.  Setting the field.onclick property will override the field.link property.
+<pre>
+{
+  "control":"html",
+  "sqlselect":"'HTML from DB '||x_primary",
+  "type":"varchar",
+  "onclick":"window.open('/','_blank');"
+}
+</pre>
+The onclick event will not work with Static HTML controls (HTML controls whose field.value is set), because Static HTML controls do not have a container.  If required, embed the JavaScript directly into the field.value.
+
+<h4>HTML - Containers</h4>
+Since the static HTML control does not create a container control when used with field.value, the html field can be used to create HTML containers around other controls:
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_HTMLContainer?popup=1&action=update&x_primary=1','Standard Controls - HTML Container')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<div style='border:3px solid red;float:left;'>"},
+      {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+      {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
+      {"name":"x_dropdown", "control":"dropdown","caption":"Dropdown"},
+    {"control":"html","value":"</div>"}
+  ]
+}
+</pre>
+
+<h3>Hidden</h3>
+The hidden field is used primarily for the following purposes:
+<ul>
+  <li>Defining key / binding fields that should not be displayed</li>
+  <li>JavaScript Integration / Additional post-load processing or actions</li>
+</ul>
+Hidden fields can be retrieve data from the database, and post data to the database, however they are not displayed on the screen.
+
+<pre>
+{
+  "name":"x_hidden",
+  "control":"hidden"
+}
+</pre>
+
+<h3>Styling Controls</h3>
+Controls can be styled using the controlclass and controlstyle properties.  More information is availabie in the <a href="/tutorials/fields_styling">Field Styling</a> tutorial.
+
+<h3>Control Availability per Model Layout</h3>
+The form, form-m, grid, exec, and report model layouts support all the standard controls above.<br/>
+<br/>
+Multisel layouts support only label and hidden fields.

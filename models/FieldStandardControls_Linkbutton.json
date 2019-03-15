@@ -1,0 +1,11 @@
+{
+  "table":"allcontrols",
+  "layout":"form",
+  "caption": ["Linkbutton"],
+  "fields": [
+    {"name":"x_primary","control":"label"},
+    {"control":"linkbutton", "value":"Edit Record", "link":"update:FieldStandardControls_Form"},
+    {"control":"linkbutton", "value":"Run JavaScript", "link":"js:XExt.Alert('Sample Popup');"},
+    {"control":"linkbutton", "value":"Open URL", "onclick":"window.open('/','_blank');"}
+  ]
+}

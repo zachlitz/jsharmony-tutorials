@@ -30,9 +30,9 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 Fields have two purposes:
 <ol>
   <li><b>In the API / Database Backend:</b> Define the columns that will be used in the model's database queries</li>
-  <li><b>In the front-end:</b> Define the fields displayed on the form or grid</li>
+  <li><b>In the front-end:</b> Define the fields and controls displayed on the form or grid</li>
 </ol>
-Columns that are not defined in the fields section will not be retrieved from the database.<br/>
+Columns that are not defined in the fields section will not be retrieved from the database, unless manual SQL overrides are used.<br/>
 <br/>
 Since there is significant overlap between the columns selected from the database and the columns displayed on the form / grid in most database systems, jsHarmony combines them into one array called "fields":
 <pre>
@@ -49,40 +49,73 @@ Since there is significant overlap between the columns selected from the databas
   ]
 }
 </pre>
+Automatic schema recognition enabled many of the above properties to be automatically generated based on the database schema.  The above model could also be written as:
+<pre>
+{
+  "table":"c",
+  "layout":"grid",
+  "title":"All Customers",
+  "caption":["Customer","Customers"],
+  "actions":"B", 
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_sts","caption":"Status"},
+    {"name":"c_name","caption":"Customer","caption_ext": "Customer Name","link":"update:C"}
+  ]
+}
+</pre>
 
 <h3>Field Name</h3>
 The field name has three purposes:
 <ol>
   <li>The field name is used as the column name in database queries</li>
-  <li>The field name is used as the control ID in rendering the front-end</li>
+  <li>The field name is used as the control class in rendering the front-end</li>
   <li>The field name is used as the internal ID to override field behavior in inherited forms</li>
 </ol>
-It is recommended to include a name for each field, even if the field is just static HTML code.<br/>
+It is recommended to include a name for each field, even if the field is just static HTML code.  This will enable the field to be overridden in inherited models.<br/>
 <br/>
 Field names should be lower-case for cross-database compatibility.
 
 <h3>Field Types</h3>
 Each of a model's database fields require a type definition.  The following types are available:
 <ul>
-  <li>"type: "varchar", "length": "30"</li>
-  <li>"type: "char", "length": "30"</li>
+  <li>
+    "type: "varchar", "length": <i>LENGTH</i>
+    &nbsp; &nbsp; &nbsp; &nbsp; ex. "type: "varchar", "length": 50
+  </li>
+  <li>
+    "type: "char", "length": <i>LENGTH</i>
+    &nbsp; &nbsp; &nbsp; &nbsp; ex. "type: "char", "length": 50
+  </li>
   <li>"type: "bigint"</li>
   <li>"type: "int"</li>
   <li>"type: "smallint"</li>
   <li>"type: "tinyint"</li>
   <li>"type: "boolean"</li>
-  <li>"type: "decimal", "precision": [10,4]</li>
-  <li>"type: "float", "precision": 53</li>
+  <li>
+    "type: "decimal", "precision": [<i>PRECISION</i>, <i>SCALE</i>]
+    &nbsp; &nbsp; &nbsp; &nbsp; ex. "type: "decimal", "precision": [10, 4]
+  </li>
+  <li>
+    "type: "float", "precision": <i>PRECISION</i>
+    &nbsp; &nbsp; &nbsp; &nbsp; ex. "type: "float", "precision": 53
+  </li>
   <li>"type: "date"</li>
   <li>"type: "time"</li>
-  <li>"type: "datetime", "precision": 7</li>
-  <li>"type: "varbinary", "length": "30"</li>
+  <li>
+    "type: "datetime", "precision": <i>PRECISION</i>
+    &nbsp; &nbsp;  &nbsp; &nbsp; ex. "type: "datetime", "precision": 7
+  </li>
+  <li>
+    "type: "varbinary", "length": <i>LENGTH</i>
+    &nbsp; &nbsp; &nbsp; &nbsp; ex. "type: "varbinary", "length": 30
+  </li>
 </ul>
 Varchar / Char/ Varbinary length can be -1 for unlimited length.  If the length is omitted, -1 is set by default.<br/>
 <br/>
 Other custom types are available on a per-database basis.  Full support for all PostgreSQL and SQL Server types is available.
 
-<h3>Field Actions</h3>
+<h3>Field Actions / Roles</h3>
 The field's "actions" property can consist of any of the following characters:
 <ul>
   <li><b>B</b> - Browse (Field is retrieved as part of the database Select statement)</li>
@@ -91,13 +124,41 @@ The field's "actions" property can consist of any of the following characters:
 </ul>
 If the "B" action is not defined, the field is not selected from the database and is not rendered to the screen.  However, the field can still be used as part of an SQL "where" condition, or as a Key or Foreign Key.<br/>
 <br/>
-One way to hide fields in inherited models is to set the field's "actions" to "" (empty string).
+One way to hide fields in inherited models is to set the field's "actions" to "" (empty string).<br/>
+<br/>
+Roles can be used to change field behavior based on user roles.  For instance, the field can be set to read-only for certain users.<br/>
+<br/>
+Learn more about Actions / Roles in the <a href="/tutorials/model_actions">Model Actions / Roles</a> tutorial.
 
 <h3>Key Fields &amp; Foreign Keys</h3>
-In order to run a Select, Update, Insert, or Delete statement, a Key field is required.  This should ideally be a bigint or int field.  If a table uses two primary keys, it is still recommended to add an identity column that contains a unique sequence number, and use the sequence number as the key in jsHarmony.  Key fields are defined by setting the "key" parameter to 1:
-<pre>{"name":"customer_id", "type":"bigint", "actions":"B", "key":1, "caption": "Customer ID"}</pre>
-Foreign Keys are columns that reference keys in other tables, and can be used in parent/child relationships.
-<pre>{"name":"department_id", "type":"varchar", "length":"32", "actions":"B", "foreignkey": 1, "caption":"Department ID"}</pre>
+In order to run a Select, Update, Insert, or Delete statement, a Key field is required.  This should ideally be a bigint or int field.  If a table uses two primary keys, it is still recommended to add an identity column that contains a unique sequence number, and use the sequence number as the key in jsHarmony.  Key fields are defined by setting the field.key property to 1:
+<pre>
+{
+  "fields": [
+    {"name":"c_id", "type": "bigint", "key": 1}
+  ]
+}
+</pre>
+Foreign Keys are columns that reference keys in other tables, and can be used in parent/child relationships - such as in subform and tab bindings.  The <b>field.foreignkey</b> attribute should be set in the following situations:
+<ul>
+  <li>When using subforms, on the foreign key of the child form (child column binding)</li>
+  <li>When using a multisel, on the foreign key id that the selected values will be linked to</li>
+</ul>
+<pre>
+{
+  "fields": [
+    {"name":"c_id", "type": "bigint", "foreignkey": 1}
+  ]
+}
+</pre>
+
+<h3>Read-only Fields</h3>
+field.readonly
+xxx
+
+<h4>Editable on Insert</h4>
+field.always_editable_on_insert
+xxxx
 
 <h3>Field Validation</h3>
 Validation is performed both Client-side before submitting the form, and Server-side before processing the form.  Validation rules are automatically added for each field based on the datatype, however additional validation rules can be added to define required fields or specify ranges.  Validation is covered in more detail in the validation section.

@@ -1,0 +1,27 @@
+{
+  "layout": "grid",
+  "title": "System Data Types",
+  "table": "alltypes",
+  "actions": "B",
+  "sort": ["^x_primary"],
+  "buttons": [{"link":"insert:FieldDataTypes_AllTypes_Form"}],
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1, "link":"update:FieldDataTypes_AllTypes_Form"},
+    {"name":"x_boolean", "type":"boolean"},
+    {"name":"x_bigint", "type":"bigint"},
+    {"name":"x_integer", "type":"integer"},
+    {"name":"x_smallint", "type":"smallint"},
+    {"name":"x_tinyint", "type":"tinyint"},
+    {"name":"x_decimal", "type":"decimal", "precision":[38,10]},
+    {"name":"x_float", "type":"float"},
+    {"name":"x_date", "type":"date"},
+    {"name":"x_datetime", "type":"datetime"},
+    {"name":"x_time", "type":"time"},
+    {"name":"x_varchar", "type":"varchar", "length":100},
+    {"name":"x_varcharmax", "type":"varchar", "length":-1},
+    {"name":"x_char", "type":"char", "length":100},
+    {"name":"x_binary", "type":"binary", "length":100},
+    {"name":"x_hash","type":"hash","salt": "alltypes_x_hash_salt","control":"label"},
+    {"name":"x_file","type":"file","controlparams":{"data_folder":"alltypes"}}
+  ]
+}

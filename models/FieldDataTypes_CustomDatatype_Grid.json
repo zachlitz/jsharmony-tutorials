@@ -1,0 +1,10 @@
+{
+  "table":"c",
+  "layout":"grid",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID","link":"update:FieldDataTypes_CustomDatatype_Form"},
+    {"name":"c_name","caption":"Customer"},
+    {"name":"c_overdue_amt","caption":"Overdue Amt","type":"money"}
+  ]
+}

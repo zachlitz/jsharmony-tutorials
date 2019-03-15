@@ -1,0 +1,10 @@
+{ 
+  "table":"allcontrols",
+  "layout":"grid",
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+    {"control":"date", "caption":"Date","unbound":true,"default":"2/3/2019"}
+  ]
+}

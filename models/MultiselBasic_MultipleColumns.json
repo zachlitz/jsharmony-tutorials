@@ -6,7 +6,7 @@
     "fields":[
       {"name":"c_id"},
       {"name":"cf_type","caption":"Flag"},
-      {"control":"html","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
+      {"control":"label","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
     ]
   },
   "MultiselBasic_MultipleColumns_CL": {

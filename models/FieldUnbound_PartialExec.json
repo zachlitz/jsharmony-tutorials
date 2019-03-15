@@ -1,0 +1,10 @@
+{ 
+  "table":"allcontrols",
+  "layout":"exec",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"date", "caption":"Date", "default":"2/3/2019","unbound":true, "actions":"B"}
+  ]
+}

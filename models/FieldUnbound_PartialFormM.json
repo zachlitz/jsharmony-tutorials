@@ -1,0 +1,11 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+    {"control":"date", "caption":"Date","unbound":true,"default":"2019-02-03"}
+  ]
+}

@@ -21,9 +21,162 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Automatic Schema Recognition",
-  "Menu": ["Models","Models Overview"]
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelAutomaticSchema_C.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/ModelAutomaticSchema_C?c_id=1&action=update", "title": "Model with Auto-generated Field Definitions" },
+    { "url": "jsHarmonyFactory/DEV_MODELS?modelid=jsHarmonyTutorials%2FModelAutomaticSchema_C", "title": "Model Viewer" }
+  ]
 }
 </script>
 
+<h3>Overview</h3>
+Automatic schema recognition significantly reduces the amount of code required by jsHarmony applications.  On system startup, the jsHarmony Server reads the schema from the database, and "fills in" missing information to models and fields.<br/>
+<br/>
+The following metadata is supported:
+<ul>
+  <li>Datatypes</li>
+  <li>Field Attributes and Validation</li>
+  <li>Primary / Foreign Keys</li>
+  <li>Controls</li>
+  <li>Drop-down Lists and List of Values</li>
+  <li>Captions and Titles</li>
+</ul>
+
+The following databases are supported:
+<ul>
+  <li>PostgreSQL</li>
+  <li>SQL Server</li>
+  <li>SQLite</li>
+</ul>
+
+<h3>Configuring Automatic Schema Recognition</h3>
+
+Automatic schema recognition is enabled by default.  Settings can be configured in app.config.js:
 <pre>
+//Automatically look up and apply database schema - data types, required fields, primary keys, controls
+config.system_settings.automatic_schema = {        //Set "automatic_schema": false to disable any initial database schema lookup
+  "metadata_captions": true, //Use database table metadata for field captions and model titles (SQL Server + Postgres)
+  "datatypes": true,         //Load data types from the database (type, length, precision)
+  "attributes": true,        //Load extended attributes from the database (required validation, primary key, read-only)
+  "controls": true,          //Load controls from the database
+  "lovs": true,              //Load LOVs (List of Values - UCOD/GCOD/UCOD2/GCOD2) from the database
+  "keys": true               //Generate primary and foreign keys based on table keys and bindings
+},
 </pre>
+
+If necessary, individual settings can be disabled, or automatic schema recognition can be fully disabled by setting the entire property to false:
+<pre>
+config.system_settings.automatic_schema = false;
+</pre>
+
+<h3>Diagnosing Problems</h3>
+When using auto-generated models, it may be necessary to view the auto-generated model properties, so that incorrect defaults can be overridden in the source model.<br/>
+<br/>
+The "Developer" tab has a "Model Viewer" tool to view the final model configuration.
+<pre>
+"ModelAutomaticSchema_C": {
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"}
+  ]
+}
+</pre>
+<%-getScreenshot('jsHarmonyFactory/DEV_MODELS?modelid=jsHarmonyTutorials%2FModelAutomaticSchema_C','Model Viewer')%>
+The generated field data types and list of values ("lov") can be seen in the Model Viewer.
+
+<h3>automatic_schema.datatypes</h3>
+Data types are recognized based on the model.table property.  Both tables and views are supported.  The following field attributes will be auto-generated if field.name matches the table column name:
+<ul>
+  <li>field.type</li>
+  <li>field.length</li>
+  <li>field.precision</li>
+</ul>
+
+<h3>automatic_schema.metadata_captions</h3>
+Metadata captions are supported only on PostgreSQL and SQL Server.
+
+<h4>model.title</h4>
+The model.title property is auto-generated based on the table comment:
+<pre>
+:: PostgreSQL
+COMMENT ON TABLE c IS 'Customers';
+
+:: SQL Server
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Customers' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'c'
+</pre>
+
+<h4>field.caption</h4>
+The field.caption property is auto-generated based on the column comment:
+:: PostgreSQL
+COMMENT ON COLUMN c.c_name IS 'Customer Name'
+
+:: SQL Server
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Customer Name' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'c', @level2type=N'COLUMN', @level2name=N'c_name'
+
+<h3>automatic_schema.attributes</h3>
+Attributes are additional field-level properties that can be added based on the database schema.  Views may not support all attributes, such as field.key.
+
+<h4>field.key</h4>
+The field.key attribute is set if the field is the primary key.
+
+<h4>field.validate</h4>
+The "Required" validator is automatically added for fields whose value cannot be null.
+
+<h4>field.foreignkey (on multisel models)</h4>
+When model.layout = "multisel", the field.foreignkey attribute is set for any field that is not the primary key or the LOV.
+
+<h4>field.action="B"</h4>
+The browse-only action is added to any field that is read-only in the database table.
+
+<h3>automatic_schema.controls</h3>
+The field.control will be automatically set based on the database field:
+<ul>
+  <li>dropdown - When field.lov is defined</li>
+  <li>label - If the field is read-only</li>
+  <li>checkbox - If the datatype field.type="boolean"</li>
+  <li>
+    If the field is read-only and the model.layout=grid
+    <ul>
+      <li>label_mmddyyyy (Date Label) - If the datatype field.type="date"</li>
+      <li>label_hhmmss (Time Label) - If the datatype field.type="time"</li>
+      <li>label - Otherwise</li>
+    </ul>
+  </li>
+  <li>date_mmddyyyy (Date Drop-down) - If the field.type="date"</li>
+  <li>xtextbox_tstmp7z (Timestamp) - If the field.type="time", or field.type="datetime", with field.datatype_config.preserve_timezone</li>
+  <li>xtextbox_tstmp7 (Timestamp) - If the field.type="datetime", without field.datatype_config.preserve_timezone</li>
+  <li>textbox_hhmmss (Time) - If the field.type="time", without field.datatype_config.preserve_timezone</li>
+  <li>file_download - If the datatype field.type="file" and model.layout="grid"</li>
+  <li>file_upload - If the datatype field.type="file" and model.layout is not a "grid"</li>
+  <li>textarea_M - If the field has unlimited length</li>
+  <li>textbox - Otherwise, based on the size of the field</li>
+</ul>
+
+<h3>automatic_schema.lovs</h3>
+If a field name is the same as a database column that has:
+<ul>
+  <li>A foreign key to a UCOD/UCOD2/GCOD/GCOD2 table</li>
+  <li>The same name as a column in another table with a foreign key to a UCOD/UCOD2/GCOD/GCOD2 table (in order to support views)</li>
+  <li>The same name as a UCOD/GCOD table, without the ucod_ prefix, ex. ucod_c_sts -> c_sts</li>
+</ul>
+A "lov" attribute will be added to the column, linking to that list of values table.<br/>
+<br/>
+Two-dimensional list of values will be automatically added, as long as the foreign keys are defined to the UCOD2/GCOD2 tables.
+
+<h3>automatic_schema.keys</h3>
+For "form", "form-m", editable "grid", and "multisel" models, if a field with the primary key (field.key) attribute has not been defined in a model, it will be automatically added based on the database schema.  This only works for tables, since views may contain multiple primary keys from multiple tables.<br/>
+<br/>
+Automatically-added primary keys will be added as "hidden" fields, so as not to change the form layout.<br/>
+<br/>
+If a foreign key is used in a binding, it will also automatically be added to the form as a "hidden" field.
+
+<h3>Automatic Bindings</h3>
+Bindings can be automatically generated based.  Information on automatic binding generation is described in the <a href="/tutorials/model_bindings#automatic_bindings">Automatic Bindings</a> tutorial.

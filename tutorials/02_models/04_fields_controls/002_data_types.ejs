@@ -21,8 +21,599 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "ID": "field_datatypes",
-  "Title": "Data Types / SQL",
-  "Menu": ["Models","Fields / Controls"]
+  "Title": "Data Types",
+  "Menu": ["Models","Fields / Controls"],
+  "Code": [
+    "/models/FieldDataTypes_AllTypes_Grid.json",
+    "/models/FieldDataTypes_AllTypes_Form.json",
+    "/models/FieldDataTypes_CustomDatatype_Grid.json",
+    "/models/FieldDataTypes_CustomDatatype_Form.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldDataTypes_AllTypes_Grid", "title": "All System Data Types - Grid" },
+    { "url": "jsHarmonyTutorials/FieldDataTypes_AllTypes_Form?x_primary=1&action=update", "title": "All System Data Types - Form" },
+    { "url": "jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Grid", "title": "Custom Money Data Type - Grid" },
+    { "url": "jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Form?c_id=1&action=update", "title": "Custom Money Data Type - Form" }
+  ]
 }
 </script>
-Data Types / SQL
+
+<h3>Data Types</h3>
+
+<h3 data-level="2">Built-in System Data Types</h3>
+jsHarmony supports the following built-in system data types in the field.type property:
+<ul>
+  <li>varchar</li>
+  <li>char</li>
+  <li>boolean</li>
+  <li>bigint</li>
+  <li>int</li>
+  <li>smallint</li>
+  <li>tinyint</li>
+  <li>decimal</li>
+  <li>float</li>
+  <li>date</li>
+  <li>datetime</li>
+  <li>time</li>
+  <li>binary</li>
+  <li>file</li>
+  <li>encascii</li>
+  <li>hash</li>
+</ul>
+
+<h4>varchar</h4>
+Varchar is a variable-length character field.  Length defines the maximum length of the field, or can be "-1" for unlimited length.
+<pre>
+{
+  "type": "varchar",
+  "length": -1
+}
+</pre>
+
+<h4>char</h4>
+Char is a fixed-length character field.  Length defines the maximum length of the field, or can be "-1" for unenforced length.
+<pre>
+{
+  "type": "char",
+  "length": -1
+}
+</pre>
+
+<h4>boolean</h4>
+Boolean can be either true or false.
+<pre>
+{
+  "type": "boolean"
+}
+</pre>
+The valid values for boolean are:
+<table border="1">
+  <tr><th>true</th><th>false</th></tr>
+  <tr><td>true</td><td>false</td></tr>
+  <tr><td>t</td><td>f</td></tr>
+  <tr><td>y</td><td>n</td></tr>
+  <tr><td>yes</td><td>no</td></tr>
+  <tr><td>on</td><td>off</td></tr>
+  <tr><td>1</td><td>0</td></tr>
+</table>
+
+<h4>bigint</h4>
+Bigint is an 8-byte signed integer
+<pre>
+{
+  "type": "bigint"
+}
+</pre>
+  
+<h4>int</h4>
+Int is a 4-byte signed integer
+<pre>
+{
+  "type": "int"
+}
+</pre>
+
+<h4>smallint</h4>
+Smallint is a 2-byte signed integer
+<pre>
+{
+  "type": "smallint"
+}
+</pre>
+
+<h4>tinyint</h4>
+Smallint is a 1-byte unsigned integer
+<pre>
+{
+  "type": "tinyint"
+}
+</pre>
+
+<h4>decimal</h4>
+Decimals have fixed precision and scale.  For decimals, "precision" represents the total number of digits, both to the left and right of the decimal.  "Scale" represents the maximum number of digits to the right of the decimal.
+<pre>
+{
+  "type": "decimal",
+  "precision": [[i]PRECISION[/i], [i]SCALE[/i]]
+}
+</pre>
+For example, for a currency up to $999,999.99, the following field definition could be used:
+<pre>
+{
+  "type": "decimal",
+  "precision": [10, 2]
+}
+</pre>
+
+<h4>float</h4>
+Floats have fixed precision and scale. The precision property defines the number of bits in the mantissa.  Generally, a 4-byte float is 24 bits, and an 8-byte float is 53 bits.
+<pre>
+{
+  "type": "float",
+  "precision": 53
+}
+</pre>
+
+<h4>date</h4>
+Date stores a date without the time.
+<pre>
+{
+  "type": "date"
+}
+</pre>
+
+<h4>datetime</h4>
+Datetime has both a date and a time.  The optional "field.datatype_config.preserve_timezone" property defines whether a timezone is stored in the field as well.  If preserve_timezone is set to false, the date will be stored in the server timezone.
+<pre>
+{
+  "type": "datetime",
+  "datatype_config":{
+    "preserve_timezone": false
+  }
+}
+</pre>
+
+<h4>time</h4>
+Time stores a time without the date.  The optional "field.datatype_config.preserve_timezone" property defines whether a timezone is stored in the field as well.  If preserve_timezone is set to false, the time will be stored in the server timezone.
+<pre>
+{
+  "type": "time",
+  "datatype_config":{
+    "preserve_timezone": true
+  }
+}
+</pre>
+
+<h4>binary</h4>
+Binary is used for storing byte arrays. Length defines the number of bytes in the field, or can be "-1" for unlimited length.
+<pre>
+{
+  "type": "binary",
+  "length": -1
+}
+</pre>
+
+<h4>binary</h4>
+Binary is used for storing byte arrays. Length defines the number of bytes in the field, or can be "-1" for unlimited length.
+<pre>
+{
+  "type": "binary",
+  "length": -1
+}
+</pre>
+
+<h4>encascii</h4>
+Encascii encrypted the value using AES 128 and stores it as a byte array.  The password property references the password key in the jsHarmony Config.
+<pre>
+{
+  "type": "encascii",
+  "password": "PASSWORD_KEY"
+}
+</pre>
+Then in models\_config.json:
+<pre>
+{
+  "passwords": {
+    "PASSWORD_KEY": "------------------------------------------------------------"
+  }
+}
+</pre>
+
+<h4>hash</h4>
+Hash is used to store a SHA-1 hash of another field.  The salt property references the salt key in the jsHarmony Config.
+<pre>
+{
+  "name": "db_table_hash_column_name",
+  "type": "hash",
+  "salt": "SALT_KEY"
+}
+</pre>
+Then in models\_config.json:
+<pre>
+{
+  "salts": {
+    "SALT_KEY": "------------------------------------------------------------"
+  }
+}
+</pre>
+
+Since hashes are generated based on the value of another field, the other field must be defined, with its field.hash property set to the name of the hash field:
+<pre>
+{
+  "name": "db_table_source_column",
+  "hash": "db_table_hash_column_name",
+  "type": ...
+}
+</pre>
+
+<h4>file</h4>
+File types are not stored in the database.  Files are stored on the file system, and the field.type="file" property enables the "/_dl/MODEL_ID/KEY_ID/FIELD_NAME" route for that field, so that the file can be uploaded and downloaded.  The "file" type is required for a field with the "file_upload" or "file_download" controls.<br/>
+<br/>
+The field.controlparams.data_folder is required for "file" fields.  More information on files can be found in the <a href="/tutorials/field_control_file">File Controls</a> tutorial.
+
+<h4>Example</h4>
+The following form and grid models use all of the built-in system data types.  The grid does not support "encascii" since encrypted values must be viewed one-at-a-time, however the "hash" column is searchable for exact matches of encrypted text.  Normally, the hash column would not be displayed, however it was displayed for referency by overriding the control to a label.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_AllTypes_Grid?popup=1','All Types Grid', { width:1000, height:400 })%>
+<pre>
+{
+  "layout": "grid",
+  "title": "System Data Types",
+  "table": "alltypes",
+  "actions": "B",
+  "sort": ["^x_primary"],
+  "buttons": [{"link":"insert:FieldDataTypes_AllTypes_Form"}],
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1, "link":"update:FieldDataTypes_AllTypes_Form"},
+    {"name":"x_boolean", "type":"boolean"},
+    {"name":"x_bigint", "type":"bigint"},
+    {"name":"x_integer", "type":"integer"},
+    {"name":"x_smallint", "type":"smallint"},
+    {"name":"x_tinyint", "type":"tinyint"},
+    {"name":"x_decimal", "type":"decimal", "precision":[38,10]},
+    {"name":"x_float", "type":"float"},
+    {"name":"x_date", "type":"date"},
+    {"name":"x_datetime", "type":"datetime"},
+    {"name":"x_time", "type":"time"},
+    {"name":"x_varchar", "type":"varchar", "length":100},
+    {"name":"x_varcharmax", "type":"varchar", "length":-1},
+    {"name":"x_char", "type":"char", "length":100},
+    {"name":"x_binary", "type":"binary", "length":100},
+    {"name":"x_hash","type":"hash","salt": "alltypes_x_hash_salt","control":"label"},
+    {"name":"x_file","type":"file","controlparams":{"data_folder":"alltypes"}}
+  ]
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_AllTypes_Form?x_primary=1&action=update&popup=1','All Types Form')%>
+<pre>
+{
+  "layout": "form",
+  "title": "System Data Types",
+  "table": "alltypes",
+  "onecolumn": true,
+  "caption": ["Item", "Items"],
+  "actions": "BIUD",
+  "popup": [900,700],
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_boolean", "type":"boolean"},
+    {"name":"x_bigint", "type":"bigint"},
+    {"name":"x_integer", "type":"integer"},
+    {"name":"x_smallint", "type":"smallint"},
+    {"name":"x_tinyint", "type":"tinyint"},
+    {"name":"x_decimal", "type":"decimal", "precision":[38,10]},
+    {"name":"x_float", "type":"float", "precision":53},
+    {"name":"x_date", "type":"date"},
+    {"name":"x_datetime", "type":"datetime"},
+    {"name":"x_time", "type":"time"},
+    {"name":"x_varchar", "type":"varchar", "length":100},
+    {"name":"x_varcharmax", "type":"varchar", "length":-1},
+    {"name":"x_char", "type":"char", "length":100},
+    {"name":"x_binary", "type":"binary", "length":100},
+    {"name":"x_encascii","type":"encascii","password": "alltypes_x_encascii_password","hash": "x_hash"},
+    {"name":"x_hash","type":"hash","salt": "alltypes_x_hash_salt","control":"label"},
+    {"name":"x_file","type":"file","controlparams":{"data_folder":"alltypes"}}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Additional PostgreSQL Data Types</h3>
+The following additional data types are supported when using a PostgreSQL database:
+<ul>
+  <li>text</li>
+  <li>character varying</li>
+  <li>character</li>
+  <li>money</li>
+  <li>double precision { "type": "double precision", "precision": 53 }</li>
+  <li>real</li>
+  <li>numeric</li>
+  <li>time without time zone</li>
+  <li>time with time zone</li>
+  <li>timetz</li>
+  <li>timestamp without time zone</li>
+  <li>timestamp</li>
+  <li>timestamp with time zone</li>
+  <li>timestampz</li>
+  <li>interval</li>
+  <li>bytea</li>
+  <li>bit</li>
+  <li>bit varying</li>
+  <li>point</li>
+  <li>line</li>
+  <li>lseg</li>
+  <li>box</li>
+  <li>path</li>
+  <li>polygon</li>
+  <li>circle</li>
+  <li>inet</li>
+  <li>cidr</li>
+  <li>macaddr</li>
+  <li>tsvector</li>
+  <li>tsquery</li>
+  <li>uuid</li>
+  <li>xml</li>
+  <li>json</li>
+  <li>jsonb</li>
+  <li>pg_lsn</li>
+  <li>txid_snapshot</li>
+</ul>
+
+<h3 data-level="2">Additional SQL Server Data Types</h3>
+The following additional data types are supported when using a SQL Server database:
+<ul>
+  <li>text</li>
+  <li>nchar</li>
+  <li>nvarchar</li>
+  <li>ntext</li>
+  <li>real</li>
+  <li>numeric</li>
+  <li>bit</li>
+  <li>money { "type": "money", "precision": [19,4] }</li>
+  <li>smallmoney { "type": "smallmoney", "precision": [19,4] }</li>
+  <li>smalldatetime</li>
+  <li>datetime2</li>
+  <li>datetimeoffset { "type": "datetimeoffset", "datatype_config": { "preserve_timezone": true } }</li>
+  <li>varbinary</li>
+  <li>image</li>
+  <li>timestamp</li>
+  <li>uniqueidentifier</li>
+  <li>sql_variant</li>
+  <li>hierarchyid</li>
+  <li>geometry</li>
+  <li>geography</li>
+  <li>xml</li>
+  <li>sysname</li>
+</ul>
+
+<h3 data-level="2">Additional SQLite Data Types</h3>
+The following additional data types are supported when using a SQLite database:
+<ul>
+  <li>integer</li>
+  <li>real</li>
+  <li>time</li>
+  <li>date</li>
+  <li>datetime</li>
+  <li>text</li>
+  <li>blob</li>
+</ul>
+
+<h3>Datatype Validation</h3>
+Validation is automatically added based on the datatype:
+<ul>
+  <li><b>varchar, char</b>: MaxLength:<i>field.length</i></li>
+  <li><b>bigint, int, smallint</b>: IsNumeric</li>
+  <li><b>tinyint</b>: IsNumeric:true, MaxValue:255</li>
+  <li><b>decimal</b>: IsDecimal</li>
+  <li><b>float</b>: IsFloat</li>
+  <li><b>date, datetime</b>: IsDate</li>
+  <li><b>time</b>: IsTime</li>
+  <li><b>encascii</b>: MaxLength:<i>field.length-1</i></li>
+  <li><b>binary</b>: IsBinary:<i>field.length</i></li>
+</ul>
+
+<h3>Custom Data Types</h3>
+Custom data types can be defined in the "models\sql" folder, in a file named either "datatypes.json" or "datatypes.DBTYPE.json".  DBTYPE can be one of the following: mssql, pgsql, or sqlite.<br/>
+<br/>
+Custom data types enable overriding existing database datatype behavior, or creating a new datatype.<br/>
+<br/>
+It is often useful to convert the datatype into an intermediary type, such as a varchar, and then convert back to the original type when selecting from / updating the database.  The "datatypes" file enables conversion between custom data types and system data types by transforming the input/output SQL expressions.<br/>
+<br/>
+Syntax of the "datatypes" file is as follows:
+<pre>
+{
+  "DATATYPE1_NAME": {
+    "type": "TYPE_NAME",
+    "sql_from_db": "[i]sql_expression[/i]",
+    "sqlsearch": "[i]sql_expression[/i]",
+    "sqlsearch_to_db": "[i]sql_expression[/i]",
+    "sql_to_db": "[i]sql_expression[/i]",
+    "sqlsort": "[i]sql_expression[/i]",
+    
+    "datatype_config": {
+      "defaults": {
+        "[i]sql_variable1[/i]": [i]value[/i],
+        "[i]sql_variable2[/i]": [i]value[/i],
+        ...
+      },
+      "validate": ["[i]validation_expression1[/i]","[i]validation_expression2[/i]",...],
+      "override_length": [i]length[/i],
+      "preserve_timezone": [i]true | false[/i]
+    }
+  },
+  "DATATYPE2_NAME": ...
+}
+
+[i]sql_expression[/i] := SQL Expression using %%%SQL%%% and optionally using %%%[i]sql_variable[/i]%%% |
+                  EJS Expression using [i]sql_variable[/i], resolving to a SQL Expression above
+[i]sql_variable[/i] := PREC_H | PREC_L | PREC | LENGTH
+[i]validation_expression1[/i] := Validation String, optionally using %%%[i]sql_variable[/i]%%% |
+                          EJS Expression using [i]sql_variable[/i], resolving to a Validation String above
+</pre>
+For example, the following custom data types are used in the SQL Server datatypes.mssql.json file:
+<pre>
+{
+  "decimal": {
+    "type": "decimal",
+    "sql_from_db": "cast(%%%SQL%%% as nvarchar)",
+    "sqlsearch": "%%%SQL%%%",
+    "sqlsearch_to_db": "cast(%%%SQL%%% as decimal(%%%PREC_H%%%,%%%PREC_L%%%))",
+    "sql_to_db": "cast(%%%SQL%%% as decimal(%%%PREC_H%%%,%%%PREC_L%%%))",
+    "sqlsort": "cast(%%%SQL%%% as decimal(%%%PREC_H%%%,%%%PREC_L%%%))",
+    
+    "datatype_config": {
+      "defaults": {
+        "PREC_H": 38,
+        "PREC_L": 10
+      }
+    }
+  },
+
+  "float": {
+    "type": "float",
+    "sql_from_db": "convert(varchar(50), %%%SQL%%%, 3)",
+    "sqlsearch": "%%%SQL%%%",
+    "sqlsort": "cast(%%%SQL%%% as float(%%%PREC%%%))",
+    "sql_to_db": "cast(%%%SQL%%% as float(%%%PREC%%%))",
+    "sqlsearch_to_db": "cast(%%%SQL%%% as float(%%%PREC%%%))",
+    
+    "datatype_config": {
+      "defaults": {
+        "PREC": 53
+      }
+    }
+  },
+
+  "text": {
+    "type": "varchar",
+    
+    "datatype_config": {
+      "defaults": {
+        "LENGTH": -1
+      },
+      "override_length": "-1"
+    }
+  },
+
+  "datetimeoffset": {
+    "sql_from_db": "convert(varchar(50),%%%SQL%%%,126)",
+    "sqlsearch": "%%%SQL%%%",
+    "type": "datetime",
+    
+    "datatype_config": {
+      "preserve_timezone": true
+    }
+  },
+
+  "varbinary":{ 
+    "type": "varchar",
+    "sql_from_db": "convert(varchar(max), %%%SQL%%%, 1)",
+    "sql_to_db": "convert(VARBINARY(&lt;%=((LENGTH&lt;0)?'MAX':LENGTH)%&gt;), %%%SQL%%%, 1)",
+    
+    "datatype_config": {
+      "defaults":{ "LENGTH": 8000 },
+      "validate": ["&lt;% if(LENGTH&gt;0){ %&gt;MaxLength:2*%%%LENGTH%%%+2&lt;% } %&gt;"],
+      "override_length": "-1"
+    }
+  }
+}
+</pre>
+Each custom datatype can additionally contain field properties, such as "format" and "default".  These properties will be merged with the field properties when the models are loaded.<br/>
+<br/>
+The SQL transformation expressions (sql_from_db, sqlsearch, sqlsearch_to_db, sql_to_db, sqlsort) can use the following variables:
+<ul>
+  <li>%%%SQL%%% - The base SQL expression before transformation</li>
+  <li>%%%FIELD%%% - The field name / column name</li>
+  <li>%%%PREC_H%%% - If field.precision is an array, then field.precision[0]</li>
+  <li>%%%PREC_L%%% - If field.precision is an array, then field.precision[1]</li>
+  <li>%%%PREC%%% - If field.precision is an integer, then field.precision</li>
+  <li>%%%LENGTH%%% - The value of field.length, or field.datatype_config.override_length, if defined</li>
+</ul>
+
+<h4>type</h4>
+The "type" property defines the parent datatype, and should reference either one of the built-in system types or an intermediary custom datatype.
+
+<h4>sql_from_db</h4>
+The "sql_from_db" property transforms the field column expression when selecting data from the database.  Additionally, it is used to transform the field column expression when performing a search, if "sqlsearch" is not already defined.
+
+<h4>sqlsearch</h4>
+The "sqlsearch" property transforms the field column expression when performing a search.
+
+<h4>sqlsearch_to_db</h4>
+The "sqlsearch_to_db" property transforms the search query value when performing a search.
+
+<h4>sql_to_db</h4>
+The "sql_to_db" property transforms the field column expression when writing to the database.
+
+<h4>sqlsort</h4>
+The "sqlsort" property transforms the field column expression when sorting by that field.
+
+<h4>datatype_config.defaults</h4>
+The datatype_config.defaults (PREC_H, PREC_L, PREC, and LENGTH) will be applied to the field if the corresponding field properties are not already defined.
+<ul>
+  <li>field.precision = [PREC_H, PREC_L] (If PREC_H and PREC_L are defined)</li>
+  <li>field.precision = PREC (If PREC is defined)</li>
+  <li>field.length = LENGTH</li>
+</ul>
+
+<h4>datatype_config.validate</h4>
+The datatype_config.validate property defines an array of validators that will be applied to the field both client-side and server-side.  Validators can be scripted using EJS, and use the datatype_config.defaults.<br/>
+<br/>
+More information on defining validators is available in the <a href="/tutorials/field_validation">Field Validation</a> tutorial.
+
+<h4>datatype_config.override_length</h4>
+The datatype_config.override_length property can be used to override field.length with a constant value.
+
+<h4>datatype_config.preserve_timezone</h4>
+The datatype_config.preserve_timezone property applies to date, datetime, and time objects, and is used to send the timezone together with the date/time, instead of converting it to the local timezone.
+
+<h4>Example</h4>
+The example below creates a new "money" datatype for the SQLite database:
+<pre>
+//datatypes.json
+{
+  "money":{ 
+    "sql_from_db": "%%%SQL%%%",
+    "sqlsearch": "cast(%%%SQL%%% as real)",
+    "sqlsearch_to_db": "cast(%%%SQL%%% as real)",
+    "sqlsort": "cast(%%%SQL%%% as real)",
+    "type": "decimal",
+    "format": ["decimalcomma",2],
+    "datatype_config": {
+      "validate": ["IsDecimalComma"]
+    }
+  }
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Grid?popup=1','Custom Datatype Grid')%>
+<pre>
+{
+  "table":"c",
+  "layout":"grid",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID","link":"update:FieldDataTypes_CustomDatatype_Form"},
+    {"name":"c_name","caption":"Customer"},
+    {"name":"c_overdue_amt","caption":"Overdue Amt","type":"money"}
+  ]
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Form?c_id=1&action=update&popup=1','Custom Datatype Form')%>
+<pre>
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "popup":[900,400],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name"},
+    {"name":"c_sts","caption":"Status"},
+    {"name":"c_overdue_amt","caption":"Overdue Amt","type":"money"}
+  ]
+}
+</pre>
+

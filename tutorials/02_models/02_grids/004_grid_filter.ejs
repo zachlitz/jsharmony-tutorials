@@ -63,7 +63,7 @@ The %%%FORSEARCHPHRASE%%% variable will automatically be replaced with the searc
 The field "sqlsearch" property can be used to customize the data that is searched.  This can be used to extend the search across additional fields.
 
 <h4>field.sqlsearchsound</h4>
-Soundex implementations are used to search by pronunciation instaed of by a character string.  This is especially useful when searching for people's names, where one name can have multiple spellings, such as "Caitlyn", "Katelin",  "Kaitlin", and "Caitlin".<br/>
+Soundex implementations are used to search by pronunciation instead of by a character string.  This is especially useful when searching for people's names, where one name can have multiple spellings, such as "Caitlyn", "Katelin",  "Kaitlin", and "Caitlin".<br/>
 <br/>
 The Soundex information is often implemented via database trigger, storing the phonetic representation in a "soundex" table:
 <pre>
@@ -85,7 +85,8 @@ Then, the "sqlsearchsound" expression can be used in the field to search the sou
 <pre>
 "sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
 </pre>
-The %%%FIELD%%% variable will be replaced by the search query.
+The %%%FIELD%%% variable will be replaced by the search query.<br/>
+The %%%SOUNDEX%%% variable will be replaced by a Soundex of the search query
 
 <h4>Removing a Field from the Search Drop-down</h4>
 Setting a field's "disable_search" property to true will remove the field from the search drop-down.

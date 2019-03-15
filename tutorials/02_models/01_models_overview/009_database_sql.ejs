@@ -21,7 +21,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "ID": "model_database_sql",
-  "Title": "Database / SQL",
+  "Title": "Model Database / SQL Expressions",
   "Menu": ["Models","Models Overview"],
   "Code": [
     "/models/ModelSQL_Grid.json",
@@ -37,7 +37,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 
 <h3>Overview</h3>
-One of the key features of jsHarmony is its database integration.  Not only is the SQL automatically generated in most instances, but forms and grids can also have datatypes and controls automatically chosen based on the database schema.<br/>
+One of the key features of jsHarmony is its database integration.  Not only is the SQL automatically generated in most instances, but forms and grids can also have data types and controls automatically chosen based on the database schema.<br/>
 <br/>
 Enterprise systems, however, often require a high level of customization.  The automatic SQL expressions may need to be customized in different scenarios.  A variety of model and field properties are available for custom SQL behavior.
 
@@ -161,7 +161,7 @@ The "sqlupdate" statement is executed for Grid, Form, Form-m, and Multisel updat
 The "sqldelete" statement is executed for Grid, Form, and Form-m deletes.  The sqldelete statement should return the # of rows that were deleted.  This validates that the delete completed successfully.
 
 <h4>model.sqldownloadselect</h4>
-The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" controls.  The SQL statement should return the FILE_NAME and FILE_EXT.  The names of the FILE_NAME and FILE_EXT columns are defiend in the field.controlparams property.
+The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" and "file_download" controls.  The SQL statement should return the FILE_NAME and FILE_EXT.  The names of the FILE_NAME and FILE_EXT columns are defiend in the field.controlparams property.
 <pre>
 select d_id,d_ext,(('D'::text || d.d_id::character varying::text) || COALESCE(d.d_ext, ''::character varying)::text) as "d_filename" from jsharmony.D where 1=1  and d_id=@d_id
 </pre>
@@ -410,7 +410,7 @@ select c_id, current_timestamp from c
 </pre>
 
 <h4>field.sqlwhere</h4>
-For select statements, if field is in querystring / bindings, use this WHERE expression
+For select statements in grids, if field is in querystring / bindings, use this WHERE expression
 <pre>
 {
   "fields":[
@@ -471,7 +471,11 @@ If the user searches the c_name field for any rows containing "ACME":
 </pre>
 
 <h4>field.sqlsearchsound</h4>
-For grids, use the specified Soundex search expression.
+For grids, use the specified Soundex search expression.  The field supports the following variables:
+<ul>
+  <li>%%%FIELD%%% - Will be replaced by the search query</li>
+  <li>%%%SOUNDEX%%% - Will be replaced by a Soundex of the search query</li>
+</ul>
 <pre>
 {
   "fields":[
@@ -484,6 +488,22 @@ Resulting SQL
 -------------
 If the user searches the c_name field for any rows that sound like "John":
   select c_id,c_name from c where c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex('John'))
+</pre>
+
+<h4>field.sqlsort</h4>
+For grids, use the specified sort expression.
+<pre>
+{
+  "fields":[
+    {"name":"c_id"},
+    {"name":"c_name","sqlsort":"ifnull(c_name,c_id)"}
+  ]
+}
+
+Resulting SQL
+-------------
+If the user sorts by the c_name column:
+  select c_id,c_name from c order by (ifnull(c_name,c_id)) desc
 </pre>
 
 <h3>Multiple Databases</h3>
