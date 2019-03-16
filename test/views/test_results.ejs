@@ -11,13 +11,13 @@
 <% for(var k in failImages){ %>
   <div class="comp">
     <h2>Screenshot name: <%= failImages[k].name; %></h2>
-    <img src="<%= live_screenshots_path%>/<%= failImages[k].name; %>"><br>
+    <img src="<%=screenshots_source_dir%>/<%=failImages[k].name; %>"><br>
     <b>Reason of fail: <span style="color: red;"><%= failImages[k].reason; %></span> </b>
-    <% if (failImages[k].reason == 'Images not the same.'){ %>
+    <% if (failImages[k].reason != 'New image was not generated'){ %>
       <h3>Regenerated image:</h3>
-      <img src="<%= regenerated_screenshots_path%>/<%= failImages[k].name; %>">
+      <img src="<%=screenshots_generated_dir%>/<%=failImages[k].name; %>">
       <h3>Differences:</h3>
-      <img src="<%= diff_screenshots_path%>/<%= failImages[k].name; %>">
+      <img src="<%=screenshots_diff_dir%>/<%=failImages[k].name; %>">
     <% } %>
     <hr>
   </div>

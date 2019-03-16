@@ -7,7 +7,6 @@
     "caption": [ "", "Customer", "Customers" ],
     "popup":[800,400],
     "fields": [
-      {"name":"c_id", "type": "bigint", "actions":"B","key": 1},
       {"name": "C_CA","control": "subform","controlstyle": "width:360px;margin-right:10px;",
         "target": "C_CA","bindings": { "c_id": "c_id" },"actions": "BIUD","caption": "Address" }
     ]

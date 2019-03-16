@@ -334,7 +334,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
 jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
   var _this = this;
   //Read all files in the tutorials folder
-  HelperFS.funcRecursive(_this.tutfolder,function(filepath, cb){
+  HelperFS.funcRecursive(_this.tutfolder,function(filepath, relativepath, cb){
     //For each File
     fs.readFile(filepath, 'utf8', function(err, data){
       if(err) return cb(err);
@@ -377,7 +377,7 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
       _this.tutorials[tutorialname] = dataobj;
       return cb();
     });
-  },undefined,function(){
+  },undefined,undefined,function(){
     //Once all files have been read
     _this.tutlisting.sort();
     //Generate menu
