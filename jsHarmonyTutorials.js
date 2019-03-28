@@ -352,7 +352,7 @@ jsHarmonyTutorials.prototype.LoadTutorials = function(callback){
       }
       catch(ex){ console.log('FATAL ERROR: Error parsing JSON data in '+filepath+':\n'+data); return cb(); }
       if(!dataobj) return cb();
-      var tutorialname = filepath.substr(_this.tutfolder.length+1);
+      var tutorialname = filepath.substr(_this.tutfolder.length+1).replace(/\\/g,'/');
 
       //Verify tutorial object
       if(!dataobj.ID){
