@@ -5,11 +5,15 @@
   "caption": ["Item", "Items"],
   "fields": [
     {"name": "x_primary", "caption": "ID", "control": "label"},
+    {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+    {"control": "button", "value":"Insert", "link": "insert:FieldStandardControls_Form"},
     {"control": "button", "value":"Browse", "link": "browse:FieldStandardControls_Form"},
+    {"control": "button", "value":"Update", "link": "update:FieldStandardControls_Form"},
+    {"control": "button", "value":"Save & New", "link": "savenew:"},
+
     {"control": "button", "value":"Browse w/Target", "link": "browse(target=_self):FieldLinks_Form"},
     {"control": "button", "value":"Browse w/Window Params", "link": "browse(target=_blank,width=500,height=200):FieldLinks_Form"},
-    {"control": "button", "value":"Update", "link": "update:FieldStandardControls_Form"},
-    {"control": "button", "value":"Insert", "link": "insert:FieldStandardControls_Form"},
+    
     {"control": "button", "value":"URL", "link": "url:/_debug/<%=modelid%>"},
     {"control": "button", "value":"URL w/Params (Next ID)", "link": "url(target=_blank,width=600,height=300):/<%=modelid%>?action=update&x_primary=<#=data.x_primary+1#>"},
   ]
