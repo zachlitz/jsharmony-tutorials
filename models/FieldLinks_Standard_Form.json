@@ -1,0 +1,18 @@
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Standard Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+
+    {"control": "button", "value":"Insert", "link": "insert:FieldLinks_C"},
+    {"control": "button", "value":"Browse", "link": "browse:FieldLinks_C"},
+    {"control": "button", "value":"Update", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Save & New", "link": "savenew:"},
+    {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
+    {"control": "button", "value":"URL", "link": "url:/_listing"},
+    {"control": "button", "value":"JavaScript", "link": "js:XExt.Alert('JavaScript Command');"}
+  ]
+}

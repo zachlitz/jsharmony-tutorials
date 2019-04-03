@@ -1,0 +1,18 @@
+{ 
+  "table":"ca",
+  "layout":"grid",
+  "onecolumn":true,
+  "caption": ["Link Parameters"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name":"ca_addr1","caption":"Address"},
+    
+    {"control": "button", "value":"Auto Parameters", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Explicit Parameters", "link": "update:FieldLinks_C&c_id"},
+    {"control": "button", "value":"Static Parameters - Number", "link": "update:FieldLinks_C&c_id=3"},
+    {"control": "button", "value":"Static Parameters - String", "link": "insert:FieldLinks_C&c_name='New customer'"},
+    {"control": "button", "value":"Multiple Parameters", "link": "insert:FieldLinks_C?c_name='New customer'&c_sts='ACTIVE'"},
+    {"control": "button", "value":"Field-Bound Parameters", "link": "insert:FieldLinks_C&c_name=ca_addr1"},
+    {"control": "button", "value":"Tab Selection", "link": "update:FieldLinks_C&tabs={\"jsHarmonyTutorials/FieldLinks_C\":\"jsHarmonyTutorials/FormPopup_C_Tab2\"}"}
+  ]
+}

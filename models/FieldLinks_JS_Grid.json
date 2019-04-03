@@ -1,0 +1,15 @@
+{ 
+  "table":"c",
+  "layout":"grid",
+  "onecolumn":true,
+  "caption": ["JS Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "c_email", "control": "hidden"},
+
+    {"control": "button", "value":"JavaScript Alert", "link": "js:XExt.Alert('Sample Alert');"},
+    {"control": "button", "value":"JavaScript popupForm", "link": "js:XExt.popupForm(xmodel.namespace+'FieldLinks_C','insert',{ 'c_name': xmodel.get('c_name',this)+'_SUB' });"},
+    {"control": "button", "value":"JavaScript Email", "link": "js:var email = xmodel.get('c_email',this); if(email){ var url = 'mailto:'+email; jsh.getFileProxy().prop('src', url); }"}
+  ]
+}

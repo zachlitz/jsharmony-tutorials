@@ -28,7 +28,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 
 <h3>Overview / Syntax</h3>
-The field.link property provides a way to perform actions or link controls to other forms and grids.  Links are available for the following controls:
+The field.link property provides a way to perform interface actions, or to link controls to other forms and grids.  Links are available for the following controls:
 <ul>
   <li>label</li>
   <li>html</li/>
@@ -55,7 +55,7 @@ The link syntax is as follows:
   browse[i](window_options)[/i]:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
   update[i](window_options)[/i]:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
   savenew[i](window_options)[/i]:MODELID&amp;[i]parameter1[/i]&amp;[i]parameter2[/i]&amp;[i]parameter3[/i]&amp;...
-  download[i](window_options)[/i]:MODELID&amp;DOWNLOAD_FIELD=KEY_VALUE_FIELD
+  download:MODELID&amp;DOWNLOAD_FIELD=KEY_VALUE_FIELD
   select
   url[i](window_options)[/i]:[i]Relative or Absolute URL, with optional &lt;# #&gt; EJS Parameters[/i]
   js:[i]JavaScript Expression[/i]
@@ -78,25 +78,48 @@ The link syntax is as follows:
   top        //Screen top offset of the window
   left       //Screen left offset of the window
   Any other window parameters supported by window.open
+</pre>
 
-Example Links:
+<b>Example Links:</b>
+<pre>
 update:C
 update:C&C_ID
 update:C&C_ID=5
 update:C&C_ID=NEW_C_ID
 url(target=_blank,width=800,height=600):https://www.example.com
 url:/C?action=update&C_ID=&lt;#=data.C_ID#&gt;
-js:alert('Test Popup');
+js:XExt.Alert('Test Popup');
 </pre>
 
-If a "url" link is used, the following EJS variables can be added, escaped using &lt;# #&gt; tags:
+<h4>Form Example</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Standard_Form?action=update&c_id=1&popup=1','Standard Links')%>
 <pre>
-data    //The current row's data, ex: data.C_ID
-xmodel  //The jsHarmony Model instance
-modelid //The jsHarmony Model ID
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Standard Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+
+    {"control": "button", "value":"Insert", "link": "insert:FieldLinks_C"},
+    {"control": "button", "value":"Browse", "link": "browse:FieldLinks_C"},
+    {"control": "button", "value":"Update", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Save & New", "link": "savenew:"},
+    {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
+    {"control": "button", "value":"URL", "link": "url:/_listing"},
+    {"control": "button", "value":"JavaScript", "link": "js:XExt.Alert('JavaScript Command');"}
+  ]
+}
 </pre>
 
-Links are generated based on the current record data.  The following parameters will be added to the querystring, in the following priority (from lowest to highest):
+<h3 data-level="2">Insert / Browse / Update / SaveNew</h3>
+The insert, browse, update, and savenew links are used to interface with other database-driven models.<br/>
+<br/>
+
+<b>Querystring Parameter Passing</b><br/>
+Links are generated based on the current record data.  The following parameters will be added to the link's querystring, in the following priority (from lowest to highest):
 <ul>
   <li>Any of the current page's querystring parameters</li>
   <li>If the action is "insert" or "savenew", any of the parameters in the current row</li>
@@ -105,69 +128,274 @@ Links are generated based on the current record data.  The following parameters 
   <li>Explicitly defined parameters in the link</li>
 </ul>
 
-<h3>Popup Windows</h3>
-If the target model for a link has the model.popup property set, or if the target is set in window_options, the link will open in a popup window.  Otherwise, the link will open in the same window.
+Parameters are defined by adding them after the target model, separated by "&amp;":
+<pre>
+[b]No Parameters (Automatic Parameters)[/b]
+update:C
 
-For both form and report
-------------------------
-Example of each link type
-  form
-    insert
-    browse
-    update
-    savenew
-    download
-    url
-    js
-  grid
-    insert
-    browse
-    update
-    savenew
-    download
-    select
-    url
-    js
+[b]One Parameter[/b]
+update:C&C_ID
+update:C&C_ID=5
+update:C&C_ID=C_ID_ON_PARENT
 
-Example of each link parameter type
-  update?C
-  update?C&c_id
-  update?C&c_id=5
-  insert?C&c_name='New customer'
-  insert?C&c_name='New customer'&c_status='ACTIVE'
-  insert?C&c_name=ca_name
-  update?C&c_id=5&tabs={\"C\":\"CF\"}
+[b]Multiple Parameters[/b]
+update:C&C_ID&E_ID
+update:C&C_ID=5&E_ID=10
+update:C&C_ID=PARENT_C_ID&E_ID=FAVORITE_E_ID
+</pre>
 
-Example of Custom JS links
-  Alert
-  OpenForm / OpenReport
-  Email
+Parameters can be explicitly defined in a variety of ways:
+<ul>
+  <li>TARGET_MODEL_FIELD_NAME=PARENT_MODEL_FIELD_NAME</li>
+  <li>TARGET_MODEL_FIELD_NAME [i]Shorthand when TARGET_MODEL_FIELD_NAME is the same as PARENT_MODEL_FIELD_NAME[/i]</li>
+  <li>TARGET_MODEL_FIELD_NAME='CONSTANT STRING'</li>
+  <li>TARGET_MODEL_FIELD_NAME=NUMBER</li>
+</ul>
 
-Example of URLs with EJS parameters
-  Internal URL / form
-  External URL
-  Email
+Additionally, tabs can be set by passing a tabs parameter:
+<pre>
+tabs={\"PARENT_MODEL\":\"SELECTED_TAB_MODEL\"}
+</pre>
+Multiple tabs are supported:
+tabs={\"PARENT_MODEL1\":\"SELECTED_TAB_MODEL1\", \"PARENT_MODEL2\":\"SELECTED_TAB_MODEL2\"}
 
-Examples of browser opening / closing
-  Popup
-  Popup override to self
-  Regular in-line window
-  Regular window to Popup
+The example below contains all of these scenarios:
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Parameters_Form?action=update&ca_id=1&popup=1','Link Parameters')%>
+<pre>
+{ 
+  "table":"ca",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Link Parameters"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name":"ca_addr1","caption":"Address"},
+    
+    {"control": "button", "value":"Auto Parameters", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Explicit Parameters", "link": "update:FieldLinks_C&c_id"},
+    {"control": "button", "value":"Static Parameters - Number", "link": "update:FieldLinks_C&c_id=3"},
+    {"control": "button", "value":"Static Parameters - String", "link": "insert:FieldLinks_C&c_name='New customer'"},
+    {"control": "button", "value":"Multiple Parameters", "link": "insert:FieldLinks_C?c_name='New customer'&c_sts='ACTIVE'"},
+    {"control": "button", "value":"Field-Bound Parameters", "link": "insert:FieldLinks_C&c_name=ca_addr1"},
+    {"control": "button", "value":"Tab Selection", "link": "update:FieldLinks_C&tabs={\"jsHarmonyTutorials/FieldLinks_C\":\"jsHarmonyTutorials/FormPopup_C_Tab2\"}"}
+  ]
+}
+</pre>
 
+<h3 data-level="2">Download</h3>
+Both forms and grids can provide "Download" links and buttons, so that users can download a target file that has been uploaded.
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Download_Grid?popup=1','Download Links')%>
+<pre>
+{ 
+  "table":"c",
+  "layout":"grid",
+  "onecolumn":true,
+  "caption": ["Download Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
+    {"control": "label", "value":"Download", "link": "download:FieldLinks_C&c_doc",
+     "type":"file", "controlparams": { "data_folder": "c_doc", "data_file_prefix": "c_doc" } }
+  ]
+}
+</pre>
+In the standard case, with the button, the button will always display, and show a "Download file not found" message if the file is missing.<br/>
+<br/>
+The label control above uses a more advanced method, so that the link will hide when the download file is not available.  In order to do this, the field.type and file definition needs to be configured.<br/>
+</br>
+If a label control has a field.type, it is directly linked to a database column or file field.  The label will then be hidden if the database column is blank, or if the file field is empty.<br/>
+<br/>
+In this example above, the field.controlparams is used to specify the location of the download file.  Normally, the "data_file_prefix" will default to field.name, however here we manually specify it since the file field is defined in another model.<br/>
+<br/>
+Download links are defined as follows:
+<pre>
+download:MODELID&DOWNLOAD_FIELD=KEY_VALUE_FIELD
+</pre>
+The DOWNLOAD_FIELD parameter defines the field on the target model that references the file.  The DOWNLOAD_FIELD must have field.type="file", and have controlparams.data_folder set to the target folder.<br/>
+<br/>
+The KEY_VALUE_FIELD parameter defines the parent model's field that has the primary key ID that will be requested from the download model.<br/>
+<br/>
+If KEY_VALUE_FIELD is not defined, it will default to the primary key of the download model, if it is found in the parent model.  For example, if the download model has a primary key "file_id", and the "file_id" field is in the parent model that contains the link field, then "file_id" will be used as the KEY_VALUE_FIELD.
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+<h3 data-level="2">Select</h3>
+Select links can only be used within a Popup List of Values grid.  They provide an alternate way to select a value in a popup List of Values.<br/>
+<br/>
+Popup list of values are displayed when a user clicks on a magnifying glass next to a field with field.popuplov defined:
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Select_Form?popup=1&c_id=1&action=update','Select Links')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Select_Form?popup=1&c_id=1&action=update','Select Links - Popup Open', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.c_parent_id_xlookup.xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return $('.xelemjsHarmonyTutorials_FieldLinks_C_LOV.unnamed_button_control_1').length; }, resolve);
+}); } })%>
+<pre>
+//Form with the Popup List of Values control
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Select Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "c_parent_id", "caption": "Parent Customer ID", "control": "label","popuplov":{ "target":"FieldLinks_C_LOV", "codeval":"c_id" }}
+  ]
+}
+
+//Grid with the List of Values contents
+"FieldLinks_C_LOV": {
+  "table":"c",
+  "layout":"grid",
+  "actions":"B",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name","link":"select"},
+    {"control": "button", "value":"Select", "link": "select"}
+  ]
+}
+</pre>
+
+In this example, both the "c_name" field and the button have a "select" link.  When the user clicks on either of the controls, it will have the same effect as clicking the "Select" link on the left of the grid, selecting the row as the result of the List of Values popup.
+
+<h3 data-level="2">Custom URL</h3>
+In some instances, it may be necessary to link to a custom URL.  Custom URLs can contain any of the data in the current model by using EJS.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_URL_Form?action=update&c_id=1&popup=1','Custom URL Links')%>
+<pre>
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["URL Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "c_email", "control": "hidden"},
+
+    {"control": "button", "value":"Internal URL", "link": "url:/&lt;%=xmodel.namespace%&gt;FieldLinks_C?action=update&c_id=&lt;%=data.c_id%&gt;"},
+    {"control": "button", "value":"External URL", "link": "url:https://www.apharmony.com"},
+    {"control": "button", "value":"Email", "link": "url:mailto:&lt;%=data.c_email%&gt;"}
+  ]
+}
+</pre>
+
+In this example, the Internal URL dynamically adds the current model's namespace to the URL, and the key field.  The mailto link also integrates the current row's email address field.<br/>
+<br/>
+Any fields used in the EJS expressions must be defined in the fields array.  In this example, the "c_email" field is used.  Since "c_email" was not part of the original form, it was included as a hidden field so that it would still be selected from the database.<br/>
+<br/>
+If the resulting link / EJS expression is blank, no action will be taken by the users browser.<br/>
+<br/>
+The following EJS variables can be used in a url link EJS expression.  EJS variables are escaped using &lt;# #&gt; tags:
+<pre>
+All models
+----------
+data    //The current row's data, ex: data.C_ID
+xmodel  //The jsHarmony Model instance
+modelid //The jsHarmony Model ID
+_GET    //The GET parameters
+
+Grid models additionally have the following parameters
+----------
+rowid     //The current table row #
+datatable //The array of rows currently being rendered
+
+Additionally, the following JavaScript global objects are available
+----------
+jsh     //The jsHarmony instance
+XExt    //The jsHarmony JavaScript Client-side Extensions
+_       //Lodash library
+moment  //Moment.js library
+</pre>
+
+<h3 data-level="2">Custom JavaScript</h3>
+Links can be used to execute custom JavaScript expressions.
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_JS_Form?action=update&c_id=1&popup=1','Custom JS Links')%>
+<pre>
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["JS Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "c_email", "control": "hidden"},
+
+    {"control": "button", "value":"JavaScript Alert", "link": "js:XExt.Alert('Sample Alert');"},
+    {"control": "button", "value":"JavaScript popupForm", "link": "js:XExt.popupForm(xmodel.namespace+'FieldLinks_C','insert',{ 'c_name': 'New Customer' });"},
+    {"control": "button", "value":"JavaScript Email", "link": "js:var email = xmodel.get('c_email'); if(email){ var url = 'mailto:'+email; jsh.getFileProxy().prop('src', url); }"}
+  ]
+}
+</pre>
+
+The following variables are accessible from the JavaScript expression:
+<pre>
+Additionally, the following JavaScript global objects are available
+----------
+jsh       //The jsHarmony instance
+XExt      //The jsHarmony JavaScript XExt Client-side Extensions
+XForm     //The jsHarmony JavaScript XForm AJAX/CRUD Library
+XValidate //The jsHarmony JavaScript XValidate Form Validation Library
+XFormat   //The jsHarmony JavaScript XFormat Formatting Library
+_         //Lodash library
+$         //jQuery library
+moment    //Moment.js library
+async     //Async.js library
+_GET      //The GET parameters
+XModels   //An associative array of the jsHarmony Models currently active on the client browser
+xmodel    //The current jsHarmony Model's instance
+_this     //The current jsHarmony Model's Class instance (used in Custom Forms / Custom JS)
+modelid   //The current jsHarmony Model's ID
+</pre>
+
+<h3 data-level="2">Window Options and Popup Windows</h3>
+By default, models with the model.popup property will open in a new window, while models without model.popup will open in the same window.  This behavior can be changed by using window options:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_WindowOptions_Form?action=update&c_id=1&popup=1','Window Options')%>
+<pre>
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Link Window Options"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    
+    {"control": "button", "value":"Link to Popup Form", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Link to Popup Form in Same Window", "link": "update(target=_self):FieldLinks_C"},
+    {"control": "button", "value":"Regular Link to Same Window", "link": "url:https://www.apharmony.com"},
+    {"control": "button", "value":"Regular Link in Popup", "link": "url(target=_blank):https://www.apharmony.com"},
+    {"control": "button", "value":"Regular Link in Popup w/Dimensions", "link": "url(target=_blank,width=600,height=600):https://www.apharmony.com"}
+  ]
+}    
+</pre>
+Window options are added in parenthesis before the link target.  The window options can be either "target" to set the link window target, or any of the window.open parameters, such as "width" and "height".<br/>
+<br/>
+Setting "target" to "_self" will open the target model in the same window, while setting "target" to "_blank" will open the target model in a new window.
 
 <h3>Onclick Event Handler</h3>
-Alternatively, the field.onclick event can be bound for a fully custom event handler.
-** Example
-** Precedence of onclick / link - onclick will override link for button / linkbutton.  For html / link, the onclick will be attached to the body element, not the link.  For html with field.value, onclick will not be applied.
-
-{"control":"button", "value":"Edit Record", "link":"update:FieldStandardControls_Form"},
-{"control":"button", "value":"Run JavaScript", "link":"js:XExt.Alert('Sample Popup');"},
-
-
-<h3>Link / Bindings</h3>
-
-If the link's target model is the same as the current model, all querystring parameters will be copied.
-
-** Select Links
+In addition to the field.link property, the field.onclick event can be bound for a fully custom event handler.
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Onclick_Precedence?popup=1','Onclick Precedence')%>
+<pre>
+{ 
+  "layout":"form",
+  "unbound":"true",
+  "onecolumn":true,
+  "caption": ["Onclick Precedence"],
+  "fields": [
+    {"control": "button", "value":"JavaScript Link", "link": "js:XExt.Alert('Sample JS Link');"},
+    {"control": "button", "value":"JavaScript Onclick", "onclick": "js:XExt.Alert('Sample JS Onclick');"},
+    {"control": "button", "value":"Button with both JavaScript Link + Onclick", "link": "js:XExt.Alert('Sample JS Link');", "onclick": "js:XExt.Alert('Sample JS Onclick');"},
+    {"control": "label", "value":"Label with both JavaScript Link + Onclick", "link": "js:XExt.Alert('Sample JS Link');", "onclick": "js:XExt.Alert('Sample JS Onclick');"},
+    {"control": "html", "value":"HTML with both JavaScript Link + Onclick", "link": "js:XExt.Alert('Sample JS Link');", "onclick": "js:XExt.Alert('Sample JS Onclick');"}
+  ]
+}
+</pre>
+If both field.link and field.onclick are defined:<br/>
+<br/>
+For button / linkbutton controls, field.onclick will override field.link<br/>
+For html / link controls, the onclick will be attached to the body element, not the link, so field.link will take precedence.<br/>
+For html with field.value, onclick will not be applied.

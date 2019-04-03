@@ -49,6 +49,7 @@ create table c (
   c_id integer primary key autoincrement not null,
   c_sts text not null default 'ACTIVE',
   c_name text not null unique,
+  c_email text,
   c_ein blob,
   c_einhash blob,
   c_doc_ext text,
@@ -58,10 +59,12 @@ create table c (
   c_desc text,
   c_start_dt text,
   c_overdue_amt text,
+  c_parent_id integer null,
   c_entry_user text,
   c_entry_tstmp text,
   c_update_dt text,
-  foreign key (c_sts) references ucod_c_sts(codeval)
+  foreign key (c_sts) references ucod_c_sts(codeval),
+  foreign key (c_parent_id) references c(c_id)
 );
 create trigger c_after_insert after insert on c
 begin
@@ -77,8 +80,8 @@ begin
   delete from sdx where table_name='c' and table_id=OLD.c_id\;
   update jsharmony_meta set jsexec = '{ "function": "soundex", "source": "(select c_name from c where c_id='||NEW.c_id||')", "dest": "insert into sdx(table_name,field_name,table_id,sdx_word,sdx_val) values(''c'',''c_name'','||NEW.c_id||',(select c_name from c where c_id='||NEW.c_id||'),%%%SOUNDEX%%%)" }'\;
 end;
-insert into c(c_id,c_sts,c_name,c_desc,c_start_dt,c_overdue_amt) values (1,'DEACTIVE','ACME Industries','Industrial Fixtures',date('now', 'localtime'),'1234567.12');
-insert into c(c_id,c_sts,c_name,c_desc,c_start_dt,c_overdue_amt) values (2,'ACTIVE','Creative Engineering','',date('now', 'localtime'),'0');
+insert into c(c_id,c_sts,c_name,c_desc,c_start_dt,c_overdue_amt,c_email) values (1,'DEACTIVE','ACME Industries','Industrial Fixtures',date('now', 'localtime'),'1234567.12','user@example.com');
+insert into c(c_id,c_sts,c_name,c_desc,c_start_dt,c_overdue_amt,c_parent_id) values (2,'ACTIVE','Creative Engineering','',date('now', 'localtime'),'0',1);
 insert into c(c_id,c_sts,c_name,c_desc,c_start_dt,c_overdue_amt) values (3,'ACTIVE','Coffee Brothers','',null,'90.9');
 
 /*********c_ext*********/
@@ -107,6 +110,7 @@ create table ca (
 );
 insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country,ca_type) values (1,'123 Test St','Chicago','IL','60103','USA','BILLING');
 insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country,ca_type) values (1,'234 Main St','Chicago','IL','60103','USA','SHIPPING');
+insert into ca(c_id,ca_addr1,ca_city,ca_state,ca_zip,ca_country,ca_type) values (2,'111 S State St','Chicago','IL','60103','USA','BILLING');
 
 /*********CC*********/
 create table cc (

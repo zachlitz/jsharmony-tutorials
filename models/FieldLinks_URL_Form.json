@@ -1,0 +1,15 @@
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["URL Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "c_email", "control": "hidden"},
+
+    {"control": "button", "value":"Internal URL", "link": "url:/<%=xmodel.namespace%>FieldLinks_C?action=update&c_id=<%=data.c_id%>"},
+    {"control": "button", "value":"External URL", "link": "url:https://www.apharmony.com"},
+    {"control": "button", "value":"Email", "link": "url:mailto:<%=data.c_email%>"}
+  ]
+}

@@ -1,0 +1,16 @@
+{ 
+  "table":"c",
+  "layout":"grid",
+  "onecolumn":true,
+  "caption": ["Link Window Options"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    
+    {"control": "button", "value":"Link to Popup Form", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Link to Popup Form in Same Window", "link": "update(target=_self):FieldLinks_C"},
+    {"control": "button", "value":"Regular Link to Same Window", "link": "url:https://www.apharmony.com"},
+    {"control": "button", "value":"Regular Link in Popup", "link": "url(target=_blank):https://www.apharmony.com"},
+    {"control": "button", "value":"Regular Link in Popup w/Dimensions", "link": "url(target=_blank,width=600,height=600):https://www.apharmony.com"}
+  ]
+}

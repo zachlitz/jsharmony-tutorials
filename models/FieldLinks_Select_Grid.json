@@ -1,0 +1,11 @@
+{ 
+  "table":"c",
+  "layout":"grid",
+  "onecolumn":true,
+  "caption": ["Select Links"],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "label"},
+    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "c_parent_id", "caption": "Parent Customer ID", "control": "label","popuplov":{ "target":"FieldLinks_C_LOV", "codeval":"c_id" }}
+  ]
+}

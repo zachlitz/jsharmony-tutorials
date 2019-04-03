@@ -1,0 +1,13 @@
+{ 
+  "layout":"form",
+  "unbound":"true",
+  "onecolumn":true,
+  "caption": ["Onclick Precedence"],
+  "fields": [
+    {"control": "button", "value":"JavaScript Link", "link": "js:XExt.Alert('Sample JS Link');"},
+    {"control": "button", "value":"JavaScript Onclick", "onclick": "js:XExt.Alert('Sample JS Onclick');"},
+    {"control": "button", "value":"Button with both JavaScript Link + Onclick", "link": "js:XExt.Alert('Sample JS Link');", "onclick": "js:XExt.Alert('Sample JS Onclick');"},
+    {"control": "label", "value":"Label with both JavaScript Link + Onclick", "link": "js:XExt.Alert('Sample JS Link');", "onclick": "js:XExt.Alert('Sample JS Onclick');"},
+    {"control": "html", "value":"HTML with both JavaScript Link + Onclick", "link": "js:XExt.Alert('Sample JS Link');", "onclick": "js:XExt.Alert('Sample JS Onclick');","nl":1}
+  ]
+}
