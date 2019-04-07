@@ -15,7 +15,7 @@
     "layout":"form",
     "caption":["Document","Documents"],
     "fields":[
-      {"name":"c_doc","type":"file","caption":"Document","controlparams": {"data_folder": "c_doc"} }
+      {"name":"c_doc","type":"file","caption":"Document","controlparams": {"data_folder": "tutorials_c_doc"} }
     ]
   }
 }

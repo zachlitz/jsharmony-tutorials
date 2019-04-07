@@ -71,8 +71,22 @@ jsHarmonyTutorials.prototype.InitTutorialsDB = function(cb){
     if(rslt && rslt.length && rslt[0].length) console.log(JSON.stringify(rslt, null, 4));
     if(err){ console.log('Error initializing database'); console.log(err); }
     else console.log('Database ready');
-    if(cb) cb();
+    _this.InitTutorialsData(cb);
   });
+}
+
+jsHarmonyTutorials.prototype.InitTutorialsData = function(cb){
+  var _this = this;
+  async.waterfall([
+    async.apply(HelperFS.createFolderIfNotExists, _this.jsh.Config.datadir),
+    async.apply(HelperFS.createFolderIfNotExists, path.join(_this.jsh.Config.datadir,'tutorials_c_doc')),
+    async.apply(HelperFS.createFolderIfNotExists, path.join(_this.jsh.Config.datadir,'tutorials_allcontrols')),
+    async.apply(HelperFS.clearFiles, path.join(_this.jsh.Config.datadir,'tutorials_c_doc'), 0, 0),
+    async.apply(HelperFS.clearFiles, path.join(_this.jsh.Config.datadir,'tutorials_allcontrols'), 0, 0),
+    async.apply(HelperFS.copyRecursive, path.join(__dirname,'data','tutorials_c_doc'), path.join(_this.jsh.Config.datadir,'tutorials_c_doc'), {}),
+    async.apply(HelperFS.copyRecursive, path.join(__dirname,'data','tutorials_allcontrols'), path.join(_this.jsh.Config.datadir,'tutorials_allcontrols'), {}),
+    function(data_cb){ console.log('Data initialized'); return data_cb(); }
+  ], cb);
 }
 
 jsHarmonyTutorials.prototype.InitFactoryDB = function(cb){

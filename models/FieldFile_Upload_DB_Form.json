@@ -1,0 +1,22 @@
+{ 
+  "table":"c",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "File Upload - DB Optimized",
+  "fields": [
+    {"name":"c_id", "key":1,"caption":"ID"},
+    {"name":"c_doc","type":"file","control":"file_upload","caption":"Client Document",
+      "controlparams": { 
+        "data_folder": "tutorials_c_doc",
+        "sqlparams": {
+          "FILE_SIZE":   "c_doc_size",
+          "FILE_EXT":    "c_doc_ext",
+          "FILE_NAME":   "c_doc_filename",
+          "FILE_UU":     "c_doc_uu",
+          "FILE_UTSTMP": "c_doc_utstmp"
+        }
+      }
+    },
+   {"name":"c_doc_filename","sqlselect":"c_id||c_doc_ext","control":"hidden"}
+  ]
+}

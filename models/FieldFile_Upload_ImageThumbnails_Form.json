@@ -1,0 +1,22 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "Image Upload - Thumbnails",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_image_with_thumbnails","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "resize": [800,600],
+          "format": "jpg"
+        },
+        "thumbnails": {
+          "small": { "format": "jpg", "crop": [100, 100] },
+          "medium": { "format": "jpg", "resize": [400, 400, { "upsize": true, "extend": true }] }
+        }
+      }
+    }
+  ]
+}

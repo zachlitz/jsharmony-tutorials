@@ -26,6 +26,110 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Code": ["/models/CL.json"]
 }
 </script>
+
+FieldFile_ImageListing
+FieldFile_Validation
+
+<h3>File Upload Control</h3>
+The "file_upload" control is used to save a file per database record.  Files are stored in the file system, in the "data" folder.<br/>
+<br/>
+A basic file upload control can be added as follows:
+<%-getScreenshot('jsHarmonyTutorials/FieldFile_Upload_Form?action=update&x_primary=1&popup=1','File Upload - Basic')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "File Upload",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_file","type":"file","caption":"x_file", "controlparams": { "data_folder": "tutorials_allcontrols" }}
+  ]
+}
+</pre>
+A field with field.type="file" will automatically have field.control="file_upload" in form / form-m / exec / report layouts, and field.control="file_download" on grid layouts.
+
+The "file_upload" control has the following options:
+<pre>
+{
+  "control": "file_upload",
+  "controlparams": {
+    "data_folder": "D",            //Subfolder name under "config.datadir" for the files, should be unique per data_file_prefix
+    "data_file_prefix": "c_doc",   //File name prefix {{PREFIX}}_{{KEY}}{{.EXT}} (Prefix defaults to field name if blank or not set)
+
+    //System Parameters
+    "_data_file_has_extension": false, //Whether the data file is saved with an extension
+                                       //Automatically set to true if sqlparams.FILE_EXT not set.
+                                       //Slower because a directory search is required on each request.  
+
+    //Interface parameters (Button Captions)
+    //  By default, if controlparams.image or controlparams.thumbnails is defined, preview_button is enabled and download_button is not set
+    //  Otherwise, for regular files, download_button is enabled and preview_button is not set
+    "download_button": "Download", //Text for the download button (for downloading files)
+    "preview_button": "View",      //Text for the preview button (for viewing images, opens in new browser window)
+    "upload_button": "Upload",     //Text for the upload button
+    "delete_button": "Delete",     //Text for the delete button
+
+    //Database parameters
+    "sqlparams": {
+      "FILE_SIZE": "d_size",     //File Size (updated on save)
+      "FILE_EXT": "d_ext",       //File Extension (updated on save)
+      "FILE_UTSTMP": "d_utstmp", //Upload Timestamp - (updated on save - set to TSTMP in sql/_global.mssql.json)
+      "FILE_UU": "d_uu",         //Upload User - (updated on save - set to CUSER in sql/_global.mssql.json)
+      "FILE_NAME": "d_filename"  //Alternate file name for when user downloads the file (read, but not saved, to database)
+    },
+
+    //Image Processing Parameters
+    "image": {
+      "format": "jpg", //jpg or png
+
+      //Use one of the following properties to process the image after upload
+      "crop": [800,600],   //Resizes and then crops the image to the target box
+      "resize": [800,600], //Resizes the image to fit within the target box
+      "resize": [225,75,{ "upsize": true, "extend":  true }], //Upsize = increase size if smaller
+                                                              //Extend = increase size to max, then center content
+      
+    },
+    "thumbnails": {
+      "D_Medium": { //Thumbnail ID is used in the thumbnail file name: {{PREFIX}}_{{THUMBNAIL_ID}}_{{KEY}}{{.EXT}} 
+        "format": "jpg", //jpg or png
+
+        //Use one of the following properties to process the image after upload
+        "crop": [800,600],   //Resizes and then crops the image to the target box
+        "resize": [800,600], //Resizes the image to fit within the target box
+        "resize": [225,75,{ "upsize": true, "extend":  true }], //Upsize = increase size if smaller
+                                                                //Extend = increase size to max, then center content
+      } 
+    },
+}
+</pre>
+
+<h3>File Download Control</h3>
+
+<h3>File Upload w/Database Optimization</h3>
+
+<h3>File Management Architecture</h3>
+* Routes / endpoints
+* Temp folder / upload process
+
+<h3>Image Upload / Resizing</h3>
+** Show resulting images for each of the 4 operations, in a border box
+
+<h3>Image Thumbnails</h3>
+
+<h3>Image Listing</h3>
+** Form with image
+** Grid listing of images / thumbnails
+** Picture gallery with zoom
+
+<h3>File Validation</h3>
+
+<h3>File System Parameters</h3>
+
+
+
+
+<pre>
 file_upload
 file_download - How to do it in a grid, and in a form
 
@@ -53,7 +157,7 @@ file_download - How to do it in a grid, and in a form
         "preview_button": "View Image", //Text for preview button - opens within new browser window
         "upload_button": "Upload New File", //Text for upload button
         "delete_button": "Delete File", //Text for delete button
-        "data_folder": "D",//Folder for files, must be unique per model
+        "data_folder": "D",//Folder for files, must be unique per data_file_prefix
         "save_file_with_extension": true, //Slower because a directory search is required on each request.  Automatically set to true if sqlparams.FILE_EXT not set
   }, 
 
@@ -68,3 +172,4 @@ validation
 
 
 
+</pre>

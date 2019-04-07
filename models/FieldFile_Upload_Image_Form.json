@@ -1,0 +1,44 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "Image Upload",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_image_basic","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "format": "jpg"
+        }
+      }
+    },
+    {"name":"x_image_crop","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "crop": [800,600],
+          "format": "jpg"
+        }
+      }
+    },
+    {"name":"x_image_resize","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "resize": [800,600],
+          "format": "jpg"
+        }
+      }
+    },
+    {"name":"x_image_resize_extend","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "resize": [800,800,{ "upsize": true, "extend":  true }],
+          "format": "jpg"
+        }
+      }
+    }
+  ]
+}

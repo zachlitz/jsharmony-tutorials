@@ -23,7 +23,42 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "ID": "field_links",
   "Title": "Links",
   "Menu": ["Models","Fields / Controls","Built-in Controls"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": [
+    "/models/FieldLinks_Standard_Form.json",
+    "/models/FieldLinks_Standard_Grid.json",
+    "/models/FieldLinks_C.json",
+    "/models/FieldLinks_Parameters_Form.json",
+    "/models/FieldLinks_Parameters_Grid.json",
+    "/models/FieldLinks_Download_Form.json",
+    "/models/FieldLinks_Download_Grid.json",
+    "/models/FieldLinks_Select_Form.json",
+    "/models/FieldLinks_Select_Grid.json",
+    "/models/FieldLinks_C_LOV.json",
+    "/models/FieldLinks_URL_Form.json",
+    "/models/FieldLinks_URL_Grid.json",
+    "/models/FieldLinks_JS_Form.json",
+    "/models/FieldLinks_JS_Grid.json",
+    "/models/FieldLinks_WindowOptions_Form.json",
+    "/models/FieldLinks_WindowOptions_Grid.json",
+    "/models/FieldLinks_Onclick_Precedence.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldLinks_Standard_Form?action=update&c_id=1", "title": "Standard Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Standard_Grid", "title": "Standard Links - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Parameters_Form?action=update&ca_id=1", "title": "Link Parameters - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Parameters_Grid", "title": "Link Parameters - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Download_Form?action=update&c_id=1", "title": "Download Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Download_Grid", "title": "Download Links - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Select_Form?action=update&c_id=1", "title": "Select Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Select_Grid", "title": "Select Links - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_URL_Form?action=update&c_id=1", "title": "Custom URL Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_URL_Grid", "title": "Custom URL Links - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_JS_Form?action=update&c_id=1", "title": "Custom JS Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_JS_Grid", "title": "Custom JS Links - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_WindowOptions_Form?action=update&c_id=1", "title": "Window Options - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_WindowOptions_Grid", "title": "Window Options - Grid" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Onclick_Precedence", "title": "Onclick Precedence" }
+  ]
 }
 </script>
 
@@ -196,7 +231,7 @@ Both forms and grids can provide "Download" links and buttons, so that users can
     {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
     {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
     {"control": "label", "value":"Download", "link": "download:FieldLinks_C&c_doc",
-     "type":"file", "controlparams": { "data_folder": "c_doc", "data_file_prefix": "c_doc" } }
+     "type":"file", "controlparams": { "data_folder": "tutorials_c_doc", "data_file_prefix": "c_doc" } }
   ]
 }
 </pre>
@@ -376,7 +411,7 @@ Window options are added in parenthesis before the link target.  The window opti
 <br/>
 Setting "target" to "_self" will open the target model in the same window, while setting "target" to "_blank" will open the target model in a new window.
 
-<h3>Onclick Event Handler</h3>
+<h3>Onclick Event Handler Precendence</h3>
 In addition to the field.link property, the field.onclick event can be bound for a fully custom event handler.
 <%-getScreenshot('jsHarmonyTutorials/FieldLinks_Onclick_Precedence?popup=1','Onclick Precedence')%>
 <pre>

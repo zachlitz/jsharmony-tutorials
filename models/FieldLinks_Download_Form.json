@@ -8,6 +8,6 @@
     {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
     {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
     {"control": "label", "value":"Download", "link": "download:FieldLinks_C&c_doc",
-     "type":"file", "controlparams": { "data_folder": "c_doc", "data_file_prefix": "c_doc" } }
+     "type":"file", "controlparams": { "data_folder": "tutorials_c_doc", "data_file_prefix": "c_doc" } }
   ]
 }
