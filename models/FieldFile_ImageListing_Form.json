@@ -5,10 +5,11 @@
   "caption": "Image Listing",
   "fields": [
     {"name":"x_primary", "type":"int", "key":1},
-    {"name":"x_image_with_thumbnails","control":"image","type":"file",
-      "controlparams": { "data_folder": "tutorials_allcontrols" }
+    {"name":"x_image_with_thumbnails","control":"image","type":"file","caption":"Image",
+      "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "controlstyle": "max-width: 300px; max-height: 150px;"
     },
-    {"control":"image","type":"file",
+    {"control":"image","type":"file","caption":"Thumbnail",
       "controlparams": {
         "data_folder": "tutorials_allcontrols",
         "data_file_prefix": "x_image_with_thumbnails",

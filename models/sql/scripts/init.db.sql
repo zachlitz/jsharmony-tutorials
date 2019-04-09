@@ -308,6 +308,7 @@ Test Line 3',
   '0',
   'Test Password'
 );
+insert into allcontrols(x_label) values ('Third row');
 
 
 insert into jsharmony.pe(pe_id,pe_fname,pe_lname,pe_email,pe_startdt,pe_pw1,pe_pw2)

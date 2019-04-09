@@ -17,7 +17,7 @@
       "controlparams": {
         "data_folder": "tutorials_allcontrols", 
         "image": {
-          "crop": [800,600],
+          "crop": [600,600],
           "format": "jpg"
         }
       }
@@ -26,7 +26,7 @@
       "controlparams": {
         "data_folder": "tutorials_allcontrols", 
         "image": {
-          "resize": [800,600],
+          "resize": [600,600],
           "format": "jpg"
         }
       }
@@ -35,7 +35,7 @@
       "controlparams": {
         "data_folder": "tutorials_allcontrols", 
         "image": {
-          "resize": [800,800,{ "upsize": true, "extend":  true }],
+          "resize": [600,600,{ "upsize": true, "extend":  true }],
           "format": "jpg"
         }
       }

@@ -1,0 +1,15 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "File Upload Validation",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_file1","type":"file","caption":"Small Image", "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "validate": ["Extension:jsh.Config.supported_images","MaxSize:100000"]
+    },
+    {"name":"x_file2","type":"file","caption":"Excel File", "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "validate": ["Extension:['.XLS','.XLSX','.XLSM']","Required"]
+    }
+  ]
+}
