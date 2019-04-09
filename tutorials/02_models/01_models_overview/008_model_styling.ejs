@@ -96,7 +96,7 @@ The "tablestyle" property defines the style of the grid's HTML table.
 <h3 data-level="2">model.rowstyle / model.rowclass</h3>
 The "rowstyle" and "rowclass" properties are applied to the "style" and "class" of each TR data row of the grid.<br/>
 <br/>
-EJS can be used to add dynamic styles based on the row index or row data.  EJS should be escaped with &lt;# ... #&gt;.  The following EJS variables are available:
+EJS can be used to add dynamic styles based on the row index or row data.  EJS should be escaped with &lt;% ... %&gt;.  The following EJS variables are available:
 <ul>
   <li><b>rowid</b> : The grid row index, starting from 0 as the first row</li>
   <li><b>datarow</b> : The current row's data.  Fields are accessible via datarow['FIELDNAME']</li>
@@ -110,8 +110,8 @@ Additionally, "even" and "odd" classes are automatically added to each grid row.
 The xejs.iif and xejs.case statements can be used for conditional styles:
 <pre>
 {
-  "rowstyle": "<#=xejs.iif(datarow['c_sts']=='ACTIVE','color:red;','color:black;')#>",
-  "rowclass": "<#-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')#>"
+  "rowstyle": "&lt;%=xejs.iif(datarow['c_sts']=='ACTIVE','color:red;','color:black;')%&gt;",
+  "rowclass": "&lt;%-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')%&gt;"
 }
 </pre>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_rowstyle?popup=1','Model Style - rowstyle')%>

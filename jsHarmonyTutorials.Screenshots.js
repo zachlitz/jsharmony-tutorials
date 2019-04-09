@@ -96,6 +96,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   if(!params.browserHeight) params.browserHeight = _this.DEFAULT_SCREENSHOT_SIZE[1];
 
   var getCropRectangle = function(selector){
+    document.querySelector('html').style.overflow = 'hidden';
     if(!selector) return null;
     return new Promise(function(resolve){
       if(!jshInstance) return resolve();

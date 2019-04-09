@@ -52,13 +52,13 @@ For example:
   }
 }
 </pre>
-Next, the HTML/EJS template needs to be defined.  The EJS uses &lt# ... #&gt; escape tags.  The HTML/EJS should be defined in a MODELID.ejs file, in the same folder as MODELID.json:
+Next, the HTML/EJS template needs to be defined.  The EJS uses &lt;% ... %&gt; escape tags for the initial render pass, and &lt;%% ... %%&gt; for the data render pass.  The HTML/EJS should be defined in a MODELID.ejs file, in the same folder as MODELID.json:
 <pre>
 <div class="xelem&lt;%=model.class%&gt; xgrid_CL_placeholder"></div>
 <script class="xgrid_CL_template" type="text/x-ejs-template" data-target=".xgrid_CL_placeholder">
-  <# _.each(data, function(row){  #>
-    <div><#=row.c_name#></div>
-  <# }); #>
+  &lt;%% _.each(data, function(row){  %%&gt;
+    <div>&lt;%%=row.c_name%%&gt;</div>
+  &lt;%% }); %%&gt;
 </script>
 </pre>
 There are two components to the Custom Grid Template, a "placeholder" and the "template".<br/>

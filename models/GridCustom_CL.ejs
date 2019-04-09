@@ -1,6 +1,6 @@
 <div class="xelem<%=model.class%> xgrid_GridCustom_CL_placeholder"></div>
 <script class="xgrid_GridCustom_CL_template" type="text/x-ejs-template" data-target=".xgrid_GridCustom_CL_placeholder">
-  <# _.each(data, function(row){  #>
-    <a href="#" onclick="<#-js('XExt.popupForm("CW","update",{"c_id":'+row.c_id+'})')#>"><#=row.c_name#></a><br/>
-  <# }); #>
+  <%% _.each(datatable, function(row){  %%>
+    <a href="#" onclick="<%%-js('XExt.popupForm("<%=model.namespace%>GridCustom_C","update",{"c_id":'+row.c_id+'})')%%>"><%%=row.c_name%%></a><br/>
+  <%% }); %%>
 </script>
