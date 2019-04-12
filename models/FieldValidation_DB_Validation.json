@@ -1,0 +1,27 @@
+{
+  "FieldValidation_DB_Validation": { 
+    "table":"allcontrols",
+    "layout":"form",
+    "onecolumn":true,
+    "caption": ["Item", "Items"],
+    "popup":[900,400],
+    "fields": [
+      { "name": "x_error", "lov": { "values": { "application_error": "application_error", "application_warning": "application_warning", "execute_form": "execute_form" }, "blank": true } },
+      { "control": "html", "value": "Select a sample database error and click 'Save'" }
+    ]
+  },
+
+  "FieldValidation_DB_ErrorForm": {
+    "table":"allcontrols",
+    "layout":"form",
+    "onecolumn":true,
+    "caption": "Error",
+    "popup":[500,300],
+    "oninit": "debugger;",
+    "fields": [
+      { "name": "x_primary", "control": "label" },
+      { "control": "label", "value": "An error occurred saving the following data:" },
+      { "name": "x_error_value", "unbound": true, "control": "label" },
+    ]
+  }
+}

@@ -25,39 +25,114 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Menu": ["Models","Fields / Controls"]
 }
 </script>
-Validation
 
+<h3>Overview</h3>
+Setting the field.validate property automatically adds both client-side and server-side validation for that field.  If the field is unbound, only the client-side validator is added.<br/>
+<br/>
+The following validators are available:
+
+<pre>
+**FieldValidation_Form
+**FieldValidation_Custom_Validators
+**FieldValidation_DB_Validators
+**FieldValidation_DB_ErrorForm
+FieldValidation_Custom_API_Validation
+  Roles
+  Parameter # / Names
+  Fields
+FieldValidation_Custom_ClientSide_Validation
+
+** How to validate database data before saving?
+** How to run form when returning from the database?
+</pre>
+
+<pre>
 "validate": [ 
   "Required", 
-  "MaxLength:5", 
-  "MinLength:5", 
+  "MaxLength:5",    //Parameter: NUMBER_OF_CHARACTERS
+  "MinLength:5",    //Parameter: NUMBER_OF_CHARACTERS
   "IsNumeric", 
-  "IsNumeric:true" (Only positive), 
+  "IsNumeric:true", //Parameter: true if only positive numbers are allowed
   "IsDecimal", 
-  "IsDecimal:3" (3 decimal places), 
+  "IsDecimal:3",    //Parameter: NUMBER_OF_DECIMAL_PLACES
   "IsFloat",
-  "MaxValue:999", 
-  "MinValue:100", 
-  "RegEx:'/regex/','be a correct value.'", 
+  "MaxValue:999",   //Parameter: MAXIMUM_VALUE
+  "MinValue:100",   //Parameter: MINIMUM_VALUE
+  "RegEx:'/regex/','be a correct value.'",  //Parameters: 'REGULAR_EXPRESSION','ERROR_MESSAGE_SUFFIX'
   "IsEmail", 
   "IsDate", 
   "IsSSN",
   "IsEIN",
   "IsValidDOB"
-  "MinDOB:1920"
+  "MinAge:21"       //Parameter: MINIMUM_AGE_IN_YEARS
   "IsPhone",
   "IsTime",
-  "Luhn" / IsCreditCard****
-  "InArray:['VALUE1','VALUE2','VALUE3']"
-  *** Equals ***
-  ],
-// File can be , 
-[
-  "Required",
-  "MaxSize:5000000" (bytes),
-  "Extension:['.PDF','.JPEG']"
-]
+  "Luhn",
+  "InArray:['VALUE1','VALUE2','VALUE3']"  //Parameter: Array of possible values (case-sensitive)
+  "Equals:x_password"  //Parameter: Field name that the current field must be equal to (for confirming a password or email)
+],
 
+//Validators specific to field.type="file"
+"validate": [
+  "Required",
+  "MaxSize:5000000",           //Parameter: MAXIMUM_FILE_SIZE_BYTES
+  "Extension:['.PDF','.JPEG']" //Parameter: Array of acceptable file extensions
+]
+</pre>
+
+See the <a href="/tutorials/field_control_file#file_upload_validation">File Upload Validation</a> tutorial for more information on validating files.
+
+<pre>
 Model Validation
+  Parameters requires for API
 
 Custom Validators
+
+Running Validation
+  Client-side
+  Server-side
+</pre>
+
+
+
+
+<pre>
+  create trigger allcontrols_before_update before update on allcontrols
+  begin
+    select case when (NEW.x_error is not null) and (NEW.x_error = 'application_error') then raise(FAIL,'Application Error - Sample Application Error') end\;
+    select case when (NEW.x_error is not null) and (NEW.x_error = 'application_warning') then raise(FAIL,'Application Warning - Sample Application Warning') end\;
+    select case when (NEW.x_error is not null) and (NEW.x_error = 'execute_form') then raise(FAIL,'Execute Form - Sample Execute Form //&lt;%=xmodel.namespace%&gt;FieldValidation_DB_ErrorForm?action=update&x_primary=&lt;%=xmodel.get("x_primary")%&gt;&x_error_value=&lt;%=xmodel.get("x_error")%&gt;') end\;
+    select case when (NEW.x_error is not null) then raise(FAIL,'Application Error - Invalid value for x_error') end\;
+  end;
+  
+  CREATE trigger [jsharmony].[CPE_IUD] on [jsharmony].[cpe] for insert, update, delete AS
+  BEGIN
+    IF exists(select * from inserted) and UPDATE(PE_ID)
+    BEGIN
+      raiserror('Application Error - Password length - at least 6 characters required',16,1)
+      ROLLBACK TRANSACTION
+      return
+    END
+  END
+  
+  CREATE FUNCTION cpe_iud() RETURNS trigger AS $$
+  BEGIN
+      IF TG_OP = 'UPDATE'
+         and
+         jsharmony.nonequal(NEW.pe_id, OLD.pe_id) THEN
+        RAISE EXCEPTION  'Application Error - ID cannot be updated.';
+      END IF;
+  END;
+  $$ LANGUAGE plpgsql;
+  
+  CREATE TRIGGER cpe_iud BEFORE INSERT OR DELETE OR UPDATE ON cpe FOR EACH ROW EXECUTE PROCEDURE cpe_iud();
+  
+      if(err.message.indexOf('Application Error - ') == 0) return errorHandler(-5, err.message, stats);
+      if(err.message.indexOf('Application Warning - ') == 0) return errorHandler(-5, err.message, stats);
+      if(err.message.indexOf('Execute Form - ') == 0) return errorHandler(-5, err.message, stats);
+      
+      
+      
+      Execute Form - MESSAGE //C?c_id=1
+  
+</pre>

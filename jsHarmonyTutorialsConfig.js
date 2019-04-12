@@ -46,6 +46,16 @@ jsHarmonyTutorialsConfig.prototype.Init = function(cb, jsh){
     };
   }
 
+  if(!jsh.XValidate._v_MinWordCount) jsh.XValidate._v_MinWordCount = function(minWords){
+    return function(_caption, _val, _obj){
+      if((typeof _val == "undefined")||(_val==="")||(_val===null)) return '';
+      var numWords = _val.toString().trim().split(/\s+/).length;
+      if(numWords < minWords) return _caption+' must have at least '+minWords+' words.';
+      return '';
+    }
+  }
+  jsh.XValidate._v_MinWordCount.runat = ['server','client'];
+
   if(cb) return cb();
 }
 

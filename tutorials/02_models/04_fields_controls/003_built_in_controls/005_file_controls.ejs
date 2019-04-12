@@ -23,7 +23,32 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "ID": "field_control_file",
   "Title": "File / Image Controls",
   "Menu": ["Models","Fields / Controls","Built-in Controls"],
-  "Code": ["/models/CL.json"]
+  "Code": [
+    "/models/FieldFile_Upload_Form.json",
+    "/models/FieldFile_Download_Form.json",
+    "/models/FieldFile_Download_Grid.json",
+    "/models/FieldFile_Upload_DB_Form.json",
+    "/models/FieldFile_Download_DB_Form.json",
+    "/models/FieldFile_Download_DB_Grid.json",
+    "/models/FieldFile_Upload_Image_Form.json",
+    "/models/FieldFile_Upload_ImageThumbnails_Form.json",
+    "/models/FieldFile_ImageListing_Form.json",
+    "/models/FieldFile_ImageListing_Grid.json",
+    "/models/FieldFile_Upload_Validation_Form.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldFile_Upload_Form?action=update&x_primary=1", "title": "File Upload Control - Basic" },
+    { "url": "jsHarmonyTutorials/FieldFile_Download_Form?action=update&x_primary=1", "title": "File Download Control - Basic Form" },
+    { "url": "jsHarmonyTutorials/FieldFile_Download_Grid", "title": "File Download Control - Basic Grid" },
+    { "url": "jsHarmonyTutorials/FieldFile_Upload_DB_Form?action=update&c_id=1", "title": "File Upload Control - Database Optimized" },
+    { "url": "jsHarmonyTutorials/FieldFile_Download_DB_Form?action=update&c_id=1", "title": "File Download Control - Database Optimized - Form" },
+    { "url": "jsHarmonyTutorials/FieldFile_Download_DB_Grid", "title": "File Download Control - Database Optimized - Grid" },
+    { "url": "jsHarmonyTutorials/FieldFile_Upload_Image_Form?action=update&x_primary=1", "title": "File Upload Control - Image Processing" },
+    { "url": "jsHarmonyTutorials/FieldFile_Upload_ImageThumbnails_Form?action=update&x_primary=1", "title": "File Upload Control - Thumbnail Generation" },
+    { "url": "jsHarmonyTutorials/FieldFile_ImageListing_Form?action=update&x_primary=1", "title": "Image Control - Form" },
+    { "url": "jsHarmonyTutorials/FieldFile_ImageListing_Grid", "title": "Image Control - Grid" },
+    { "url": "jsHarmonyTutorials/FieldFile_Upload_Validation_Form?action=update&x_primary=1", "title": "File Upload Validation" }
+  ]
 }
 </script>
 
@@ -104,6 +129,7 @@ The "file_upload" control has the following options:
     },
 }
 </pre>
+The field.controlparams._data_file_has_extension property is a system-only parameter.  The property is automatically set to "true" if field.controlparams.sqlparams.FILE_EXT is not set, so that the system knows that it needs to save the file extension with each file.
 
 <h3>File Download Control</h3>
 The "file_download" control enables downloading a previously uploaded file.  For example:
@@ -128,7 +154,7 @@ The "file_download" control is hidden when the file does not exist, since the "f
 The "file_download" control has the following options:
 <pre>
 {
-  "control": "file_upload",
+  "control": "file_download",
   "controlparams": {
     "data_folder": "D",            //Subfolder name under "config.datadir" for the files, should be unique per data_file_prefix
     "data_file_prefix": "c_doc",   //File name prefix {{PREFIX}}_{{KEY}}{{.EXT}} (Prefix defaults to field name if blank or not set)
@@ -195,11 +221,11 @@ As a result, in the above model, the following SQL is generated for the select a
 <pre>
 Select
 ------
-select c_id,(c_id||c_doc_ext) as "c_doc_filename",c_doc_ext,c_doc_size,c_doc_utstmp,c_doc_uu from c where  1=1  and c_id=@c_id
+select c_id, (c_id||c_doc_ext) as "c_doc_filename", c_doc_ext, c_doc_size, c_doc_utstmp, c_doc_uu from c where  1=1 and c_id=@c_id
 
 Update
 ------
-update c set c_doc_ext=@c_doc_ext,c_doc_size=@c_doc_size,c_doc_utstmp=datetime('now','localtime'),c_doc_uu=(select context from jsharmony_meta limit 1) where 1=1  and c_id=@c_id;
+update c set c_doc_ext=@c_doc_ext, c_doc_size=@c_doc_size, c_doc_utstmp=datetime('now','localtime'), c_doc_uu=(select context from jsharmony_meta limit 1) where 1=1 and c_id=@c_id
 </pre>
 The FILE_UTSTMP parameter is bound to the jsHarmony "CUSER" sql expression, while the FILE_UU parameter is bound to the jsHarmony "TSTMP" sql expression.  The CUSER and TSTMP expressions are defaulted to the current user and current timestamp in jsharmony-factory\models\sql\_global.DB.json, but can be overridden in the local application.<br/>
 <br/>
@@ -231,67 +257,292 @@ The "file_download" control with the database optimization is implemented as fol
 </pre>
 
 <h3>File Management Architecture</h3>
-* Routes / endpoints
-* Temp folder / upload process
+Files are stored in the folder defined by jsh.Config.datadir.  Each file is stored in the folder defined by field.controlparams.data_folder and field.controlparams.data_file_prefix.  If data_file_prefix is not set, it will default to the name of the field.<br/>
+<br/>
+File names are set as follows:
+<pre>
+Without field.controlparams.sqlparams.FILE_EXT:
+  Standard file / image:
+    {DATA_FOLDER}\{DATA_FILE_PREFIX}_{PRIMARY_KEY_VALUE}.{FILE_EXTENSION}
+  Thumbnail:
+    {DATA_FOLDER}\{DATA_FILE_PREFIX}_{THUMBNAIL_ID}_{PRIMARY_KEY_VALUE}.{FILE_EXTENSION}
+
+With field.controlparams.sqlparams.FILE_EXT:
+  Standard file / image:
+    {DATA_FOLDER}\{DATA_FILE_PREFIX}_{PRIMARY_KEY_VALUE}
+  Thumbnail:
+    {DATA_FOLDER}\{DATA_FILE_PREFIX}_{THUMBNAIL_ID}_{PRIMARY_KEY_VALUE}
+</pre>
+
+The following process is used to upload files:
+<ol>
+  <li>While editing the record, a file is uploaded as a temporary file, using /_ul/, and assigned a temporary ID ("tempid")
+    <ul>
+      <li>/_ul/ can be used for a JSONP interface</li>
+      <li>/_ul/json can be used for a JSON interface</li>
+    </ul>
+  </li>
+  <li>Before the record is saved, the file can be downloaded using /_dl/_temp/:tempid</li>
+  <li>On save:
+    <ul>
+      <li>A new file can be added/replaced by setting the field to the temporary ID: field_name=_temp/tempid.jpg</li>
+      <li>An existing file can be deleted by setting the field to blank: field_name=</li>
+      <li>No changes can be made by omitting the field from the post data</li>
+    </ul>
+  </li>
+  <li>After the record is saved, a file can be downloaded using /_dl/:modelid/:keyid/:fieldname</li>
+  <li>Each user has their own temporary data store.  This can be cleared by accessing /_ul/clear</li>
+</ol>
+
+A full listing of file-related routes is as follows:
+<pre>
+/_ul/               :: JSONP route for uploading a file to the temporary user store
+/_ul/json           :: JSON route for uploading a file to the temporary user store
+/_ul/clear          :: Route for clearing the temporary user store
+/_ul/ckeditor       :: Route for uploading a CKEditor file to the shared cmsfiles subfolder
+/_dl/_temp/:tempid  :: Route for downloading a file from the temporary user store
+/_dl/:modelid/:keyid/:fieldname :: Route for downloading a saved file from the data folder
+</pre>
+Older files are automatically deleted from the temporary user store.  The file expiration is defined by the "user_temp_expiration" config setting.
 
 <h3>Image Upload / Resizing</h3>
-** Show resulting images for each of the 4 operations, in a border box
+The "file_upload" control can also be used to upload and automatically resize / resample images:
+<%-getScreenshot('jsHarmonyTutorials/FieldFile_Upload_Image_Form?action=update&x_primary=1&popup=1','Image Processing')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "Image Upload",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_image_basic","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "format": "jpg"
+        }
+      }
+    },
+    {"name":"x_image_crop","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "crop": [300,300],
+          "format": "jpg"
+        }
+      }
+    },
+    {"name":"x_image_resize","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "resize": [300,300],
+          "format": "jpg"
+        }
+      }
+    },
+    {"name":"x_image_resize_extend","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
+        "image": {
+          "resize": [300,300,{ "upsize": true, "extend":  true }],
+          "format": "jpg"
+        }
+      }
+    }
+  ]
+}
+</pre>
+
+<style type="text/css">
+.field_control_file_image_samples div {
+  border:1px solid black;
+  display:inline-block;
+}
+</style>
+
+Either "resize" or "crop" can be added to post-process the image so that it fits a target dimension.  Crop will resize the image to be larger than the bounding box and then crop the edges, while resize will resize to image to fit within the bounding box.<br/>
+<br/>
+Resize has two additional options: upsize and extend.  Upsize will increase the size of the image if it is initially smaller than the box.  Extend will add a white background so that the resulting image will be centered within the target box.<br/>
+<br/>
+Below are samples of the resulting images from the above model definition:<br/>
+<br/>
+<div class="field_control_file_image_samples">
+  Basic Image (No resize or crop):<br/>
+  <div><img src="/_dl/jsHarmonyTutorials/FieldFile_Upload_Image_Form/1/x_image_basic?view=1&_=<%=Date.now()%>&thumb=true" /></div><br/>
+  <br/>
+  Crop to 300x300:<br/>
+  <div><img src="/_dl/jsHarmonyTutorials/FieldFile_Upload_Image_Form/1/x_image_crop?view=1&_=<%=Date.now()%>&thumb=true" /></div><br/>
+  <br/>
+  Resize to 300x300:<br/>
+  <div><img src="/_dl/jsHarmonyTutorials/FieldFile_Upload_Image_Form/1/x_image_resize?view=1&_=<%=Date.now()%>&thumb=true" /></div><br/>
+  <br/>
+  Resize + Extend to 300x300:<br/>
+  <div><img src="/_dl/jsHarmonyTutorials/FieldFile_Upload_Image_Form/1/x_image_resize_extend?view=1&_=<%=Date.now()%>&thumb=true" /></div><br/>
+</div>
+<br/>
+Uploaded images can be embedded using the following URL:
+<pre>
+/_dl/:modelid/:keyid/:fieldname?view=1
+
+The view option returns the file directly, instead of setting the headers to download the file as an attachment.
+
+Additionally, it is recommended to add an "_" parameter with the current timestamp in order to block caching, so that the latest version of the image is always downloaded.
+
+For example:
+&lt;img src="/_dl/jsHarmonyTutorials/FieldFile_Upload_Image_Form/1/x_image_resize_extend?view=1&_=<%=Date.now()%>" /&gt;
+</pre>
 
 <h3>Image Thumbnails</h3>
-
-<h3>Image Listing</h3>
-** Form with image
-** Grid listing of images / thumbnails
-** Picture gallery with zoom
-
-<h3>File Validation</h3>
-
-<h3>File System Parameters</h3>
-
-
-
-
+In addition to post-processing the primary image, additional thumbnails can be generated during the file upload process using the "thumbnails" property:
+<%-getScreenshot('jsHarmonyTutorials/FieldFile_Upload_ImageThumbnails_Form?action=update&x_primary=1&popup=1','Image Processing')%>
 <pre>
-file_upload
-file_download - How to do it in a grid, and in a form
-
-{"sqlparams": {"FILE_SIZE": "d_size",  //file_upload params - File Size
-          "FILE_EXT": "d_ext", //File Extension
-          "FILE_UTSTMP": "d_utstmp", //Upload Timestamp - will be combined with TSTMP sql
-          "FILE_UU": "d_uu", //Upload User - will be combined with CUSER sql
-          "FILE_NAME": "d_filename" //Target file name for download
-        },
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "Image Upload - Thumbnails",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_image_with_thumbnails","type":"file",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols", 
         "image": {
-          "crop": [800,600], //Use either crop or resize
           "resize": [800,600],
-          "resize": [225,75,{ "upsize": true, "extend":  true }], //upsize = increase size if smaller, extend = increase size to max, center content
-          "format": "jpg", //jpg or png
+          "format": "jpg"
         },
         "thumbnails": {
-          "D_Medium": { //Key = file name
-            "crop": [800,600], //Use either crop or resize
-            "resize": [800,600],
-            "resize": [225,75,{ "upsize": true, "extend":  true }],
-            "format": "jpg", //jpg or png
-          } 
-        },
-        "download_button": "Download Document", //Text for download button
-        "preview_button": "View Image", //Text for preview button - opens within new browser window
-        "upload_button": "Upload New File", //Text for upload button
-        "delete_button": "Delete File", //Text for delete button
-        "data_folder": "D",//Folder for files, must be unique per data_file_prefix
-        "save_file_with_extension": true, //Slower because a directory search is required on each request.  Automatically set to true if sqlparams.FILE_EXT not set
-  }, 
+          "small": { "format": "jpg", "crop": [100, 100] },
+          "medium": { "format": "jpg", "resize": [400, 400, { "upsize": true, "extend": true }] }
+        }
+      }
+    }
+  ]
+}
+</pre>
+Each thumbnail has the same "crop" and "resize" options as the primary image.<br/>
+<br/>
+The first thumbnail is displayed on the form after upload.  An alternate thumbnail can be selected for the preview via the field.controlparams.show_thumbnail property.
 
-images
-file extensions in config
-temp folder / upload process
-parameters on Config
+<h3>Image Control / Listing</h3>
+Images can be embedded in grids and forms by using the "image" control.  The "image" control only displayed if the image exists, avoiding broken image links.
+<%-getScreenshot('jsHarmonyTutorials/FieldFile_ImageListing_Grid?popup=1','Image Listing')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"grid",
+  "caption": "Image Listing",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_image_with_thumbnails","control":"image","type":"file","caption":"Image",
+      "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "controlstyle": "max-width: 200px; max-height: 100px;"
+    },
+    {"control":"image","type":"file","caption":"Thumbnail",
+      "controlparams": {
+        "data_folder": "tutorials_allcontrols",
+        "data_file_prefix": "x_image_with_thumbnails",
+        "show_thumbnail": "small"
+      }
+    }
+  ]
+}
+</pre>
+In the example above, two thumbnail columns are displayed.<br/>
+<br/>
+The first "Image" column displays the full-size image, and uses the field.controlstyle property to fit the image into a 300px by 150px box.<br/>
+<br/>
+The second "Thumbnail" column displays the thumbnail instead.<br/>
+<br/>
+Where possible, it is recommended to use thumbnail display, since the images will more quickly.<br/>
+<br/>
+Both columns link to a popup with the original image on click.  This behavior can be changed by setting field.controlparams.preview_on_click to false.<br/>
+<br/>
+The "image" control has the following options:
+<pre>
+{
+  "control": "image",
+  "controlparams": {
+    "data_folder": "D",            //Subfolder name under "config.datadir" for the files, should be unique per data_file_prefix
+    "data_file_prefix": "c_doc",   //File name prefix {{PREFIX}}_{{KEY}}{{.EXT}} (Prefix defaults to field name if blank or not set)
 
-validation
-  extension
-  file size
+    //System Parameters
+    "_data_file_has_extension": false, //Whether the data file is saved with an extension
+                                       //Automatically set to true if sqlparams.FILE_EXT not set.
+                                       //Slower because a directory search is required on each request.  
 
+    //Interface parameters
+    "show_thumbnail": "small",     //Whether to display an image thumbnail.  If no thumbnails are defined, set to "true" to display the image
+    "preview_on_click":true,       //Whether to link the thumbnail to the full image on click
 
+    //Database parameters
+    "sqlparams": {
+      "FILE_EXT": "d_ext",       //File Extension (updated on save)
+      "FILE_NAME": "d_filename"  //Alternate file name for when user downloads the file (read, but not saved, to database)
+    },
+}
+</pre>
 
+<h3>File Upload Validation</h3>
+The field.type="file" has additional extended validation options for working with files:
+<ul>
+  <li>Extension:['.ext1','.ext2']</li>
+  <li>Extension:jsh.Config.supported_images</li>
+  <li>MaxSize:########</li>
+</ul>
+
+<b>Validator: Extension</b><br/>
+The Extension validator ensures that the uploaded file has a specific file extension.  This is primarily used to ensure that the user does not make a mistake in uploading the file.<br/>
+<br/>
+The Extension validator accepts an array of values.  Additionally, the "jsh.Config.supported_images" variable can be used to limit the Extension validator to any image type that is supported by the image processing component (currently JPEG, GIF, and PNG).  Other arrays of file extensions can also be defined in jsh.Config.app_settings.<br/>
+<br/>
+
+<b>Validator: MaxSize</b><br/>
+The MaxSize validator specifies the maximum file size in bytes.
+<br/>
+
+The following example uses file validators on two file_upload fields:
+<%-getScreenshot('jsHarmonyTutorials/FieldFile_Upload_Validation_Form?x_primary=1&action=update&popup=1','File Upload Validation')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "File Upload Validation",
+  "fields": [
+    {"name":"x_primary", "type":"int", "key":1},
+    {"name":"x_file1","type":"file","caption":"Small Image", "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "validate": ["Extension:jsh.Config.supported_images","MaxSize:100000"]
+    },
+    {"name":"x_file2","type":"file","caption":"Excel File", "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "validate": ["Extension:['.XLS','.XLSX','.XLSM']","Required"]
+    }
+  ]
+}
+</pre>
+
+<h3>File System Parameters</h3>
+The following file-related system config parameters are available:
+<pre>
+//Full list of valid extensions that can be uploaded into the system
+jsh.Config.valid_extensions = [".jpg", ".jpeg", ".pdf", ".png", ".gif", ".txt", ".xlsm", ".xls", ".xlsx", ".bak", ".zip", ".csv"];
+
+//Images supported for crop / resize / thumbnails
+jsh.Config.supported_images = ['.jpg','.jpeg','.gif','.png'];
+
+//Data folder (defaults to /data)
+jsh.Config.datadir = '';
+
+//Maximum file upload size (50MB)
+jsh.Config.max_filesize = 50000000;
+
+//Maximum file storage in User Temp Folder (50MB)
+jsh.Config.max_user_temp_foldersize = 50000000;
+
+//Seconds before Public Temp Folder files are deleted on next upload.  Default is 5 minutes
+jsh.Config.public_temp_expiration = 5 * 60;
+
+//Seconds before User Temp Folder files are deleted on next upload.  Default is 6 hours
+jsh.Config.user_temp_expiration = 6 * 60 * 60;
 </pre>

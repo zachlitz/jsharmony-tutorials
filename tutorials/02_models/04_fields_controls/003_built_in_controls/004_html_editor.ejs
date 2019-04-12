@@ -205,3 +205,10 @@ jsh.App[modelid] = new (function(){
 })();
 
 </pre>
+
+<h3>Saving Images / Files</h3>
+Images and files are saved using the "/_ul/ckeditor" route.  Images and files are shared between all authenticated users.<br/>
+<br/>
+Uploaded files are temporarily stored in /data/public, before they are processed and saved to /data/cmsfiles.<br/>
+<br/>
+The root data folder ("/data") can be changed using the jsh.Config.datadir setting.

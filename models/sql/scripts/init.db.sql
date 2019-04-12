@@ -270,8 +270,26 @@ create table allcontrols (
   x_textarea text,
   x_hidden text,
   x_checkbox integer,
-  x_password text
+  x_password text,
+  x_error text
 );
+
+create trigger allcontrols_before_insert before insert on allcontrols
+begin
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_error') then raise(FAIL,'Application Error - Sample Application Error') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_warning') then raise(FAIL,'Application Warning - Sample Application Warning') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'execute_form') then raise(FAIL,'Execute Form - Sample Execute Form //FieldValidation_DB_SampleForm?c_id=1') end\;
+  select case when (NEW.x_error is not null) then raise(FAIL,'Application Error - Invalid value for x_error') end\;
+end;
+
+create trigger allcontrols_before_update before update on allcontrols
+begin
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_error') then raise(FAIL,'Application Error - Sample Application Error') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_warning') then raise(FAIL,'Application Warning - Sample Application Warning') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'execute_form') then raise(FAIL,'Execute Form - Sample Execute Form //<%=xmodel.namespace%>FieldValidation_DB_ErrorForm?action=update&x_primary=<%=xmodel.get("x_primary")%>&x_error_value=<%=xmodel.get("x_error")%>') end\;
+  select case when (NEW.x_error is not null) then raise(FAIL,'Application Error - Invalid value for x_error') end\;
+end;
+
 insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_date, x_textarea, x_hidden, x_checkbox, x_password)
 values (
   'Test Label',

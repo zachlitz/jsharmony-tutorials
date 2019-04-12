@@ -145,7 +145,7 @@ The "formstyle" property is applied to the DIV containing the form elements.
 Field properties can be defined for each field in the model.
 
 <h3 data-level="2">field.captionstyle / field.captionclass</h3>
-In form, form-m, and exec layouts, the "captionstyle" and "captionclass" properties are applied to the "style" and "class" of the field caption label.<br/>
+In form, form-m, and exec layouts, the "captionstyle" and "captionclass" properties are applied to the "style" and "class" of the field caption label.  In order to simplify formatting, the first defined field.captionstyle will be passed down to all subsequent fields that do not have field.captionstyle defined.<br/>
 In grid layouts, the "captionstyle" and "captionclass" properties are applied to the "style" and "class" of the TH column header.
 <pre>
 {
@@ -177,6 +177,30 @@ In grid and multisel layouts, the "controlstyle" and "controlclass" properties a
 </pre>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
+
+<h3 data-level="2">Line Breaks - field.nl / field.eol / model.onecolumn</h3>
+Line breaks can be added to fields using either the field.nl or field.eol properties.
+<pre>
+//Field properties
+
+//New Line
+{
+  "nl": true //Insert a line break before this field
+}
+
+//End of Line
+{
+  "eol": true //Insert a line break after this field
+}
+</pre>
+Additionally, setting "model.onecolumn" to true will automatically add line breaks to every field on the first, and adjust the captions of all the form fields to be the same width:
+<pre>
+//Model properties
+{
+  "layout": "form",
+  "onecolumn": true
+}
+</pre>
 
 <h3>Custom CSS Files</h3>
 Custom CSS files can be defined either sitewide or per-model.

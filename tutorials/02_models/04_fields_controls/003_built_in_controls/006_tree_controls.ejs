@@ -21,14 +21,37 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Tree Controls",
-  "Menu": ["Models","Fields / Controls","Built-in Controls"],
-  "Code": ["/models/CL.json"]
+  "Menu": ["Models","Fields / Controls","Built-in Controls"]
 }
 </script>
-tree
-{"item_context_menu": [ //tree params - Context Menu for an Item
-  { "icon": "insert", "text": "Add", "command": "XExt.Alert('insert' + context_item);", "actions": "IUD" }
-],
-"expand_all": false, //Show nodes expanded by default
-"expand_to_selected": true
-},
+
+The tree control has the following parameters:
+<pre>
+{
+  "control": "tree",
+  
+  //The "List of Values" expression for populating the tree nodes
+  "lov": {
+    "sql": "select ----- as CODEID, ----- as CODEParentID, ----- as CODEVal, ----- as CODETxt, ----- as CODEIcon from ----- where 1=1 %%%DATALOCKS%%% order by -----",
+    "datalock":{"C_ID":"client_FCERT_ID"}
+  },
+
+  //Bind to a database to save the selected item, or set field.virtual to interact with the control via the field.onchange event
+  "name": "Item_ID",
+
+  "controlparams": {
+
+    //Array of menu items that are displayed when a tree node is right-clicked.
+    //  The selected value is passed as "context_item" to the "command" JavaScript method
+    "item_context_menu": [
+      { "icon": "insert", "text": "Add", "command": "XExt.Alert('insert ' + context_item);", "actions": "IUD" }
+    ],
+
+    //Expand all tree nodes by default
+    "expand_all": false,      
+    
+    //Automatically expand tree to the selected node, when selected on load or via JavaScript
+    "expand_to_selected": true
+  }
+}
+</pre>

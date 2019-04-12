@@ -348,7 +348,7 @@ By default, a password control that is bound to a database field will have the f
   <li><b>controlparams</b>: The "update_when_blank" controlparam excludes the password from being saved during update, if it is blank.  The default value is "false", so that the password update will be optional.</li>
   <li><b>actions</b>: The "B" action will not be enabled by default, so that passwords will not be downloaded from the database</li>
   <li>
-    <b>validate</b>: Two validators will be added:<br/>
+    <b>validate</b>: Two validators will be added by default:<br/>
     &nbsp; &nbsp; A "Required" validator for the insert operation (or all operations if controlparams.update_when_blank is true)<br/>
     &nbsp; &nbsp; A "MinLength" validator, requiring a minimum password length of 8
   </li>

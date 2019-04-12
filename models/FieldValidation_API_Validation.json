@@ -1,0 +1,7 @@
+{
+  "layout":"exec",
+  "caption": "API Validation",
+  "fields": [
+    { "control": "button", "value": "Invoke API Call", "onclick": "XForm.Post(xmodel.id, { message: 'test', delay: 2000 }, function(rslt){ XExt.Alert(JSON.stringify(rslt)); });" }
+  ]
+}

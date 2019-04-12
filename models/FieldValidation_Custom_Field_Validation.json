@@ -1,0 +1,20 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"unbound":true, "control":"textbox", "validate":["RegEx:'/^\\\\d{4}$/','be a four digit number.'"], "caption":"Field 1" }, { "control":"html", "value": "(RegEx:'/^\\\\d{4}$/','be a four digit number.')" },
+    {"unbound":true, "control":"textbox", "validate":["MinWordCount:5"], "caption":"Field 2" }, { "control":"html", "value": "(MinWordCount:5)" },
+    {"unbound":true, "control":"textbox", "validate":["js:if((typeof _val == 'undefined')||(_val==='')||(_val===null)) return ''; if(_val.toString().toUpperCase()==_val.toString()) return ''; return _caption+' must be uppercase.';"], "caption":"Field 3" }, { "control":"html", "value": "js:if((typeof _val == 'undefined')||(_val==='')||(_val===null)) return ''; if(_val.toString().toUpperCase()==_val.toString()) return ''; return _caption+' must be uppercase.';" },
+     {"name": "x_textbox", "control":"textbox", "validate":[
+       {"function":"js:if(!_val || (_val.toString().toLowerCase().substr(0,4)!='test')) return _caption+' must begin with the word \"test\".';","runat":["server"]}
+     ], "caption":"x_textbox" }, { "control":"html", "value": "In-line JS Validator - Server-side" },
+    {"name":"field_4", "unbound":true, "control":"textbox", "caption":"Field 4" }, { "control":"html", "value": "Dual Field Validator: (Field 4 + Field 5) = 10" },
+    {"name":"field_5", "unbound":true, "control":"textbox", "validate":[
+      { "function":"js:var f4 = parseFloat(_obj.field_4||0);  var f5 = parseFloat(_obj.field_5||0); if(isNaN(f4) || isNaN(f5) || ((f4 + f5) != 10)) return 'The sum of Field 4 and Field 5 must be 10.';", "selector": ".field_4,.field_5" }
+     ], "caption":"Field 5" }, { "control":"html", "value": "Dual Field Validator: (Field 4 + Field 5) = 10" },
+    {"unbound":true, "control":"textbox", "validate":[{"actions":"I", "function":"Required"}], "caption": "Field 6"}, { "control":"html", "value": "Required only on Insert" },
+  ]
+}
