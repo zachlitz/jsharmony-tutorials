@@ -6,6 +6,7 @@ if(routetype != 'd') return callback();
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
+var async = require('async');
 var Helper = require('../Helper.js');
 var XValidate = jsh.XValidate;
 var model = jsh.getModel(req, modelid);
@@ -37,7 +38,33 @@ if (verb == 'post') {
 
   var db = jsh.getDB('default');
 
-  res.end(JSON.stringify({ '_success': 1 }));
+  var customer = null;
+
+  async.waterfall([
+
+    //Select a random customer
+    function(cb){
+      appsrv.ExecRecordset(req._DBContext, "select c_name from c", [], {}, function(err, rslt){
+        if(err) return cb(err);
+        if(!rslt || !rslt.length || !rslt[0].length) return cb(err);
+        var rnd = Math.floor(Math.random() * rslt[0].length);
+        customer = rslt[0][rnd];
+        return cb();
+      });
+    },
+
+    //If a delay was requested, wait
+    function(cb){
+      if(!P.delay) return cb();
+      else setTimeout(cb, parseInt(P.delay));
+    }
+  ], function(err){
+    if(err) return Helper.GenError(req, res, -99999, err);
+
+    //Return API result
+    var message = (customer?customer.c_name:'System') + ' says ' + P.message;
+    res.end(JSON.stringify({ '_success': 1, 'message': message }));
+  });
 }
 else return callback();
 

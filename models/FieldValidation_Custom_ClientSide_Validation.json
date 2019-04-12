@@ -5,6 +5,6 @@
   "fields": [
     { "control": "textbox", "name": "message", "caption": "Message", "default": "Hello" },
     { "control": "textbox", "name": "delay", "caption": "Delay (ms)", "default": 1000 },
-    { "control": "button", "value": "Invoke API Call", "onclick": "XForm.Post(xmodel.id, { message: xmodel.get('message'), delay: xmodel.get('delay') }, function(rslt){ XExt.Alert(JSON.stringify(rslt)); });" }
+    { "control": "button", "name": "invoke", "value": "Invoke API Call", "onclick": "_this.invoke_click();" }
   ]
 }
