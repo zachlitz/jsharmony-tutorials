@@ -1,0 +1,22 @@
+{
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    { "name": "x_error", "lov": { "blank": true, "values": {
+      "application_error": "application_error",
+      "application_warning": "application_warning",
+      "execute_form": "execute_form",
+      "db_error_standard": "db_error_standard",
+      "db_error_regex": "db_error_regex",
+      "unhandled": "unhandled"
+    } } },
+    { "control": "html", "value": "Select a sample database error and click 'Save'" }
+  ],
+  "dberrors": [
+    [ "error_standard", "Sample Error Message Override (Partial String Match)" ],
+    [ "/.*\\_regex/", "Sample Error Message Override (Regex)" ]
+  ]
+}

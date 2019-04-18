@@ -22,54 +22,61 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "ID": "field_validation",
   "Title": "Field Validation",
-  "Menu": ["Models","Fields / Controls"]
+  "Menu": ["Models","Fields / Controls"],
+  "Code": [
+    "/models/FieldValidation_Standard.json",
+    "/models/FieldValidation_Custom.json",
+    "/models/FieldValidation_API.json",
+    "/models/FieldValidation_API.onroute.js",
+    "/models/FieldValidation_JS.json",
+    "/models/FieldValidation_JS.js"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldValidation_Standard?action=update&x_primary=1", "title": "Field Validation - Standard Validators" },
+    { "url": "jsHarmonyTutorials/FieldValidation_Custom?action=update&x_primary=1", "title": "Field Validation - Custom Validators" },
+    { "url": "jsHarmonyTutorials/FieldValidation_Custom?action=insert", "title": "Field Validation - Custom Validators (Insert)" },
+    { "url": "jsHarmonyTutorials/FieldValidation_API", "title": "Field Validation - Custom Server-side API Validation" },
+    { "url": "jsHarmonyTutorials/FieldValidation_JS", "title": "Field Validation - Custom Client-side JavaScript Validation" }
+  ]
 }
 </script>
 
 <h3>Overview</h3>
+Validators enable validation on both the client-side and server-side of the system.  Validators can be combined and customized.<br/>
+<br/>
 Setting the field.validate property automatically adds both client-side and server-side validation for that field.  If the field is unbound, only the client-side validator is added.<br/>
 <br/>
 The following validators are available:
 
 <pre>
-**FieldValidation_Form
-**FieldValidation_Custom_Validators
-**FieldValidation_DB_Validators
-**FieldValidation_DB_ErrorForm
-FieldValidation_Custom_API_Validation
-  Roles
-  Parameter # / Names
-  Fields
-FieldValidation_Custom_ClientSide_Validation
-
-Partial Validators - Require a base validator - IsFloat, IsValidDOB
-  MinValue, MaxValue, MinAge
-</pre>
-
-<pre>
 "validate": [ 
   "Required", 
-  "MaxLength:5",    //Parameter: NUMBER_OF_CHARACTERS
-  "MinLength:5",    //Parameter: NUMBER_OF_CHARACTERS
+  "Required:ALLOW_BLANK", //Parameter: Allow empty strings
+  "MaxLength:5",          //Parameter: NUMBER_OF_CHARACTERS
+  "MinLength:5",          //Parameter: NUMBER_OF_CHARACTERS
   "IsNumeric", 
-  "IsNumeric:true", //Parameter: true if only positive numbers are allowed
+  "IsNumeric:true",       //Parameter: true if only positive numbers are allowed
   "IsDecimal", 
-  "IsDecimal:3",    //Parameter: NUMBER_OF_DECIMAL_PLACES
+  "IsDecimal:3",          //Parameter: MAX_NUMBER_OF_DECIMAL_PLACES
+  "IsDecimal:3,true",     //Parameters: MAX_NUMBER_OF_DECIMAL_PLACES,COMMA
+  "IsDecimalComma:3",     //Parameter: MAX_NUMBER_OF_DECIMAL_PLACES
   "IsFloat",
-  "MaxValue:999",   //Parameter: MAXIMUM_VALUE
-  "MinValue:100",   //Parameter: MINIMUM_VALUE
+  "IsBinary:50",          //Parameters: MAX_LENGTH
+  "MaxValue:999",         //Parameter: MAXIMUM_VALUE
+  "MinValue:100",         //Parameter: MINIMUM_VALUE
   "RegEx:'/regex/','be a correct value.'",  //Parameters: 'REGULAR_EXPRESSION','ERROR_MESSAGE_SUFFIX'
   "IsEmail", 
   "IsDate", 
   "IsSSN",
   "IsEIN",
-  "IsValidDOB"
-  "MinAge:21"       //Parameter: MINIMUM_AGE_IN_YEARS
+  "MaxAge:150",           //Parameter: MAXIMUM_AGE_IN_YEARS
+  "MinAge:21",            //Parameter: MINIMUM_AGE_IN_YEARS
   "IsPhone",
   "IsTime",
   "Luhn",
-  "InArray:['VALUE1','VALUE2','VALUE3']"  //Parameter: Array of possible values (case-sensitive)
-  "Equals:x_password"  //Parameter: Field name that the current field must be equal to (for confirming a password or email)
+  "InArray:['VALUE1','VALUE2','VALUE3']", //Parameter: Array of possible values (case-sensitive)
+  "Equals:x_password",                    //Parameter: Field name that the current field must be equal to (for confirming a password or email)
+  "Equals:'_obj.x_password','Password'"   //Parameters: COMPARISON_EXPRESSION,COMPARISON_CAPTION
 ],
 
 //Validators specific to field.type="file"
@@ -79,60 +86,1068 @@ Partial Validators - Require a base validator - IsFloat, IsValidDOB
   "Extension:['.PDF','.JPEG']" //Parameter: Array of acceptable file extensions
 ]
 </pre>
-
-See the <a href="/tutorials/field_control_file#file_upload_validation">File Upload Validation</a> tutorial for more information on validating files.
-
+Each validator only returns a value if it fails.  A success result is "undefined" or an empty string.<br/>
+<br/>
+Each validator should be responsible for only one aspect of the field, in order to enable more flexibility by combining validators.  For instance:
 <pre>
-Model Validation
-  Parameters requires for API
+"MaxAge:150"     //Only checks to see if the Date is >= <%=(new Date(Date.now()-365.2422*150*24*60*60*1000)).toISOString().substr(0,10)%>.  If the Date is invalid, it returns a success.  IF the field is empty, it returns a success.
+"IsDate"         //Only checks to see if the Date is valid.  If the field is empty, it returns a success.
+"Required"       //Checks to see if the field is empty
 
-Custom Validators
+By combining the validators:
+["Required","IsDate"]              - Allows only a valid Date
+["IsDate"]                         - Allows either a Date or an empty string
+["Required","IsDate","MaxAge:150"] - Allows only a Date year that is >=  <%=(new Date(Date.now()-365.2422*150*24*60*60*1000)).toISOString().substr(0,10)%>
+["MaxAge:150"]                     - Allows an empty string, a value that is not a Date, or a Date that is >= <%=(new Date(Date.now()-365.2422*150*24*60*60*1000)).toISOString().substr(0,10)%>
+</pre>
+Since every validator for a field is run in each validation pass, and each one can generate its own error, it is further a good idea that each validator should only validate its specific task and no others.  For instance, the "MaxAge:150" validator should not return an error if the Date is invalid, because otherwise two error messages will be generated (by both "IsDate" and "MaxAge:150") on a failure.  This is especially important when automatic validators are added based on the field datatype.<br/>
+<br/>
+<h4>Validator Syntax</h4>
+<pre>
+Shorthand syntax:
+field.validate = ["Required","MaxLength:50"]
 
-Running Validation
-  Client-side
-  Server-side
+Full syntax:
+field.validate = [
+  { "actions":"BIUD", "function": "Required", "caption": "Customer Name", "selector": ".c_name.xelemC", "runat": ["client","server"] },
+  { "actions":"BIUD", "function": "MaxLength:50", "caption": "Customer Name", "selector": ".c_name.xelemC", "runat": ["client","server"] }
+]
+
+Validator Options
+  action    The form actions for which the validator should fire.  For example, this can be used to restrict the validator to just "insert" operations.
+  function  The validator function and its parameters that will be executed during validation.  "js:" can be used for a custom inline JavaScript function
+  caption   The field caption that will be displayed when the validator generates an error
+  selector  In client-side validation, the document selector used to highlight the field on failure via the "xinputerror" class.  Can be used to highlight multiple fields.
+  runat     Whether the validator will run on the client-side user interface, on the server-side API, or both.  Defaults to both client and server.
+
+* The only required parameter is "function".
 </pre>
 
+<h3>Standard Validators</h3>
+The following example implements all of the built-in standard validators:
+<%-getScreenshot('jsHarmonyTutorials/FieldValidation_Standard?action=update&x_primary=1&popup=1','Field Validation - Standard')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"name":"field1","unbound":true, "control":"textbox", "validate":["Required"], "caption":"Field 1" }, { "control":"html", "value": "(Required)" },
+    {"unbound":true, "control":"textbox", "validate":["MaxLength:5"], "caption":"Field 2" }, { "control":"html", "value": "(MaxLength:5)" },
+    {"unbound":true, "control":"textbox", "validate":["MinLength:5"], "caption":"Field 3" }, { "control":"html", "value": "(MinLength:5)" },
+    {"unbound":true, "control":"textbox", "validate":["IsNumeric"], "caption":"Field 4" }, { "control":"html", "value": "(IsNumeric)" },
+    {"unbound":true, "control":"textbox", "validate":["IsNumeric:true"], "caption":"Field 5" }, { "control":"html", "value": "(IsNumeric:true)" },
+    {"unbound":true, "control":"textbox", "validate":["IsDecimal"], "caption":"Field 6" }, { "control":"html", "value": "(IsDecimal)" },
+    {"unbound":true, "control":"textbox", "validate":["IsDecimal:3"], "caption":"Field 7" }, { "control":"html", "value": "(IsDecimal:3)" },
+    {"unbound":true, "control":"textbox", "validate":["IsDecimalComma:2"], "caption":"Field 8" }, { "control":"html", "value": "(IsDecimalComma:2)" },
+    {"unbound":true, "control":"textbox", "validate":["IsFloat"], "caption":"Field 9" }, { "control":"html", "value": "(IsFloat)" },
+    {"unbound":true, "control":"textbox", "validate":["IsBinary"], "caption":"Field 10" }, { "control":"html", "value": "(IsBinary)" },
+    {"unbound":true, "control":"textbox", "validate":["MaxValue:999","IsFloat"], "caption":"Field 11" }, { "control":"html", "value": "(MaxValue:999)" },
+    {"unbound":true, "control":"textbox", "validate":["MinValue:100","IsFloat"], "caption":"Field 12" }, { "control":"html", "value": "(MinValue:100)" },
+    {"unbound":true, "control":"textbox", "validate":["RegEx:'/^\\\\d{4}$/','be a four digit number.'"], "caption":"Field 13" }, { "control":"html", "value": "(RegEx:'/^\\\\d{4}$/','be a four digit number.')" },
+    {"unbound":true, "control":"textbox", "validate":["IsEmail"], "caption":"Field 14" }, { "control":"html", "value": "(IsEmail)" },
+    {"unbound":true, "control":"textbox", "validate":["IsDate"], "caption":"Field 15" }, { "control":"html", "value": "(IsDate)" },
+    {"unbound":true, "control":"textbox", "validate":["IsSSN"], "caption":"Field 16" }, { "control":"html", "value": "(IsSSN)" },
+    {"unbound":true, "control":"textbox", "validate":["IsEIN"], "caption":"Field 17" }, { "control":"html", "value": "(IsEIN)" },
+    {"unbound":true, "control":"textbox", "validate":["MaxAge:150"], "caption":"Field 18" }, { "control":"html", "value": "(MaxAge:150)" },
+    {"unbound":true, "control":"textbox", "validate":["MinAge:21"], "caption":"Field 19" }, { "control":"html", "value": "(MinAge:21)" },
+    {"unbound":true, "control":"textbox", "validate":["IsPhone"], "caption":"Field 20" }, { "control":"html", "value": "(IsPhone)" },
+    {"unbound":true, "control":"textbox", "validate":["IsTime"], "caption":"Field 21" }, { "control":"html", "value": "(IsTime)" },
+    {"unbound":true, "control":"textbox", "validate":["Luhn"], "caption":"Field 22" }, { "control":"html", "value": "(Luhn) * Credit Card #" },
+    {"unbound":true, "control":"textbox", "validate":["InArray:['VALUE1','VALUE2','VALUE3']"], "caption":"Field 23" }, { "control":"html", "value": "(InArray:['VALUE1','VALUE2','VALUE3'])" },
+    {"unbound":true, "control":"textbox", "validate":["Equals:field1"], "caption":"Field 24" }, { "control":"html", "value": "(Equals:field1)" },
+    {"unbound":true, "control":"textbox", "validate":["Equals:5,'the number five'"], "caption":"Field 25" }, { "control":"html", "value": "(Equals:5,'the number five')" },
+    {"unbound":true, "control":"textbox", "validate":["Equals:'_obj.field1','the first field (Field 1)'"], "caption":"Field 26" }, { "control":"html", "value": "(Equals:'_obj.field1','the first field (Field 1)')" },
+    {"unbound":true, "control":"textbox", "validate":["Required","IsNumeric"], "caption":"Field 27" }, { "control":"html", "value": "(Required, IsNumeric) * Example with multiple validators" },
+  ]
+}
+</pre>
 
+<h3 data-level="2">Required</h3>
+The "Required" validator checks to see that a value is set for the field.  There is one optional parameter:
+<ul>
+  <li>ALLOW_BLANK - (Optional) If set to true, allows the empty string.  Default "false"</li>
+</ul>
+Without the "Required" validator, none of the other validators should fire.
+<pre>
+Syntax
+------
+• Required
+• Required:ALLOW_BLANK
 
+Examples
+--------
+• "Required"        //Do not allow undefined, null or empty string
+• "Required:false"  //Do not allow undefined, null or empty string
+• "Required:true"   //Do not allow undefined or null
+</pre>
+
+<h3 data-level="2">MaxLength</h3>
+The "MaxLength" validator checks that a field does not exceed a certain length.  There is one required parameter:
+<ul>
+  <li>NUMBER_OF_CHARACTERS - The maximum number of characters</li>
+</ul>
+<pre>
+Syntax
+------
+• MaxLength:NUMBER_OF_CHARACTERS
+
+Examples
+--------
+• "MaxLength:5"      //Allow empty strings, or strings of up to 5 characters
+• "MaxLength:5000"   //Allow empty strings, or strings of up to 5000 characters
+</pre>
+
+<h3 data-level="2">MinLength</h3>
+The "MinLength" validator checks that a field has at least a certain length.  There is one required parameter:
+<ul>
+  <li>NUMBER_OF_CHARACTERS - The minimum number of characters</li>
+</ul>
+MinLength will return a success if the field is blank.  MinLength must be combined with the Required validator to ensure that the value is both not blank and has the required number of characters.
+<pre>
+Syntax
+------
+• MinLength:NUMBER_OF_CHARACTERS
+
+Examples
+--------
+• "MinLength:5"      //Allow empty strings, or strings of at least 5 characters
+• "MinLength:5000"   //Allow empty strings, or strings of at least 5000 characters
+</pre>
+
+<h3 data-level="2">IsNumeric</h3>
+The "IsNumeric" validator checks that a field is an integer.  There is one optional parameter:
+<ul>
+  <li>NOT_NEGATIVE - (Optional) If set to true, disallows negative numbers.  Default "false"</li>
+</ul>
+IsNumeric will return a success if the field is blank.  IsNumeric must be combined with the Required validator to ensure that the value is both not blank and an integer.
+<pre>
+Syntax
+------
+• IsNumeric
+• IsNumeric:NOT_NEGATIVE
+
+Examples
+--------
+• "IsNumeric"        //Allow empty strings, or any integer
+• "IsNumeric:false"  //Allow empty strings, or any integer
+• "IsNumeric:true"   //Allow empty strings, any positive integer, or 0
+</pre>
+
+<h3 data-level="2">IsDecimal</h3>
+The "IsDecimal" validator checks that a field is a number.  There are two optional parameters:
+<ul>
+  <li>MAX_NUMBER_OF_DECIMAL_PLACES - (Optional) Maximum number of decimal places.  Default "-1" (unlimited)</li>
+  <li>COMMA - (Optional) Allow commas in the number (thousands separator).  Default "false"</li>
+</ul>
+IsDecimal will return a success if the field is blank.  IsDecimal must be combined with the Required validator to ensure that the value is both not blank and a number.
+<pre>
+Syntax
+------
+• IsDecimal
+• IsDecimal:MAX_NUMBER_OF_DECIMAL_PLACES
+• IsDecimal:MAX_NUMBER_OF_DECIMAL_PLACES,COMMA
+
+Examples
+--------
+• "IsDecimal"        //Allow empty strings, or any decimal number
+                     //Ex: 1000.042384798273982
+• "IsDecimal:-1"     //Allow empty strings, or any decimal number
+                     //Ex: 1000.042384798273982
+• "IsDecimal:0"      //Allow empty strings, or any integer
+                     //Ex: 1000
+• "IsDecimal:2"      //Allow empty strings, or any decimal with a maximum of 3 digits of precision after the decimal point
+                     //Ex: 1000.04
+• "IsDecimal:2,true" //Allow empty strings, or any decimal with a maximum of 3 digits of precision after the decimal point, optionally using thousands separators
+                     //Ex: 1000.04
+                     //Ex: 1,000.04
+</pre>
+
+<h3 data-level="2">IsDecimalComma</h3>
+The "IsDecimalComma" validator checks that the field is a number.  The IsDecimalComma validator is the same as running IsDecimal with the COMMA parameter set to true.  There is one optional parameter:
+<ul>
+  <li>MAX_NUMBER_OF_DECIMAL_PLACES - (Optional) Maximum number of decimal places.  Default "-1" (unlimited)</li>
+</ul>
+IsDecimalComma will return a success if the field is blank.  IsDecimalComma must be combined with the Required validator to ensure that the value is both not blank and a number.
 
 <pre>
-  create trigger allcontrols_before_update before update on allcontrols
-  begin
-    select case when (NEW.x_error is not null) and (NEW.x_error = 'application_error') then raise(FAIL,'Application Error - Sample Application Error') end\;
-    select case when (NEW.x_error is not null) and (NEW.x_error = 'application_warning') then raise(FAIL,'Application Warning - Sample Application Warning') end\;
-    select case when (NEW.x_error is not null) and (NEW.x_error = 'execute_form') then raise(FAIL,'Execute Form - Sample Execute Form //&lt;%=xmodel.namespace%&gt;FieldValidation_DB_ErrorForm?action=update&x_primary=&lt;%=xmodel.get("x_primary")%&gt;&x_error_value=&lt;%=xmodel.get("x_error")%&gt;') end\;
-    select case when (NEW.x_error is not null) then raise(FAIL,'Application Error - Invalid value for x_error') end\;
-  end;
-  
-  CREATE trigger [jsharmony].[CPE_IUD] on [jsharmony].[cpe] for insert, update, delete AS
-  BEGIN
-    IF exists(select * from inserted) and UPDATE(PE_ID)
-    BEGIN
-      raiserror('Application Error - Password length - at least 6 characters required',16,1)
-      ROLLBACK TRANSACTION
-      return
-    END
-  END
-  
-  CREATE FUNCTION cpe_iud() RETURNS trigger AS $$
-  BEGIN
-      IF TG_OP = 'UPDATE'
-         and
-         jsharmony.nonequal(NEW.pe_id, OLD.pe_id) THEN
-        RAISE EXCEPTION  'Application Error - ID cannot be updated.';
-      END IF;
-  END;
-  $$ LANGUAGE plpgsql;
-  
-  CREATE TRIGGER cpe_iud BEFORE INSERT OR DELETE OR UPDATE ON cpe FOR EACH ROW EXECUTE PROCEDURE cpe_iud();
-  
-      if(err.message.indexOf('Application Error - ') == 0) return errorHandler(-5, err.message, stats);
-      if(err.message.indexOf('Application Warning - ') == 0) return errorHandler(-5, err.message, stats);
-      if(err.message.indexOf('Execute Form - ') == 0) return errorHandler(-5, err.message, stats);
-      
-      
-      
-      Execute Form - MESSAGE //C?c_id=1
-  
+Syntax
+------
+• IsDecimalComma
+• IsDecimalComma:MAX_NUMBER_OF_DECIMAL_PLACES
+
+Examples
+--------
+• "IsDecimalComma"        //Allow empty strings, or any decimal number
+                          //Ex: 1000.042384798273982
+                          //Ex: 1,000.042384798273982
+• "IsDecimalComma:-1"     //Allow empty strings, or any decimal number
+                          //Ex: 1000.042384798273982
+                          //Ex: 1,000.042384798273982
+• "IsDecimalComma:0"      //Allow empty strings, or any integer
+                          //Ex: 1000
+                          //Ex: 1,000
+• "IsDecimalComma:2"      //Allow empty strings, or any decimal with a maximum of 3 digits of precision after the decimal point
+                          //Ex: 1000.04
+                          //Ex: 1,000.04
 </pre>
+
+<h3 data-level="2">IsFloat</h3>
+The "IsFloat" validator checks that a field is a number.<br/>
+<br/>
+IsFloat will return a success if the field is blank.  IsFloat must be combined with the Required validator to ensure that the value is both not blank and a number.
+<pre>
+Syntax
+------
+• IsFloat
+
+Examples
+--------
+• "IsFloat"        //Allow empty strings, or any number, including scientific notation
+                   //Ex: 1000.042384798273982
+                   //Ex: 1000.04
+                   //Ex: 1.00004e3
+</pre>
+
+<h3 data-level="2">IsBinary</h3>
+The "IsBinary" validator checks that a field is a binary string.  The field allows either hex strings (0xAABBCC0022), or ASCII strings.  There is one optional parameter:
+<ul>
+  <li>MAX_LENGTH - (Optional) Maximum number of bytes.  Default "-1" (unlimited)</li>
+</ul>
+IsBinary will return a success if the field is blank.  IsBinary must be combined with the Required validator to ensure that the value is both not blank and a binary string.
+<pre>
+Syntax
+------
+• IsBinary
+• IsBinary:MAX_LENGTH
+
+Examples
+--------
+• "IsBinary"        //Allow empty strings, hex bytes strings, or standard strings
+                    //Ex: 0x00FA120044
+                    //Ex: 12345
+• "IsBinary:-1"     //Allow empty strings, hex bytes strings, or standard strings
+                    //Ex: 0x00FA120044
+                    //Ex: 12345
+• "IsBinary:0"      //Allow empty strings, or empty hex byte strings
+                    //Ex: 0x
+• "IsBinary:2"      //Allow empty strings, hex byte strings of up to 2 bytes, or ASCII strings of up to 2 characters
+                    //Ex: 0xAABB
+                    //Ex: GB
+</pre>
+
+<h3 data-level="2">MaxValue</h3>
+The "MaxValue" validator checks that a field is less than a certian value.  There is one required parameter:
+<ul>
+  <li>MAXIMUM_VALUE - The maximum allowed value for the field</li>
+</ul>
+MaxValue will return a success if the field is blank or not a number.  MaxValue must be combined with the Required and IsFloat/IsDecimal/IsNumeric validators to ensure that the value is both not blank and a number.
+<pre>
+Syntax
+------
+• MaxValue:MAXIMUM_VALUE
+
+Examples
+--------
+• "MaxValue:5"      //Allow empty strings, non-numeric strings, or numbers less than or equal to 5
+• "MaxValue:55.12"  //Allow empty strings, non-numeric strings, or numbers less than or equal to 55.12
+</pre>
+
+<h3 data-level="2">MinValue</h3>
+The "MinValue" validator checks that a field is less than a certian value.  There is one required parameter:
+<ul>
+  <li>MINIMUM_VALUE - The minimum allowed value for the field</li>
+</ul>
+MinValue will return a success if the field is blank or not a number.  MinValue must be combined with the Required and IsFloat/IsDecimal/IsNumeric validators to ensure that the value is both not blank and a number.
+<pre>
+Syntax
+------
+• MinValue:MINIMUM_VALUE
+
+Examples
+--------
+• "MinValue:5"      //Allow empty strings, non-numeric strings, or numbers greater than or equal to 5
+• "MinValue:55.12"  //Allow empty strings, non-numeric strings, or numbers greater than or equal to 55.12
+</pre>
+
+<h3 data-level="2">RegEx</h3>
+The "RegEx" validator check if a field matches a regular expression.  If not, a custom message will be returned.  There are two required parameters:
+<ul>
+  <li>REGULAR_EXPRESSION - The regular expression that will be tested</li>
+  <li>ERROR_MESSAGE_SUFFIX - The ERROR_MESSAGE_SUFFIX in the expression "[field.caption] must ERROR_MESSAGE_SUFFIX"</li>
+</ul>
+RegEx must be combined with the Required validator to ensure that the value is both not blank and a passes the regular expression.
+<pre>
+Syntax
+------
+• RegEx:REGULAR_EXPRESSION,ERROR_MESSAGE_SUFFIX
+
+Examples
+--------
+• "RegEx:'/regex/','be a correct value.'"       //Allow empty strings, and the string "regex"
+• "RegEx:'/^\\d{4}$/','be a four digit number'" //Allow empty strings, and four digit numbers
+</pre>
+
+<h3 data-level="2">IsEmail</h3>
+The "IsEmail" validator checks that a field is a valid email address.<br/>
+</br/>
+IsEmail will return a success both if the field is blank or if it is an email address.  IsEmail must be combined with the Required validator to ensure that the value is both not blank and an email address.
+<pre>
+Syntax
+------
+• IsEmail
+
+Examples
+--------
+• "IsEmail"      //Allow empty strings, and email addresses
+</pre>
+
+<h3 data-level="2">IsSSN</h3>
+The "IsSSN" validator checks that a field is a valid social security number.  Dashes are removed and ignored before validating.<br/>
+</br/>
+IsSSN will return a success both if the field is blank or if it is a social security number.  IsSSN must be combined with the Required validator to ensure that the value is both not blank and a social security number.
+<pre>
+Syntax
+------
+• IsSSN
+
+Examples
+--------
+• "IsSSN"      //Allow empty strings, and social security numbers
+</pre>
+
+<h3 data-level="2">IsEIN</h3>
+The "IsEIN" validator checks that a field is a valid EIN.  Dashes are removed and ignored before validating.<br/>
+</br/>
+IsEIN will return a success both if the field is blank or if it is an EIN.  IsEIN must be combined with the Required validator to ensure that the value is both not blank and an EIN.
+<pre>
+Syntax
+------
+• IsEIN
+
+Examples
+--------
+• "IsEIN"      //Allow empty strings, and EINs
+</pre>
+
+<h3 data-level="2">IsDate</h3>
+The "IsDate" validator checks that a field is a valid date.<br/>
+</br/>
+IsDate will return a success both if the field is blank or if it is a date.  IsDate must be combined with the Required validator to ensure that the value is both not blank and a date.
+<pre>
+Syntax
+------
+• IsDate
+
+Examples
+--------
+• "IsDate"      //Allow empty strings, and dates
+                //Ex: 5/4/2020
+</pre>
+
+<h3 data-level="2">IsTime</h3>
+The "IsTime" validator checks that a field is a valid time.<br/>
+</br/>
+IsTime will return a success both if the field is blank or if it is a time.  IsTime must be combined with the Required validator to ensure that the value is both not blank and a time.
+<pre>
+Syntax
+------
+• IsTime
+
+Examples
+--------
+• "IsTime"      //Allow empty strings, and time
+                //Ex: 12:21 pm
+</pre>
+
+<h3 data-level="2">MaxAge</h3>
+The "MaxAge" validator checks that a field has a date occurred less than a certain number of years ago.  There is one required parameter:
+<ul>
+  <li>MAXIMUM_AGE_IN_YEARS - The maximum number of years ago that the date can occur</li>
+</ul>
+MaxAge will return a success both if the field is blank, if the field is not a date, or if the date occurred less than a certain number of years ago.  MaxAge must be combined with the Required validator and IsDate validator to ensure that the value is both not blank and a date.
+<pre>
+Syntax
+------
+• MaxAge:MAXIMUM_AGE_IN_YEARS
+
+Examples
+--------
+• "MaxAge:150"      //Allow empty strings, values that are not dates, and dates that are less than or equal to 150 years ago
+                    //Ex: 1970-01-01
+</pre>
+
+<h3 data-level="2">MinAge</h3>
+The "MinAge" validator checks that a field has a date occurred more than a certain number of years ago.  There is one required parameter:
+<ul>
+  <li>MINIMUM_AGE_IN_YEARS - The minimum number of years ago that the date can occur</li>
+</ul>
+MinAge will return a success both if the field is blank, if the field is not a date, or if the date occurred more than a certain number of years ago.  MinAge must be combined with the Required validator and IsDate validator to ensure that the value is both not blank and a date.
+<pre>
+Syntax
+------
+• MinAge:MINIMUM_AGE_IN_YEARS
+
+Examples
+--------
+• "MinAge:21"      //Allow empty strings, values that are not dates, and dates that are greater than or equal to 21 years ago
+                   //Ex: 1970-01-01
+</pre>
+
+<h3 data-level="2">IsPhone</h3>
+The "IsPhone" validator checks that a field is a number with between 10 to 20 digits.  Any formatting and non-numeric characters should be removed prior to running the validation.  Leading "1" digits may not may not need to be removed based on the target implementation.<br/>
+</br/>
+IsPhone will return a success both if the field is blank or if it is a phone number.  IsPhone must be combined with the Required validator to ensure that the value is both not blank and a phone number.
+<pre>
+Syntax
+------
+• IsPhone
+
+Examples
+--------
+• "IsPhone"      //Allow empty strings, and phone numbers
+                 //Ex: 9342342345
+</pre>
+
+<h3 data-level="2">Luhn / Credit Card #</h3>
+The "Luhn" validator checks that a field is a valid credit card number by checking if it passes the Luhn algorithm. Spaces should be removed prior to running the validation.<br/>
+</br/>
+Luhn will return a success both if the field is blank or if it is a credit card number.  Luhn must be combined with the Required validator to ensure that the value is both not blank and a credit card number.
+<pre>
+Syntax
+------
+• Luhn
+
+Examples
+--------
+• "Luhn"      //Allow empty strings, and credit card numbers
+              //Ex: 4111111111111111
+</pre>
+
+<h3 data-level="2">InArray</h3>
+The "InArray" validator checks that a field value exists in an array of possible values.  The InArray validator is case-sensitive.  There is one required parameter:
+<ul>
+  <li>POSSIBLE_VALUES - An array of possible values for the field</li>
+</ul>
+InArray will return a success both if the field is blank, if the field value is an element of POSSIBLE_VALUES.  InArray must be combined with the Required validator to ensure that the value is both not blank and in the array.
+<pre>
+Syntax
+------
+• InArray:POSSIBLE_VALUES
+
+Examples
+--------
+• "InArray:['VALUE1','VALUE2','VALUE3']"    //Allow empty strings, or one of the following strings: VALUE1, VALUE2, VALUE3
+                                            //Ex: VALUE1
+                                            //Ex: VALUE2
+</pre>
+
+<h3 data-level="2">Equals</h3>
+The "Equals" validator checks that a field value is equal to an expression.  The Equals validator is case-sensitive.  There is one required parameter:
+<ul>
+  <li>COMPARISON_EXPRESSION - (Required) The expression the field will be checked against</li>
+  <li>COMPARISON_CAPTION - (Required) The caption that will be displayed in the error on failure</li>
+</ul>
+<b>Note: </b>If the COMPARISON_EXPRESSION is equal to the name of another field on the form, jsHarmony will automatically set the COMPARISON_EXPRESSION to "obj.FIELD_NAME", and the caption to the caption of that field.<br/>
+<br/>
+The "Equals" validator can be used to compare against other fields in the validation object, since the COMPARISON_EXPRESSION is evaluated at runtime.<br/>
+<br/>
+Equals will not return a success if the field is blank.
+<pre>
+Syntax
+------
+• Equals:COMPARISON_EXPRESSION,COMPARISON_CAPTION
+
+Examples
+--------
+• "Equals:_obj.field1,'Field 1'"    //Require the value of the field to be the same as the value of "field1"
+• "Equals:5+1,'Six'"                //Require the value of the field to be the number 6
+                                    //Ex: 6
+• "Equals:x_password"               //On system load, if the "x_password" field is in the same model, jsHarmony will automatically refactor this to:
+                                    //"Equals:obj.x_password,'Password'"  (assuming that the field.caption of "x_password" is "Password")
+</pre>
+
+<h3>File Upload Validation (Server-side)</h3>
+Two file validators are built-in to jsHarmony.  They operate only server-side:
+<ul>
+  <li>MaxSize:1000000</li>
+  <li>Extension:['.TXT','.PDF']</li>
+</ul>
+See the <a href="/tutorials/field_control_file#file_upload_validation">File Upload Validation</a> examples with file upload validation.
+
+<h3 data-level="2">MaxSize (File Validator)</h3>
+The "MaxSize" validator checks that a uploaded file is less than a certain size.  There is one required parameter:
+<ul>
+  <li>MAXIMUM_FILE_SIZE_BYTES - An maximum size of the file in bytes</li>
+</ul>
+MaxSize will return a success both if the file is not uploaded, or if the field size is less than or equal to MAXIMUM_FILE_SIZE_BYTES.  MaxSize must be combined with the Required validator to ensure that the file has both been uploaded and is the correct size.
+<pre>
+Syntax
+------
+• MaxSize:MAXIMUM_FILE_SIZE_BYTES
+
+Examples
+--------
+• "MaxSize:10000000"    //Allow no file, or files that are less than or equal to 10 MB
+</pre>
+
+<h3 data-level="2">Extension (File Validator)</h3>
+The "Extension" validator checks that a uploaded file has a valid extension.  File extension validation is case-insensitive.  There is one required parameter:
+<ul>
+  <li>FILE_EXTENSIONS - An array of possible file extensions.  A period "." is required before each extension.</li>
+</ul>
+The Extension validator will return a success both if the file is not uploaded, or if the file has the correct extension.  Extension must be combined with the Required validator to ensure that the file has both been uploaded and has the correct extension.
+<pre>
+Syntax
+------
+• Extension:FILE_EXTENSIONS
+
+Examples
+--------
+• "Extension:['.TXT','.PDF']"              //Allow no file, or files that have the ".TXT" or ".PDF" extensions
+• "Extension:jsh.Config.supported_images"  //Allow no file, or one of the file extensions configured in jsh.Config.supported_images
+</pre>
+
+<h3>Custom Validators</h3>
+Custom validators can be used to extend the built-in validation functions for additional applications.  There are three types of custom validators:
+<ul>
+  <li><b>System-wide Validators</b> - defined in a global file such as app.config.js, and available to all models</li>
+  <li><b>In-line JavaScript Validators</b> - defined using JavaScript in-line in the validation string</li>
+  <li><b>In-line Regular Expression Validators</b> - defined using Regular Expressions in-line in the validation string</li>
+</ul>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldValidation_Custom?action=update&x_primary=1&popup=1','Field Validation - Custom')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"unbound":true, "control":"textbox", "validate":["RegEx:'/^\\\\d{4}$/','be a four digit number.'"], "caption":"Field 1" }, { "control":"html", "value": "(RegEx:'/^\\\\d{4}$/','be a four digit number.')" },
+    {"unbound":true, "control":"textbox", "validate":["MinWordCount:5"], "caption":"Field 2" }, { "control":"html", "value": "(MinWordCount:5)" },
+    {"unbound":true, "control":"textbox", "validate":["js:if((typeof _val == 'undefined')||(_val==='')||(_val===null)) return ''; if(_val.toString().toUpperCase()==_val.toString()) return ''; return _caption+' must be uppercase.';"], "caption":"Field 3" }, { "control":"html", "value": "js:if((typeof _val == 'undefined')||(_val==='')||(_val===null)) return ''; if(_val.toString().toUpperCase()==_val.toString()) return ''; return _caption+' must be uppercase.';" },
+    {"name": "x_textbox", "control":"textbox", "validate":[
+        {"function":"js:if(!_val || (_val.toString().toLowerCase().substr(0,4)!='test')) return _caption+' must begin with the word \"test\".';","runat":["server"]}
+      ], "caption":"x_textbox" }, { "control":"html", "value": "In-line JS Validator - Server-side" },
+    {"name":"field_4", "unbound":true, "control":"textbox", "caption":"Field 4" }, { "control":"html", "value": "Dual Field Validator: (Field 4 + Field 5) = 10" },
+    {"name":"field_5", "unbound":true, "control":"textbox", "validate":[
+      { "function":"js:var f4 = parseFloat(_obj.field_4||0);  var f5 = parseFloat(_obj.field_5||0); if(isNaN(f4) || isNaN(f5) || ((f4 + f5) != 10)) return 'The sum of Field 4 and Field 5 must be 10.';", "selector": ".field_4,.field_5" }
+      ], "caption":"Field 5" }, { "control":"html", "value": "Dual Field Validator: (Field 4 + Field 5) = 10" },
+    {"unbound":true, "control":"textbox", "validate":[{"actions":"I", "function":"Required"}], "caption": "Field 6"}, { "control":"html", "value": "Required only on Insert" },
+  ]
+}
+</pre>
+<ul>
+  <li>"Field 1" uses a custom Regular Expression validator</li>
+  <li>"Field 2" uses a custom-defined system-wide validator</li>
+  <li>"Field 3" uses an inline JavaScript validator</li>
+  <li>"x_textbox" uses an inline server-side JavaScript validator</li>
+  <li>"Field 4" and "Field 5" use a dual-field JavaScript validator</li>
+  <li>"Field 6" implements a validator that only runs on Insert operations</li>
+</ul>
+
+<h3 data-leve="2">System-wide Custom Validators</h3>
+System-wide custom validators can be defined in app.config.js:
+<pre>
+//app.config.js
+exports = module.exports = function(jsh, config, dbconfig){
+
+  if(!jsh.XValidate._v_MinWordCount) jsh.XValidate._v_MinWordCount = function(minWords){
+    return function(_caption, _val, _obj){
+      //Do not run the validator if the field is blank
+      if((typeof _val == "undefined")||(_val==="")||(_val===null)) return '';
+      //Get the number of works in the string
+      var numWords = _val.toString().trim().split(/\s+/).length;
+      //Return an error if the number of words is less than the required number of words
+      if(numWords < minWords) return _caption+' must have at least '+minWords+' words.';
+      //(Optional) Otherwise, return a successful (empty) string
+      return '';
+    };
+  }
+  jsh.XValidate._v_MinWordCount.runat = ['server','client'];
+
+}
+</pre>
+The system-wide validators are added to the jsHarmony.XValidate object.  The validator function name should begin with "_v_" (which should be dropped when used in a field.validate expression).<br/>
+<br/>
+Validator functions have the following syntax:
+<pre>
+jsHarmony.XValidate._v_VALIDATORNAME = function(PARAM1, PARAM2, ...){
+  return function(_caption, _val, _obj){
+  };
+}
+
+Validators are initialized with the parameters (PARAM1, PARAM2, ...) passed during instantiation.
+In this example, the validator would be used as follows in the field.validate defintion:
+"VALIDATORNAME:PARAM1,PARAM2"
+
+Validators return a function that is executed on validation.
+
+Validator function parameters are:
+  _caption   The caption of the field being validated
+  _val       The value fo the field being validated
+  _obj       The validation object, containing all the other fields being validated
+
+Validator functions should return:
+  On success: An empty string or have no return value
+  On failure: A string with the failure message
+
+In most instances, the validator should return a success on null or blank values, so that it could be both optional or required.
+In order to do that, the following expression should be used:
+  if((typeof _val == "undefined")||(_val==="")||(_val===null)) return '';
+
+Finally, a "runat" attribute can be added to the validator, so that its scope can be limited to either the client or the server:
+
+jsHarmony.XValidate._v_VALIDATORNAME.runat = ['server','client'];  //Run at both client and server (default)
+jsHarmony.XValidate._v_VALIDATORNAME.runat = ['client'];           //Run only on the client user interface (vulnerable to hacking)
+jsHarmony.XValidate._v_VALIDATORNAME.runat = ['server'];           //Run only server-side
+</pre>
+
+<h3 data-leve="2">In-line JavaScript Custom Validators</h3>
+Custom in-line validators can be implemented via the "js" validator:
+<pre>
+"js:VALIDATION_FUNCTION"
+
+VALIDATION_FUNCTION is called with the following parameters:
+  _caption   The caption of the field being validated
+  _val       The value fo the field being validated
+  _obj       The validation object, containing all the other fields being validated
+
+The return value of VALIDATION_FUNCTION should be:
+  On success: An empty string (''), or no return call
+  On failure: A string with the error message
+
+If the field is optional (not required), it is recommended to use the following syntax for checking if a value exists:
+if((typeof _val == 'undefined')||(_val==='')||(_val===null)) return '';
+
+Below is a sample validation expression that checks to see if the value is uppercase:
+"js:if((typeof _val == 'undefined')||(_val==='')||(_val===null)) return ''; if(_val.toString().toUpperCase()==_val.toString()) return ''; return _caption+' must be uppercase.';"
+</pre>
+
+<h3 data-leve="2">In-line Regular Expression Validators</h3>
+The syntax of regular expression validators ("RegEx") is defined in the <a href="#regex">RegEx Validator</a> section above.  The RegEx validator can be used to create a custom validator without programming a custom JavaScript validation function.
+
+<h3>Database Validation</h3>
+Validation can be also be implemented in database triggers.  Database validation is ideal for validating business logic or custom data relationships, since the database-side validation will ensure the integrity of the underlying data across all systems that use the database.<br/>
+<br/>
+More information is available in the <a href="/tutorials/model_database_validation">Database Validation / Error Handling</a> tutorial.
+
+<h3>API Validation (Server-side)</h3>
+Server-side valiation of models is automatically performed using field validators.  When implementing fully custom server-side API endpoints, however, it is necessary to manually validate API access and API parameters.<br/>
+<br/>
+Three functions are used for API validation:
+<ul>
+  <li>Helper.hasModelAction - Checks model <-> role <-> user <-> action permissions</li>
+  <li>jsHarmony.AppSrv.ParamCheck - Checks if required / optional Querystring and POST parameters are present, and disallows extra parameters</li>
+  <li>XValidate.Validate - Validates parameter data using the jsHarmony validators</li>
+</ul>
+
+The example below implements a custom server-side API endpoint, which is called when the "Invoke API Call" button is clicked.<br/>
+<br/>
+The API call is passed a Message and a Delay in milliseconds.  When the button is clicked, the API waits Delay ms, finds the first customer in the database, and returns: "[Customer Name] says [Message]"
+<%-getScreenshot('jsHarmonyTutorials/FieldValidation_API?popup=1','Field Validation - API')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldValidation_API?popup=1','Field Validation - API Invoked', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.invoke').click();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.xDialog.length; }, resolve);
+}); } })%>
+<pre>
+//FieldValidation_API.json
+//------------------------
+{
+  "layout":"exec",
+  "caption": "API Validation",
+  "onecolumn": true,
+  "fields": [
+    { "control": "textbox", "name": "message", "caption": "Message", "default": "Hello" },
+    { "control": "textbox", "name": "delay", "caption": "Delay (ms)", "default": 1000 },
+    { "control": "button", "name": "invoke", "value": "Invoke API Call", "onclick": "XForm.Post(xmodel.id, { message: xmodel.get('message'), delay: xmodel.get('delay') }, function(rslt){ XExt.Alert(JSON.stringify(rslt)); });" }
+  ]
+}
+
+//FieldValidation_API.onroute.js
+//------------------------------
+//Parameters: (routetype, req, res, callback, require, jsh, modelid, params)
+//------------------------------
+//On POST, select the first customer, and return "[customer name] says [message]"
+//  If [delay] is passed as a parameter, wait [delay] ms before returning
+//------------------------------
+
+//Only process API backend requests: /_d/*
+if(routetype != 'd') return callback();
+
+var _ = require('lodash');
+var fs = require('fs');
+var path = require('path');
+var async = require('async');
+var Helper = require('../Helper.js');
+var XValidate = jsh.XValidate;
+var model = jsh.getModel(req, modelid);
+
+var appsrv = jsh.AppSrv;
+var dbtypes = appsrv.DB.types;
+
+var verb = req.method.toLowerCase();
+if (verb == 'post') {
+
+  //Validate Parameters
+  var Q = req.query;
+  var P = req.body;
+
+  //Validate the current user has the required access to the target Model
+  if (!Helper.hasModelAction(req, model, 'U')) { Helper.GenError(req, res, -11, 'Invalid Model Access'); return; }
+
+  //Validate querystring parameter names - should be empty
+  if (!appsrv.ParamCheck('Q', Q, [])) { Helper.GenError(req, res, -4, 'Invalid Parameters'); return; }
+
+  //Validate post body parameter names - should contain the required "message" parameter and optional "delay" parameter
+  if (!appsrv.ParamCheck('P', P, ['&message','|delay'])) { return Helper.GenError(req, res, -4, 'Invalid Parameters'); }
+
+  //Validate parameter data
+  var validation = new XValidate();
+  validation.AddValidator('_obj.message', 'Message', 'U', [XValidate._v_Required(), XValidate._v_MaxLength(50)]);
+  validation.AddValidator('_obj.delay', 'Delay', 'U', [XValidate._v_IsNumeric(true), XValidate._v_MaxValue(10000)]);
+  var validation_errors = validation.Validate('U', P);
+  if (!_.isEmpty(validation_errors)) { return Helper.GenError(req, res, -2, _.flatMap(validation_errors).join('\n')); }
+
+  var db = jsh.getDB('default');
+
+  var customer = null;
+
+  async.waterfall([
+
+    //Select the first customer
+    function(cb){
+      appsrv.ExecRecordset(req._DBContext, "select c_name from c limit 1", [], {}, function(err, rslt){
+        if(err) return cb(err);
+        if(!rslt || !rslt.length || !rslt[0].length) return cb(err);
+        customer = rslt[0][0];
+        return cb();
+      });
+    },
+
+    //If a delay was requested, wait
+    function(cb){
+      if(!P.delay) return cb();
+      else setTimeout(cb, parseInt(P.delay));
+    }
+  ], function(err){
+    if(err) return Helper.GenError(req, res, -99999, err);
+
+    //Return API result
+    var message = (customer?customer.c_name:'System') + ' says ' + P.message;
+    res.end(JSON.stringify({ '_success': 1, 'message': message }));
+  });
+}
+else return callback();
+</pre>
+
+<h3 data-level="2">Helper.hasModelAction</h3>
+The Helper.hasModelAction function is a static function used to check if a user has access to the target Action in a model.
+<pre>
+Helper.hasModelAction(req, model, action);
+
+Parameters
+----------
+req    - The Express request object
+model  - The jsHarmony Model that will be tested for access
+action - The requested action(s) on that model
+
+Returns
+-------
+The function will return true if the current user has access to [b]any[/b] of the requested actions on the target model.
+</pre>
+<ul>
+  <li>If the model does not have the requested action defined in model.actions, the result will always be false</li>
+  <li>If a user has the "DEV" role, the result will be true</li>
+  <li>If a user has the "SYSADMIN" role, and the model.dev flag is not set, the result will be true</li>
+  <li>Otherwise, if the user has a role assigned, and that role has the target action on the model, the result will be true</li>
+  <li>Otherwise, the result will be false</li>
+</ul>
+For example:
+<pre>
+model.actions = "BU"
+model.roles = { "main": { "writers": "BU", "readers": "B"  } }
+
+If
+  Requested Action = "U" (Update)
+  User has "writers" role
+Then Helper.hasModelAction(req, model, 'U') = true
+
+If
+  Requested Action = "U" (Update)
+  User has "readers" role
+Then Helper.hasModelAction(req, model, 'U') = false
+
+If
+  Requested Action = "BU" (Browse or Update)
+  User has "readers" role
+Then Helper.hasModelAction(req, model, 'BU') = true
+
+If model.actions is not defined, it will default to a different value depending on the layout:
+  "BU" for exec / report / multisel models
+  "B" or "BIUD" on grids depending on whether they are updateable
+  "BU" on unbound forms
+  "BIUD" on standard forms
+</pre>
+
+The Helper.hasModelAction function should call Helper.GenError on failure and return.  This will send back an error message to the user and stop further processing.
+<pre>
+var Helper = require('../Helper.js');
+
+if (!Helper.hasModelAction(req, model, 'U')) { Helper.GenError(req, res, -11, 'Invalid Model Access'); return; }
+</pre>
+
+<h3 data-level="2">jsHarmony.AppSrv.ParamCheck</h3>
+The jsHarmony.AppSrv.ParamCheck function validates the API call signature.  It checks the names of parameters in the querystring and post body, and generates an error on any extra or missing parameters.
+
+<pre>
+jsHarmony.AppSrv.ParamCheck(desc, col, params, show_errors)
+
+Parameters
+----------
+desc        - Friendly description of the object being validated (for error messages)
+col         - The object being validated (Querystring JSON object, or POST data JSON object).  The object should have a key/value for each parameter:
+              Ex. {
+                "key1": "value1",
+                "key2": "value2"
+              }
+params      - The parameter definition array (function signature).  An array of strings.
+              Ex: ['&key1','|key2']
+              Parameter names must be prefixed with either '&' or '|'.
+                '&': Required parameter
+                '|': Optional parameter
+              In the example above, "key1" is required, and "key2" is optional.
+show_errors - Whether to log errors to the console and database log (default true)
+
+Returns
+-------
+The function will return false if:
+  Any required parameters are missing, or
+  Any undefined parameters exist
+Otherwise, the function will return true
+</pre>
+
+For example, to validate the querystring and POST body:
+<pre>
+var Helper = require('../Helper.js');
+
+var Q = req.query;
+var P = req.body;
+
+//Validate querystring parameter names - should be empty
+if (!jsh.AppSrv.ParamCheck('Q', Q, [])) { Helper.GenError(req, res, -4, 'Invalid Parameters'); return; }
+
+//Validate post body parameter names - should contain the required "message" parameter and optional "delay" parameter
+if (!jsh.AppSrv.ParamCheck('P', P, ['&message','|delay'])) { return Helper.GenError(req, res, -4, 'Invalid Parameters'); }
+</pre>
+
+<h3 data-level="2">XValidate.Validate</h3>
+The XValidate object is the base object for the jsHarmony validation.  The XValidate.Validate function runs the validators that have been defined on the object.  Syntax is as follows:
+<pre>
+//For server-side (no UI) validation
+class XValidate {
+
+  //Server-side Constructor
+  constructor()
+
+  //Properties
+  Validators = new Array();   //Array of XValidate.XValidator objects
+
+  //Methods
+  AddValidator(_field, _caption, _actions, _funcs, _roles)
+  Validate(actions, _obj, field, ignore, roles, options)
+
+  //Client-side
+  //-----------
+
+  //Client-side Constructor
+  constructor(jsh)
+
+  //Additional Client-side properties
+  FocusOnError = true;        //Whether to set focus to the first control that failed validation
+  ErrorClass = 'xinputerror;  //The CSS class that will be added to any controls with failed validation
+  jsh = undefiend;            //The jsHarmony Client-side object - should be set in the constructor
+
+  //Additional Client-side Methods
+  AddControlValidator(_selector, _field, _caption, _actions, _funcs)
+  ResetValidation(field, parentobj)
+  ValidateControls(actions, _obj, field, parentobj)
+}
+
+//Each validator is defined as a static method that returns a validation function
+XValidate._v_Required = function(ALLOW_BLANK){ return function(_caption, _val, _obj}{ ... } }
+XValidate._v_MinLength = function(NUMBER_OF_CHARACTERS){ return function(_caption, _val, _obj}{ ... } }
+...
+
+//Each validator can have an optional runat property that defines whether it runs client-side or server-side (default both)
+XValidate._v_Required.runat = ["server", "client"];
+
+class XValidate.XValidator {
+
+  constructor(_field, _caption, _actions, _funcs, _selector, _roles);
+
+  //Properties
+  Field      //Name of the key in the validation data object
+  Caption    //Caption displayed in the error messages
+  Actions    //Actions (BIUD) for which the validator should run
+  Funcs      //Array of validator functions that will be executed during validation
+             //  Each validator function is called with parameters f(_caption, _val, _obj)
+             //    _caption - The Validator caption
+             //    _val     - The value being validated
+             //    _obj     - The parent object of the value, with keys for all other fields being validated
+  Roles      //Associate array of Actions by role, for which the validator should run.  For example:
+             //  {
+             //    "role_id1": "BIUD",
+             //    "role_id2": "BU"
+             //  }
+             //* The roles array is used to disable validation by field, if the user does not have access to the field
+  Selector   //(Client-side) The document selector of the control being validated
+}
+
+XValidate.AddValidator(_field, _caption, _actions, _funcs, _roles)
+//Add a new XValidator to the Validators array
+//new XValidate.XValidator(_field, _caption, _actions, _funcs, undefined, _roles);
+
+XValidate.Validate(actions, _obj, field, ignore, roles, options)
+//Run the validation
+----------
+Parameters
+----------
+actions  - The action(s) that should be validated (BIUD)
+_obj     - The data object to be validated:
+           {
+             "key1": "value1",
+             "key2": "value2"
+           }
+field    - (Optional) Limit validation to a single field name.  Matches against XValidator.Field
+ignore   - (Optional) Array of field names to ignore.  Ex: ['key1','key2']
+roles    - (Optional) Associative array of roles given to the current user.  Ex: { "role_id1": true, "role_id2": true }
+                      If a validator has XValidator.Roles defined, and the user does not have access to the validator, it will not be tested
+options  - (Optional) Array of options
+           {
+             ignoreUndefined: false  //If set to true, and the data object value for that field is undefined, ignore its validators
+           }
+
+Returns
+-------
+If validation passed, returns null
+If validation failed, returns an associative array of errors, grouped by XValidator.Selector:
+  {
+    "selector1": ["error1", "error2"],
+    "selector2": ["error3"],
+  }
+* If XValidator.Selector is not defined for a field, its errors will be in the empty string selector:
+  {
+    "": ["error1", "error2", "error3"]
+  }
+
+Client-side Methods
+-------------------
+XValidate.AddControlValidator(_selector, _field, _caption, _actions, _funcs)
+//(Client-side) Add a new client-side XValidator to the Validators array
+//new XValidate.XValidator(_field, _caption, _actions, _funcs, _selector);
+
+XValidate.ResetValidation(field, parentobj)
+//(Client-side) Reset Validation and remove the XValidate.ErrorClass from any XValidator.Selector with the error class in parentobj
+
+XValidate.ValidateControls(actions, _obj, field, parentobj)
+//(Client-side) Run client-side valiation
+//1. Resets Validation
+//2. Runs XValidate.Validate(actions, _obj, field)
+//3. If validation errors occurred, generate an XExt.Alert message and select the first invalid control on close
+----------
+Parameters
+----------
+actions   - The action(s) that should be validated (BIUD)
+_obj      - The data object to be validated:
+            {
+              "key1": "value1",
+              "key2": "value2"
+            }
+field     - (Optional) Limit validation to a single field name.  Matches against XValidator.Field
+parentobj - (Optional) The form container for the validation fields.  Defaults to jsh.root
+
+Returns
+-------
+If validation passed, returns true
+If validation failed, returns false
+</pre>
+
+For example, to validate the parameters in the Server-Side API example:
+<pre>
+var Helper = require('../Helper.js');
+var XValidate = jsh.XValidate;
+var _ = require('lodash');
+
+var validation = new XValidate();
+validation.AddValidator('_obj.message', 'Message', 'U', [XValidate._v_Required(), XValidate._v_MaxLength(50)]);
+validation.AddValidator('_obj.delay', 'Delay', 'U', [XValidate._v_IsNumeric(true), XValidate._v_MaxValue(10000)]);
+var validation_errors = validation.Validate('U', P);
+if (!_.isEmpty(validation_errors)) { return Helper.GenError(req, res, -2, _.flatMap(validation_errors).join('\n')); }
+</pre>
+
+<h3>JavaScript Validation (Client-side)</h3>
+The XValidate class interface is defined above.  Below is an example implementing client-side validation:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldValidation_JS?popup=1','Field Validation - JavaScript')%>
+<pre>
+//FieldValidation_JS.json
+//-----------------------
+{
+  "layout":"exec",
+  "caption": "API Validation",
+  "onecolumn": true,
+  "fields": [
+    { "control": "textbox", "name": "message", "caption": "Message", "default": "Hello" },
+    { "control": "textbox", "name": "delay", "caption": "Delay (ms)", "default": 1000 },
+    { "control": "button", "name": "invoke", "value": "Invoke API Call", "onclick": "_this.invoke_click();" }
+  ]
+}
+
+//FieldValidation_JS.js
+//---------------------
+jsh.App[modelid] = new (function(){
+  var _this = this;
+
+  this.invoke_click = function(){
+
+    //Define data object for validation
+    var data = { 
+      message: xmodel.get('message'), 
+      delay: xmodel.get('delay') 
+    };
+
+    //Initialize custom client-side validator
+    var validation = new XValidate(jshInstance);
+
+    //Define validators
+    validation.AddControlValidator('.message.xelem'+xmodel.class, '_obj.message', 'Message', 'U', [ XValidate._v_Required(), XValidate._v_MaxLength(50) ]);
+    validation.AddControlValidator('.delay.xelem'+xmodel.class, '_obj.delay', 'Delay', 'U', [ XValidate._v_IsNumeric(true), XValidate._v_MaxValue(10000) ]);
+
+    //Execute validation on "data" object, and stop running function if it fails
+    //"ValidateControls" will automatically display an error message and switch focus to the error field on failure
+    if(!validation.ValidateControls('U', data)) return;
+
+    //++ Validation Passed
+
+    //Execute API call
+    XForm.Post(
+      xmodel.namespace + 'FieldValidation_API', 
+      data, 
+      function(rslt){ 
+        //Display the resulting JSON in a dialog box
+        XExt.Alert(JSON.stringify(rslt)); 
+      }
+    );
+  }
+
+})();
+</pre>
+
+<h3>Automatic Datatype Validators</h3>
+Validators are automatically added on load, based on the field.type.  More information is available in the <a href="/tutorials/field_datatypes#datatype_validation">Data Type Validation</a> tutorial.

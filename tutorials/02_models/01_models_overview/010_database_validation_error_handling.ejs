@@ -1,0 +1,230 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "model_database_validation",
+  "Title": "Database Validation / Error Handling",
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelDBValidation_ErrorGenerator.json",
+    "/models/ModelDBValidation_ErrorPopup.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/ModelDBValidation_ErrorGenerator?action=update&x_primary=1", "title": "Sample Database Error Generator" }
+  ]
+}
+</script>
+
+<h3>Overview</h3>
+In many enterprise systems, it is desirable to enforce data integrity and relationships at the database level.  Complex relationships often need to be enforced using triggers, while simple relationships can be defined using constraints and foreign keys.<br/>
+<br/>
+When a particular insert or update statement would cause invalid data, such as a duplicate customer name, the database will return an error message.  jsHarmony can then handle that error message in a variety of different ways:
+<ul>
+  <li>Display a custom message to the user</li>
+  <li>Display a generic "Application Error" message to the user</li>
+  <li>Open a custom form with more information</li>
+</ul>
+
+<h3>Triggering Database Errors</h3>
+Database errors can range from simple errors, such as foreign key constraints, to advanced custom errors that are thrown based on custom conditions.<br/>
+<br/>
+There are four types of errors:
+<ul>
+  <li>Application Error messages - custom messages always shown to the user via message box</li>
+  <li>Application Warning messages - custom messages always shown to the user via message box</li>
+  <li>Execute Form errors - custom messages display a message box and then launch a form</li>
+  <li>Generic errors that require custom handling via model.dberrors</li>
+</ul>
+
+Errors can be generated via triggers as follows:
+
+<h3 data-level="2">SQL Server</h3>
+<pre>
+create trigger allcontrols_insert_update on allcontrols for insert, update as
+begin
+  if(exists(select * from inserted where x_error = 'application_error')) begin raiserror('Application Error - Sample Application Error',16,1); ROLLBACK TRANSACTION; return; end;
+  if(exists(select * from inserted where x_error = 'application_warning')) begin raiserror('Application Warning - Sample Application Warning',16,1); ROLLBACK TRANSACTION; return; end;
+  if(exists(select * from inserted where x_error = 'execute_form')) begin raiserror('Execute Form - Sample Execute Form Message //&lt;%%=xmodel.namespace%%&gt;ModelDBValidation_ErrorPopup?action=update&x_primary=&lt;%%=xmodel.get("x_primary")%%&gt;&x_error_value=&lt;%%=xmodel.get("x_error")%%&gt;',16,1); ROLLBACK TRANSACTION; return; end;
+  if(exists(select * from inserted where x_error is not null)) begin raiserror('Invalid value for x_error',16,1); ROLLBACK TRANSACTION; return; end;
+end
+</pre>
+
+<h3 data-level="2">PostgreSQL</h3>
+<pre>
+create function allcontrols_before_insert_update() RETURNS trigger as $$
+begin
+  if((new.x_error is not null) and (new.x_error = 'application_error')) then raise exception 'Application Error - Sample Application Error'; end if;
+  if((new.x_error is not null) and (new.x_error = 'application_warning')) then raise exception 'Application Warning - Sample Application Warning'; end if;
+  if((new.x_error is not null) and (new.x_error = 'execute_form')) then raise exception 'Execute Form - Sample Execute Form Message //&lt;%%=xmodel.namespace%%&gt;ModelDBValidation_ErrorPopup?action=update&x_primary=&lt;%%=xmodel.get("x_primary")%%&gt;&x_error_value=&lt;%%=xmodel.get("x_error")%%&gt;'; end if;
+  if(new.x_error is not null) then raise exception 'Invalid value for x_error'; end if;
+end; 
+$$ LANGUAGE plpgsql;
+
+create trigger allcontrols_before_insert_update BEFORE INSERT OR UPDATE ON allcontrols FOR EACH ROW EXECUTE PROCEDURE allcontrols_before_insert_update();
+</pre>
+
+<h3 data-level="2">SQLite</h3>
+<pre>
+create trigger allcontrols_before_update before update on allcontrols
+begin
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_error') then raise(FAIL,'Application Error - Sample Application Error') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_warning') then raise(FAIL,'Application Warning - Sample Application Warning') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'execute_form') then raise(FAIL,'Execute Form - Sample Execute Form Message //&lt;%=xmodel.namespace%&gt;ModelDBValidation_ErrorPopup?action=update&x_primary=&lt;%=xmodel.get("x_primary")%&gt;&x_error_value=&lt;%=xmodel.get("x_error")%&gt;') end\;
+  select case when (NEW.x_error is not null) then raise(FAIL,'Invalid value for x_error') end\;
+end;
+</pre>
+
+<h3>Handling Database Errors</h3>
+Database error messages are handled based on the error text:
+<ul>
+  <li>If the error message begins with "Application Error - ", the message will be displayed directly to the user</li>
+  <li>If the error message begins with "Application Warning - ", the message will be displayed directly to the user</li>
+  <li>If the error message begins with "Execute Form - ", the message will be displayed to the user and the target form will be opened</li>
+  <li>If the error message is matches an expression in the model.dberrors section, the dberrors message will be displayed to the user</li>
+  <li>If the error message is not handled by the above, a generic error message is displayed to the user, while administrators will see a detailed error message.  The database error is then logged and emailed</li>
+</ul>
+
+The example below provides an interface to generate errors.  Saving the drop-down value will cause the database trigger to generate an error.
+<%-getScreenshot('jsHarmonyTutorials/ModelDBValidation_ErrorGenerator?action=update&x_primary=1&popup=1','Model DB Validation')%>
+<pre>
+//Database Trigger
+create trigger allcontrols_before_update before update on allcontrols
+begin
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_error') then raise(FAIL,'Application Error - Sample Application Error') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'application_warning') then raise(FAIL,'Application Warning - Sample Application Warning') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'execute_form') then raise(FAIL,'Execute Form - Sample Execute Form Message //&lt;%=xmodel.namespace%&gt;ModelDBValidation_ErrorPopup?action=update&x_primary=&lt;%=xmodel.get("x_primary")%&gt;&x_error_value=&lt;%=xmodel.get("x_error")%&gt;') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'db_error_standard') then raise(FAIL,'sample_db_error_standard') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'db_error_regex') then raise(FAIL,'sample_db_error_regex') end\;
+  select case when (NEW.x_error is not null) and (NEW.x_error = 'unhandled') then raise(FAIL,'Sample unhandled database error') end\;
+  select case when (NEW.x_error is not null) then raise(FAIL,'Application Error - Invalid value for x_error') end\;
+end;
+
+//ModelDBValidation_ErrorGenerator - Saving will generate an error from database-side trigger validation
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    { "name": "x_error", "lov": { "blank": true, "values": {
+      "application_error": "application_error",
+      "application_warning": "application_warning",
+      "execute_form": "execute_form",
+      "db_error_standard": "db_error_standard",
+      "db_error_regex": "db_error_regex",
+      "unhandled": "unhandled"
+    } } },
+    { "control": "html", "value": "Select a sample database error and click 'Save'" }
+  ],
+  "dberrors": [
+    [ "error_standard", "Sample Error Message Override (Partial String Match)" ],
+    [ "/.*\\_regex/", "Sample Error Message Override (Regex)" ]
+  ]
+}
+
+//ModelDBValidation_ErrorPopup - Sample "Execute Form" callback form for custom-handling database errors
+{
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "Error",
+  "popup":[500,300],
+  "oninit": "debugger;",
+  "fields": [
+    { "name": "x_primary", "control": "label" },
+    { "control": "label", "value": "An error occurred saving the following data:" },
+    { "name": "x_error_value", "unbound": true, "control": "label" },
+  ]
+}
+</pre>
+
+<h3 data-level="2">model.dberrors</h3>
+The simplest way to implement custom errors is through the model.dberrors property.  when a database error occurs, the system searches through model.dberrors to see check for either a partial string or regular expression match against the error message.  If a match is found, the associated error message is shown.  Otherwise, a generic database error handler is called.
+<pre>
+{
+  "dberrors": [
+    ["PARTIAL_STRING_MATCH1", "FRIENDLY_ERROR_MESSAGE1"],
+    ["PARTIAL_STRING_MATCH2", "FRIENDLY_ERROR_MESSAGE2"],
+    ["/REGULAR_EXPRESSION_MATCH3/", "FRIENDLY_ERROR_MESSAGE3"]
+  ]
+}
+
+For example:
+{
+  "dberrors": [
+    [ "error_standard", "Sample Error Message Override (Partial String Match)" ],
+    [ "/.*\\_regex/", "Sample Error Message Override (Regex)" ]
+
+    [ "unq_ca", "Customer can only have one record of each Address Type." ]
+    ["/UNQ_GCOD_.*_CODEVAL/","CODE Value must be unique"],
+  ]
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/ModelDBValidation_ErrorGenerator?action=update&x_primary=1&popup=1','Model DB Validation - model.dberrors', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  jshInstance.XModels[jshInstance.XModels_root].set('x_error','db_error_standard')
+  jshInstance.XPage.Save();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.xDialog.length; }, resolve);
+}); } })%>
+
+<h3 data-level="2">Application Error</h3>
+If the error message string begins with "Application Error - ", the full error message will be returned to the user in a dialog box.  Application Errors are meant to be displayed back through the user interface:
+
+<%-getScreenshot('jsHarmonyTutorials/ModelDBValidation_ErrorGenerator?action=update&x_primary=1&popup=1','Model DB Validation - Application Error', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  jshInstance.XModels[jshInstance.XModels_root].set('x_error','application_error')
+  jshInstance.XPage.Save();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.xDialog.length; }, resolve);
+}); } })%>
+
+
+<h3 data-level="2">Application Warning</h3>
+If the error message string begins with "Application Warning - ", the full error message will be returned to the user in a dialog box.  Application Warning are meant to be displayed back through the user interface:
+
+<%-getScreenshot('jsHarmonyTutorials/ModelDBValidation_ErrorGenerator?action=update&x_primary=1&popup=1','Model DB Validation - Application Warning', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  jshInstance.XModels[jshInstance.XModels_root].set('x_error','application_warning')
+  jshInstance.XPage.Save();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.xDialog.length; }, resolve);
+}); } })%>
+
+<h3 data-level="2">Execute Form</h3>
+If the error message string begins with "Execute Form - ", the text after "Execute Form -" will be displayed to the user in a dialog box.  After the user clicks "OK", the TARGET_MODEL form is launched.
+
+<pre>
+Error Message Syntax:
+Execute Form - MESSAGE //TARGET_MODEL?parameter=value
+
+EJS can be used in the URL, for example:
+Execute Form - Sample Execute Form Message //&lt;%=xmodel.namespace%&gt;ModelDBValidation_ErrorPopup?action=update&x_primary=&lt;%=xmodel.get("x_primary")%&gt;&x_error_value=&lt;%=xmodel.get("x_error")%&gt;
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/ModelDBValidation_ErrorGenerator?action=update&x_primary=1&popup=1','Model DB Validation - Execute Form', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  jshInstance.XModels[jshInstance.XModels_root].set('x_error','execute_form')
+  jshInstance.XPage.Save();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.xDialog.length; }, resolve);
+}); } })%>
+
+Based on the code above, the following error popup is shown after "OK" is clicked:
+<pre>/jsHarmonyTutorials/ModelDBValidation_ErrorPopup?action=update&x_primary=1&x_error_value=execute_form</pre>
+<%-getScreenshot('jsHarmonyTutorials/ModelDBValidation_ErrorPopup?action=update&x_primary=1&x_error_value=execute_form&popup=1','Model DB Validation - Error Popup')%>

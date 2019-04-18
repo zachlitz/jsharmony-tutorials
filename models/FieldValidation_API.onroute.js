@@ -1,4 +1,11 @@
-//(routetype, req, res, callback, require, jsh, modelid, params)
+//FieldValidation_API.onroute.js
+//------------------------------
+//On POST, select the first customer, and return "[customer name] says [message]"
+//  If [delay] is passed as a parameter, wait [delay] ms before returning
+//------------------------------
+
+
+//onroute(routetype, req, res, callback, require, jsh, modelid, params)
 
 //Only process API backend requests: /_d/*
 if(routetype != 'd') return callback();
@@ -16,6 +23,7 @@ var dbtypes = appsrv.DB.types;
 
 var verb = req.method.toLowerCase();
 if (verb == 'post') {
+
   //Validate Parameters
   var Q = req.query;
   var P = req.body;
@@ -42,13 +50,12 @@ if (verb == 'post') {
 
   async.waterfall([
 
-    //Select a random customer
+    //Select the first customer
     function(cb){
-      appsrv.ExecRecordset(req._DBContext, "select c_name from c", [], {}, function(err, rslt){
+      appsrv.ExecRecordset(req._DBContext, "select c_name from c limit 1", [], {}, function(err, rslt){
         if(err) return cb(err);
         if(!rslt || !rslt.length || !rslt[0].length) return cb(err);
-        var rnd = Math.floor(Math.random() * rslt[0].length);
-        customer = rslt[0][rnd];
+        customer = rslt[0][0];
         return cb();
       });
     },

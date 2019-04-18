@@ -1,0 +1,13 @@
+{
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": "Error",
+  "popup":[500,300],
+  "oninit": "debugger;",
+  "fields": [
+    { "name": "x_primary", "control": "label" },
+    { "control": "label", "value": "An error occurred saving the following data:" },
+    { "name": "x_error_value", "unbound": true, "control": "label" },
+  ]
+}
