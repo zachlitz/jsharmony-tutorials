@@ -1,0 +1,14 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"name":"field1","unbound":true, "control":"textbox", "default":"Test", "caption":"Standard Default Value" },
+    {"name":"field2","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)", "caption":"JS Default Value" },
+    {"name":"field3","unbound":true, "control":"hidden","ongetvalue":"return 'abc';" },
+    {"name":"x_textbox"},
+    {"name":"x_textarea","ongetvalue":"return xmodel.get('x_textbox');"}
+  ]
+}

@@ -332,7 +332,7 @@ All of the following fields in the above models should have datalocks defined:
   <li>Primary Keys</li>
   <li>Foreign Keys</li>
   <li>Fields used as parameters in LOV, Default, Title, or Breadcrumb SQL statements</li>
-  <li>Any List of Values fields with custom SQL (field.lov.sql, field.lov.sql2, field.lov.sqlmp, field.lov.sqlselect) that can be truncated for efficiency during insert (do not have the field.always_editable_on_insert property set)</li>
+  <li>Any List of Values fields with custom SQL (field.lov.sql, field.lov.sql2, field.lov.sqlmp, field.lov.sqlselect) that can be truncated for efficiency during insert (if they have the field.locked_by_querystring property set)</li>
   <li>The "lovkey" in Multisel models</li>
   <li>Any fields with a custom LOV (field.lov.sql, field.lov.sql2, field.lov.sqlmp, field.lov.sqlselect), or a popup LOV</li>
 </ol>

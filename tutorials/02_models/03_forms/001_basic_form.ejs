@@ -255,12 +255,12 @@ Default values can be set on insert by adding the field value to the querystring
 <%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=insert&c_sts=ACTIVE&popup=1','Form Insert Mode Default Value')%>
 
 <h4>Always Editable on Insert</h4>
-Passing a default value will make the field read-only.  In order to keep the field editable, use the "always_editable_on_insert" property:
+Passing a default value will make the field read-only.  In order to keep the field editable, set the "locked_by_querystring" property to false:
 
 <pre>
 {
   "fields":[
-    { "name":"c_sts", "caption":"Status", "always_editable_on_insert":1 }
+    { "name":"c_sts", "caption":"Status", "locked_by_querystring":false }
   ]
 }
 </pre>

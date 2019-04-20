@@ -7,7 +7,7 @@
     "fields":[
       {"name":"c_id","caption": "ID"},
       {"name":"c_name","caption":"Name"},
-      {"name":"c_sts","caption":"Status","always_editable_on_insert":1}
+      {"name":"c_sts","caption":"Status","locked_by_querystring":false}
     ]
   }
 }

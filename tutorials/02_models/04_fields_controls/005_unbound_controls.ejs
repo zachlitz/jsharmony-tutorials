@@ -25,8 +25,23 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Code": ["/models/C.json","/models/C.js"]
 }
 </script>
+<pre>
+No type = not in SQL statements / not sent to server?
+Unbound = No control color changed on "updated"
+          Not part of HasUpdate
+          Not part of Params sent to Server
+          No server-side validators
+          Not returned in xmodel.hasBindingOrRootKey, unless in xmodel.bindings
+          Saved temporarily client-side when switching rows in form-m / grid
+          No sort enabled in grid
+          always_editable = field does not become read-only (based on field.action or field.readonly).  Yes on field.controlparams.base_readonly
+                 Field Validators run based on model actions, not on field actions
+                 * Can only be used with unbound controls
+
 Unbound Controls (Receiving)
 
-field.virtual
+field.always_editable
+field.default
 field.static
 field.unbound
+</pre>
