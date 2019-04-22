@@ -26,6 +26,46 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 }
 </script>
 <pre>
+Examples
+--------
+field.unbound
+  --FieldUnbound_Basic
+  --jsHarmonyTutorials/FieldUnbound_Basic?action=update&x_primary=1
+  Several unbound controls
+    Textbox
+    Dropdown
+  If the model is unbound, all fields gets unbound
+  If the field does not have a "type", the field gets unbound
+
+  --FieldUnbound_AlwaysEditable
+  --jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=update&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test
+  --jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=browse&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test
+  always_editable
+
+  --FieldUnbound_InitialValue
+  --jsHarmonyTutorials/FieldUnbound_InitialValue?action=update&x_primary=1&auto_initial_qs=abc
+  Default Value
+  Default Value via SQL
+  Initial Value via SQL
+
+  --FieldUnbound_JS
+  //Getting / settings via JavaScript
+  xmodel.get
+  xmodel.set
+
+  --FieldUnbound_Dashboard_ChildGrid
+  //Using Unbound Fields for Bindings to Child Grids (Dashboard)
+
+  --FieldUnbound_Tree_ChildForm
+  //Using Unbound Fields for Bindings to Child Forms (Tree)
+
+  --FieldUnbound_Launcher
+  //Using Unbound Fields for a Launcher (ATRAX-RCV)
+
+  --FieldUnbound_PopupLov
+  //Using Unbound Popup LOV (Amber-STOP)
+
+
 No type = not in SQL statements / not sent to server?
 Unbound = No control color changed on "updated"
           Not part of HasUpdate
@@ -41,7 +81,5 @@ Unbound = No control color changed on "updated"
 Unbound Controls (Receiving)
 
 field.always_editable
-field.default
-field.static
 field.unbound
 </pre>

@@ -1,0 +1,18 @@
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>Bound Field</h3>"},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"control":"html","value":"<h3>Unbound Fields</h3>"},
+    {"unbound":true, "control":"textbox", "caption": "Textbox", "nl": false, "captionclass":"leading", "validate": ["Required"]},
+    {"unbound":true, "control":"html", "value": "<b>Content</b>", "caption": "HTML"},
+    {"unbound":true, "control":"label", "value": "Content", "caption": "Label"},
+    {"unbound":true, "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" }, "blank": true },"caption":"Dropdown"},
+    {"unbound":true, "control":"date", "caption":"Date"},
+    {"unbound":true, "control":"hidden"}
+  ]
+}
