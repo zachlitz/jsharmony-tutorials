@@ -4,6 +4,7 @@ begin;
 
 drop table if exists allcontrols;
 drop table if exists alltypes;
+drop table if exists category;
 drop view if exists v_cc;
 drop view if exists v_c;
 drop table if exists e;
@@ -170,7 +171,24 @@ create view v_cc as
   select cc_id,cc_name,cc_title,cc_phone,cc_email,cc.c_id,c_name
     from cc
     inner join c on c.c_id=cc.c_id;
-    
+
+/********CATEGORY*********/
+create table category (
+  category_id integer primary key autoincrement not null,
+  category_parent_id integer,
+  category_name text,
+  foreign key (category_parent_id) references category(category_id)
+);
+insert into category(category_id, category_parent_id, category_name) values(1, null,'(Root)');
+insert into category(category_id, category_parent_id, category_name) values(2, 1,'Home');
+insert into category(category_id, category_parent_id, category_name) values(4, 2,'Cooking');
+insert into category(category_id, category_parent_id, category_name) values(5, 2,'Design Ideas');
+insert into category(category_id, category_parent_id, category_name) values(3, 5,'Bath');
+insert into category(category_id, category_parent_id, category_name) values(6, 5,'Kitchen');
+insert into category(category_id, category_parent_id, category_name) values(7, 5,'Inspiration Photos');
+insert into category(category_id, category_parent_id, category_name) values(8, 4,'Baking');
+insert into category(category_id, category_parent_id, category_name) values(9, 4,'Vegan');
+
 /*********ALLTYPES*********/
 create table alltypes (
   x_primary integer primary key autoincrement not null,

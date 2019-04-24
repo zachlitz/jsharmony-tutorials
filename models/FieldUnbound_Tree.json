@@ -1,0 +1,34 @@
+{
+  "FieldUnbound_Tree": { 
+    "layout":"form",
+    "caption": ["Category", "Categories"],
+    "sqlselect": "select category_id from category where category_parent_id is null order by category_name limit 1",
+    "nokey": true,
+    "fields": [
+      {"name": "category_id","caption": "","control": "tree","always_editable":true, "unbound": true,
+        "controlstyle": "display:inline-block;margin-right:10px;height:400px;width:300px;",
+        "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
+        "controlparams": { "expand_all": true },
+        "onchange": "jsh.XPage.Select(null, xmodel.namespace+'FieldUnbound_Tree_Category');"
+      },
+      {
+        "control": "subform",
+        "controlstyle": "width:450px;display:inline-block;",
+        "target": "FieldUnbound_Tree_Category",
+        "bindings": { "category_id": "category_id" },
+        "caption": "",
+        "actions": "BIUD"
+      }
+    ]
+  },
+  "FieldUnbound_Tree_Category": {
+    "table":"category",
+    "layout":"form",
+    "onecolumn":true,
+    "caption": ["Category", "Categories"],
+    "fields": [
+      {"name": "category_id", "caption": "Category ID", "control": "label"},
+      {"name": "category_name", "caption": "Category Name", "control": "textbox"},
+    ]  
+  }
+}

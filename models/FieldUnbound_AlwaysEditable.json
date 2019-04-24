@@ -10,10 +10,8 @@
     {"control":"html","value":"<h3>Unbound Fields - Standard</h3>"},
     {"caption":"Static Default Value","unbound":true, "control":"textbox", "default":"Test", "nl": false, "captionclass": "leading" },
     {"caption":"Querystring Default Value","unbound":true, "control":"textbox", "name":"auto_initial_qs1" },
-    {"caption":"Browse-Only","unbound":true, "control":"textbox", "default":"Test", "actions":"B" },
     {"control":"html","value":"<h3>Unbound Fields - Always Editable</h3>"},
     {"caption":"Always Editable","unbound":true, "control":"textbox", "default":"Test", "always_editable": true, "nl": false, "captionclass": "leading" },
     {"caption":"Querystring Default Value","unbound":true, "control":"textbox", "name":"auto_initial_qs2", "always_editable": true },
-    {"caption":"Browse-Only","unbound":true, "control":"textbox", "default":"Test", "always_editable": true, "actions":"B" }
   ]
 }
