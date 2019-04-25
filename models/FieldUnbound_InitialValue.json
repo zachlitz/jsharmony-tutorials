@@ -13,7 +13,7 @@
     {"caption":"Default Value (JS)","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)" },
     {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from allcontrols where x_primary = @x_primary" } },
     {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select c_id codeval, c_name codetxt from c order by c_name", "blank": true } },
-    {"caption":"Default Value (via querystring)", "unbound":true, "control":"textbox", "name": "auto_initial_qs" },
-    {"caption":"Default Value (via Model SQL)", "unbound":true, "control":"textbox", "name": "auto_initial_db" }
+    {"caption":"Default Value (via querystring)", "unbound":true, "control":"textbox", "name": "auto_initial_qs" }, {"control":"html", "value":"(xxxxwill be reset to default on Refresh)"},
+    {"caption":"Default Value (via Model SQL)", "unbound":true, "control":"textbox", "name": "auto_initial_db" }, {"control":"html", "value":"(xxxxwill be reset to default on Refresh)"}
   ]
 }

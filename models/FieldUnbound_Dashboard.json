@@ -1,0 +1,25 @@
+{
+  "FieldUnbound_Dashboard": { 
+    "layout":"form",
+    "caption": ["Customer", "Customers"],
+    "unbound": true,
+    "fields": [
+      {"name": "c_sts", "caption": "Status","control": "dropdown", "unbound": true,
+        "lov": { "UCOD": "c_sts", "blank": "(All)" },
+        "onchange": "jsh.XPage.Select('FieldUnbound_Dashboard_CL');"
+      },
+      {"control": "html", "value":"Note: The 'Deactivated' status is an expired CODE, so it does not display in the dropdown"},
+      {"control": "subform", "target": "FieldUnbound_Dashboard_CL", "bindings": { "c_sts": "c_sts" } },
+    ]
+  },
+  "FieldUnbound_Dashboard_CL": {
+    "table":"c",
+    "layout":"grid",
+    "caption": ["Customer", "Customers"],
+    "fields": [
+      {"name":"c_id", "caption": "ID"},
+      {"name":"c_name", "caption": "Name"},
+      {"name":"c_sts", "caption": "Status","actions":"BIU"}
+    ]
+  }
+}

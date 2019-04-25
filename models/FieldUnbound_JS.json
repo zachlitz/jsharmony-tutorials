@@ -4,11 +4,13 @@
   "onecolumn":true,
   "caption": ["Item", "Items"],
   "popup":[900,400],
+  "sqlselect": "select x_primary,x_textbox,x_textarea as auto_initial_db from allcontrols where x_primary=@x_primary",
   "fields": [
-    {"name":"field1","unbound":true, "control":"textbox", "default":"Test", "caption":"Standard Default Value" },
-    {"name":"field2","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)", "caption":"JS Default Value" },
-    {"name":"field3","unbound":true, "control":"hidden","ongetvalue":"return 'abc';" },
-    {"name":"x_textbox"},
-    {"name":"x_textarea","ongetvalue":"return xmodel.get('x_textbox');"}
+    {"control":"html","value":"<h3>Bound Field</h3>"},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"control":"html","value":"<h3>Unbound Field</h3>"},
+    {"name":"field1","unbound":true, "control":"textbox" },
+    {"control": "button", "value": "Set Value", "onclick":"xmodel.set('field1', 'New Value')" },{"control": "html", "value": "xmodel.set('field1', 'New Value')"},
+    {"control": "button", "value": "Get Value", "onclick":"XExt.Alert(xmodel.get('field1'))" },{"control": "html", "value": "XExt.Alert(xmodel.get('field1'))"},
   ]
 }

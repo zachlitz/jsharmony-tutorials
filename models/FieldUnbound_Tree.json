@@ -2,22 +2,23 @@
   "FieldUnbound_Tree": { 
     "layout":"form",
     "caption": ["Category", "Categories"],
-    "sqlselect": "select category_id from category where category_parent_id is null order by category_name limit 1",
-    "nokey": true,
+    "unbound": true,
+    "buttons":[{"link":"insert:FieldUnbound_Tree_Category", "bindings": { "category_parent_id": "category_id" }, "text": "Add Subcategory" }],
     "fields": [
       {"name": "category_id","caption": "","control": "tree","always_editable":true, "unbound": true,
-        "controlstyle": "display:inline-block;margin-right:10px;height:400px;width:300px;",
         "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
+        "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" },
         "controlparams": { "expand_all": true },
-        "onchange": "jsh.XPage.Select(null, xmodel.namespace+'FieldUnbound_Tree_Category');"
+        "onchange": "jsh.XPage.Select('FieldUnbound_Tree_Category');",
+        "controlstyle": "display:inline-block;margin-right:10px;height:400px;width:300px;"
       },
       {
         "control": "subform",
-        "controlstyle": "width:450px;display:inline-block;",
         "target": "FieldUnbound_Tree_Category",
         "bindings": { "category_id": "category_id" },
         "caption": "",
-        "actions": "BIUD"
+        "actions": "BIUD",
+        "controlstyle": "width:450px;display:inline-block;"
       }
     ]
   },
@@ -25,10 +26,12 @@
     "table":"category",
     "layout":"form",
     "onecolumn":true,
+    "popup":[500,150],
     "caption": ["Category", "Categories"],
     "fields": [
       {"name": "category_id", "caption": "Category ID", "control": "label"},
-      {"name": "category_name", "caption": "Category Name", "control": "textbox"},
-    ]  
+      {"name": "category_name", "caption": "Category Name", "control": "textbox", "validate": ["Required"]},
+      {"name": "category_parent_id", "control": "hidden"}
+    ]
   }
 }
