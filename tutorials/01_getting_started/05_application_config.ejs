@@ -685,6 +685,7 @@ config.debug_params = _.extend(config.debug_params,{
   disable_email: false,                  //Disable sending any email messages
   report_debug: false,       //Display report warnings (Null value, etc.)
   auth_debug: false,         //Debug Login / Authentication, and log hashes
+  delay_requests: 0,         //Add a delay of this many milliseconds to all router requests (for testing latency)
 
   db_requests: false,        //Log every database request
   db_log_level: 6,           //Bitmask: 2 = WARNING, 4 = NOTICES :: Database messages logged to the console / log 

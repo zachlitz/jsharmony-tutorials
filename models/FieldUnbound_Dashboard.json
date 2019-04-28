@@ -6,10 +6,12 @@
     "fields": [
       {"name": "c_sts", "caption": "Status","control": "dropdown", "unbound": true,
         "lov": { "UCOD": "c_sts", "blank": "(All)" },
-        "onchange": "jsh.XPage.Select('FieldUnbound_Dashboard_CL');"
+        "onchange": "XPage.Select('FieldUnbound_Dashboard_CL');"
       },
       {"control": "html", "value":"Note: The 'Deactivated' status is an expired CODE, so it does not display in the dropdown"},
       {"control": "subform", "target": "FieldUnbound_Dashboard_CL", "bindings": { "c_sts": "c_sts" } },
+      {"control": "html", "value":"Note: Status dropdown in the grid is read-only because of the binding"},
+      {"control": "html", "value":"Note: Grid commitlevel defaults to 'page' because the grid not the top-level form.", "nl":1},
     ]
   },
   "FieldUnbound_Dashboard_CL": {
@@ -19,7 +21,7 @@
     "fields": [
       {"name":"c_id", "caption": "ID"},
       {"name":"c_name", "caption": "Name"},
-      {"name":"c_sts", "caption": "Status","actions":"BIU"}
+      {"name":"c_sts", "caption": "Status"}
     ]
   }
 }

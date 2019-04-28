@@ -361,7 +361,7 @@ For the model:
   "fields":[
     {"name":"c_sts","caption":"Status"},
     {"name":"RUN","control":"button","value":"Run","caption":"",
-      "onclick":"jsh.XPage.RunDBFunc(this,function(rslt){ XExt.Alert(rslt[modelid][0].status); }, { noMessage: true });"}
+      "onclick":"XPage.RunDBFunc(this,function(rslt){ XExt.Alert(rslt[modelid][0].status); }, { noMessage: true });"}
   ]
 }
 </pre>

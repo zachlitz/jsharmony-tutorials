@@ -3,7 +3,7 @@
   "caption":["Customer Report"],
   "oninit":"_this.oninit(xmodel);",
   "fields":[
-    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+    {"control":"button","value":"Run Report","onclick": "XPage.RunReport();"}
   ],
   "reportdata": {
     "C": { "sql": "select c_id,c_name from c" }

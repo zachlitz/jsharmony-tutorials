@@ -5,13 +5,13 @@
   "caption": ["Item", "Items"],
   "popup":[900,400],
   "fields": [
-    {"control":"html","value":"<h3>Bound Field</h3>"},
+    {"control":"html","value":"<h3>Bound Field</h3>","block":true},
     {"name":"x_textbox", "caption": "x_textbox"},
     {"control":"html","value":"<h3>Unbound Fields - Standard</h3>"},
-    {"caption":"Static Default Value","unbound":true, "control":"textbox", "default":"Test", "nl": false, "captionclass": "leading" },
+    {"caption":"Static Default Value","unbound":true, "control":"textbox", "default":"Test" },
     {"caption":"Querystring Default Value","unbound":true, "control":"textbox", "name":"auto_initial_qs1" },
-    {"control":"html","value":"<h3>Unbound Fields - Always Editable</h3>"},
-    {"caption":"Always Editable","unbound":true, "control":"textbox", "default":"Test", "always_editable": true, "nl": false, "captionclass": "leading" },
+    {"control":"html","value":"<h3>Unbound Fields - Always Editable</h3>","block":true},
+    {"caption":"Always Editable","unbound":true, "control":"textbox", "default":"Test", "always_editable": true },
     {"caption":"Querystring Default Value","unbound":true, "control":"textbox", "name":"auto_initial_qs2", "always_editable": true },
   ]
 }

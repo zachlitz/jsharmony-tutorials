@@ -1,0 +1,35 @@
+{
+  "FieldUnbound_Launcher": { 
+    "layout":"form",
+    "caption": "Customer",
+    "unbound": true,
+    "popup": [600, 400],
+    "fields": [
+      {"name": "c_id", "caption": "Customer ID", "control": "textbox", "unbound": true, "validate": ["Required"],
+        "popuplov":{ "target":"FieldUnbound_Launcher_C_LOV", "codeval":"c_id" } },
+      {"control": "button", "value": "Edit Customer", "link": "update:FieldUnbound_Launcher_C"}
+    ]
+  },
+  "FieldUnbound_Launcher_C_LOV": {
+    "table":"c",
+    "layout":"grid",
+    "actions":"B",
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"c_id","caption": "ID"},
+      {"name":"c_name","caption":"Name","link":"select"}
+    ]
+  },
+  "FieldUnbound_Launcher_C": {
+    "table":"c",
+    "layout":"form",
+    "onecolumn": true,
+    "popup": [600, 400],
+    "caption": ["Customer", "Customers"],
+    "fields": [
+      {"name":"c_id", "caption": "ID"},
+      {"name":"c_name", "caption": "Name"},
+      {"name":"c_sts", "caption": "Status"}
+    ]
+  }
+}

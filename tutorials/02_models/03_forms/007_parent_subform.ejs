@@ -254,7 +254,7 @@ If using foreign keys for the bindings, it is necessary to specify the bindings 
   "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
   "fields": [
     {"name":"c_id","control":"hidden"},
-    {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc(function(){jsh.XPage.Refresh();});"}
+    {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc(function(){XPage.Refresh();});"}
   ]
 }
 </pre>

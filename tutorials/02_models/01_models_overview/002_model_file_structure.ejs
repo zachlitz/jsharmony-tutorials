@@ -191,7 +191,7 @@ A basic report consists of at least one JSON report definition file, and one Rep
   "layout": "report",
   "caption":["Customer Report"],
   "fields":[
-    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+    {"control":"button","value":"Run Report","onclick": "XPage.RunReport();"}
   ],
   "reportdata": {
     "C": { "sql": "select c_id,c_name from c" }
@@ -221,7 +221,7 @@ A basic report consists of at least one JSON report definition file, and one Rep
   "caption":["Customer Report"],
   "oninit":"_this.oninit(xmodel);",
   "fields":[
-    {"control":"button","value":"Run Report","onclick": "jsh.XPage.RunReport();"}
+    {"control":"button","value":"Run Report","onclick": "XPage.RunReport();"}
   ],
   "reportdata": {
     "C": { "sql": "select c_id,c_name from c" }

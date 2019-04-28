@@ -22,9 +22,438 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Unbound Controls",
   "Menu": ["Models","Fields / Controls"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": [
+    "/models/FieldUnbound_Basic.json",
+    "/models/FieldUnbound_Cache_Form.json",
+    "/models/FieldUnbound_Cache_FormM.json",
+    "/models/FieldUnbound_Cache_Grid.json",
+    "/models/FieldUnbound_AlwaysEditable.json",
+    "/models/FieldUnbound_InitialValue.json",
+    "/models/FieldUnbound_JS.json",
+    "/models/FieldUnbound_Dashboard.json",
+    "/models/FieldUnbound_Tree.json",
+    "/models/FieldUnbound_Launcher.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldUnbound_Basic?action=update&x_primary=1", "title": "Basic Unbound Controls" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_Cache_Form?action=update&x_primary=1", "title": "Cached Unbound Data Between Refresh - Form" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_Cache_FormM?action=update", "title": "Cached Unbound Data Between Refresh - Form-M" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_Cache_Grid", "title": "Cached Unbound Data Between Refresh - Grid" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=update&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test", "title": "Field.always_editable property - action=update" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=browse&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test", "title": "Field.always_editable property - action=browse" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_InitialValue?action=update&x_primary=1&auto_initial_qs=abc", "title": "Unbound Default / Initial Values" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_JS?action=update&x_primary=1", "title": "JavaScript Integration with Unbound Fields" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_Dashboard", "title": "Dashboard w/Parameter-bound Grid" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_Tree", "title": "Tree w/Parameter-bound Form" },
+    { "url": "jsHarmonyTutorials/FieldUnbound_Launcher", "title": "Shortcut Form Launcher w/Popup LOV" }
+  ]
 }
 </script>
+
+<h3>Overview</h3>
+Unbound fields are any fields that are disconnected from the database.  "Bound" fields are loaded from and saved to the database.  Unbound fields, on the other hand, can be used for anything else, such as:
+<ul>
+  <li>Adding text and images to the page</li>
+  <li>Implementing custom user interactions with JavaScript</li>
+  <li>Binding child forms to user-inputted values</li>
+</ul>
+Individual fields can be set as unbound via the field.unbound property:
+<pre>
+{
+  "name": "sample_field",
+  "control": "textbox",
+  "unbound": true
+}
+</pre>
+Additionally, fields are automatically set as unbound when:
+<ul>
+  <li>The entire model is unbound (model.unbound = true)</li>
+  <li>The field does not have field.value defined</li>
+  <li>The field control is "html", "linkbutton" or "button"</li>
+</ul>
+Unbound fields can be used with dropdowns, textboxes, labels, or any of the standard controls:
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Basic?action=update&x_primary=1&popup=1','Basic Unbound Controls')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>Bound Field</h3>","block":true},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"control":"html","value":"<h3>Unbound Fields</h3>","block":true},
+    {"unbound":true, "control":"textbox", "caption": "Textbox", "validate": ["Required"]},
+    {"unbound":true, "control":"html", "value": "<b>Content</b>", "caption": "HTML"},
+    {"unbound":true, "control":"label", "value": "Content", "caption": "Label"},
+    {"unbound":true, "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" }, "blank": true },"caption":"Dropdown"},
+    {"unbound":true, "control":"date", "caption":"Date"},
+    {"unbound":true, "control":"hidden"}
+  ]
+}
+</pre>
+
+<br/>
+Unbound fields are not used in any database operations or database SQL statements, except in loading the unbound field's initial List of Values or Default Values.<br/>
+<br/>
+If a field is unbound, it is not sent to the server for API operations, and are not part of server-side validation.  They also cannot be used in sorting.<br/>
+<br/>
+When an API operation causes a reload of local data, the unbound values are cached and then restored after reload, so that the data does not change on the user's interface:
+
+<h4>Cached Unbound Data on Form</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Cache_Form?action=update&x_primary=1&popup=1','Cached Unbound Data Between Refresh - Form')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>Bound Fields</h3>","block":true},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"caption":"DB Timestamp (Bound)","sqlselect":"strftime('%H:%M:%S','now')"},
+    {"control":"html","value":"<h3>Unbound Field</h3>","block":true},
+    {"control":"date", "caption":"Unbound Field","unbound":true,"default":"2/3/2019"}
+  ]
+}
+</pre>
+
+<h4>Cached Unbound Data on Form-M</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Cache_FormM?action=update&popup=1','Cached Unbound Data Between Refresh - Form-M')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form-m",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>Bound Fields</h3>","block":true},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"caption":"DB Timestamp (Bound)","sqlselect":"strftime('%H:%M:%S','now')"},
+    {"control":"html","value":"<h3 class='inline'>Unbound Field</h3>","block":true},
+    {"control":"date", "caption":"Unbound Field","unbound":true,"default":"2019-02-03"}
+  ]
+}
+</pre>
+
+<h4>Cached Unbound Data on Grid</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Cache_Grid?popup=1','Cached Unbound Data Between Refresh - Grid')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"grid",
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"name":"x_primary","caption":"ID"},
+    {"name":"x_textbox", "control":"textbox","caption":"Bound Textbox"},
+    {"caption":"DB Timestamp (Bound)","sqlselect":"strftime('%H:%M:%S','now')"},
+    {"control":"date", "caption":"Unbound Field","unbound":true,"default":"2/3/2019"},
+  ]
+}
+</pre>
+
+<h3>Always Editable :: field.always_editable</h3>
+Under normal operation, an unbound field will be readonly when:
+<ul>
+  <li>The page URL is loaded with the browse action (when "action=browse" is in the querystring)</li>
+  <li>The field is readonly due the field.actions property (if field.actions, model.actions, or the applied roles resolve to "B" instead of "BIU")</li>
+  <li>The field.readonly property is set to "true"</li>
+  <li>The field value is prepopulated from the querystring and field.locked_by_querystring is set to "true"</li>
+</ul>
+The field.always_editable property can be used to make an unbound field always editable, even when it should be readonly as a result of the actions or other properties.<br/>
+<br/>
+The field.always_editable property is useful in situations where the unbound field should always be editable, for example when it is not bound to any data, but used only to define filter parameters for a grid subform.<br/>
+<br/>
+<b>Note: </b>The popup List of Values has a "base_readonly" property that makes the control readonly, while still updateable via the magnifying glass.  If a control has the field.controlparams.base_readonly property set, it will not be overridden by the field.always_editable property.<br/>
+<br/>
+The following examples demonstrate how to fields with the "always_editable" property react to the "action=browse" querystring and querystring default values.
+
+<h4>field.always_editable with action=update</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=update&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test&popup=1','Unbound field.always_editable property - Update')%>
+
+<h4>field.always_editable with action=browse</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=browse&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test&popup=1','Unbound field.always_editable property - Browse')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>Bound Field</h3>","block":true},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"control":"html","value":"<h3>Unbound Fields - Standard</h3>"},
+    {"caption":"Static Default Value","unbound":true, "control":"textbox", "default":"Test" },
+    {"caption":"Querystring Default Value","unbound":true, "control":"textbox", "name":"auto_initial_qs1" },
+    {"control":"html","value":"<h3>Unbound Fields - Always Editable</h3>","block":true},
+    {"caption":"Always Editable","unbound":true, "control":"textbox", "default":"Test", "always_editable": true },
+    {"caption":"Querystring Default Value","unbound":true, "control":"textbox", "name":"auto_initial_qs2", "always_editable": true },
+  ]
+}
+</pre>
+
+<h3>Unbound Initial / Default Values</h3>
+Initial values for unbound fields can be set the same way that initial values are set for standard bound fields.  If database default values are used, they are sent by the server on form load.<br/>
+<br/>
+The following methods for unbound field initial values are supported:
+<ul>
+  <li>field.default - Static value</li>
+  <li>field.default - Client-side JavaScript</li>
+  <li>field.default - Server-side SQL</li>
+  <li>field.name in Querystring</li>
+  <li>field.name returned by model.sqlselect statement</li>
+</ul>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_InitialValue?action=update&x_primary=1&auto_initial_qs=abc&popup=1','Unbound Default / Initial Values')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "sqlselect": "select x_primary,x_textbox,'Initial Value' as auto_initial_db from allcontrols where x_primary=@x_primary",
+  "fields": [
+    {"control":"html","value":"<h3>Bound Field</h3>","block":true},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"control":"html","value":"<h3>Unbound Fields</h3>","block":true},
+    {"caption":"Default Value (Static)","unbound":true, "control":"textbox", "default":"Test" },
+    {"caption":"Default Value (JS)","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)" },
+    {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from allcontrols where x_primary = @x_primary" } },
+    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select c_id codeval, c_name codetxt from c order by c_name", "blank": true } },
+    {"caption":"Default Value (via querystring)", "unbound":true, "control":"textbox", "name": "auto_initial_qs" },
+    {"caption":"Default Value (via Model SQL Select)", "unbound":true, "control":"textbox", "name": "auto_initial_db" }
+  ]
+}
+</pre>
+
+<h3>JavaScript Integration</h3>
+Unbound fields can be read and set via the xmodel.get and xmodel.set functions:
+<pre>
+-----------------------------
+xmodel.get(fieldname, rowref)
+-----------------------------
+Get the value of a field from the user interface
+
+Parameters
+----------
+fieldname  - The field.name whose value will be returned
+rowref     - (Optional) For grid layouts, the target rowid.  If "null", return the value of the field in the currently edited rowid
+
+Returns
+-------
+If the field is a binding, or a key in the root form that is defined in the querystring, return the bound value.
+Otherwise, get and return the value of the field from the user interface.
+
+------------------------------------------------
+xmodel.set(fieldname, value, rowref, onComplete)
+------------------------------------------------
+Get the value of a field from the user interface
+
+Parameters
+----------
+fieldname  - The field.name whose value will be set
+value      - The new value that will be applied to the target field
+rowref     - (Optional) For grid layouts, the target rowid.  If "null", return the value of the field in the currently edited rowid
+onComplete - (Optional) Function called after the field is set
+
+--------
+Examples
+--------
+var val = xmodel.get('field1');
+xmodel.set('field1', val);
+</pre>
+The following form provides a simple example of the "xmodel.get" and "xmodel.set" functions:
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_JS?action=update&x_primary=1&popup=1','Unbound Field JavaScript Integration')%>
+<pre>
+{ 
+  "table":"allcontrols",
+  "layout":"form",
+  "onecolumn":true,
+  "caption": ["Item", "Items"],
+  "popup":[900,400],
+  "sqlselect": "select x_primary,x_textbox from allcontrols where x_primary=@x_primary",
+  "fields": [
+    {"control":"html","value":"<h3>Bound Field</h3>","block":true},
+    {"name":"x_textbox", "caption": "x_textbox"},
+    {"control":"html","value":"<h3>Unbound Field</h3>","block":true},
+    {"name":"field1","unbound":true, "control":"textbox" },
+    {"control": "button", "value": "Set Value", "onclick":"xmodel.set('field1', 'New Value')" },{"control": "html", "value": "xmodel.set('field1', 'New Value')"},
+    {"control": "button", "value": "Get Value", "onclick":"XExt.Alert(xmodel.get('field1'))" },{"control": "html", "value": "XExt.Alert(xmodel.get('field1'))"},
+  ]
+}
+</pre>
+
+<h3>Examples</h3>
+The following example demonstrate advanced use cases of unbound fields, such as binding unbound fields to subforms.
+
+<h3 level="2">Dashboard w/Custom Filters (Unbound Parent / Child Grid)</h3>
+A dashboard page can provide an overview of the user's pending tasks and important notifications.<br/>
+<br/>
+A dashboard model will often contain a variety of subforms.  The parent form can be unbound, while the child forms will be bound to the database.<br/>
+<br/>
+The following example links an unbound parent form to a bound child grid.  The dashboard has an unbound field for filtering the status, and the child grid's bindings are linked to the unbound field:
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Dashboard?popup=1','Unbound Example: Dashboard w/Parameter-bound Grid')%>
+<pre>
+//Dashboard
+{ 
+  "layout":"form",
+  "caption": ["Customer", "Customers"],
+  "unbound": true,
+  "fields": [
+    {"name": "c_sts", "caption": "Status","control": "dropdown", "unbound": true,
+      "lov": { "UCOD": "c_sts", "blank": "(All)" },
+      "onchange": "XPage.Select('Dashboard_CL');"
+    },
+    {"control": "html", "value":"Note: The 'Deactivated' status is an expired CODE, so it does not display in the dropdown"},
+    {"control": "subform", "target": "Dashboard_CL", "bindings": { "c_sts": "c_sts" } },
+    {"control": "html", "value":"Note: Status dropdown in the grid is read-only because of the binding"},
+    {"control": "html", "value":"Note: Grid commitlevel defaults to 'page' because the grid not the top-level form.", "nl":1},
+  ]
+}
+
+//"Dashboard_CL" - Dashboard Customer Listing Grid
+{
+  "table":"c",
+  "layout":"grid",
+  "caption": ["Customer", "Customers"],
+  "fields": [
+    {"name":"c_id", "caption": "ID"},
+    {"name":"c_name", "caption": "Name"},
+    {"name":"c_sts", "caption": "Status"}
+  ]
+}
+</pre>
+The dropdown's "onchange" event executes JavaScript "XPage.Select" to reselect the child grid, since the parent binding has been updated.
+
+<h3 level="2">Tree Editor (Unbound Parent / Child Form)</h3>
+The "Tree Editor" example links an unbound parent form to a bound child form.  The unbound parent form contains a Tree control, and clicking on a node executes the JavaScript "XPage.Select" to refresh the child form to the correct record.<br/>
+<br/>
+The user can add categories by clicking "Add Subcategory", and delete the current category by clicking "Delete".  Updates are saved by clicking "Save".<br/>
+<br/>
+The initially selected node is defined by the field.default property, to select the first node in the tree.
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Tree?popup=1','Unbound Example: Tree w/Parameter-bound Form')%>
+<pre>
+//Unbound Parent with Category Tree
+{ 
+  "layout":"form",
+  "caption": ["Category", "Categories"],
+  "unbound": true,
+  "buttons":[{"link":"insert:Tree_Category", "bindings": { "category_parent_id": "category_id" }, "text": "Add Subcategory" }],
+  "fields": [
+    {"name": "category_id","caption": "","control": "tree","always_editable":true, "unbound": true,
+      "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
+      "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" },
+      "controlparams": { "expand_all": true },
+      "onchange": "XPage.Select('Tree_Category');",
+      "controlstyle": "display:inline-block;margin-right:10px;height:400px;width:300px;"
+    },
+    {
+      "control": "subform",
+      "target": "Tree_Category",
+      "bindings": { "category_id": "category_id" },
+      "caption": "",
+      "actions": "BIUD",
+      "controlstyle": "width:450px;display:inline-block;"
+    }
+  ]
+}
+
+//"Tree_Category" - Subform to edit an individual category
+{
+  "table":"category",
+  "layout":"form",
+  "onecolumn":true,
+  "popup":[500,150],
+  "caption": ["Category", "Categories"],
+  "fields": [
+    {"name": "category_id", "caption": "Category ID", "control": "label"},
+    {"name": "category_name", "caption": "Category Name", "control": "textbox", "validate": ["Required"]},
+    {"name": "category_parent_id", "control": "hidden"}
+  ]
+}
+</pre>
+
+<h3 level="2">Shortcut Form Launcher (Unbound Popup LOV / Popup Form / Shortcut Keys)</h3>
+xxxxxxx
+<h4>Customer Launcher Form</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher?popup=1','Unbound Example: Shortcut Form Launcher w/Popup LOV')%>
+<h4>Customer Launcher Form - Magnifying Glass - Popup LOV Selection</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher?popup=1','Unbound Example: Shortcut Form Launcher w/Popup LOV - Popup LOV Selection', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$('.c_id_xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return !!jshInstance.$('.c_name:visible').length; }, resolve);
+}); }
+})%>
+<h4>Customer Launcher Form - Customer Editor Form</h4>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher_C?action=update&c_id=1&popup=1','Unbound Example: Shortcut Form Launcher - Popup')%>
+<pre>
+//"Customer_Launcher" - Customer Launcher
+{ 
+  "layout":"form",
+  "caption": "Customer",
+  "unbound": true,
+  "popup": [600, 400],
+  "fields": [
+    {"name": "c_id", "caption": "Customer ID", "control": "textbox", "unbound": true, "validate": ["Required"],
+      "popuplov":{ "target":"Customer_List_of_Values_Grid", "codeval":"c_id" } },
+    {"control": "button", "value": "Edit Customer", "link": "update:Customer_Editor"}
+  ]
+}
+
+//"Customer_List_of_Values_Grid" - Displayed when the user clicks the magnifying glass
+{
+  "table":"c",
+  "layout":"grid",
+  "actions":"B",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_name","caption":"Name","link":"select"}
+  ]
+}
+
+//"Customer_Editor" - Displayed when user clicks the "Edit Customer" button
+{
+  "table":"c",
+  "layout":"form",
+  "onecolumn": true,
+  "popup": [600, 400],
+  "caption": ["Customer", "Customers"],
+  "fields": [
+    {"name":"c_id", "caption": "ID"},
+    {"name":"c_name", "caption": "Name"},
+    {"name":"c_sts", "caption": "Status"}
+  ]
+}
+
+// models/js/site.js (Keyboard shortcut intergration)
+// Pressing "ALT+C" on any page will open up the "Customer_Launcher" popup
+(function(jsh){
+  var XExt = jsh.XExt;
+  var XForm = jsh.XForm;
+
+  //Override the "CustomShortcutKeys" function
+  jsh.XPage.CustomShortcutKeys = function(e){
+    var chr = String.fromCharCode(e.which);
+    if ((chr == 'C') && (e.altKey)) {//ALT+C = OPEN CUSTOMER LAUNCHER
+      //Launch the Customer Launcher popup form
+      //* Note, if the target form is not in the root namespace, be sure to use the full namespace
+      //  Ex: jsHarmonyTutorials/Customer_Launcher
+      XExt.popupForm('Customer_Launcher','update');
+      //Return "true" so that further shortcut keys are not processed
+      return true;
+    }
+    return false;
+  }
+
+})(jshInstance);
+</pre>
+
 <pre>
 Examples
 --------
@@ -49,39 +478,25 @@ field.unbound
   Initial Value via SQL
 
   --FieldUnbound_JS
+  --jsHarmonyTutorials/FieldUnbound_JS?action=update&x_primary=1
   //Getting / settings via JavaScript
   xmodel.get
   xmodel.set
 
   --FieldUnbound_Dashboard_ChildGrid
+  --jsHarmonyTutorials/FieldUnbound_Dashboard
   //Using Unbound Fields for Bindings to Child Grids (Dashboard)
   customer listing by status
 
   --FieldUnbound_Tree
+  --jsHarmonyTutorials/FieldUnbound_Tree
   //Using Unbound Fields for Bindings to Child Forms (Tree)
 
   --FieldUnbound_Launcher + Popuplov
+  --jsHarmonyTutorials/FieldUnbound_Launcher
   //Using Unbound Fields for a Launcher (ATRAX-RCV)
   customer editor by ID / popuplov
-
-1. Category table + Data
-2. Tree render
-
-
-No type = not in SQL statements / not sent to server?
-Unbound = No control color changed on "updated"
-          Not part of HasUpdate
-          Not part of Params sent to Server
-          No server-side validators
-          Not returned in xmodel.hasBindingOrRootKey, unless in xmodel.bindings
-          Saved temporarily client-side when switching rows in form-m / grid
-          No sort enabled in grid
-          always_editable = field does not become read-only (based on field.action or field.readonly).  Yes on field.controlparams.base_readonly
-                 Field Validators run based on model actions, not on field actions
-                 * Can only be used with unbound controls
-
-Unbound Controls (Receiving)
-
-field.always_editable
-field.unbound
 </pre>
+
+xxxxx Check model.unbound tutorial - new logic for models
+** If the entire model is unbound, no database access is performed, unless List of Values, Default Values, Breadcrumbs, or the Title requires SQL execution during initial load.<br/>

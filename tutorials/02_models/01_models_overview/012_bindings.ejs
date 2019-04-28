@@ -178,7 +178,7 @@ Additionally, the model.querystring property can be used to always open a form t
   "title":"User Settings",
   "actions":"BU",
   "querystring": { "&action":"update", "&pe_id": "@user_id" },
-  "onupdate": "jsh.XPage.Reload({ force: true, browserRefresh: true });",
+  "onupdate": "XPage.Reload({ force: true, browserRefresh: true });",
   "fields":[
     {"name":"pe_id","control":"hidden","key":1},
     {"name":"pe_fname","caption":"First Name"},

@@ -10,7 +10,7 @@
     "fields":[
       {"name":"c_id","actions":"BIU"},
       {"name":"RUN","control":"button","value":"Run","caption":"",
-        "onclick":"jsh.XPage.RunDBFunc(this,function(rslt){ XExt.Alert(XExt.ReplaceAll(JSON.stringify(rslt,null,4),' ','&nbsp;')); }, { noMessage: true });"}
+        "onclick":"XPage.RunDBFunc(this,function(rslt){ XExt.Alert(XExt.ReplaceAll(JSON.stringify(rslt,null,4),' ','&nbsp;')); }, { noMessage: true });"}
     ]
   }
 }
