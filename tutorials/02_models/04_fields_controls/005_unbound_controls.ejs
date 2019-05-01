@@ -70,6 +70,7 @@ Additionally, fields are automatically set as unbound when:
   <li>The entire model is unbound (model.unbound = true)</li>
   <li>The field does not have field.value defined</li>
   <li>The field control is "html", "linkbutton" or "button"</li>
+  <li>The field does not have a field.type defined (any database fields require field.type)</li>
 </ul>
 Unbound fields can be used with dropdowns, textboxes, labels, or any of the standard controls:
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Basic?action=update&x_primary=1&popup=1','Basic Unbound Controls')%>
@@ -308,7 +309,7 @@ The following example links an unbound parent form to a bound child grid.  The d
   "fields": [
     {"name": "c_sts", "caption": "Status","control": "dropdown", "unbound": true,
       "lov": { "UCOD": "c_sts", "blank": "(All)" },
-      "onchange": "XPage.Select('Dashboard_CL');"
+      "onchange": "XPage.Select({ modelid: 'Dashboard_CL', onCancel: undoChange });"
     },
     {"control": "html", "value":"Note: The 'Deactivated' status is an expired CODE, so it does not display in the dropdown"},
     {"control": "subform", "target": "Dashboard_CL", "bindings": { "c_sts": "c_sts" } },
@@ -329,14 +330,57 @@ The following example links an unbound parent form to a bound child grid.  The d
   ]
 }
 </pre>
-The dropdown's "onchange" event executes JavaScript "XPage.Select" to reselect the child grid, since the parent binding has been updated.
+The dropdown's "onchange" event executes JavaScript "XPage.Select" to reselect the child grid, since the parent binding has been updated. The field.onchange event and XPage.Select function have the following function signatures:
+<pre>
+------------------------------------------
+field.onchange(obj, newval, undoChange, e)
+------------------------------------------
+Event executed when a field control's value is changed
+
+Parameters
+----------
+obj        - The DOM object that was updated
+newval     - The new value of the field
+undoChange - A function that can be executed to restore the previous value: undoChange()
+e          - The DOM event that triggered the field.onchange handler.  Can be null if triggered via JavaScript or custom event handlers.
+
+-------------------------------
+XPage.Select(options, callback)
+-------------------------------
+Request model data from the API, for this model and all child models.
+
+Parameters
+----------
+options    - (String|Object) (Optional) Request options
+               (String) The root model id for the request.  All child models will also be refreshed
+               (Object) {
+                 modelid:  (String) The root model id for the request.  All child models will also be refreshed.  (Default: undefined)
+                 onCancel: (Function) Event executed when Select has been canceled due to unsaved changes (Default: undefined)
+                 force:    (Boolean) Do not check for unsaved changes on the models before running select (Default: false)
+               }
+               ** If modelid is blank, XPage.Select will default to the root model
+               ** If the target model, or any of its child models are updateable (actions~"IU"), either options.force or options.onCancel is required
+callback   - (Optional) Function executed on successful completion of XPage.Select
+
+--------
+Examples
+--------
+//Refresh read-only model
+XPage.Select({ modelid: 'CL' });
+
+//Refresh updateable model
+XPage.Select({ modelid: 'Dashboard_CL', onCancel: undoChange });
+
+//Refresh, ignoring any unsaved changes
+XPage.Select({ modelid: 'Dashboard_CL', force: true });
+</pre>
 
 <h3 level="2">Tree Editor (Unbound Parent / Child Form)</h3>
 The "Tree Editor" example links an unbound parent form to a bound child form.  The unbound parent form contains a Tree control, and clicking on a node executes the JavaScript "XPage.Select" to refresh the child form to the correct record.<br/>
 <br/>
 The user can add categories by clicking "Add Subcategory", and delete the current category by clicking "Delete".  Updates are saved by clicking "Save".<br/>
 <br/>
-The initially selected node is defined by the field.default property, to select the first node in the tree.
+The initially selected node is defined by the tree's field.default property.  The field.default property contains SQL that is executed server-side to select the first node in the tree.
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Tree?popup=1','Unbound Example: Tree w/Parameter-bound Form')%>
 <pre>
 //Unbound Parent with Category Tree
@@ -350,7 +394,7 @@ The initially selected node is defined by the field.default property, to select 
       "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
       "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" },
       "controlparams": { "expand_all": true },
-      "onchange": "XPage.Select('Tree_Category');",
+      "onchange": "XPage.Select({ modelid: 'Tree_Category', onCancel: undoChange })",
       "controlstyle": "display:inline-block;margin-right:10px;height:400px;width:300px;"
     },
     {
@@ -379,8 +423,8 @@ The initially selected node is defined by the field.default property, to select 
 }
 </pre>
 
-<h3 level="2">Shortcut Form Launcher (Unbound Popup LOV / Popup Form / Shortcut Keys)</h3>
-xxxxxxx
+<h3 level="2">Form Launcher (Unbound Popup LOV / Popup Form / Shortcut Keys)</h3>
+The "Form Launcher" demonstrates an unbound popuplov control, as well as shortcut key integration.  When a user presses "ALT+C", the Customer Launcher form will pop up.  The user can then select a customer, and click "Edit Customer" to launch the Edit Customer form.
 <h4>Customer Launcher Form</h4>
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher?popup=1','Unbound Example: Shortcut Form Launcher w/Popup LOV')%>
 <h4>Customer Launcher Form - Magnifying Glass - Popup LOV Selection</h4>
@@ -389,7 +433,7 @@ xxxxxxx
   jshInstance.XExt.waitUntil(function(){ return !!jshInstance.$('.c_name:visible').length; }, resolve);
 }); }
 })%>
-<h4>Customer Launcher Form - Customer Editor Form</h4>
+<h4>Customer Editor Form</h4>
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher_C?action=update&c_id=1&popup=1','Unbound Example: Shortcut Form Launcher - Popup')%>
 <pre>
 //"Customer_Launcher" - Customer Launcher
@@ -437,8 +481,8 @@ xxxxxxx
   var XExt = jsh.XExt;
   var XForm = jsh.XForm;
 
-  //Override the "CustomShortcutKeys" function
-  jsh.XPage.CustomShortcutKeys = function(e){
+  //Add Custom Shortcut Key for "ALT+C"
+  jsh.XPage.CustomShortcutKeys.push(function(e){
     var chr = String.fromCharCode(e.which);
     if ((chr == 'C') && (e.altKey)) {//ALT+C = OPEN CUSTOMER LAUNCHER
       //Launch the Customer Launcher popup form
@@ -449,54 +493,8 @@ xxxxxxx
       return true;
     }
     return false;
-  }
+  });
 
 })(jshInstance);
 </pre>
-
-<pre>
-Examples
---------
-field.unbound
-  --FieldUnbound_Basic
-  --jsHarmonyTutorials/FieldUnbound_Basic?action=update&x_primary=1
-  Several unbound controls
-    Textbox
-    Dropdown
-  If the model is unbound, all fields gets unbound
-  If the field does not have a "type", the field gets unbound
-
-  --FieldUnbound_AlwaysEditable
-  --jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=update&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test
-  --jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=browse&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test
-  always_editable
-
-  --FieldUnbound_InitialValue
-  --jsHarmonyTutorials/FieldUnbound_InitialValue?action=update&x_primary=1&auto_initial_qs=abc
-  Default Value
-  Default Value via SQL
-  Initial Value via SQL
-
-  --FieldUnbound_JS
-  --jsHarmonyTutorials/FieldUnbound_JS?action=update&x_primary=1
-  //Getting / settings via JavaScript
-  xmodel.get
-  xmodel.set
-
-  --FieldUnbound_Dashboard_ChildGrid
-  --jsHarmonyTutorials/FieldUnbound_Dashboard
-  //Using Unbound Fields for Bindings to Child Grids (Dashboard)
-  customer listing by status
-
-  --FieldUnbound_Tree
-  --jsHarmonyTutorials/FieldUnbound_Tree
-  //Using Unbound Fields for Bindings to Child Forms (Tree)
-
-  --FieldUnbound_Launcher + Popuplov
-  --jsHarmonyTutorials/FieldUnbound_Launcher
-  //Using Unbound Fields for a Launcher (ATRAX-RCV)
-  customer editor by ID / popuplov
-</pre>
-
-xxxxx Check model.unbound tutorial - new logic for models
-** If the entire model is unbound, no database access is performed, unless List of Values, Default Values, Breadcrumbs, or the Title requires SQL execution during initial load.<br/>
+XPage.CustomShortcutKeys is an array of function hooks for extending the default system shortcut keys.  The function should return "true" if the shortcut key was handled, so that further shortcut key handlers will not be run.

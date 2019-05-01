@@ -6,7 +6,7 @@
     "fields": [
       {"name": "c_sts", "caption": "Status","control": "dropdown", "unbound": true,
         "lov": { "UCOD": "c_sts", "blank": "(All)" },
-        "onchange": "XPage.Select('FieldUnbound_Dashboard_CL');"
+        "onchange": "XPage.Select({ modelid: 'FieldUnbound_Dashboard_CL', onCancel: undoChange });"
       },
       {"control": "html", "value":"Note: The 'Deactivated' status is an expired CODE, so it does not display in the dropdown"},
       {"control": "subform", "target": "FieldUnbound_Dashboard_CL", "bindings": { "c_sts": "c_sts" } },

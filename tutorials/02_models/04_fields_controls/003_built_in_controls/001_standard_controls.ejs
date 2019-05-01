@@ -174,7 +174,12 @@ For example:
 </pre>
 
 The following example uses the date control on unbound fields:
-<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_DateFormat?popup=1','Standard Controls - Date Formatting')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldStandardControls_DateFormat?popup=1','Standard Controls - Date Formatting', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$(document.activeElement).blur();
+  jshInstance.$('.datepicker').first().datepicker('hide');
+  return resolve();
+}); }
+})%>
 <pre>
 {
   "layout":"form",

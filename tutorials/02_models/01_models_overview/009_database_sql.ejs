@@ -213,7 +213,7 @@ If no primary key exists for the model, for instance in a Grid without a primary
 A model with the "nokey" attribute will still execute the "select" SQL statements.
 
 <h4>model.unbound</h4>
-A model with the "unbound" attribute will not execute any SQL statements.
+A model with the "unbound" attribute will not execute any SQL statements for Select, Insert, Update, or Delete.  Unbound models will still execute SQL on initial load for List of Values, Default Values, Breadcrumbs, or the Title, if applicable.  An unbound model will automatically also set field.unbound=true for all fields in that model.
 <pre>
 {
   "unbound": true

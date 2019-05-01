@@ -9,7 +9,7 @@
         "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
         "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" },
         "controlparams": { "expand_all": true },
-        "onchange": "var cur_category_id = jshInstance.XModels['jsHarmonyTutorials/FieldUnbound_Tree_Category'].controller.form.Data.category_id;  if(String(newval)==String(cur_category_id)) return;  XPage.CheckChanges(null, function(){ XPage.Select('FieldUnbound_Tree_Category'); }, function(){ xmodel.set('category_id', cur_category_id); });",
+        "onchange": "XPage.Select({ modelid: 'FieldUnbound_Tree_Category', onCancel: undoChange })",
         "controlstyle": "display:inline-block;margin-right:10px;height:400px;width:300px;"
       },
       {

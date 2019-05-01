@@ -34,6 +34,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/ModelStyle_cellstyle_grid.json",
     "/models/ModelStyle_controlstyle_grid.json",
     "/models/ModelStyle_controlstyle_form.json",
+    "/models/ModelStyle_blockstyle_form.json",
     "/models/ModelStyle_CL.json",
     "/models/ModelStyle_CL.css"
   ],
@@ -46,8 +47,9 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_grid", "title": "Grid: field.captionstyle / field.captionclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_form?c_id=1&action=update", "title": "Form: field.captionstyle / field.captionclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_cellstyle_grid", "title": "Grid: field.cellstyle / field.cellclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_grid", "title": "Form: field.controlstyle / field.controlclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_grid", "title": "Grid: field.controlstyle / field.controlclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update", "title": "Form: field.controlstyle / field.controlclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_blockstyle_form?c_id=1&action=update", "title": "Form: field.blockstyle / field.blockclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_CL", "title": "Custom CSS Files" }
   ]
 }
@@ -178,7 +180,27 @@ In grid and multisel layouts, the "controlstyle" and "controlclass" properties a
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
 
-<h3 data-level="2">Line Breaks - field.nl / field.eol / model.onecolumn</h3>
+<h3 data-level="2">field.blockstyle / field.blockclass</h3>
+In form, form-m, and exec layouts, the "blockstyle" and "blockclass" properties are applied to the "style" and "class" of the div surrounding a field, if field.block = true.<br/>
+<br/>
+Form elements will normally be rendered in-line, without line breaks, unless field.block=true, or model.onecolumn=true.<br/>
+<br/>
+In grid and multisel layouts, the "blockstyle" and "blockclass" properties are not applicable.
+<pre>
+{
+  {"control":"html","value":"Block HTML 1","block":true},
+  {"control":"html","value":"Block HTML 2","block":true},
+  {"control":"html","value":"Non-Block HTML 1"},
+  {"control":"html","value":"Non-Block HTML 2"},
+  {"name": "c_name","caption": "Customer Name","block": true,
+    "blockstyle": "border: 4px dashed black;",
+    "blockclass": "fieldWithErrors"
+  }
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_blockstyle_form?c_id=1&action=update&popup=1','Model Style - blockstyle - form')%>
+
+<h3 data-level="2">Line Breaks - field.nl / field.eol / field.block / model.onecolumn</h3>
 Line breaks can be added to fields using either the field.nl or field.eol properties.
 <pre>
 //Field properties
@@ -193,7 +215,29 @@ Line breaks can be added to fields using either the field.nl or field.eol proper
   "eol": true //Insert a line break after this field
 }
 </pre>
-Additionally, setting "model.onecolumn" to true will automatically add line breaks to every field on the first, and adjust the captions of all the form fields to be the same width:
+The field.block property will add a "div" wrapper around the field and caption, effectively adding a line-break before and after the field.  The field.block property will also squash / ignore the next field's "field.nl" property.
+<pre>
+//Field Blocks
+{
+  "block": true //Add a block element around the field, so that it will be rendered on its own line
+}
+
+//Blocks can be used with HTML elements
+{
+  "control": "html",
+  "value": "<h1>Heading</h1>",
+  "block": true
+}
+
+//Blocks can be used with Standard elements
+{
+  "name": "c_id",
+  "control": "textbox",
+  "caption": "Customer ID",
+  "block": true
+}
+</pre>
+Setting "model.onecolumn" to true will automatically add line breaks to every field except for HTML controls.  Model.onecolumn will also adjust the captions of all the form fields to be the same width:
 <pre>
 //Model properties
 {

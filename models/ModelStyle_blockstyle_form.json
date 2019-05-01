@@ -1,0 +1,19 @@
+{
+  "ModelStyle_blockstyle_form": {
+    "layout": "form", 
+    "table": "c",
+    "actions": "BIUD", 
+    "caption": [ "", "Customer", "Customers" ],
+    "fields": [
+      {"name":"c_id", "type": "bigint", "actions":"B","key": 1,"control":"label","caption":"ID"},
+      {"control":"html","value":"Block HTML 1","block":true},
+      {"control":"html","value":"Block HTML 2","block":true},
+      {"control":"html","value":"Non-Block HTML 1"},
+      {"control":"html","value":"Non-Block HTML 2"},
+      {"name": "c_name","caption": "Customer Name","block": true,
+       "blockstyle": "border: 4px dashed black;",
+       "blockclass": "fieldWithErrors"
+      }
+    ]
+  }
+}
