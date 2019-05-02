@@ -21,12 +21,48 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Formatting Data",
-  "Menu": ["Models","Fields / Controls"]
+  "Menu": ["Models","Fields / Controls"],
+  "Code": [
+    "/models/FieldFormat_Standard.json",
+    "/models/FieldFormat_JS.json",
+    "/models/FieldFormat_Custom.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldFormat_Standard", "title": "Field Format - Standard Formatters" },
+    { "url": "jsHarmonyTutorials/FieldFormat_JS", "title": "Field Format - Formatting via JavaScript" },
+    { "url": "jsHarmonyTutorials/FieldFormat_Custom", "title": "Field Format - Custom Formatter" }
+  ]
 }
 </script>
 
 <h3>Overview</h3>
-xxxxxxxxxx
+Field formatters enable applying string formatting to database values.  Data is formatted for display, and then "decoded" to a raw value before being sent back to the database.<br/.
+<br/>
+The following built-in formatters are available:
+<pre>
+"phone"
+"date:'MM/DD/YY HH:mm'" //Parameter: FORMAT_STRING (moment.js)
+"tstmp"
+"MMDDYY"
+"time:'h:mm A'"    //Parameter: FORMAT_STRING (moment.js)
+"decimal:2"        //Parameter: FIXED_NUMBER_OF_DECIMAL_PLACES
+"decimalext:2"     //Parameter: MIN_NUMBER_OF_DECIMAL_PLACES (Decimal that adds zeros of they do not exist, up to 20 decimal places)
+"decimalcomma:2"   //Parameter: FIXED_NUMBER_OF_DECIMAL_PLACES
+"comma"
+"ssn"
+"ein"
+"bool"
+</pre>
+Formatters are applied by using the field.format property:
+<pre>
+{
+  "name": "cc_phone",
+  "format": "phone"
+}
+</pre>
+
+<h3>Standard Formatters</h3>
+The following example implements all the built-in formatters:
 <%-getScreenshot('jsHarmonyTutorials/FieldFormat_Standard?popup=1','Field Formatting - Standard Formatters')%>
 <pre>
 { 
@@ -55,25 +91,273 @@ xxxxxxxxxx
 }
 </pre>
 
-<h3>Standard Formatters</h3>
-xxxxxxxxxxx
-
 <h3 data-level="2">phone</h3>
+The "phone" formatter converts a 10-digit string of numbers into a formatted US phone number.  Any extensions / extra characters will be added to the end of a phone number.  Any leading 1's will be stripped.
+<pre>
+Syntax
+------
+• phone
+
+Encoding
+--------
+• "phone"
+  -------
+  "2223334444" -> "(222) 333-4444"
+  "2223334444x1234" -> "(222) 333-4444  x1234"
+  "12223334444" -> "(222) 333-4444"
+  "1112223334444" -> "(222) 333-4444"
+
+Decoding
+--------
+Returns "2223334444"   //Ten-digit phone number, without any leading ones
+</pre>
+
 <h3 data-level="2">date</h3>
+The "date" formatter converts a date string or Date object to a formatted date string using Moment.js formatting.  There is one required parameter:
+<ul>
+  <li>FORMAT_STRING - The Moment.js format string, ex. "YYYY-MM-DDTHH:mm:ss"</li>
+</ul>
+The documentation for the format strings is available at the <a href="https://momentjs.com/docs/#/displaying/">Moment.js website</a>.
+<pre>
+Syntax
+------
+• date:FORMAT_STRING
+
+Encoding
+--------
+• "date:'MM/DD/YYYY'"
+  -------
+  "2019-04-10" -> "04/10/2019"
+
+• "date:'YYYY-MM-DDTHH:mm:ss'"
+  -------
+  "2019-04-10" -> "2019-04-10T00:00:00"
+
+• "date:'MM/DD/YYYY h:mm:ss A'"
+-------
+"2019-04-10" -> "04/10/2019 12:00:00 AM"
+
+Decoding
+--------
+Returns an ISO date string "YYYY-MM-DDTHH:mm:ss.SSSS"
+
 <h3 data-level="2">tstmp</h3>
+The "tstmp" formatter converts a date string or Date object to a formatted date string with the format: 'MM/DD/YY HH:mm'
+
+<pre>
+Syntax
+------
+• tstmp
+
+Encoding
+--------
+• "tstmp"
+  -------
+  "2019-04-10T18:21:55" -> "04/10/19 18:21"
+
+Decoding
+--------
+Returns an ISO date string "YYYY-MM-DDTHH:mm:ss.SSSS"
+
 <h3 data-level="2">MMDDYY</h3>
+The "MMDDYY" formatter converts a date string or Date object to a formatted date string with the format: 'MM/DD/YY'
+
+<pre>
+Syntax
+------
+• MMDDYY
+
+Encoding
+--------
+• "MMDDYY"
+  -------
+  "2019-04-10T18:21:55" -> "04/10/19"
+
+Decoding
+--------
+Returns an ISO date string "YYYY-MM-DDTHH:mm:ss.SSSS"
+
 <h3 data-level="2">time</h3>
+The "time" formatter converts a time string into a formatted time string using Moment.js formatting.  There is one required parameter:
+<ul>
+  <li>FORMAT_STRING - The Moment.js format string, ex. "h:mm A"</li>
+</ul>
+The documentation for the format strings is available at the <a href="https://momentjs.com/docs/#/displaying/">Moment.js website</a>.
+<pre>
+Syntax
+------
+• time:FORMAT_STRING
+
+Encoding
+--------
+• "time:'h:mm A'"
+  -------
+  "5:43" -> "5:43 AM"
+
+• "time:'HH:mm'"
+  -------
+  "5:43" -> "05:43"
+
+Decoding
+--------
+Returns an ISO date string, with the time added to 1970-01-01: "1970-01-01THH:mm:ss.SSSS"
+
 <h3 data-level="2">decimal</h3>
+The "decimal" formatter converts number into a formatted string.  There is one required parameter:
+<ul>
+  <li>FIXED_NUMBER_OF_DECIMAL_PLACES - Number of decimal places to display.</li>
+</ul>
+
+<pre>
+Syntax
+------
+• decimal:FIXED_NUMBER_OF_DECIMAL_PLACES
+
+Encoding
+--------
+• "decimal:0"
+  -------
+  123.5 -> "124"
+
+• "decimal:2"
+  -------
+  123.5 -> "123.50"
+
+Decoding
+--------
+Returns a string of the number, with the fixed number of decimal places.
+</pre>
+
 <h3 data-level="2">decimalext</h3>
+The "decimalext" formatter converts number into a formatted string.  As opposed to the "decimal" formatter, "decimalext" keeps any existing decimal places.  There is one required parameter:
+<ul>
+  <li>MIN_NUMBER_OF_DECIMAL_PLACES - Minimum number of decimal places to display.</li>
+</ul>
+
+<pre>
+Syntax
+------
+• decimalext:MIN_NUMBER_OF_DECIMAL_PLACES
+
+Encoding
+--------
+• "decimalext:0"
+  -------
+  123.5 -> "123.5"
+
+• "decimalext:2"
+  -------
+  123.5 -> "123.50"
+
+Decoding
+--------
+Returns a string of the number.
+
 <h3 data-level="2">decimalcomma</h3>
+The "decimalcomma" formatter converts number into a formatted string, adding commas as the thousandth separator.  There is one required parameter:
+<ul>
+  <li>FIXED_NUMBER_OF_DECIMAL_PLACES - Number of decimal places to display.</li>
+</ul>
+
+<pre>
+Syntax
+------
+• decimalcomma:FIXED_NUMBER_OF_DECIMAL_PLACES
+
+Encoding
+--------
+• "decimalcomma:0"
+  -------
+  1231.5 -> "1,232"
+
+• "decimalcomma:2"
+  -------
+  1231.5 -> "1,231.50"
+
+Decoding
+--------
+Returns a string of the number, with the fixed number of decimal places, without commas.
+
 <h3 data-level="2">comma</h3>
+The "comma" formatter converts a number into a string with thousandth separators.
+<pre>
+Syntax
+------
+• comma
+
+Encoding
+--------
+• "comma"
+  -------
+  "1234567" -> "1,234,567"
+  "1234567.89012" -> "1,234,567.89012"
+
+Decoding
+--------
+Returns a string of the number, without commas.
+
 <h3 data-level="2">ssn</h3>
+The "ssn" formatter converts a 9-digit string of numbers into a formatted SSN (Social Security Number).  Any non-numeric characters will be stripped.
+<pre>
+Syntax
+------
+• ssn
+
+Encoding
+--------
+• "ssn"
+  -------
+  "111223333" -> "111-22-3333"
+  "111 22 3333" -> "111-22-3333"
+
+Decoding
+--------
+Returns "111223333"   //Nine-digit SSN number as string
+
 <h3 data-level="2">ein</h3>
+The "ein" formatter converts a 9-digit string of numbers into a formatted EIN (Employer Identification Number).  Any non-numeric characters will be stripped.
+<pre>
+Syntax
+------
+• ein
+
+Encoding
+--------
+• "ein"
+  -------
+  "112222222" -> "11-2222222"
+  "11 2222222" -> "11-2222222"
+
+Decoding
+--------
+Returns "112222222"   //Nine-digit EIN number as string
+
 <h3 data-level="2">bool</h3>
+The "bool" formatter converts a boolean type into a string.  The boolean decoder supports the following values:
+<ul>
+  <li>True: true, 'true', 't', 'y', 'yes', 'on', 1</li>
+  <li>False: false, 'false', 'f', 'n', 'no', 'off', 1</li>
+</ul>
+<pre>
+Syntax
+------
+• bool
+
+Encoding
+--------
+• "bool"
+  -------
+  "on" -> "true"
+  true -> "true"
+  false -> "false"
+
+Decoding
+--------
+Returns boolean true / false
 
 <h3>Formatting data using JavaScript</h3>
-xxxxxxxxxxxxxxxx
-
+The formatters can be used to encode / decode data used in other parts of the system.  For instance, it can be useful to apply a phone formatter to data that either comes from the user or from the database.<br/>
+<br/>
 Data can be formatted / decoded using the XFormat.Apply and XFormat.Decode functions:
 <pre>
 -----------------------------
@@ -83,12 +367,12 @@ Format a value using the target format parameters
 
 Parameters
 ----------
-format  - The formatter
+format  - The formatter, together with parameters, ex. "date:'MM/DD/YYYY'"
 val     - The value that will be formatted
 
 Returns
 -------
-xxxxxxxxxx
+A string containing the formatted value, as defined in the formatters above
 
 ---------------------------
 XFormat.Decode(format, val)
@@ -97,22 +381,34 @@ Decode a previously formatted string
 
 Parameters
 ----------
-format  - The formatter
+format  - The formatter, together with parameters, ex. "date:'MM/DD/YYYY'"
 val     - The value that will be decoded
 
 Returns
 -------
-xxxxxxxxxx
+A decoded value of the formatted string, as defined in the formatters above
 
 
 --------
 Examples
 --------
-var val = jsh.XFormat.Apply('phone','2223334444');
-//val will now be "(222) 333-4444"
-var src = jsh.XFormat.Decode('phone', val);
-//src will now be "2223334444"
-//xxxxxxxxxxxxxxEncode a date
+var val = jsh.XFormat.Apply("phone","2223334444");
+//val = "(222) 333-4444"
+
+var src = jsh.XFormat.Decode("phone", val);
+//src = "2223334444"
+
+var dt = jsh.XFormat.Apply("date:'MM/DD/YYYY'","2019-04-10");
+//dt = "04/10/2019"
+
+-----------------------------------------------------------------
+Formatters can also be directly called by their XFormat function:
+-----------------------------------------------------------------
+var val = jsh.XFormat.phone("2223334444");
+//val = "(222) 333-4444"
+
+var src = jsh.XFormat.phone_decode(val);
+//src = "2223334444"
 </pre>
 
 <%-getScreenshot('jsHarmonyTutorials/FieldFormat_JS?popup=1','Field Formatting - Running Formatters in JavaScript')%>
@@ -134,25 +430,68 @@ var src = jsh.XFormat.Decode('phone', val);
 </pre>
 
 <h3>Custom Formatters</h3>
+System-wide custom formatters can be defined in app.config.js.<br/>
+<br/>
+A formatter consists of two functions "FORMATTER", and "FORMATTER_decode", where FORMATTER is the name of the format function:
+<pre>
+------------------------------
+jsh.CustomFormatters.FORMATTER = function(param1, param2, ..., val){ }
+------------------------------
+Format a value using the target format parameters
 
-System-wide custom formatters can be defined in app.config.js:
+Parameters
+----------
+param1, param2, ... - (Optional) Parameters passed to the formatter
+val                 - The raw value string that will be formatted
+
+Returns
+-------
+A formatted string
+
+-------------------------------------
+jsh.CustomFormatters.FORMATTER_decode = function(param1, param2, ..., val){ }
+-------------------------------------
+Decode a previously formatted string
+
+Parameters
+----------
+param1, param2, ... - (Optional) Parameters passed to the formatter
+val                 - The formatted string that will be decoded
+
+Returns
+-------
+A raw value string
+
+* The "decode" function must be idempotent, that is, passing the same value through decode twice should still yield the same result.
+* The parameters param1, param2, ... are optional, and most formatters will not have them.  If defined, any use of the formatter must pass all parameters.
+</pre>
+
+The following example implements the custom "creditcard" formatter in app.config.js:
 <pre>
 //app.config.js
 exports = module.exports = function(jsh, config, dbconfig){
 
-  //xxxxxxxxxxxxxxxxxxxxxxxxxcommentsxxxxxx
+  //"FORMATTER" function - takes a raw value string and returns a formatted string
+  // Ex. "4111111111111111" returns "4111 1111 1111 1111"
   jsh.CustomFormatters.creditcard = function (val) {
+    //Do not process null / undefined inputs
     if ((typeof val == 'undefined') || (val === null)) return val;
+    //Remove non alpha-numeric characters
     var ccval = val.toString().replace(/[^0-9]+/g, '');
+    //If the string is less than 13 characters, do not process
     if (ccval.toString().length < 13) return val;
+    //Return a formatted credit card number with spaces
     return ccval.substr(0, 4).trim() + ' ' + ccval.substr(4, 4) + ' ' + ccval.substr(8, 4) + ' ' + ccval.substr(12);
   }
 
+  //"FORMATTER_decode" function - takes a formatted string and returns a raw value string
+  // Ex. "4111 1111 1111 1111" returns "4111111111111111"
   jsh.CustomFormatters.creditcard_decode = function (val) {
-    if (val === '') return val;
+    //If the value is null / undefined, do not process
     if (val === null) return val;
     if (typeof val === 'undefined') return val;
-    var rslt = (val||'').replace(/[^0-9]+/g, '');
+    //Remove non alpha-numeric characters
+    var rslt = (val.toString()||'').replace(/[^0-9]+/g, '');
     return rslt;
   }
 
@@ -172,24 +511,4 @@ Once defined, system-wide formatters can be used like any other built-in formatt
     {"unbound":true, "control":"textbox", "caption":"Field 1", "format":"creditcard", "default":"4111111111111111" }
   ]
 }
-</pre>
-
-<pre>
-["phone"]
-["date","MM/DD/YY HH:mm"] FORMAT (moment)
-["tstmp"]
-["MMDDYY"]
-["time":"h:mm A"] FORMAT (moment)
-["time":"HH:mm"]
-["decimal","2"] NUMDIGITS
-["decimalext","2"] NUMDIGITS (Decimal that doesn't round up, only adds zeros, up to 20 decimal places)
-["decimalcomma","2"] NUMDIGITS (Decimal that doesn't round up, only adds zeros, up to 20 decimal places)
-["comma"]
-["ssn"]
-["ein"]
-["bool"]
-//Date uses Moment.js
-
-.Apply
-.Decode
 </pre>

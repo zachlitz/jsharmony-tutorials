@@ -21,19 +21,28 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Tree Controls",
-  "Menu": ["Models","Fields / Controls","Built-in Controls"]
+  "Menu": ["Models","Fields / Controls","Built-in Controls"],
+  "Code": [
+    "/models/FieldTree_Standard.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldTree_Standard?action=update&category_id=6", "title": "Tree Control" }
+  ]
 }
 </script>
 
-The tree control has the following parameters:
+<h3>Overview</h3>
+A tree control enables the user to select a value from an expandable tree.  This is useful for navigating complex or recursively-defined structures, such as file folders or store categories.<br/>
+<br/>
+The tree control uses a similar syntax to the list of values, and has the following tree-specific field properties:
 <pre>
 {
   "control": "tree",
   
   //The "List of Values" expression for populating the tree nodes
   "lov": {
-    "sql": "select ----- as CODEID, ----- as CODEParentID, ----- as CODEVal, ----- as CODETxt, ----- as CODEIcon from ----- where 1=1 %%%DATALOCKS%%% order by -----",
-    "datalock":{"C_ID":"client_FCERT_ID"}
+    "sql": "select ----- as codeid, ----- as codeparentid, ----- as codeval, ----- as codetxt, ----- as codeicon from ----- where 1=1 %%%DATALOCKS%%% order by -----",
+    "datalock":{ ... }
   },
 
   //Bind to a database to save the selected item, or set field.always_editable to interact with the control via the field.onchange event
@@ -53,5 +62,34 @@ The tree control has the following parameters:
     //Automatically expand tree to the selected node, when selected on load or via JavaScript
     "expand_to_selected": true
   }
+}
+</pre>
+The tree List of Values expression should return a table of tree nodes, defined as follows:
+<ul>
+  <li>codeid :: The unique ID of the tree node</li>
+  <li>codeparentid :: The ID of the parent node</li>
+  <li>codeval :: The value of the node that will be saved to the database, if selected</li>
+  <li>codetxt :: The display text of the node</li>
+  <li>codeicon :: The icon name to be used for the node (same format as the model.buttons icons)</li>
+</ul>
+The codeid and codeparentid fields recursively define the tree structure.  The codeval field is used for getting / setting the currently selected tree node.  The codetxt and codeicon properties are used to render each individual tree node.
+
+<h3>Example</h3>
+The following example uses a tree control to select the parent category in a category tree:
+<%-getScreenshot('jsHarmonyTutorials/FieldTree_Standard?action=update&category_id=6&popup=1','Tree Control')%>
+<pre>
+{
+  "layout":"form",
+  "table":"category",
+  "caption": ["Category", "Categories"],
+  "onecolumn":true,
+  "fields": [
+    {"name": "category_id", "caption": "Category ID", "control": "label"},
+    {"name": "category_name", "caption": "Category Name", "control": "textbox", "validate": ["Required"]},
+    {"name": "category_parent_id","caption": "Parent Category","control": "tree",
+      "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category where category_id<>ifnull(@category_id,0) order by codetxt;" },
+      "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" }
+    }
+  ]
 }
 </pre>

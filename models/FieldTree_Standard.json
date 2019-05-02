@@ -1,0 +1,14 @@
+{
+  "layout":"form",
+  "table":"category",
+  "caption": ["Category", "Categories"],
+  "onecolumn":true,
+  "fields": [
+    {"name": "category_id", "caption": "Category ID", "control": "label"},
+    {"name": "category_name", "caption": "Category Name", "control": "textbox", "validate": ["Required"]},
+    {"name": "category_parent_id","caption": "Parent Category","control": "tree",
+      "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category where category_id<>ifnull(@category_id,0) order by codetxt;" },
+      "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" }
+    }
+  ]
+}

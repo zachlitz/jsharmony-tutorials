@@ -66,10 +66,9 @@ jsHarmonyTutorialsConfig.prototype.Init = function(cb, jsh){
   }
 
   jsh.CustomFormatters.creditcard_decode = function (val) {
-    if (val === '') return val;
     if (val === null) return val;
     if (typeof val === 'undefined') return val;
-    var rslt = (val||'').replace(/[^0-9]+/g, '');
+    var rslt = (val.toString()||'').replace(/[^0-9]+/g, '');
     return rslt;
   }
 
