@@ -1,0 +1,12 @@
+{ 
+  "layout":"form",
+  "onecolumn":true,
+  "unbound":true,
+  "caption": "Custom Formatter",
+  "popup":[900,400],
+  "fields": [
+    {"unbound":true, "control":"textbox", "caption":"Field 1", "format":"creditcard", "default":"4111111111111111" }, { "control":"html", "value": "(creditcard) 4111111111111111" },
+
+    {"control":"button", "value": "Reapply Formatting", "onclick": "_.each(xmodel.fields, function(field){ xmodel.set(field.name, xmodel.get(field.name)); });  XExt.Alert('Formatting reapplied'); "}
+  ]
+}

@@ -46,15 +46,32 @@ jsHarmonyTutorialsConfig.prototype.Init = function(cb, jsh){
     };
   }
 
-  if(!jsh.XValidate._v_MinWordCount) jsh.XValidate._v_MinWordCount = function(minWords){
-    return function(_caption, _val, _obj){
-      if((typeof _val == "undefined")||(_val==="")||(_val===null)) return '';
-      var numWords = _val.toString().trim().split(/\s+/).length;
-      if(numWords < minWords) return _caption+' must have at least '+minWords+' words.';
-      return '';
+  if(!jsh.XValidate._v_MinWordCount){
+    jsh.XValidate._v_MinWordCount = function(minWords){
+      return function(_caption, _val, _obj){
+        if((typeof _val == "undefined")||(_val==="")||(_val===null)) return '';
+        var numWords = _val.toString().trim().split(/\s+/).length;
+        if(numWords < minWords) return _caption+' must have at least '+minWords+' words.';
+        return '';
+      }
     }
+    jsh.XValidate._v_MinWordCount.runat = ['server','client'];
   }
-  jsh.XValidate._v_MinWordCount.runat = ['server','client'];
+
+  jsh.CustomFormatters.creditcard = function (val) {
+    if ((typeof val == 'undefined') || (val === null)) return val;
+    var ccval = val.toString().replace(/[^0-9]+/g, '');
+    if (ccval.toString().length < 13) return val;
+    return ccval.substr(0, 4).trim() + ' ' + ccval.substr(4, 4) + ' ' + ccval.substr(8, 4) + ' ' + ccval.substr(12);
+  }
+
+  jsh.CustomFormatters.creditcard_decode = function (val) {
+    if (val === '') return val;
+    if (val === null) return val;
+    if (typeof val === 'undefined') return val;
+    var rslt = (val||'').replace(/[^0-9]+/g, '');
+    return rslt;
+  }
 
   if(cb) return cb();
 }

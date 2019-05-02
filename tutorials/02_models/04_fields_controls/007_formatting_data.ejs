@@ -24,13 +24,172 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Menu": ["Models","Fields / Controls"]
 }
 </script>
-Formatting Data
 
-field.format
-"phone", or 
-["date","MM/DD/YY HH:mm"], or 
-["decimal","2"], or 
-["decimalext","2"] (Decimal that doesn't round up, only adds zeros, up to 20 decimal places), or 
-"ssn", or 
-["time":"h:mm A"], or 
-["time":"HH:mm"]  //Date uses Moment.js
+<h3>Overview</h3>
+xxxxxxxxxx
+<%-getScreenshot('jsHarmonyTutorials/FieldFormat_Standard?popup=1','Field Formatting - Standard Formatters')%>
+<pre>
+{ 
+  "layout":"form",
+  "onecolumn":true,
+  "unbound":true,
+  "caption": "Format Examples",
+  "popup":[900,400],
+  "fields": [
+    {"unbound":true, "control":"textbox", "caption":"Field 1", "format":"phone", "default":"2024561111" },
+    {"unbound":true, "control":"textbox", "caption":"Field 2", "format":"date:'MM/DD/YYYY h:mm A'", "default":"2019-05-01T19:21:44" },
+    {"unbound":true, "control":"textbox", "caption":"Field 3", "format":"tstmp", "default":"2019-05-01T19:21:44" },
+    {"unbound":true, "control":"textbox", "caption":"Field 4", "format":"MMDDYY", "default":"2019-05-01T19:21:44" },
+    {"unbound":true, "control":"textbox", "caption":"Field 5", "format":"time:'h:mm A'", "default":"2019-05-01T19:21:44" },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 6", "format":"decimal:2", "default":5331.2534 },
+    {"unbound":true, "control":"textbox", "caption":"Field 7", "format":"decimalext:2", "default":5331.2534 },
+    {"unbound":true, "control":"textbox", "caption":"Field 8", "format":"decimalcomma:2", "default":5331.2534 },
+    {"unbound":true, "control":"textbox", "caption":"Field 9", "format":"comma", "default":5331.2534 },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 10", "format":"ssn", "default":123121234 },
+    {"unbound":true, "control":"textbox", "caption":"Field 11", "format":"ein", "default":121234567 },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 12", "format":"bool", "default":true },
+  ]
+}
+</pre>
+
+<h3>Standard Formatters</h3>
+xxxxxxxxxxx
+
+<h3 data-level="2">phone</h3>
+<h3 data-level="2">date</h3>
+<h3 data-level="2">tstmp</h3>
+<h3 data-level="2">MMDDYY</h3>
+<h3 data-level="2">time</h3>
+<h3 data-level="2">decimal</h3>
+<h3 data-level="2">decimalext</h3>
+<h3 data-level="2">decimalcomma</h3>
+<h3 data-level="2">comma</h3>
+<h3 data-level="2">ssn</h3>
+<h3 data-level="2">ein</h3>
+<h3 data-level="2">bool</h3>
+
+<h3>Formatting data using JavaScript</h3>
+xxxxxxxxxxxxxxxx
+
+Data can be formatted / decoded using the XFormat.Apply and XFormat.Decode functions:
+<pre>
+-----------------------------
+XFormat.Apply(format, val)
+-----------------------------
+Format a value using the target format parameters
+
+Parameters
+----------
+format  - The formatter
+val     - The value that will be formatted
+
+Returns
+-------
+xxxxxxxxxx
+
+---------------------------
+XFormat.Decode(format, val)
+---------------------------
+Decode a previously formatted string
+
+Parameters
+----------
+format  - The formatter
+val     - The value that will be decoded
+
+Returns
+-------
+xxxxxxxxxx
+
+
+--------
+Examples
+--------
+var val = jsh.XFormat.Apply('phone','2223334444');
+//val will now be "(222) 333-4444"
+var src = jsh.XFormat.Decode('phone', val);
+//src will now be "2223334444"
+//xxxxxxxxxxxxxxEncode a date
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldFormat_JS?popup=1','Field Formatting - Running Formatters in JavaScript')%>
+<pre>
+{ 
+  "layout":"form",
+  "unbound":true,
+  "caption": "Formatting using JavaScript",
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>XFormat.Decode</h3>","block":true},
+    {"unbound":true, "name": "field1", "control":"textbox", "caption":"Field 1", "default":"(202) 456-1111" },
+    {"control": "button", "value": "Run XFormat.Decode", "onclick":"XExt.Alert(jsh.XFormat.Decode('phone',xmodel.get('field1')))" },
+    {"control":"html","value":"<h3>XFormat.Apply</h3>","block":true},
+    {"unbound":true, "name": "field2", "control":"textbox", "caption":"Field 2", "default":"2024561111" },
+    {"control": "button", "value": "Run XFormat.Apply", "onclick":"XExt.Alert(jsh.XFormat.Apply('phone',xmodel.get('field2')))" },
+  ]
+}
+</pre>
+
+<h3>Custom Formatters</h3>
+
+System-wide custom formatters can be defined in app.config.js:
+<pre>
+//app.config.js
+exports = module.exports = function(jsh, config, dbconfig){
+
+  //xxxxxxxxxxxxxxxxxxxxxxxxxcommentsxxxxxx
+  jsh.CustomFormatters.creditcard = function (val) {
+    if ((typeof val == 'undefined') || (val === null)) return val;
+    var ccval = val.toString().replace(/[^0-9]+/g, '');
+    if (ccval.toString().length < 13) return val;
+    return ccval.substr(0, 4).trim() + ' ' + ccval.substr(4, 4) + ' ' + ccval.substr(8, 4) + ' ' + ccval.substr(12);
+  }
+
+  jsh.CustomFormatters.creditcard_decode = function (val) {
+    if (val === '') return val;
+    if (val === null) return val;
+    if (typeof val === 'undefined') return val;
+    var rslt = (val||'').replace(/[^0-9]+/g, '');
+    return rslt;
+  }
+
+}
+</pre>
+
+Once defined, system-wide formatters can be used like any other built-in formatters:
+<%-getScreenshot('jsHarmonyTutorials/FieldFormat_Custom?popup=1','Field Formatting - Custom Formatters')%>
+<pre>
+{ 
+  "layout":"form",
+  "onecolumn":true,
+  "unbound":true,
+  "caption": "Custom Formatter",
+  "popup":[900,400],
+  "fields": [
+    {"unbound":true, "control":"textbox", "caption":"Field 1", "format":"creditcard", "default":"4111111111111111" }
+  ]
+}
+</pre>
+
+<pre>
+["phone"]
+["date","MM/DD/YY HH:mm"] FORMAT (moment)
+["tstmp"]
+["MMDDYY"]
+["time":"h:mm A"] FORMAT (moment)
+["time":"HH:mm"]
+["decimal","2"] NUMDIGITS
+["decimalext","2"] NUMDIGITS (Decimal that doesn't round up, only adds zeros, up to 20 decimal places)
+["decimalcomma","2"] NUMDIGITS (Decimal that doesn't round up, only adds zeros, up to 20 decimal places)
+["comma"]
+["ssn"]
+["ein"]
+["bool"]
+//Date uses Moment.js
+
+.Apply
+.Decode
+</pre>

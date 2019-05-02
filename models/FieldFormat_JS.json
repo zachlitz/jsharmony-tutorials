@@ -1,0 +1,14 @@
+{ 
+  "layout":"form",
+  "unbound":true,
+  "caption": "Formatting via JavaScript",
+  "popup":[900,400],
+  "fields": [
+    {"control":"html","value":"<h3>XFormat.Decode</h3>","block":true},
+    {"unbound":true, "name": "field1", "control":"textbox", "caption":"Field 1", "default":"(202) 456-1111" },
+    {"control": "button", "value": "Run XFormat.Decode", "onclick":"XExt.Alert(jsh.XFormat.Decode('phone',xmodel.get('field1')))" },{"control": "html", "value": "jsh.XFormat.Decode('phone',xmodel.get('field1'))"},
+    {"control":"html","value":"<h3>XFormat.Apply</h3>","block":true},
+    {"unbound":true, "name": "field2", "control":"textbox", "caption":"Field 2", "default":"2024561111" },
+    {"control": "button", "value": "Run XFormat.Apply", "onclick":"XExt.Alert(jsh.XFormat.Apply('phone',xmodel.get('field2')))" },{"control": "html", "value": "jsh.XFormat.Apply('phone',xmodel.get('field2'))"},
+  ]
+}

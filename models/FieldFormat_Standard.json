@@ -1,0 +1,26 @@
+{ 
+  "layout":"form",
+  "onecolumn":true,
+  "unbound":true,
+  "caption": "Format Examples",
+  "popup":[900,400],
+  "fields": [
+    {"unbound":true, "control":"textbox", "caption":"Field 1", "format":"phone", "default":"2024561111" }, { "control":"html", "value": "(phone) 2024561111" },
+    {"unbound":true, "control":"textbox", "caption":"Field 2", "format":"date:'MM/DD/YYYY h:mm A'", "default":"2019-05-01T19:21:44" }, { "control":"html", "value": "(date:'MM/DD/YYYY h:mm A') 2019-05-01T19:21:44" },
+    {"unbound":true, "control":"textbox", "caption":"Field 3", "format":"tstmp", "default":"2019-05-01T19:21:44" }, { "control":"html", "value": "(tstmp) 2019-05-01T19:21:44" },
+    {"unbound":true, "control":"textbox", "caption":"Field 4", "format":"MMDDYY", "default":"2019-05-01T19:21:44" }, { "control":"html", "value": "(MMDDYY) 2019-05-01T19:21:44" },
+    {"unbound":true, "control":"textbox", "caption":"Field 5", "format":"time:'h:mm A'", "default":"2019-05-01T19:21:44" }, { "control":"html", "value": "(time:'h:mm A') 2019-05-01T19:21:44" },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 6", "format":"decimal:2", "default":5331.2534 }, { "control":"html", "value": "(decimal:2) 5331.2534" },
+    {"unbound":true, "control":"textbox", "caption":"Field 7", "format":"decimalext:2", "default":5331.2534 }, { "control":"html", "value": "(decimalext:2) 5331.2534" },
+    {"unbound":true, "control":"textbox", "caption":"Field 8", "format":"decimalcomma:2", "default":5331.2534 }, { "control":"html", "value": "(decimalcomma:2) 5331.2534" },
+    {"unbound":true, "control":"textbox", "caption":"Field 9", "format":"comma", "default":5331.2534 }, { "control":"html", "value": "(comma) 5331.2534" },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 10", "format":"ssn", "default":123121234 }, { "control":"html", "value": "(ssn) 123121234" },
+    {"unbound":true, "control":"textbox", "caption":"Field 11", "format":"ein", "default":121234567 }, { "control":"html", "value": "(ein) 121234567" },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 12", "format":"bool", "default":true }, { "control":"html", "value": "(bool) true" },
+
+    {"control":"button", "value": "Reapply Formatting", "onclick": "_.each(xmodel.fields, function(field){ xmodel.set(field.name, xmodel.get(field.name)); });  XExt.Alert('Formatting reapplied'); "}
+  ]
+}
