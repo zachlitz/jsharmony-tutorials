@@ -21,16 +21,67 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Default Values",
-  "Menu": ["Models","Fields / Controls"]
+  "Menu": ["Models","Fields / Controls"],
+  "Code": [
+    "/models/FieldDefault_Standard.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldDefault_Standard?action=insert&c_parent_id=1", "title": "Field Default Values - New Child Customer" }
+  ]
 }
 </script>
-Default Values
 
-field.default
-  Constant
-  JS
-  SQL
+<h3>Overview</h3>
+xxxxxxxxxxxx
+** js via breadcrumbs does not work
+** Priority
 
-defualt.sql
-default.sql_params
-defualt.nodatalock
+The following example adds a child customer based on a parent customer ID.  THe parent customer ID is passed in the "c_parent_id" querystring parameter.
+<%-getScreenshot('jsHarmonyTutorials/FieldDefault_Standard?action=insert&c_parent_id=1&popup=1','Field Default Value - Standard')%>
+<pre>
+{
+  "layout":"form",
+  "table":"c",
+  "onecolumn":true,
+  "title":{ "insert":"Add Child Customer" },
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"c_id","caption": "ID"},
+    {"name":"c_parent_id","caption": "Parent Customer","lov":{"sql":"select c_id codeval,c_name codetxt from c order by c_name"}},
+    {"name":"c_name","caption":"Name","default":{ "sql": "select c_name||' :: Child' from c where c_id = @c_parent_id" }},
+    {"name":"c_sts","caption":"Status","default":"ACTIVE"},
+    {"name":"c_start_dt","caption":"Start Date","control":"date","default":"js:new Date()"},
+  ]
+}
+</pre>
+
+<h3>field.default</h3>
+The field.default property sets the initial value of the field during an insert operation, or when the field is unbound.<br/>
+<br/>
+The default value of the field can be either a static value, a value returned by a SQL statement during model load, or a value dynamically generated using JavaScript.
+
+<h3 data-level="2">Static</h3>
+xxxxxxxxxxxx
+"default": "USA",
+
+
+<h3 data-level="2">Client-side JavaScript</h3>
+xxxxxxxxxxxx
+"default": "js:moment().format()",
+** also, can use the data
+
+<h3 data-level="2">SQL</h3>
+xxxxxxxxxxxx
+"default": {
+  "sql": "select c_name from c where c_id=@c_id",
+  "sql_params": ["c_id"] 
+  "nodatalock":["c_id"] (If applicable)
+},
+
+
+<h3>Querystring</h3>
+xxxxxxxxxxxx
+* Read-only, unless locked_by_querystring is false
+
+<h3>Using model.sqlselect</h3>
+xxxxxxxxxxxxonly for unbound, link to unbound tutorial
