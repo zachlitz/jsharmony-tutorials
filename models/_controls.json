@@ -1,0 +1,24 @@
+{
+  "date_ddddmmmdyyyy":{
+		"control":"date",
+		"format":["date","dddd, MMM D YYYY"]
+  },
+  "h1":{
+    "control":"html",
+    "value":"jsmacro:'<h1>'+(this.value||'')+'</h1>'",
+    "block": true
+  },
+  "c_id":{
+    "for": [
+      "c_id",
+      "c_parent_id"
+    ],
+		"controlstyle":"font-weight:bold;"
+  },
+  "c_name":{
+    "for": [
+      { "field": { "name": "c_name" }, "model": { "layout": "grid" } }
+    ],
+		"cellstyle":"background-color:orange;"
+  }
+}
