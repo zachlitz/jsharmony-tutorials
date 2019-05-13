@@ -1,24 +1,31 @@
 {
+  "comment":"*** Local Custom Controls ***",
   "date_ddddmmmdyyyy":{
-		"control":"date",
-		"format":["date","dddd, MMM D YYYY"]
+    "control":"date",
+    "format":["date","dddd, MMM D YYYY"]
   },
   "h1":{
     "control":"html",
     "value":"jsmacro:'<h1>'+(this.value||'')+'</h1>'",
     "block": true
   },
-  "c_id":{
-    "for": [
-      "c_id",
-      "c_parent_id"
-    ],
-		"controlstyle":"font-weight:bold;"
+  "x_customdropdown":{
+    "for": "x_customdropdown",
+    "control": "dropdown",
+    "lov": { "values": { "ONE": "One", "TWO": "Two" }, "blank": true }
   },
-  "c_name":{
+  "bold_custom_controls":{
     "for": [
-      { "field": { "name": "c_name" }, "model": { "layout": "grid" } }
+      "x_customtextbox",
+      "x_customdropdown"
     ],
-		"cellstyle":"background-color:orange;"
+    "controlstyle":"font-weight:bold;"
+  },
+  "orange_custom_controls_in_grid":{
+    "for": [
+      { "field": { "name": "x_customtextbox" }, "model": { "layout": "grid" } },
+      { "field": { "name": "x_customdropdown" }, "model": { "layout": "grid" } }
+    ],
+    "cellstyle":"background-color:orange;"
   }
 }

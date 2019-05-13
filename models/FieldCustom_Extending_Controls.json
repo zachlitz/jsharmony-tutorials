@@ -2,11 +2,10 @@
   "layout":"form",
   "caption": "Extending Controls",
   "onecolumn":true,
-  "unbound": true,
+  "unbound":true,
   "popup":[800,600],
   "fields": [
     {"control":"date_ddddmmmdyyyy","caption":"date_ddddmmmdyyyy","unbound":true,"default":"5/21/2019"},
-    {"control":"h1","value":"Sample Heading"},
-    
+    {"control":"h1","value":"Sample Heading"}
   ]
 }

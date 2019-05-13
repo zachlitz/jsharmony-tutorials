@@ -1,0 +1,12 @@
+{ 
+  "layout":"form",
+  "caption": "Automatic Field Properties",
+  "onecolumn":true,
+  "table":"allcontrols",
+  "popup":[800,600],
+  "fields": [
+    {"name":"x_primary"},
+    {"name":"x_customtextbox"},
+    {"name":"x_customdropdown"}
+  ]
+}

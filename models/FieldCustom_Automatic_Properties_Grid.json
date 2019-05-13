@@ -1,0 +1,11 @@
+{ 
+  "layout":"grid",
+  "caption": "Automatic Field Properties",
+  "table":"allcontrols",
+  "popup":[800,600],
+  "fields": [
+    {"name":"x_primary"},
+    {"name":"x_customtextbox"},
+    {"name":"x_customdropdown"}
+  ]
+}

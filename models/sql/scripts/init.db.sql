@@ -289,7 +289,9 @@ create table allcontrols (
   x_hidden text,
   x_checkbox integer,
   x_password text,
-  x_error text
+  x_error text,
+  x_customtextbox text,
+  x_customdropdown text
 );
 
 create trigger allcontrols_before_insert before insert on allcontrols
@@ -314,7 +316,7 @@ begin
   select case when (NEW.x_error is not null) then raise(FAIL,'Application Error - Invalid value for x_error') end\;
 end;
 
-insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_date, x_textarea, x_hidden, x_checkbox, x_password)
+insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_date, x_textarea, x_hidden, x_checkbox, x_password, x_customtextbox, x_customdropdown)
 values (
   'Test Label',
   '<b>Test</b> HTML',
@@ -331,7 +333,9 @@ Test Line 4
 Test Line 5',
   'Test Hidden Field',
   '1',
-  'Test Password'
+  'Test Password',
+  'Custom Textbox',
+  'ONE'
 );
 insert into allcontrols(x_label, x_html, x_textbox, x_textzoom, x_dropdown, x_date, x_textarea, x_hidden, x_checkbox, x_password)
 values (

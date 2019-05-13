@@ -560,10 +560,10 @@ site.auth = {
 <h3 data-level="2">Public / Private Apps</h3>
 <pre>
 //System-wide public Express routes
-site.public_apps = [{'/public_page': function(req, res){ res.send('Public Page'); }}];
+site.public_apps.push({'/public_page': function(req, res, next){ res.send('Public Page'); }});
 
 //System-wide private Express routes (requiring login)
-site.private_apps = [{'/private_page': function(req, res){ res.send('Private Page'); }}];    
+site.private_apps.push({'/private_page': function(req, res, next){ res.send('Private Page'); }});    
 </pre>
 
 

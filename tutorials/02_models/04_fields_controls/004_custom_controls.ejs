@@ -22,33 +22,286 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Custom Controls",
   "Menu": ["Models","Fields / Controls"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": [
+    "/node_modules/jsharmony/models/_controls.json",
+    "/models/_controls.json",
+    "/models/FieldCustom_Builtin_Controls.json",
+    "/models/FieldCustom_Extending_Controls.json",
+    "/models/FieldCustom_Automatic_Properties_Form.json",
+    "/models/FieldCustom_Automatic_Properties_Grid.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldCustom_Builtin_Controls", "title": "Custom Fields - Built-in Controls" },
+    { "url": "jsHarmonyTutorials/FieldCustom_Extending_Controls", "title": "Custom Fields - Extending Controls" },
+    { "url": "jsHarmonyTutorials/FieldCustom_Automatic_Properties_Form?action=update&x_primary=1", "title": "Custom Fields - Automatic Properties - Form" },
+    { "url": "jsHarmonyTutorials/FieldCustom_Automatic_Properties_Grid", "title": "Custom Fields - Automatic Properties - Grid" }
+  ]
 }
 </script>
-Custom Controls
+
+<h3>Overview</h3>
+Custom controls are reusable controls with additional default properties applied.  Custom controls can derive from either a base system control or another custom control.<br/>
+<br/>
+There are three types of custom controls:
+<ul>
+  <li><b>Default Built-in Custom Controls</b> - included by default in each project, and used to standardize styles in an application</li>
+  <li><b>Extended Controls</b> - custom-defined per application, used as templates to automatically apply default property values to fields</li>
+  <li><b>Automatic Properties</b> - applied to fields on system load, based on custom-defined rules</li>
+</ul>
+Custom controls are defined in "models/_controls.json"
+
+<h3>Default Built-in Custom Controls</h3>
+A variety of default, built-in custom controls are available for system-wide standardized styles.<br/>
+<br/>
+Styles can be customized per application in "models/public_css/style.css".  Each of the controls below use the CSS class ".x{CONTROL_NAME}".  For example, the "label_mmddyyyy" control has a control class of "xlabel_mmddyyyy".<br/>
+<br/>
+Below is a form with all of the default built-in custom controls:
+<%-getScreenshot('jsHarmonyTutorials/FieldCustom_Builtin_Controls?popup=1','Custom Fields - Built-in Controls')%>
+<pre>
+{ 
+  "layout":"form",
+  "caption": "Built-in Custom Controls",
+  "onecolumn":true,
+  "unbound": true,
+  "popup":[800,600],
+  "fields": [
+    {"control":"label_mmddyyyy","caption":"label_mmddyyyy","unbound":true,"default":"5/21/2019"},
+    {"control":"label_hhmmss","caption":"label_hhmmss","unbound":true,"default":"5/21/2019 2:34 pm"},
+    {"control":"label_hhmmssz","caption":"label_hhmmssz","unbound":true,"default":"5/21/2019 2:34 pm"},
+    {"control":"label_VS","caption":"label_VS","unbound":true,"default":"Lorem"},
+    {"control":"label_S","caption":"label_S","unbound":true,"default":"Lorem ipsum dolor"},
+    {"control":"label_M","caption":"label_M","unbound":true,"default":"Lorem ipsum dolor sit amet"},
+    {"control":"label_L","caption":"label_L","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_VL","caption":"label_VL","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_h1","caption":"label_h1","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_h2","caption":"label_h2","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_h3","caption":"label_h3","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_h4","caption":"label_h4","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_h5","caption":"label_h5","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_h6","caption":"label_h6","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_notification","caption":"label_notification","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"label_error","caption":"label_error","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+
+    {"control":"dropdown_VS","caption":"dropdown_VS","unbound":true,"lov":{"values":{"VALUE1":"Value 1","VALUE2":"Value 2"}},"default":"VALUE1"},
+    {"control":"dropdown_S","caption":"dropdown_S","unbound":true,"lov":{"values":{"VALUE1":"Value 1","VALUE2":"Value 2"}},"default":"VALUE1"},
+    {"control":"dropdown_M","caption":"dropdown_M","unbound":true,"lov":{"values":{"VALUE1":"Value 1","VALUE2":"Value 2"}},"default":"VALUE1"},
+    {"control":"dropdown_2","caption":"dropdown_2","unbound":true,"lov":{"values":{"VALUE1":"Value 1","VALUE2":"Value 2"}},"default":"VALUE1"},
+    {"control":"dropdown_L","caption":"dropdown_L","unbound":true,"lov":{"values":{"VALUE1":"Value 1","VALUE2":"Value 2"}},"default":"VALUE1"},
+    {"control":"dropdown_VL","caption":"dropdown_VL","unbound":true,"lov":{"values":{"VALUE1":"Value 1","VALUE2":"Value 2"}},"default":"VALUE1"},
+
+    {"control":"textbox_VS","caption":"textbox_VS","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"textbox_S","caption":"textbox_S","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"textbox_M","caption":"textbox_M","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"textbox_2","caption":"textbox_2","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"textbox_L","caption":"textbox_L","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"textbox_VL","caption":"textbox_VL","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+    {"control":"textbox_decimal","caption":"textbox_decimal","unbound":true,"default":"5.12345"},
+    {"control":"textbox_email","caption":"textbox_email","unbound":true,"default":"user@company.com"},
+    {"control":"textbox_mmddyy","caption":"textbox_mmddyy","unbound":true,"default":"5/21/2019"},
+    {"control":"textbox_hhmmss","caption":"textbox_hhmmss","unbound":true,"default":"5/21/2019 2:34 pm"},
+    {"control":"textbox_phone","caption":"textbox_phone","unbound":true,"default":"2223334444"},
+    {"control":"textbox_tstmp","caption":"textbox_tstmp","unbound":true,"default":"5/21/2019 2:34 pm"},
+
+    {"control":"textarea_M","caption":"textarea_M","unbound":true,"default":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
+
+    {"control":"date_mmddyy","caption":"date_mmddyy","unbound":true,"default":"5/21/2019"},
+    {"control":"date_mmddyyyy","caption":"date_mmddyyyy","unbound":true,"default":"5/21/2019"},
+  ]
+}
+</pre>
+
+<h3 data-level="2">Label Controls</h3>
+<pre>
+[b]label_mmddyyyy[/b]   Date formatted as MM/DD/YYYY, ex. 05/21/2019
+[b]label_hhmmss[/b]     Time formatted as hh:mm:ss A, ex. 02:34:00 PM
+[b]label_hhmmssz[/b]    Time w/timezone formatted HH:mm:ssZ, ex 14:34:00-05:00
+[b]label_VS[/b]         Very small label (43px)
+[b]label_S[/b]          Small label (117px)
+[b]label_M[/b]          Medium label (233px)
+[b]label_L[/b]          Large label (392px)
+[b]label_VL[/b]         Very large label (590px)
+[b]label_h1[/b]         Label formatted with Heading 1
+[b]label_h2[/b]         Label formatted with Heading 2
+[b]label_h3[/b]         Label formatted with Heading 3
+[b]label_h4[/b]         Label formatted with Heading 4
+[b]label_h5[/b]         Label formatted with Heading 5
+[b]label_h6[/b]         Label formatted with Heading 6
+[b]label_notification[/b] Label formatted with information notification
+[b]label_error[/b]        Label formatted with error notification
+</pre>
+
+
+<h3 data-level="2">Dropdown Controls</h3>
 
 <pre>
-Samples
-**FieldCustom_Builtin_Controls
-FieldCustom_Extending_Controls
-FieldCustom_Fully_Custom_Controls
+[b]dropdown_VS[/b]   Very small dropdown (50px)
+[b]dropdown_S[/b]    Small dropdown (125px)
+[b]dropdown_M[/b]    Medium dropdown (240px)
+[b]dropdown_L[/b]    Large dropdown (400px)
+[b]dropdown_VL[/b]   Very large dropdown (615px)
+[b]dropdown_2[/b]    Dropdown for column 2+ (Right-aligned caption)
+</pre>
 
-  1. All Built-in Custom Controls (1)
-  2. Control Extensions (1)
-    Basic
-    Macro JS
-  3. Automatically applying custom controls (1)
-    Grid with "For" Syntax
-  4. Fully Custom Control (3)
-    Toggle Switch
+<h3 data-level="2">Textbox Controls</h3>
 
-Built-in custom controls (1)
-Creating new basic controls (1)
-  "For" syntax
-  macrojs
-Creating new fully custom controls (1)
-  * new "tag" for custom properties
-Fully Custom Control (1)
-  * ongetvalue / onsetvalue / onrender
-Custom JS Interface (get/set)
+<pre>
+[b]textbox_VS[/b]       Very small textbox (43px)
+[b]textbox_S[/b]        Small textbox (117px)
+[b]textbox_M[/b]        Medium textbox (233px)
+[b]textbox_L[/b]        Large textbox (392px)
+[b]textbox_VL[/b]       Very large textbox (608px)
+[b]textbox_2[/b]        Textbox for column 2+ (Right-aligned caption)
+[b]textbox_decimal[/b]  Textbox for decimals (200px)
+[b]textbox_email[/b]    Textbox for email addresses (392px)
+[b]textbox_mmddyy[/b]   Date formatted as MM/DD/YY, ex. 05/21/19
+[b]textbox_hhmmss[/b]   Time formatted as hh:mm:ss A, ex. 02:34:00 PM
+[b]textbox_phone[/b]    Phone formatted, ex. (222) 333-4444
+[b]textbox_tstmp[/b]    Timestamp formatted as MM/DD/YY HH:mm, ex. 05/21/19 14:34
+</pre>
+
+<h3 data-level="2">Textarea Controls</h3>
+
+<pre>
+[b]textarea_M[/b]    Medium textarea (590px by 120px)
+</pre>
+
+<h3 data-level="2">Date Controls</h3>
+
+<pre>
+[b]date_mmddyy[/b]     Date formatted as MM/DD/YY, ex. 05/21/19
+[b]date_mmddyyyy[/b]   Date formatted as MM/DD/YYYY, ex. 05/21/2019
+</pre>
+
+
+<h3>Extending Controls (_controls.json)</h3>
+Any of the existing base controls (textbox, label, textarea, html, etc) or any of the default custom controls can be extended with additional properties to create a new custom control.<br/>
+<br/>
+Extended custom controls are defined in the local "/models/_controls.json" file.<br/>
+<br/>
+Below is an example of the two types of extended controls: basic extended controls and dynamic extended controls:
+<%-getScreenshot('jsHarmonyTutorials/FieldCustom_Extending_Controls?popup=1','Custom Fields - Extending Controls')%>
+<pre>
+{ 
+  "layout":"form",
+  "caption": "Extending Controls",
+  "onecolumn":true,
+  "unbound":true,
+  "popup":[800,600],
+  "fields": [
+    {"control":"date_ddddmmmdyyyy","caption":"date_ddddmmmdyyyy","unbound":true,"default":"5/21/2019"},
+    {"control":"h1","value":"Sample Heading"}
+  ]
+}
+</pre>
+
+<h3 data-level="2">Basic Extended Controls</h3>
+Basic extended controls derive from a base control, and add default values for properties.  In the example below, the "date_ddddmmmdyyyy" control is a new custom control based on the "date" control:
+<pre>
+"date_ddddmmmdyyyy":{
+  "control":"date",
+  "format":["date","dddd, MMM D YYYY"]
+}
+</pre>
+The "date_ddddmmmdyyyy" control inherits from the "date" control, and sets a default value for the "format" property.  The control is used above in the "Extending Controls" example.<br/>
+<br/>
+Any custom control properties can be overridden by the field.
+
+<h3 data-level="2">Dynamic Extended Controls (jsmacro)</h3>
+Dynamic extended controls use JavaScript for more complex property values.  JavaScript is prefixed with "jsmacro:", and evaluted on system load.  The example below creates a new control based on the" html" control:
+<pre>
+"h1":{
+  "control":"html",
+  "value":"jsmacro:'<h1>'+(this.value||'')+'</h1>'",
+  "block": true
+}
+</pre>
+The "h1" control inherits from the "html" control, and wraps an "&lt;h1&gt;" tag around the field value.  The control is used above in the "Extending Controls" example.
+
+<h3>Automatically Applying Custom Properties ("for" property)</h3>
+In order to simplify development, properties can be automatically applied to fields based on custom-defined rules.<br/>
+<br/>
+Automatic properties are applied by creating a new custom control with a "for" property.  Any model fields that satisfy the conditions of the "for" property will have the properties automatically applied.
+<pre>
+Syntax 1 (One condition):
+{
+  "for": [i]FOR_CODITION[/i],
+  [i]PROPERTY1[/i]: [i]VALUE1[/i],
+  [i]PROPERTY2[/i]: [i]VALUE2[/i],
+  ...
+}
+
+Syntax 2 (Array of conditions):
+{
+  "for": [ [i]FOR_CONDITION[/i], [i]FOR_CONDITION[/i], ... ],
+  [i]PROPERTY1[/i]: [i]VALUE1[/i],
+  [i]PROPERTY2[/i]: [i]VALUE2[/i],
+  ...
+}
+
+[i]FOR_CONDITION[/i] :=
+  FIELD_NAME
+  { "field": { FIELD_PROPERTY1: VALUE1, ... }, "model": { MODEL_PROPERTY1: VALUE1, ... } }
+</pre>
+If the FOR_CONDITION is a string, any fields whose names match the FOR_CONDITION will have the properties applied.<br/>
+<br/>
+If the FOR_CONDITION is an object, then FOR_CONDITION.field and FOR_CONDITION.model properties must match the field and model properties in order for the control properties to be applied.<br/>
+<br/>
+The following custom controls illustrate the "for" property:
+<pre>
+"x_customdropdown":{
+  "for": "x_customdropdown",
+  "control": "dropdown",
+  "lov": { "values": { "ONE": "One", "TWO": "Two" }, "blank": true }
+},
+"bold_custom_controls":{
+  "for": [
+    "x_customtextbox",
+    "x_customdropdown"
+  ],
+  "controlstyle":"font-weight:bold;"
+},
+"orange_custom_controls_in_grid":{
+  "for": [
+    { "field": { "name": "x_customtextbox" }, "model": { "layout": "grid" } },
+    { "field": { "name": "x_customdropdown" }, "model": { "layout": "grid" } }
+  ],
+  "cellstyle":"background-color:orange;"
+}
+</pre>
+The "x_customdropdown" control properties are applied to any field whose field.name is "x_customdropdown".<br/>
+<br/>
+The "bold_custom_controls" control properties are applied to any field whose field.name is either "x_customtextbox" or "x_customdropdown".<br/>
+<br/>
+The "orange_custom_controls_in_grid" control properties are applied if the model.layout is "grid", and if the field.name is either "x_customtextbox" or "x_customdropdown".<br/>
+<br/>
+Below are implementations of the automatic properties:
+<%-getScreenshot('jsHarmonyTutorials/FieldCustom_Automatic_Properties_Form?action=update&x_primary=1&popup=1','Custom Fields - Automatic Properties - Form')%>
+<pre>
+{ 
+  "layout":"form",
+  "caption": "Automatic Field Properties",
+  "onecolumn":true,
+  "table":"allcontrols",
+  "popup":[800,600],
+  "fields": [
+    {"name":"x_primary"},
+    {"name":"x_customtextbox"},
+    {"name":"x_customdropdown"}
+  ]
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldCustom_Automatic_Properties_Grid?popup=1','Custom Fields - Automatic Properties - Grid')%>
+<pre>
+{ 
+  "layout":"grid",
+  "caption": "Automatic Field Properties",
+  "table":"allcontrols",
+  "popup":[800,600],
+  "fields": [
+    {"name":"x_primary"},
+    {"name":"x_customtextbox"},
+    {"name":"x_customdropdown"}
+  ]
+}
 </pre>
