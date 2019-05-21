@@ -99,11 +99,11 @@ Role permissions are added to each other, however they can never exceed the "act
 "actions":"BIU",
 "roles":{ 
   "SYSADMIN":"*",
-  "EDIT":"BU",
-  "READONLY":"B" 
+  "EDITOR":"BU",
+  "READER":"B" 
 }
 </pre>
 Will result in the following permissions:<br/>
- &nbsp; A user with only the "READONLY" role will have <b>"B"</b> access<br/>
- &nbsp; A user with "EDIT" and "READONLY" roles will have <b>"BU"</b> access<br/>
- &nbsp; A user with "SYSADMIN", "EDIT" and "READONLY" roles will have <b>"BIU"</b> access
+ &nbsp; A user with only the "READER" role will have <b>"B"</b> access<br/>
+ &nbsp; A user with "EDITOR" and "READER" roles will have <b>"BU"</b> access<br/>
+ &nbsp; A user with "SYSADMIN", "EDITOR" and "READER" roles will have <b>"BIU"</b> access
