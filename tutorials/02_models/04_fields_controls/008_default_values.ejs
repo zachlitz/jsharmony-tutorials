@@ -32,8 +32,12 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 
 <h3>Overview</h3>
-Default values can be applied either to bound database fields during an insert operation, or to unbound fields on page load.<br/>
-<br/>
+Default values can be applied to:
+<ul>
+  <li>Bound database fields during an insert operation</li>
+  <li>Unbound fields on page load</li>
+  <li>Bound database fields on page load, if the model.layout is "report" or "exec"</li>
+</ul>
 There are five ways to apply default values:
 <ul>
   <li>Using field.default with a static value</li>

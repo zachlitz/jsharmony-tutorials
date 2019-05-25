@@ -1,0 +1,12 @@
+{ 
+  "GridBasic_Static": {
+    "table":"jsharmony_numbers",
+    "layout":"grid",
+    "caption":["Number","Numbers"],
+    "grid_static": true,
+    "rowlimit": 1000,
+    "fields":[
+      {"name":"n","caption": "Number", "key": true}
+    ]
+  }
+}

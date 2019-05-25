@@ -32,7 +32,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/GridBasic_HTML.json",
     "/models/GridBasic_Sort.json",
     "/models/GridBasic_Rowcount.json",
-    "/models/GridBasic_ExtendedProperties.json"
+    "/models/GridBasic_ExtendedProperties.json",
+    "/models/GridBasic_Static.json"
   ],
   "Demo": [
     { "url": "jsHarmonyTutorials/GridBasic_CL", "title": "Basic Grid" },
@@ -41,7 +42,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     { "url": "jsHarmonyTutorials/GridBasic_Controls", "title": "Grid Controls" },
     { "url": "jsHarmonyTutorials/GridBasic_Controls_Links", "title": "Grid Links" },
     { "url": "jsHarmonyTutorials/GridBasic_HTML", "title": "Grid HTML Controls" },
-    { "url": "jsHarmonyTutorials/GridBasic_Rowcount", "title": "Grid Rowcount" }
+    { "url": "jsHarmonyTutorials/GridBasic_Rowcount", "title": "Grid Rowcount" },
+    { "url": "jsHarmonyTutorials/GridBasic_Static", "title": "Static Grid" }
   ]
 }
 </script>
@@ -287,3 +289,35 @@ The total number of rows returned for the current search can be displayed at the
 }
 </pre>
 <%-getScreenshot('jsHarmonyTutorials/GridBasic_Rowcount?popup=1','Grid Rowcount')%>
+
+<h3>Static Grids (Fast Performance)</h3>
+In applications that require rendering thousands of rows, the standard grid may need to be optimized for performance.  There are two options:
+<ul>
+  <li>Use a custom grid template (for fastest performance)</li>
+  <li>Use a static grid (disabling any data binding or dynamic evaluation logic)</li>
+</ul>
+Custom grid templates are covered in the <a href="/tutorials/grids_custom_templates">Custom Grid Templates</a> tutorials.<br/>
+<br/>
+Static grids disable any data binding logic, and can be used when all of the following conditions are met:
+<ul>
+  <li>The only model action is "B" (browse)</li>
+  <li>No formatting is required client-side</li>
+  <li>No dynamic EJS tags are used</li>
+  <li>All controls are labels</li>
+</ul>
+Static grids are defined using the "grid_static" property:
+<pre>
+{ 
+  "GridBasic_Static": {
+    "table":"jsharmony_numbers",
+    "layout":"grid",
+    "caption":["Number","Numbers"],
+    "grid_static": true,
+    "rowlimit": 1000,
+    "fields":[
+      {"name":"n","caption": "Number", "key": true}
+    ]
+  }
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/GridBasic_Static?popup=1','Static Grid',{height: 400})%>
