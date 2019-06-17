@@ -303,6 +303,9 @@ config.default_report_fonts = [
 //Start jsHarmony without the standard console messages
 config.silentStart = false;
 
+//Load models on startup (set to false for database / initialization scripting)
+this.loadModels = true;
+
 //Google Maps API Key
 config.google_settings = { API_KEY: 'XXXXXXXXXXXXXX' };
 
@@ -343,13 +346,20 @@ dbconfig['default'] = {
   database: "DBNAME", 
   user: "DBUSER", 
   password: "DBPASS", 
-  _driver: new pgsqlDBDriver(),
-  options:{
-    connectTimeout:30000, //Maximum wait time to log in to a server
-    requestTimeout:30000, //Maximum time per SQL query
-    ecrypt:true,          //Use encrypted channel (default to true), required for Azure
-    useUTC: false,        //Use UTC vs local time for dates, may cause unexpected behavior with Date/Time controls
-    pooled: true          //Enable database connection pooling
+  _driver: new mssqlDBDriver(),
+  //Options
+  maxConnectRetries: 100,
+  connectionTimeout:30000, //Maximum wait time to log in to a server
+  requestTimeout:30000,    //Maximum time per SQL query
+  pool: {
+    max: 10, //Maximum number of connections in Connection Pool
+    min: 0,  //Minimum number of connections in Connection Pool
+    idleTimeoutMillis: 30000, //Time (ms) before closing an unused connection
+  },
+  options: {
+    ecrypt:true,           //Use encrypted channel (default to true), required for Azure
+    useUTC: false,         //Use UTC vs local time for dates, may cause unexpected behavior with Date/Time controls
+    pooled: true           //Enable database connection pooling
   } 
 };
 
