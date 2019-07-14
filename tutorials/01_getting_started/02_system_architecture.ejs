@@ -262,23 +262,22 @@ The jsHarmony factory has additional data that needs to be stored in a database 
 <br/>
 The following key tables are stored in the jsharmony schema:
 <ul>
-  <li>Centralized Documents (D)</li>
-  <li>Centralized Notes (N)</li>
-  <li>Text Management (TXT)</li>
-  <li>Help System (HP, H)<br/>&nbsp;</li>
+  <li>Centralized Documents (doc)</li>
+  <li>Centralized Notes (note)</li>
+  <li>Text Management (txt)</li>
+  <li>Help System (help_target, help)<br/>&nbsp;</li>
 
-  <li>System Users and Roles (PE, SR, SPER)</li>
-  <li>Client Portal Users and Roles (CPE, CR, CPER)</li>
-  <li>Menu (SM / SRM / CRM)<br/>&nbsp;</li>
+  <li>System Users and Roles (sys_user, sys_role, sys_user_role)</li>
+  <li>Client Portal Users and Roles (cust_user, cust_role, cust_user_role)</li>
+  <li>Menu (menu / sys_menu_role / cust_menu_role)<br/>&nbsp;</li>
 
-  <li>Settings Configuration (PPD)</li>
-  <li>Developer / System / User Settings (XPP, GPP, PPP)</li>
-  <li>Developer List of Values (code_H, code2_H, code*)</li>
-  <li>System List of Values (code_H, code2_H, code*)<br/>&nbsp;</li>
+  <li>Settings Configuration (param)</li>
+  <li>Developer / System / User Settings (param_sys, param_app, param_user)</li>
+  <li>List of Values (code, code2)</li>
 
-  <li>Job Processor Tables (RQST, RQST_*)</li>
-  <li>Automated Request Queue (RQ)</li>
-  <li>Audit Trail (AUD_H, AUD_D)</li>
+  <li>Job Processor Tables (job, job_*)</li>
+  <li>Automated Request Queue (queue)</li>
+  <li>Audit Trail (audit, audit_detail)</li>
 </ul>
 <b>Context User</b><br/>
 All database operations are run under the same database account.  In order to differentiate between jsHarmony users, the Postgres session variable "sessionvars.appuser" and SQL Server "context_info" is automatically set to the current user before each database operation, so that audit trail or database-side security triggers can perform logic based on the application user.<br/>

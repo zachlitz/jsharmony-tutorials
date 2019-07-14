@@ -22,7 +22,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Menu",
   "Menu": ["Models","Models Overview"],
-  "Demo": "jsHarmonyFactory/X_SMLW"
+  "Demo": "jsHarmonyFactory/Dev/Menu_Tree_Editor"
 }
 </script>
 
@@ -55,7 +55,7 @@ When more items are displayed than will fit on the screen, "More" side-menus are
 
 <h3>Built-in jsHarmony Factory Menu Administration</h3>
 Menu administration is available in the jsHarmony Factory Developer tab:
-<%-getScreenshot('jsHarmonyFactory/X_SMLW','Menu Administration')%>
+<%-getScreenshot('jsHarmonyFactory/Dev/Menu_Tree_Editor','Menu Administration')%>
 Right-click on a menu to add a child menu item or to delete a menu item.  There are two menu levels:
 <ul>
   <li>Top-level menu items can be added under "Main System" or "Customer"</li>
@@ -64,10 +64,10 @@ Right-click on a menu to add a child menu item or to delete a menu item.  There 
 The Menu ID should be unique across the system.  "Sequence #" will update the sort order.<br/>
 <br/>
 Additionally, a "List" view is available for quick entry:
-<%-getScreenshot('jsHarmonyFactory/X_SML','Menu Administration - List View', { height: 400 })%>
+<%-getScreenshot('jsHarmonyFactory/Dev/Menu_Listing','Menu Administration - List View', { height: 400 })%>
 
 Each menu item is visible to users with only the specified roles.  Menu roles can be managed by clicking "Privileges":
-<%-getScreenshot('jsHarmonyFactory/X_SRMSELR_HW?action=update&sm_id=3','Menu Administration - Roles')%>
+<%-getScreenshot('jsHarmonyFactory/Dev/SysMenuRole?action=update&menu_id=3','Menu Administration - Roles')%>
 
 <h3>JavaScript Actions</h3>
 Each MenuItem can execute JavaScript when it is clicked, instead of navigating to a link.  Use the "js:" prefix to execute javascript:
@@ -87,29 +87,29 @@ MENU_ID can be the Menu ID of a top-level menu, or of a submenu item.
 <h3>jsHarmony Factory Menu Database Design</h3>
 The jsHarmony Factory database schema is shown below.  Fully custom menus can use their own database structures by overriding the jsHaronySite.menu function.
 <pre>
-jsharmony.SM :: Contains all menu items
-  SM_ID           Menu Item Internal Database ID
-  SM_ID_Parent    Menu Item Parent Internal Database ID
-  SM_STS          Status - ACTIVE / HOLD / CLOSED
-  SM_Name         Menu ID (Text ID, used in the menu system)
-  SM_Seq          Sequence # (Sort Order)
-  SM_DESC         Title - Displayed as the menu item text
-  SM_DESCL        Menu Item Long Description
-  SM_DESCVL       Menu Item Very Long Description
-  SM_Cmd          Relative link to a page, or Javascript prefixed with "js:"
-  SM_Image        URL of Image for menu item
-  SM_SubCmd       Additional text appended to SM_Cmd - can used for Anchor links
-  SM_UTYPE        Whether the menu is for the Main System "S", or the Client Portal "C"
+jsharmony.menu :: Contains all menu items
+  menu_id           Menu Item Internal Database ID
+  menu_id_parent    Menu Item Parent Internal Database ID
+  menu_sts          Status - ACTIVE / HOLD / CLOSED
+  menu_name         Menu ID (Text ID, used in the menu system)
+  menu_seq          Sequence # (Sort Order)
+  menu_desc         Title - Displayed as the menu item text
+  menu_desc_ext     Menu Item Long Description
+  menu_desc_ext2    Menu Item Very Long Description
+  menu_cmd          Relative link to a page, or Javascript prefixed with "js:"
+  menu_image        URL of Image for menu item
+  menu_subcmd       Additional text appended to SM_Cmd - can used for Anchor links
+  menu_group        Whether the menu is for the Main System "S", or the Client Portal "C"
 
-jsharmony.SRM :: Main System roles, per menu item
-  SM_ID     Menu Item Internal Database ID
-  SR_NAME   Role Name
+jsharmony.sys_menu_role :: Main System roles, per menu item
+  menu_id          Menu Item Internal Database ID
+  sys_role_name    Role Name
 
-jsharmony.CRM :: Client Portal roles, per menu item
-  SM_ID     Menu Item Internal Database ID
-  CR_NAME   Role Name
+jsharmony.cust_menu_role :: Client Portal roles, per menu item
+  menu_id          Menu Item Internal Database ID
+  cust_role_name   Role Name
 </pre>
-Each user is assigned roles in the jsharmony.SPER / jsharmony.CPER tables.  Users will only see menu items that are assigned roles that the user has access to.
+Each user is assigned roles in the jsharmony.sys_user_role / jsharmony.cust_user_role tables.  Users will only see menu items that are assigned roles that the user has access to.
 
 <h3>Custom Menus</h3>
 

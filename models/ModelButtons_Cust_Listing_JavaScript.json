@@ -8,7 +8,7 @@
     "menu":"clients",
     "buttons":[
       {"text":"Current Model ID","link":"js:js:XExt.Alert('The current model is '+modelid);","icon":"search"},
-      {"text":"Active Users Report","link":"js:XExt.popupReport('RPE',{ 'sys_user_sts': 'ACTIVE' },{width:850,height:600});","icon":"export"}
+      {"text":"Active Users Report","link":"js:XExt.popupReport('jsHarmonyFactory/Reports/SysUser_Listing',{ 'sys_user_sts': 'ACTIVE' },{width:850,height:600});","icon":"export"}
     ],
     "hide_system_buttons":["export","search","print"],
     "fields":[
