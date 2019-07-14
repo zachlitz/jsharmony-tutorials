@@ -33,7 +33,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     { "url": "jsHarmonyTutorials/FieldDataTypes_AllTypes_Grid", "title": "All System Data Types - Grid" },
     { "url": "jsHarmonyTutorials/FieldDataTypes_AllTypes_Form?x_primary=1&action=update", "title": "All System Data Types - Form" },
     { "url": "jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Grid", "title": "Custom Money Data Type - Grid" },
-    { "url": "jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Form?c_id=1&action=update", "title": "Custom Money Data Type - Form" }
+    { "url": "jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Form?cust_id=1&action=update", "title": "Custom Money Data Type - Form" }
   ]
 }
 </script>
@@ -259,7 +259,7 @@ The following form and grid models use all of the built-in system data types.  T
 {
   "layout": "grid",
   "title": "System Data Types",
-  "table": "alltypes",
+  "table": "all_types",
   "actions": "B",
   "sort": ["^x_primary"],
   "buttons": [{"link":"insert:FieldDataTypes_AllTypes_Form"}],
@@ -279,8 +279,8 @@ The following form and grid models use all of the built-in system data types.  T
     {"name":"x_varcharmax", "type":"varchar", "length":-1},
     {"name":"x_char", "type":"char", "length":100},
     {"name":"x_binary", "type":"binary", "length":100},
-    {"name":"x_hash","type":"hash","salt": "alltypes_x_hash_salt","control":"label"},
-    {"name":"x_file","type":"file","controlparams":{"data_folder":"tutorials_allcontrols"}}
+    {"name":"x_hash","type":"hash","salt": "all_types_x_hash_salt","control":"label"},
+    {"name":"x_file","type":"file","controlparams":{"data_folder":"tutorials_all_controls"}}
   ]
 }
 </pre>
@@ -290,7 +290,7 @@ The following form and grid models use all of the built-in system data types.  T
 {
   "layout": "form",
   "title": "System Data Types",
-  "table": "alltypes",
+  "table": "all_types",
   "onecolumn": true,
   "caption": ["Item", "Items"],
   "actions": "BIUD",
@@ -311,9 +311,9 @@ The following form and grid models use all of the built-in system data types.  T
     {"name":"x_varcharmax", "type":"varchar", "length":-1},
     {"name":"x_char", "type":"char", "length":100},
     {"name":"x_binary", "type":"binary", "length":100},
-    {"name":"x_encascii","type":"encascii","password": "alltypes_x_encascii_password","hash": "x_hash"},
-    {"name":"x_hash","type":"hash","salt": "alltypes_x_hash_salt","control":"label"},
-    {"name":"x_file","type":"file","controlparams":{"data_folder":"tutorials_allcontrols"}}
+    {"name":"x_encascii","type":"encascii","password": "all_types_x_encascii_password","hash": "x_hash"},
+    {"name":"x_hash","type":"hash","salt": "all_types_x_hash_salt","control":"label"},
+    {"name":"x_file","type":"file","controlparams":{"data_folder":"tutorials_all_controls"}}
   ]
 }
 </pre>
@@ -589,30 +589,30 @@ The example below creates a new "money" datatype for the SQLite database:
 <%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Grid?popup=1','Custom Datatype Grid')%>
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID","link":"update:FieldDataTypes_CustomDatatype_Form"},
-    {"name":"c_name","caption":"Customer"},
-    {"name":"c_overdue_amt","caption":"Overdue Amt","type":"money"}
+    {"name":"cust_id","caption": "ID","link":"update:FieldDataTypes_CustomDatatype_Form"},
+    {"name":"cust_name","caption":"Customer"},
+    {"name":"cust_overdue_amt","caption":"Overdue Amt","type":"money"}
   ]
 }
 </pre>
 
-<%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Form?c_id=1&action=update&popup=1','Custom Datatype Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldDataTypes_CustomDatatype_Form?cust_id=1&action=update&popup=1','Custom Datatype Form')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "popup":[900,400],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"name":"c_overdue_amt","caption":"Overdue Amt","type":"money"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"name":"cust_overdue_amt","caption":"Overdue Amt","type":"money"}
   ]
 }
 </pre>

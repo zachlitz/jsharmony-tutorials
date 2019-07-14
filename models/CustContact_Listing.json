@@ -1,0 +1,23 @@
+{
+  "CustContact_Listing_Basic": {
+    "table":"v_cust_contact",
+    "layout":"grid",
+    "title":"All Contacts",
+    "caption":["","Contact","Contacts"],
+    "actions":"B", 
+    "sort":["^cust_contact_name"], 
+    "menu":"clients",
+    "fields":[
+      {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_contact_name","type":"varchar","length":"50","caption": "Contact","actions":"B"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer","actions":"B"}
+    ]
+  },
+  "CustContact_Listing_Inherited": {
+    "inherits": "CustContact_Listing_Basic",
+    "fields":[
+      {"name":"cust_contact_title","type":"varchar","length":"8","caption": "Title","actions":"B","__AFTER__":"cust_contact_name"},
+      {"name":"cust_name","__REMOVE__":1}
+    ]
+  }
+}

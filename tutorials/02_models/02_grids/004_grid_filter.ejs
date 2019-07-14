@@ -22,8 +22,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Grid Search",
   "Menu": ["Models","Grids"],
-  "Code": ["/models/GridSearch_CL.json"],
-  "Demo": "jsHarmonyTutorials/GridSearch_CL"
+  "Code": ["/models/GridSearch_Cust_Listing.json"],
+  "Demo": "jsHarmonyTutorials/GridSearch_Cust_Listing"
 }
 </script>
 
@@ -37,8 +37,8 @@ Model:
   "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
 
 Field:
-  "sqlsearch":"c_name||' '||c_desc"
-  "sqlsearchsound": "c_id in (select c_id from sdx where sdx_col='c_name' and sdx_val=soundex(%%%FIELD%%%))"
+  "sqlsearch":"cust_name||' '||cust_desc"
+  "sqlsearchsound": "cust_id in (select cust_id from soundex where soundex_col='cust_name' and soundex_val=soundex(%%%FIELD%%%))"
   "disable_search": true
   "disable_search_all": true
   "enable_search": true
@@ -67,23 +67,23 @@ Soundex implementations are used to search by pronunciation instead of by a char
 <br/>
 The Soundex information is often implemented via database trigger, storing the phonetic representation in a "soundex" table:
 <pre>
-sdx :: Soundex Table
-  sdx_id        Soundex Internal ID
+soundex :: Soundex Table
+soundex_id        Soundex Internal ID
   field_name    Field name that is being encoded
   table_name    Table name of the field that is being encoded
   table_id      Unique key in the table of the field that is being encoded
-  sdx_word      Original word
-  sdx_val       Soundex value
+  soundex_word      Original word
+  soundex_val       Soundex value
 </pre>
-A trigger should populate the sdx table when the target field is updated (in this case, the customer name):
+A trigger should populate the soundex table when the target field is updated (in this case, the customer name):
 <pre>
-delete from sdx where table_name='c' and table_id=new.c_id
-insert into sdx(table_name, field_name, table_id, sdx_word, sdx_val)
-         values('c', 'c_name', new.c_id, new.c_name, soundex(new.c_name) )
+delete from soundex where table_name='cust' and table_id=new.cust_id
+insert into soundex(table_name, field_name, table_id, soundex_word, soundex_val)
+         values('cust', 'cust_name', new.cust_id, new.cust_name, soundex(new.cust_name) )
 </pre>
 Then, the "sqlsearchsound" expression can be used in the field to search the soundex table by pronunciation:
 <pre>
-"sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"
+"sqlsearchsound": "cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=soundex(%%%FIELD%%%))"
 </pre>
 The %%%FIELD%%% variable will be replaced by the search query.<br/>
 The %%%SOUNDEX%%% variable will be replaced by a Soundex of the search query
@@ -93,7 +93,7 @@ Setting a field's "disable_search" property to true will remove the field from t
 <pre>
 {
   "fields":[
-    {"name":"c_name","caption":"Customer","disable_search":true}
+    {"name":"cust_name","caption":"Customer","disable_search":true}
   ]
 }
 </pre>
@@ -103,7 +103,7 @@ The "disable_search_all" property will remove the field from the "Any..." Column
 <pre>
 {
   "fields":[
-    {"name":"c_name","caption":"Customer","disable_search_all":true}
+    {"name":"cust_name","caption":"Customer","disable_search_all":true}
   ]
 }
 </pre>
@@ -113,7 +113,7 @@ By default, hidden fields have search disabled.  Search can be enabled on a hidd
 <pre>
 {
   "fields":[
-    {"name":"c_ssnhash","caption": "SSN","type":"hash","length":20,"salt":"c_ssnhash","enable_search":true}
+    {"name":"cust_ssnhash","caption": "SSN","type":"hash","length":20,"salt":"cust_ssnhash","enable_search":true}
   ]
 }
 </pre>
@@ -126,7 +126,7 @@ Additionally, where clauses can be hard-coded in the SQL expression using "model
 A custom SQL where expression can be added to a grid using the model's "sqlwhere" property.  In the following example, the grid will only show Active customers:
 <pre>
 {
-  "sqlwhere":"c_sts='ACTIVE'"
+  "sqlwhere":"cust_sts='ACTIVE'"
 }
 </pre>
 
@@ -139,7 +139,7 @@ This sql "where" expression can be customized using the field's "sqlwhere" prope
 <pre>
 {
   "fields":[
-    {"name":"c_name","caption":"Customer","sqlwhere":"(c_name like '%'||@c_name||'%' or c_desc like '%'||@c_name||'%')"}
+    {"name":"cust_name","caption":"Customer","sqlwhere":"(cust_name like '%'||@cust_name||'%' or cust_desc like '%'||@cust_name||'%')"}
   ]
 }
 </pre>
@@ -147,10 +147,10 @@ In the above example, the following URL querystrings will search both the custom
 <ul>
   <li>
     <b>Partial Customer Name Match:</b><br/>
-    <a href="/jsHarmonyTutorials/GridSearch_CL?c_name=Industries" target="_blank">/GridBasic_Search?c_name=Industries</a>
+    <a href="/jsHarmonyTutorials/GridSearch_Cust_Listing?cust_name=Industries" target="_blank">/GridBasic_Search?cust_name=Industries</a>
   </li>
   <li>
     <b>Partial Customer Description Match:</b><br/>
-    <a href="/jsHarmonyTutorials/GridSearch_CL?c_name=Fixture" target="_blank">/GridBasic_Search?c_name=Fixture</a>
+    <a href="/jsHarmonyTutorials/GridSearch_Cust_Listing?cust_name=Fixture" target="_blank">/GridBasic_Search?cust_name=Fixture</a>
   </li>
 </ul>

@@ -1,12 +1,12 @@
 { 
   "ModelSQL_Exec": {
-    "table":"c",
+    "table":"cust",
     "layout":"exec",
     "onecolumn":true,
     "caption":["Customer","Customers"],
-    "sqlexec": "select @c_sts as status", 
+    "sqlexec": "select @cust_sts as status", 
     "fields":[
-      {"name":"c_sts","caption":"Status"},
+      {"name":"cust_sts","caption":"Status"},
       {"name":"RUN","control":"button","value":"Run","caption":"",
        "onclick":"XPage.RunDBFunc(this,function(rslt){ XExt.Alert(rslt[modelid][0].status); }, { noMessage: true });"}
     ]

@@ -1,15 +1,15 @@
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption": ["JS Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
-    {"name": "c_email", "control": "hidden"},
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_email", "control": "hidden"},
 
     {"control": "button", "value":"JavaScript Alert", "link": "js:XExt.Alert('Sample Alert');"},
-    {"control": "button", "value":"JavaScript popupForm", "link": "js:XExt.popupForm(xmodel.namespace+'FieldLinks_C','insert',{ 'c_name': 'New Customer' });"},
-    {"control": "button", "value":"JavaScript Email", "link": "js:var email = xmodel.get('c_email'); if(email){ var url = 'mailto:'+email; jsh.getFileProxy().prop('src', url); }"}
+    {"control": "button", "value":"JavaScript popupForm", "link": "js:XExt.popupForm(xmodel.namespace+'FieldLinks_Cust','insert',{ 'cust_name': 'New Customer' });"},
+    {"control": "button", "value":"JavaScript Email", "link": "js:var email = xmodel.get('cust_email'); if(email){ var url = 'mailto:'+email; jsh.getFileProxy().prop('src', url); }"}
   ]
 }

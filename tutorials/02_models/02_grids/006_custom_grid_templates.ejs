@@ -24,17 +24,17 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Title": "Custom Grid Templates",
   "Menu": ["Models","Grids"],
   "Code": [
-    "/models/GridCustom_CL.json",
-    "/models/GridCustom_CL.ejs",
-    "/models/GridCustom_CL.css"
+    "/models/GridCustom_Cust_Listing.json",
+    "/models/GridCustom_Cust_Listing.ejs",
+    "/models/GridCustom_Cust_Listing.css"
   ],
-  "Demo": "jsHarmonyTutorials/GridCustom_CL"
+  "Demo": "jsHarmonyTutorials/GridCustom_Cust_Listing"
 }
 </script>
 
 Custom Grid Templates can be used to render grid data in any layout, such as a calendar, slideshow, or list of buttons.
 
-<%-getScreenshot('jsHarmonyTutorials/GridCustom_CL?popup=1','Custom Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/GridCustom_Cust_Listing?popup=1','Custom Grid')%>
 
 First, the custom grid template needs to be defined in the model.templates.grid property:
 
@@ -49,16 +49,16 @@ For example:
 <pre>
 {
   "templates": {
-    "grid": ".xgrid_CL_template"
+    "grid": ".xgrid_Cust_Listing_template"
   }
 }
 </pre>
 Next, the HTML/EJS template needs to be defined.  The EJS uses &lt;% ... %&gt; escape tags for the initial render pass, and &lt;%% ... %%&gt; for the data render pass.  The HTML/EJS should be defined in a MODELID.ejs file, in the same folder as MODELID.json:
 <pre>
-<div class="xelem&lt;%=model.class%&gt; xgrid_CL_placeholder"></div>
-<script class="xgrid_CL_template" type="text/x-ejs-template" data-target=".xgrid_CL_placeholder">
+<div class="xelem&lt;%=model.class%&gt; xgrid_Cust_Listing_placeholder"></div>
+<script class="xgrid_Cust_Listing_template" type="text/x-ejs-template" data-target=".xgrid_Cust_Listing_placeholder">
   &lt;%% _.each(data, function(row){  %%&gt;
-    <div>&lt;%%=row.c_name%%&gt;</div>
+    <div>&lt;%%=row.cust_name%%&gt;</div>
   &lt;%% }); %%&gt;
 </script>
 </pre>
@@ -74,7 +74,7 @@ The template is rendered with the following EJS variables:
 <pre>
 {
   rowid       //The starting rowid (0 unless "Load More" is used)
-  data        //The data returned from the database, an array of rows, ex: { [ "c_id": 1, "c_name": "First" ], [ "c_id": 2, "c_name": "Second" ] }
+  data        //The data returned from the database, an array of rows, ex: { [ "cust_id": 1, "cust_name": "First" ], [ "cust_id": 2, "cust_name": "Second" ] }
   modelid     //The current Model ID
   jsh         //The jsHarmony object
   instance    //The name of the jsHarmony instance

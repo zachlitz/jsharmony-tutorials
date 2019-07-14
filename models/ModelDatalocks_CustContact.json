@@ -1,0 +1,13 @@
+{
+  "ModelDatalocks_CustContact": {
+    "layout": "form", 
+    "table": "cust_contact",
+    "actions": "BIUD", 
+    "caption": [ "", "Contact", "Contacts" ],
+    "fields": [
+      {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"control":"label","caption":"ID","datalock":{ "cust_id": "cust_contact_id" } },
+      {"name":"cust_id","type":"bigint","actions":"BIU","foreignkey":1,"control":"hidden","datalock":{ "cust_id": "cust_id" } },
+      {"name":"cust_contact_name","type":"varchar","length":"100","caption":"Name","actions":"BIU","control": "textbox","nl": 1 }
+    ]
+  }
+}

@@ -34,8 +34,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/ModelFiles_Form_Inline.json",
 
     "/models/ModelFiles_MultipleModels.json",
-    "/models/ModelFiles_MultipleModels_C.ejs",
-    "/models/ModelFiles_MultipleModels_CC.ejs",
+    "/models/ModelFiles_MultipleModels_Cust.ejs",
+    "/models/ModelFiles_MultipleModels_CustContact.ejs",
 
     "/models/ModelFiles_Report_Basic.json",
     "/models/ModelFiles_Report_Basic.ejs",
@@ -52,9 +52,9 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/ModelFiles_Report_Inline.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/ModelFiles_Form_Basic?c_id=1&action=update", "title": "Form - Basic" },
-    { "url": "jsHarmonyTutorials/ModelFiles_Form_SeparateFiles?c_id=1&action=update", "title": "Form - Separate Code Files" },
-    { "url": "jsHarmonyTutorials/ModelFiles_Form_Inline?c_id=1&action=update", "title": "Form - Inline Code" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Form_Basic?cust_id=1&action=update", "title": "Form - Basic" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Form_SeparateFiles?cust_id=1&action=update", "title": "Form - Separate Code Files" },
+    { "url": "jsHarmonyTutorials/ModelFiles_Form_Inline?cust_id=1&action=update", "title": "Form - Inline Code" },
     { "url": "jsHarmonyTutorials/ModelFiles_Report_Basic", "title": "Report - Basic" },
     { "url": "jsHarmonyTutorials/ModelFiles_Report_SeparateFiles", "title": "Report - Separate Code Files" },
     { "url": "jsHarmonyTutorials/ModelFiles_Report_Inline", "title": "Report - Inline Code" }
@@ -73,7 +73,7 @@ A basic model consists of the model definition as JSON in one file:
 <pre>
 //MODELID.json
 {
-  "table": "c",
+  "table": "cust",
   ...
 }
 </pre>
@@ -83,7 +83,7 @@ The JSON syntax in jsHarmony has been extended to allow for commenting a line by
 <pre>
 {
   //Comment
-  "table": "c",
+  "table": "cust",
   ...
 }
 </pre>
@@ -93,7 +93,7 @@ In addition to the basic model definition, a model can contain JS, CSS, EJS, and
 <pre>
 //MODELID.json
 {
-  "table": "c",
+  "table": "cust",
   ...
   "oninit":"_this.oninit(xmodel);"
 }
@@ -194,7 +194,7 @@ A basic report consists of at least one JSON report definition file, and one Rep
     {"control":"button","value":"Run Report","onclick": "XPage.RunReport();"}
   ],
   "reportdata": {
-    "C": { "sql": "select c_id,c_name from c" }
+    "cust": { "sql": "select cust_id,cust_name from cust" }
   }
 }
 
@@ -205,8 +205,8 @@ A basic report consists of at least one JSON report definition file, and one Rep
   <link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' />
 </head>
 <body>
-  &lt;% _.each(data.C,function(C,C_idx){  %&gt;
-    <div>&lt;%=C.c_name%&gt;</div>
+  &lt;% _.each(data.cust,function(cust,cust_idx){  %&gt;
+    <div>&lt;%=cust.cust_name%&gt;</div>
   &lt;% }); %&gt;
 </body>
 </html>
@@ -224,7 +224,7 @@ A basic report consists of at least one JSON report definition file, and one Rep
     {"control":"button","value":"Run Report","onclick": "XPage.RunReport();"}
   ],
   "reportdata": {
-    "C": { "sql": "select c_id,c_name from c" }
+    "cust": { "sql": "select cust_id,cust_name from cust" }
   }
 }
 
@@ -235,8 +235,8 @@ A basic report consists of at least one JSON report definition file, and one Rep
   <link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' />
 </head>
 <body>
-  &lt;% _.each(data.C,function(C,C_idx){  %&gt;
-    <div>&lt;%=C.c_name%&gt;</div>
+  &lt;% _.each(data.cust,function(cust,cust_idx){  %&gt;
+    <div>&lt;%=cust.cust_name%&gt;</div>
   &lt;% }); %&gt;
 </body>
 </html>
@@ -303,7 +303,7 @@ The model properties could be directly assigned instead of using the external fi
 //MODELID.json
 {
   ...
-  "reportbody": "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' /></head><body>&lt;% _.each(data.C,function(C,C_idx){  %&gt;<div>&lt;%=C.c_name%&gt;</div>&lt;% }); %&gt;</body></html>",
+  "reportbody": "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><link href='file:///&lt;%=jsh.Config.moduledir%&gt;/public/fonts/jsHarmonyFonts.css' rel='stylesheet' type='text/css' /></head><body>&lt;% _.each(data.cust,function(cust,cust_idx){  %&gt;<div>&lt;%=cust.cust_name%&gt;</div>&lt;% }); %&gt;</body></html>",
   "pageheader": "Report Header",
   "pagefooter": "Page <span class='pageNumber'></span> / <span class='totalPages'></span>",
   "ejs": "<div class='&lt;%=model.class%&gt;_sample'>Sample div</div>",

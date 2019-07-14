@@ -1,12 +1,12 @@
 { 
   "ModelSQL_Field_sqlselect": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"},
-      {"name":"status","caption":"Status","actions":"B","sqlselect":"select codetxt from ucod_c_sts where codeval = c_sts","type":"varchar"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"},
+      {"name":"status","caption":"Status","actions":"B","sqlselect":"select code_txt from code_cust_sts where code_val = cust_sts","type":"varchar"}
     ]
   }
 }

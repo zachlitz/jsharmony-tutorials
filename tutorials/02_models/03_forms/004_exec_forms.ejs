@@ -33,7 +33,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   ],
   "Demo": [
     { "url": "jsHarmonyTutorials/FormExec_Launcher", "title": "Launcher Form" },
-    { "url": "jsHarmonyTutorials/FormExec_Launcher?c_id=1", "title": "Launcher Form with Querystring Parameter" },
+    { "url": "jsHarmonyTutorials/FormExec_Launcher?cust_id=1", "title": "Launcher Form with Querystring Parameter" },
     { "url": "jsHarmonyTutorials/FormExec_API_Consumer", "title": "API Request" },
     { "url": "jsHarmonyTutorials/FormExec_API_Multirecordset_Consumer", "title": "Multirecordset API Request" }
   ]
@@ -61,10 +61,10 @@ As opposed to unbound forms, "exec" forms connect to the database on load to pop
   "layout": "exec", 
   "onecolumn":true,
   "title": "Activate Customer",
-  "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
+  "sqlexec": "update cust set cust_sts='ACTIVE' where cust_id=@cust_id", 
   "fields": [
-    {"name":"c_id","caption":"Customer","control":"dropdown",
-     "lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true },
+    {"name":"cust_id","caption":"Customer","control":"dropdown",
+     "lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name", "blank": true },
      "validate": ["Required"]
     },
     {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc();"}
@@ -76,8 +76,8 @@ The launcher provides fields for input, and one or more "button" controls for ex
 <h4>Prepopulating Parameters</h4>
 Launcher parameter values can be hard-coded in the URL:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormExec_Launcher?c_id=1" target="_blank">/jsHarmonyTutorials/FormExec_Launcher?c_id=1</a>
-<%-getScreenshot('jsHarmonyTutorials/FormExec_Launcher?c_id=1&popup=1','Exec Launcher with Parameters')%>
+<a href="/jsHarmonyTutorials/FormExec_Launcher?cust_id=1" target="_blank">/jsHarmonyTutorials/FormExec_Launcher?cust_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormExec_Launcher?cust_id=1&popup=1','Exec Launcher with Parameters')%>
 
 <h3>Database API Endpoint</h3>
 Exec models can also be used as API endpoints for database calls.  Roles can be used to limit access to each API call by user permissions.<br/>
@@ -88,7 +88,7 @@ The database calls can consist of any SQL.  If the SQL returns result recordsets
 //jsHarmonyTutorials/FormExec_API
 {
   "layout": "exec",
-  "sqlexec": "select c_id,c_name from c"
+  "sqlexec": "select cust_id,cust_name from cust"
 }
 </pre>
 JavaScript can be used to access the API endpoint:
@@ -110,8 +110,8 @@ The API can also return multiple recordsets by setting the "sqltype" property to
 {
   "layout": "exec",
   "sqlexec": [
-    "select c_id,c_name,c_sts from c;",
-    "select codeval,codetxt from ucod_c_sts where (CODETDT is null or CODETDT>datetime('now','localtime')) order by codseq;"
+    "select cust_id,cust_name,cust_sts from cust;",
+    "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
   ],
   "sqltype": "multirecordset"
 }

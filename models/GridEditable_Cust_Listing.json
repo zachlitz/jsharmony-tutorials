@@ -1,0 +1,11 @@
+{ 
+  "GridEditable_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"}
+    ]
+  }
+}

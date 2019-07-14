@@ -35,22 +35,22 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/ModelStyle_controlstyle_grid.json",
     "/models/ModelStyle_controlstyle_form.json",
     "/models/ModelStyle_blockstyle_form.json",
-    "/models/ModelStyle_CL.json",
-    "/models/ModelStyle_CL.css"
+    "/models/ModelStyle_Cust_Listing.json",
+    "/models/ModelStyle_Cust_Listing.css"
   ],
   "Demo": [
     { "url": "jsHarmonyTutorials/ModelStyle_css", "title": "model.css" },
-    { "url": "jsHarmonyTutorials/ModelStyle_tabpanelstyle?c_id=2&action=update", "title": "model.tabpanelstyle" },
+    { "url": "jsHarmonyTutorials/ModelStyle_tabpanelstyle?cust_id=2&action=update", "title": "model.tabpanelstyle" },
     { "url": "jsHarmonyTutorials/ModelStyle_tablestyle", "title": "model.tablestyle" },
     { "url": "jsHarmonyTutorials/ModelStyle_rowstyle", "title": "model.rowstyle" },
-    { "url": "jsHarmonyTutorials/ModelStyle_formstyle?c_id=1&action=update", "title": "model.formstyle" },
+    { "url": "jsHarmonyTutorials/ModelStyle_formstyle?cust_id=1&action=update", "title": "model.formstyle" },
     { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_grid", "title": "Grid: field.captionstyle / field.captionclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_form?c_id=1&action=update", "title": "Form: field.captionstyle / field.captionclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_captionstyle_form?cust_id=1&action=update", "title": "Form: field.captionstyle / field.captionclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_cellstyle_grid", "title": "Grid: field.cellstyle / field.cellclass" },
     { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_grid", "title": "Grid: field.controlstyle / field.controlclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update", "title": "Form: field.controlstyle / field.controlclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_blockstyle_form?c_id=1&action=update", "title": "Form: field.blockstyle / field.blockclass" },
-    { "url": "jsHarmonyTutorials/ModelStyle_CL", "title": "Custom CSS Files" }
+    { "url": "jsHarmonyTutorials/ModelStyle_controlstyle_form?cust_id=1&action=update", "title": "Form: field.controlstyle / field.controlclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_blockstyle_form?cust_id=1&action=update", "title": "Form: field.blockstyle / field.blockclass" },
+    { "url": "jsHarmonyTutorials/ModelStyle_Cust_Listing", "title": "Custom CSS Files" }
   ]
 }
 </script>
@@ -66,7 +66,7 @@ The property value can either be a string or an array of strings.  Arrays of str
 <pre>
 {
   "css": [
-    ".xbody_ModelStyle_CL .xform_title { color: red; }",
+    ".xbody_ModelStyle_Cust_Listing .xform_title { color: red; }",
     ".xbody .xactions a { color: red; }"
   ]
 }
@@ -82,7 +82,7 @@ The "tabpanelstyle" property is applied to the tab panel container.
   "tabpanelstyle": "border: 2px dashed red;"
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/ModelStyle_tabpanelstyle?c_id=2&action=update&popup=1','Model Style - tabpanelstyle')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_tabpanelstyle?cust_id=2&action=update&popup=1','Model Style - tabpanelstyle')%>
 
 <h3>Grid Properties</h3>
 
@@ -112,8 +112,8 @@ Additionally, "even" and "odd" classes are automatically added to each grid row.
 The xejs.iif and xejs.case statements can be used for conditional styles:
 <pre>
 {
-  "rowstyle": "&lt;%=xejs.iif(datarow['c_sts']=='ACTIVE','color:red;','color:black;')%&gt;",
-  "rowclass": "&lt;%-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')%&gt;"
+  "rowstyle": "&lt;%=xejs.iif(datarow['cust_sts']=='ACTIVE','color:red;','color:black;')%&gt;",
+  "rowclass": "&lt;%-xejs.case(datarow['cust_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')%&gt;"
 }
 </pre>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_rowstyle?popup=1','Model Style - rowstyle')%>
@@ -141,7 +141,7 @@ The "formstyle" property is applied to the DIV containing the form elements.
   "formstyle": "border: 2px solid red;"
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/ModelStyle_formstyle?c_id=1&action=update&popup=1','Model Style - formstyle')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_formstyle?cust_id=1&action=update&popup=1','Model Style - formstyle')%>
 
 <h3>Field Properties</h3>
 Field properties can be defined for each field in the model.
@@ -156,7 +156,7 @@ In grid layouts, the "captionstyle" and "captionclass" properties are applied to
 }
 </pre>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_captionstyle_grid','Model Style - captionstyle - grid')%>
-<%-getScreenshot('jsHarmonyTutorials/ModelStyle_captionstyle_form?c_id=1&action=update&popup=1','Model Style - captionstyle - form')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_captionstyle_form?cust_id=1&action=update&popup=1','Model Style - captionstyle - form')%>
 
 <h3 data-level="2">field.cellstyle / field.cellclass</h3>
 On grid and multisel layouts, the "cellstyle" and "cellclass" properties are applied to the "style" and "class" of the TD data row cells.
@@ -178,7 +178,7 @@ In grid and multisel layouts, the "controlstyle" and "controlclass" properties a
 }
 </pre>
 <%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_grid','Model Style - controlstyle - grid')%>
-<%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_form?c_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_controlstyle_form?cust_id=1&action=update&popup=1','Model Style - controlstyle - form')%>
 
 <h3 data-level="2">field.blockstyle / field.blockclass</h3>
 In form, form-m, and exec layouts, the "blockstyle" and "blockclass" properties are applied to the "style" and "class" of the div surrounding a field, if field.block = true.<br/>
@@ -192,13 +192,13 @@ In grid and multisel layouts, the "blockstyle" and "blockclass" properties are n
   {"control":"html","value":"Block HTML 2","block":true},
   {"control":"html","value":"Non-Block HTML 1"},
   {"control":"html","value":"Non-Block HTML 2"},
-  {"name": "c_name","caption": "Customer Name","block": true,
+  {"name": "cust_name","caption": "Customer Name","block": true,
     "blockstyle": "border: 4px dashed black;",
     "blockclass": "fieldWithErrors"
   }
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/ModelStyle_blockstyle_form?c_id=1&action=update&popup=1','Model Style - blockstyle - form')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_blockstyle_form?cust_id=1&action=update&popup=1','Model Style - blockstyle - form')%>
 
 <h3 data-level="2">Line Breaks - field.nl / field.eol / field.block / model.onecolumn</h3>
 Line breaks can be added to fields using either the field.nl or field.eol properties.
@@ -231,7 +231,7 @@ The field.block property will add a "div" wrapper around the field and caption, 
 
 //Blocks can be used with Standard elements
 {
-  "name": "c_id",
+  "name": "cust_id",
   "control": "textbox",
   "caption": "Customer ID",
   "block": true
@@ -276,18 +276,18 @@ Sitewide CSS files can contain EJS for dynamic server-side rendering.  The follo
 <h4>Per-Model CSS</h4>
 Styles that are specific to a model can be part of the model definition, or in a MODELID.css file in the same folder as the model.
 Per-model styles are not publicly accessible.
-<h5>CL.json</h5>
+<h5>Cust_Listing.json</h5>
 <pre>
 {
-  "css": ".xbody_CL .xform_title { color: red; }"
+  "css": ".xbody_Cust_Listing .xform_title { color: red; }"
 }
 </pre>
-<h5>CL.css</h5>
+<h5>Cust_Listing.css</h5>
 <pre>
-.xformCL td { color: red; }
-.xformCL thead tr { background-color: green; }
+.xformCust_Listing td { color: red; }
+.xformCust_Listing thead tr { background-color: green; }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/ModelStyle_CL?popup=1','Model Style')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelStyle_Cust_Listing?popup=1','Model Style')%>
 
 <h3>CSS Architecture</h3>
 

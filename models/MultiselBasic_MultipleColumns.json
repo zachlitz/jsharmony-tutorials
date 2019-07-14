@@ -1,23 +1,23 @@
 { 
   "MultiselBasic_MultipleColumns": {
-    "table":"cf",
+    "table":"cust_flag",
     "layout":"multisel",
     "caption":["Customer Flag","Customers Flags"],
     "fields":[
-      {"name":"c_id"},
-      {"name":"cf_type","caption":"Flag"},
-      {"control":"label","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
+      {"name":"cust_id"},
+      {"name":"cust_flag_type","caption":"Flag"},
+      {"control":"label","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_Cust_Listing&cust_flag_type=code_val","caption":"Flagged Customers"}
     ]
   },
-  "MultiselBasic_MultipleColumns_CL": {
-    "sqlselect":"select c.c_id,c_name,cf_type from c inner join cf on c.c_id=cf.c_id %%%SQLSUFFIX%%%",
+  "MultiselBasic_MultipleColumns_Cust_Listing": {
+    "sqlselect":"select cust.cust_id,cust_name,cust_flag_type from cust inner join cust_flag on cust.cust_id=cust_flag.cust_id %%%SQLSUFFIX%%%",
     "layout":"grid",
     "caption":["Customer","Customers"],
     "popup":[500,300],
     "fields":[
-      {"name":"c_id","control":"hidden"},
-      {"name":"c_name","caption":"Customer Name"},
-      {"name":"cf_type","caption":"Flag","foreignkey":1}
+      {"name":"cust_id","control":"hidden"},
+      {"name":"cust_name","caption":"Customer Name"},
+      {"name":"cust_flag_type","caption":"Flag","foreignkey":1}
     ]
   }
 }

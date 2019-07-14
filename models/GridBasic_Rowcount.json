@@ -1,13 +1,13 @@
 { 
   "GridBasic_Rowcount": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "actions":"B",
     "caption":["Customer","Customers"],
     "grid_rowcount":true,
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"}
     ]
   }
 }

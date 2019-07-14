@@ -28,7 +28,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   ],
   "Demo": [
     { "url": "jsHarmonyTutorials/FieldCustomSQL_Grid", "title": "Custom SQL Field Expressions - Grid" },
-    { "url": "jsHarmonyTutorials/FieldCustomSQL_Form?c_id=1&action=update", "title": "Custom SQL Field Expressions - Form" }
+    { "url": "jsHarmonyTutorials/FieldCustomSQL_Form?cust_id=1&action=update", "title": "Custom SQL Field Expressions - Form" }
   ]
 }
 </script>
@@ -42,10 +42,10 @@ By default, the generated SQL statements will use the field value as the column 
 The "sqlselect" property can be used to change the column expression in the "select" statement.  For example, sqlselect can be used to select only the "year" part of a date field:
 <pre>
 {
-  "name": "c_start_dt",
-  "sqlselect": "(cast(strftime('%Y', c_start_dt) as integer))"
+  "name": "cust_start_dt",
+  "sqlselect": "(cast(strftime('%Y', cust_start_dt) as integer))"
 }
-Resulting SQL Expression: select (cast(strftime('%Y', c_start_dt) as integer)) as "c_start_dt" from c
+Resulting SQL Expression: select (cast(strftime('%Y', cust_start_dt) as integer)) as "cust_start_dt" from cust
 </pre>
 
 <h4>field.sqlinsert</h4>
@@ -53,41 +53,41 @@ The "sqlinsert" property can be used to change the column value in the "insert" 
 <pre>
 {
   "name": "customer_id",
-  "sqlinsert": "(select max(customer_id)+1 from c)"
+  "sqlinsert": "(select max(customer_id)+1 from cust)"
 }
-Resulting SQL Expression: insert into c(customer_id) values ((select ifnull(max(c_id)+1,1) from c))
+Resulting SQL Expression: insert into cust(customer_id) values ((select ifnull(max(cust_id)+1,1) from cust))
 </pre>
 
 <h4>field.sqlupdate</h4>
 The "sqlupdate" property can be used to change the column value in the "sqlupdate" statement.  For example, sqlupdate can be used to apply a "last modified" date:
 <pre>
 {
-  "name": "c_update_dt",
+  "name": "cust_update_dt",
   "sqlupdate": "(date('now', 'localtime'))"
 }
-Resulting SQL Expression: update c set c_update_dt=(date('now', 'localtime'))
+Resulting SQL Expression: update cust set cust_update_dt=(date('now', 'localtime'))
 </pre>
 
 <h4>field.sqlsort</h4>
 The "sqlsort" property is used in grids, as the sort expression.  For example, sqlsort can be used to sort a List of Values field by a sequence field:
 <pre>
 {
-  "name": "c_sts",
-  "sqlupdate": "(select codseq from ucod_c_sts where ucod_c_sts.codeval=c.c_sts)"
+  "name": "cust_sts",
+  "sqlupdate": "(select code_seq from code_cust_sts where code_cust_sts.code_val=cust.cust_sts)"
 }
-Resulting SQL Expression: select c_id,c_sts from c order by (select codseq from ucod_c_sts where ucod_c_sts.codeval=c.c_sts) asc
+Resulting SQL Expression: select cust_id,cust_sts from cust order by (select code_seq from code_cust_sts where code_cust_sts.code_val=cust.cust_sts) asc
 </pre>
 
 <h4>field.sqlwhere</h4>
-The "sqlwhere" property is used in grids, when a filter is set in the URL / querystring.  For instance, if the value for "c_start_dt" is passed in the URL:<br/>
-<a href="/jsHarmonyTutorials/FieldCustomSQL_Grid?c_start_dt=2018" target="_blank">/jsHarmonyTutorials/FieldCustomSQL_Grid?c_start_dt=2018</a><br/>
-Then, the SQL where expression could be modified to show any results with "c_start_dt" greater than or equal to "2018", instead of just results equal to "2018".
+The "sqlwhere" property is used in grids, when a filter is set in the URL / querystring.  For instance, if the value for "cust_start_dt" is passed in the URL:<br/>
+<a href="/jsHarmonyTutorials/FieldCustomSQL_Grid?cust_start_dt=2018" target="_blank">/jsHarmonyTutorials/FieldCustomSQL_Grid?cust_start_dt=2018</a><br/>
+Then, the SQL where expression could be modified to show any results with "cust_start_dt" greater than or equal to "2018", instead of just results equal to "2018".
 <pre>
 {
-  "name": "c_start_dt",
-  "sqlwhere": "(c_start_dt >= (date(@c_start_dt||'-01-01')))"
+  "name": "cust_start_dt",
+  "sqlwhere": "(cust_start_dt >= (date(@cust_start_dt||'-01-01')))"
 }
-Resulting SQL Expression: select c_id,c_sts from c where (c_start_dt >= (date(@c_start_dt||'-01-01')))
+Resulting SQL Expression: select cust_id,cust_sts from cust where (cust_start_dt >= (date(@cust_start_dt||'-01-01')))
 </pre>
 The field.sqlwhere expression will only be added if the parameter is in the querystring or bindings.
 
@@ -95,23 +95,23 @@ The field.sqlwhere expression will only be added if the parameter is in the quer
 The "sqlsearch" property is used in grids, when the "search" tool is used to search for data.  For example, sqlsearch can be used to search across multiple fields:
 <pre>
 {
-  "name": "c_name",
-  "sqlsearch":"(c_name||' '||c_desc)"
+  "name": "cust_name",
+  "sqlsearch":"(cust_name||' '||cust_desc)"
 }
-Resulting SQL Expression: select c_id,c_name from c where (upper((c_name||' '||c_desc)) like upper(@search_0_c_name))
+Resulting SQL Expression: select cust_id,cust_name from cust where (upper((cust_name||' '||cust_desc)) like upper(@search_0_cust_name))
 </pre>
-In this example, searching the "c_name" field will search across both "c_name" and "c_desc".
+In this example, searching the "cust_name" field will search across both "cust_name" and "cust_desc".
 
 <h4>field.sqlsearchsound</h4>
 The "sqlsearchsound" property is used in grids, when the "search" tool is used to search the column using the "Sounds Like" comparison.  The Soundex of the search value can be used as a parameter via the %%%SOUNDEX%%% expression:
 <pre>
 {
-  "name": "c_name",
-  "sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=%%%SOUNDEX%%%)"
+  "name": "cust_name",
+  "sqlsearchsound": "cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=%%%SOUNDEX%%%)"
 }
-Resulting SQL Expression: select c_id,c_name from c where (c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=@search_0_c_name_soundex))
+Resulting SQL Expression: select cust_id,cust_name from cust where (cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=@search_0_cust_name_soundex))
 </pre>
-In this example, the "sdx" table contains the Soundex index of all data in the "c" table.  The sdx table should be updated via trigger on any insert / update into the "c" table.<br/>
+In this example, the "soundex" table contains the Soundex index of all data in the "cust" table.  The soundex table should be updated via trigger on any insert / update into the "cust" table.<br/>
 <br/>
 The sqlsearchsound property supports the following variables:
 <ul>
@@ -122,37 +122,37 @@ The sqlsearchsound property supports the following variables:
 <h4>Example</h4>
 Form with fields using sqlselect, sqlinsert, and sqlupdate:
 <ul>
-  <li>c_id - Automatic primary key</li>
-  <li>c_start_dt - Year-only dates</li>
-  <li>c_update_dt - Timestamp</li>
+  <li>cust_id - Automatic primary key</li>
+  <li>cust_start_dt - Year-only dates</li>
+  <li>cust_update_dt - Timestamp</li>
 </ul>
-<%-getScreenshot('jsHarmonyTutorials/FieldCustomSQL_Form?c_id=1&action=update&popup=1','Custom SQL Field Expressions - Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldCustomSQL_Form?cust_id=1&action=update&popup=1','Custom SQL Field Expressions - Form')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "popup":[900,400],
   "fields":[
     {
-      "name":"c_id",
+      "name":"cust_id",
       "caption": "ID",
-      "sqlinsert":"(select max(c_id)+2 from c)",
+      "sqlinsert":"(select max(cust_id)+2 from cust)",
       "actions":"BI",
       "readonly":true
     },
-    {"name":"c_name","caption":"Name"},
+    {"name":"cust_name","caption":"Name"},
     {
-      "name":"c_start_dt",
+      "name":"cust_start_dt",
       "caption":"Start Year",
       "type":"int",
-      "sqlselect":"(cast(strftime('%Y', c_start_dt) as integer))",
-      "sqlinsert":"(date(@c_start_dt||'-01-01'))",
-      "sqlupdate":"(date(@c_start_dt||'-01-01'))"
+      "sqlselect":"(cast(strftime('%Y', cust_start_dt) as integer))",
+      "sqlinsert":"(date(@cust_start_dt||'-01-01'))",
+      "sqlupdate":"(date(@cust_start_dt||'-01-01'))"
     },
     {
-      "name":"c_update_dt",
+      "name":"cust_update_dt",
       "control":"hidden",
       "sqlinsert":"(date('now', 'localtime'))",
       "sqlupdate":"(date('now', 'localtime'))"
@@ -162,32 +162,32 @@ Form with fields using sqlselect, sqlinsert, and sqlupdate:
 </pre>
 Grid with fields using sqlselect, sqlinsert, sqlupdate, sqlsort, sqlwhere, sqlsearch, and sqlsearchsound:
 <ul>
-  <li>c_name - Compound Search via sqlsearch, and Soundex via sqlsearchsound</li>
-  <li>c_sts - sqlsort via a sort column in another table</li>
-  <li>c_start_dt - Year-only dates, and custom sqlwhere expression</li>
+  <li>cust_name - Compound Search via sqlsearch, and Soundex via sqlsearchsound</li>
+  <li>cust_sts - sqlsort via a sort column in another table</li>
+  <li>cust_start_dt - Year-only dates, and custom sqlwhere expression</li>
 </ul>
 <%-getScreenshot('jsHarmonyTutorials/FieldCustomSQL_Grid?popup=1','Custom SQL Field Expressions - Grid')%>
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption":["Customer","Customers"],
   "buttons":[{"link":"insert:FieldCustomSQL_Form"}],
   "fields":[
-    {"name":"c_id","caption": "ID","link":"update:FieldCustomSQL_Form"},
-    {"name":"c_name","caption":"Customer",
-     "sqlsearch":"(c_name||' '||c_desc)",
-     "sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=%%%SOUNDEX%%%)"
+    {"name":"cust_id","caption": "ID","link":"update:FieldCustomSQL_Form"},
+    {"name":"cust_name","caption":"Customer",
+     "sqlsearch":"(cust_name||' '||cust_desc)",
+     "sqlsearchsound": "cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=%%%SOUNDEX%%%)"
     },
-    {"name":"c_sts","caption":"Status",
-     "sqlsort":"(select codseq from ucod_c_sts where ucod_c_sts.codeval=c.c_sts)"
+    {"name":"cust_sts","caption":"Status",
+     "sqlsort":"(select code_seq from code_cust_sts where code_cust_sts.code_val=cust.cust_sts)"
     },
-    {"name":"c_start_dt","caption":"Start Year",
+    {"name":"cust_start_dt","caption":"Start Year",
       "type":"int",
-      "sqlselect":"(cast(strftime('%Y', c_start_dt) as integer))", //Extract the year from the date field
-      "sqlinsert":"(date(@c_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
-      "sqlupdate":"(date(@c_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
-      "sqlwhere":"c_start_dt >= (date(@c_start_dt||'-01-01'))" //If c_start_dt is in querystring, display any start date >= the value
+      "sqlselect":"(cast(strftime('%Y', cust_start_dt) as integer))", //Extract the year from the date field
+      "sqlinsert":"(date(@cust_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
+      "sqlupdate":"(date(@cust_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
+      "sqlwhere":"cust_start_dt >= (date(@cust_start_dt||'-01-01'))" //If cust_start_dt is in querystring, display any start date >= the value
      }
   ]
 }

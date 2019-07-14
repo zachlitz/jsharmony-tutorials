@@ -23,12 +23,12 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Title": "Breadcrumbs",
   "Menu": ["Models","Models Overview"],
   "Code": [
-    "/models/ModelBreadcrumbs_CL.json",
-    "/models/ModelBreadcrumbs_C.json",
-    "/models/ModelBreadcrumbs_CCL.json",
-    "/models/ModelBreadcrumbs_CC.json"
+    "/models/ModelBreadcrumbs_Cust_Listing.json",
+    "/models/ModelBreadcrumbs_Cust.json",
+    "/models/ModelBreadcrumbs_CustContact_Listing.json",
+    "/models/ModelBreadcrumbs_CustContact.json"
   ],
-  "Demo": "jsHarmonyTutorials/ModelBreadcrumbs_CL"
+  "Demo": "jsHarmonyTutorials/ModelBreadcrumbs_Cust_Listing"
 }
 </script>
 
@@ -37,7 +37,7 @@ Breadcrumbs are links rendered at the top of the form, to show the hierarchy of 
 </br>
 User interface best practices recommend using breadcrumbs on all second-level pages (excluding popup windows / tabs).
 
-<%-getScreenshot('jsHarmonyTutorials/ModelBreadcrumbs_CC?action=update&cc_id=2&popup=1','Breadcrumbs')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelBreadcrumbs_CustContact?action=update&cust_contact_id=2&popup=1','Breadcrumbs')%>
 
 <h3>Breadcrumbs Syntax</h3>
 <pre>
@@ -47,15 +47,15 @@ User interface best practices recommend using breadcrumbs on all second-level pa
     "title": "[i]breadcrumb_expression[/i]",
 
     //Optional Parameters
-    "sql": "select c_id,c_name from c where c_id=isnull(@c_id,(select c_id from cc where cc_id=@cc_id))", //SQL statement to populate data for breadcrumbs
-    "sql_params": ["c_id","cc_id"], //Array of field names used in the SQL statement - these values are automatically populated on system load
-    "nodatalock": ["c_id"]          //Disable datalocks (should not be used in most implementations as this potentially reduces security)
+    "sql": "select cust_id,cust_name from cust where cust_id=isnull(@cust_id,(select cust_id from cust_contact where cust_contact_id=@cust_contact_id))", //SQL statement to populate data for breadcrumbs
+    "sql_params": ["cust_id","cust_contact_id"], //Array of field names used in the SQL statement - these values are automatically populated on system load
+    "nodatalock": ["cust_id"]          //Disable datalocks (should not be used in most implementations as this potentially reduces security)
   }
 }
 
 [i]breadcrumb_expression[/i] :=
   "MODELID", or
-  "HTML/EJS String", for example "<a href='CW?action=update&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"
+  "HTML/EJS String", for example "<a href='Cust_Container?action=update&cust_id=<#=bcrumbs.cust_id#>'><#=bcrumbs.cust_name#></a>"
 
 Any EJS in breadcrumb_expression is escaped with <# #>, and is evaluated with the following parameters:
 {
@@ -82,17 +82,17 @@ Breadcrumbs can be customized based on whether the user is inserting, viewing, o
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["CL"],
+    "parents": ["Cust_Listing"],
     "insert": {
       "title": "New Customer"
     },
     "browse": {
-      "sql": "select c_name from c where c_id=@c_id",
-      "title": "<#=bcrumbs.c_name#>"
+      "sql": "select cust_name from cust where cust_id=@cust_id",
+      "title": "<#=bcrumbs.cust_name#>"
     },
     "update": {
-      "sql": "select c_name from c where c_id=@c_id",
-      "title": "<#=bcrumbs.c_name#>"
+      "sql": "select cust_name from cust where cust_id=@cust_id",
+      "title": "<#=bcrumbs.cust_name#>"
     }
   }
 }
@@ -110,7 +110,7 @@ If the parent model has no parameters, link directly to the model name:
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["ModelBreadcrumbs_CL"]
+    "parents": ["ModelBreadcrumbs_Cust_Listing"]
   }
 }
 </pre>
@@ -120,7 +120,7 @@ The breadcrumb can be custom HTML, for instance when linking to a the parent mod
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_CL'>All Customers</a>"]
+    "parents": ["<a href='/ModelBreadcrumbs_Cust_Listing'>All Customers</a>"]
   }
 }
 </pre>
@@ -132,14 +132,14 @@ In the example below, a different SQL expression needs to be used for "insert" a
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_C?action=update&c_id=<#=bcrumbs.c_id#>'><#=bcrumbs.c_name#></a>"],
+    "parents": ["<a href='/ModelBreadcrumbs_Cust?action=update&cust_id=<#=bcrumbs.cust_id#>'><#=bcrumbs.cust_name#></a>"],
     "insert": {
-      "sql": "select c_id,c_name from c where c_id=@c_id",
+      "sql": "select cust_id,cust_name from cust where cust_id=@cust_id",
       "title": "New Contact"
     },
     "browse": {
-      "sql": "select cc.c_id,c_name,cc_name from cc inner join c on cc.c_id=c.c_id where cc_id=@cc_id",
-      "title": "<#=bcrumbs.cc_name#>"
+      "sql": "select cust_contact.cust_id,cust_name,cust_contact_name from cust_contact inner join cust on cust_contact.cust_id=cust.cust_id where cust_contact_id=@cust_contact_id",
+      "title": "<#=bcrumbs.cust_contact_name#>"
     }
   }
 }
@@ -150,7 +150,7 @@ Tabs are specified as a querystring parameter, in the format: { "PARENT_MODEL": 
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/CW?action=update&c_id=<#=bcrumbs.c_id#>&tabs={\"CW\":\"C_CCL\"}'><#=bcrumbs.c_name#></a>"],
+    "parents": ["<a href='/Cust_Container?action=update&cust_id=<#=bcrumbs.cust_id#>&tabs={\"Cust_Container\":\"Cust_Contact_Listing\"}'><#=bcrumbs.cust_name#></a>"],
   }
 }
 </pre>
@@ -160,12 +160,12 @@ If the breadcrumbs can be initialied via form / querystring data, use the "data"
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_C?action=update&c_id=<#=data.c_id#>'>Edit Customer</a>"],
+    "parents": ["<a href='/ModelBreadcrumbs_Cust?action=update&cust_id=<#=data.cust_id#>'>Edit Customer</a>"],
     "insert": {
       "title": "New Contact"
     },
     "update": {
-      "title": "<#=data.cc_name#>"
+      "title": "<#=data.cust_contact_name#>"
     }
   }
 }
@@ -182,7 +182,7 @@ Although not recommended since it limits how a form can be used as a subform, qu
 <pre>
 {
   "breadcrumbs": {
-    "parents": ["<a href='/ModelBreadcrumbs_C?action=update&c_id=<#=_GET.c_id#>'>Edit Customer</a>"],
+    "parents": ["<a href='/ModelBreadcrumbs_Cust?action=update&cust_id=<#=_GET.cust_id#>'>Edit Customer</a>"],
     "insert": {
       "title": "New Contact"
     },
@@ -209,7 +209,7 @@ The breadcrumbs SQL data for each model is stored in the "data._bcrumbs" propert
 <pre>
 {
   "fields": [
-    {"name":"pe_name_asgn","type":"varchar","actions":"BIU","control":"textbox","default":"js:data._bcrumbs.pe_name_asgn"}, 
+    {"name":"sys_user_name_asgn","type":"varchar","actions":"BIU","control":"textbox","default":"js:data._bcrumbs.sys_user_name_asgn"}, 
   ]
 }
 </pre>

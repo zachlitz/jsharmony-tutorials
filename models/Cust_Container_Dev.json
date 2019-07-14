@@ -1,0 +1,27 @@
+{
+  "Cust_Container_Dev":{
+    "layout": "form", 
+    "title": "Customer Information",
+    "table": "cust",
+    "actions": "BIUD", 
+    "roles": {"C_B":"B","C_X":"*"},
+    "caption": [ "", "Customer", "Customers" ],
+    "menu": "clients",
+    "popup":[1000,700],
+    "tabpos":"top",
+    "tabcode": "cust_sts",
+    "tabs":[
+      {"name":"Overview","caption": "Overview","target":"Cust_Subform","bindings":{"cust_id":"cust_id"}},
+      {"name":"Contacts","caption": "Contacts","target":"Cust_Contact_Listing","bindings":{"cust_id":"cust_id"},
+        "actions":"BU"},
+      {"name":"Customer Flags","caption": "Customer Flags","target":"Cust_Flag","bindings":{"cust_id":"cust_id"},
+        "showcode": ["ACTIVE"],"actions":"BU"},
+      {"name":"SetInactive","caption": "Set Inactive","target":"Cust_Exec","bindings":{"cust_id":"cust_id"},
+        "showcode": ["ACTIVE"],"actions":"BU"}
+    ],
+    "fields": [
+      {"name":"cust_id", "type": "bigint", "actions":"B","key": 1},
+      {"name": "cust_sts","type":"varchar","length":8,"actions": "B"}
+    ]
+  }
+}

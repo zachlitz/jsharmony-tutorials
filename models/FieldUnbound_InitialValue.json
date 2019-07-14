@@ -1,18 +1,18 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
   "popup":[900,400],
-  "sqlselect": "select x_primary,x_textbox,'Initial Value' as auto_initial_db from allcontrols where x_primary=@x_primary",
+  "sqlselect": "select x_primary,x_textbox,'Initial Value' as auto_initial_db from all_controls where x_primary=@x_primary",
   "fields": [
     {"control":"html","value":"<h3>Bound Field</h3>","block":true},
     {"name":"x_textbox", "caption": "x_textbox"},
     {"control":"html","value":"<h3>Unbound Fields</h3>","block":true},
     {"caption":"Default Value (Static)","unbound":true, "control":"textbox", "default":"Test" },
     {"caption":"Default Value (JS)","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)" },
-    {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from allcontrols where x_primary = @x_primary" } },
-    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select c_id codeval, c_name codetxt from c order by c_name", "blank": true } },
+    {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from all_controls where x_primary = @x_primary" } },
+    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select cust_id code_val, cust_name code_txt from cust order by cust_name", "blank": true } },
     {"caption":"Default Value (via querystring)", "unbound":true, "control":"textbox", "name": "auto_initial_qs" },
     {"caption":"Default Value (via Model SQL Select)", "unbound":true, "control":"textbox", "name": "auto_initial_db" }
   ]

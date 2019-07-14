@@ -30,10 +30,10 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/ModelBindings_Automatic.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/ModelBindings_Subform_C?c_id=1&action=update", "title": "Subform Bindings" },
+    { "url": "jsHarmonyTutorials/ModelBindings_Subform_Cust?cust_id=1&action=update", "title": "Subform Bindings" },
     { "url": "jsHarmonyTutorials/ModelBindings_Querystring_Bindings?action=update&customer_id=1", "title": "Querystring Bindings" },
     { "url": "jsHarmonyTutorials/ModelBindings_Querystring_GlobalParams", "title": "Querystring GlobalParams (Current User Settings)" },
-    { "url": "jsHarmonyTutorials/ModelBindings_Automatic_CCL", "title": "Automatic Bindings" }
+    { "url": "jsHarmonyTutorials/ModelBindings_AutomatiCust_Contact_Listing", "title": "Automatic Bindings" }
   ]
 }
 </script>
@@ -80,34 +80,34 @@ Bindings can be declared as follows:
 </pre>
 
 Below is an example of bindings in a subform:
-<%-getScreenshot('jsHarmonyTutorials/ModelBindings_Subform_C?c_id=1&action=update&popup=1','Model Bindings')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelBindings_Subform_Cust?cust_id=1&action=update&popup=1','Model Bindings')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","control":"hidden","key":1},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "CC","bindings":{ "c_id": "c_id" } }
+    {"name":"cust_id","control":"hidden","key":1},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "CustContact","bindings":{ "cust_id": "cust_id" } }
   ]
 },
-"CC": {
-  "table":"cc",
+"CustContact": {
+  "table":"cust_contact",
   "layout":"grid",
   "caption":["Contact","Contacts"],
   "fields":[
-    {"name":"cc_id","control":"hidden","key":1},
-    {"name":"c_id","control":"hidden"},
-    {"name":"cc_name","caption":"Name"},
-    {"name":"cc_title","caption":"Title"},
-    {"name":"cc_email","caption":"Email"}
+    {"name":"cust_contact_id","control":"hidden","key":1},
+    {"name":"cust_id","control":"hidden"},
+    {"name":"cust_contact_name","caption":"Name"},
+    {"name":"cust_contact_title","caption":"Title"},
+    {"name":"cust_contact_email","caption":"Email"}
   ]
 }
 </pre>
-The subform field in C has bindings defined, connection the "c_id" column in the subform to the "c_id" column in the parent form.<br/>
+The subform field in cust has bindings defined, connection the "cust_id" column in the subform to the "cust_id" column in the parent form.<br/>
 <br/>
 Bindings are defined for the following elements:
 <ul>
@@ -127,19 +127,19 @@ By default, form fields that are set in the querystring will have the querystrin
 If the model is the top-level model on a page, the bindings in model.bindings will be applied on save.  For example, the following model.bindings:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
-  "bindings": { "c_id": "customer_id" },
+  "bindings": { "cust_id": "customer_id" },
   "fields":[
-    {"name":"c_id","control":"hidden"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_id","control":"hidden"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 </pre>
-Will populate the "c_id" field with the querystring value for "customer_id":<br/>
+Will populate the "cust_id" field with the querystring value for "customer_id":<br/>
 <br/>
 <a href="/jsHarmonyTutorials/ModelBindings_Querystring_Bindings?action=update&customer_id=1">/jsHarmonyTutorials/ModelBindings_TopLevel?action=update&amp;customer_id=1</a>
 
@@ -172,17 +172,17 @@ The model.querystring property can be used to override a form so that it always 
 Additionally, the model.querystring property can be used to always open a form to edit a particular record, for instance the current user's settings:
 <pre>
 {
-  "table":"jsharmony.pe",
+  "table":"jsharmony.sys_user",
   "layout":"form",
   "onecolumn":true,
   "title":"User Settings",
   "actions":"BU",
-  "querystring": { "&action":"update", "&pe_id": "@user_id" },
+  "querystring": { "&action":"update", "&sys_user_id": "@user_id" },
   "onupdate": "XPage.Reload({ force: true, browserRefresh: true });",
   "fields":[
-    {"name":"pe_id","control":"hidden","key":1},
-    {"name":"pe_fname","caption":"First Name"},
-    {"name":"pe_lname","caption":"Last Name"}
+    {"name":"sys_user_id","control":"hidden","key":1},
+    {"name":"sys_user_fname","caption":"First Name"},
+    {"name":"sys_user_lname","caption":"Last Name"}
   ]
 }
 </pre>
@@ -221,7 +221,7 @@ Key fields are automatically added if the config.system_settings.automatic_schem
 <h3>Dynamic Bindings</h3>
 Dynamic bindings are a more advanced form of automatic bindings.  General-purpose components, such as jsHarmony Factory's Notes, can be used by multiple application models.<br/>
 <br/>
-For instance, there could be an application with Customer Notes (C), and Contact Notes (CT).  Dynamic bindings can be used to automatically bind Notes to the Customer and Contact models by defining them in one place, without writing out the bindings each time they are used.<br/>
+For instance, there could be an application with Customer Notes (C), and Customer Contact Notes (CC).  Dynamic bindings can be used to automatically bind Notes to the Customer and Contact models by defining them in one place, without writing out the bindings each time they are used.<br/>
 <br/>
 Dynamic bindings are defined in app.config.js:
 <pre>
@@ -249,8 +249,8 @@ config.dynamic_bindings = {
   "JSHARMONY_NOTES": {   //Model ID or Model Group (from config.model_groups)
     "n_scope_id": "key", //Bind the "n_scope_id" column to the parent form's key
     "n_scope": {         //Bind the "n_scope" column based on the parent form's key name
-      "key:c_id": "'C'", //If the parent form's key name is "c_id", set the binding to the character string 'C'
-      "key:ct_id": "'CT'"
+      "key:cust_id": "'C'", //If the parent form's key name is "cust_id", set the binding to the character string 'C'
+      "key:cust_contact_id": "'CC'"
     }
   }
 }

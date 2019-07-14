@@ -1,0 +1,19 @@
+{
+  "table":"cust_contact",
+  "layout":"grid", 
+  "title":"Contacts",
+  "caption":["","Contact","Contacts"],
+  "actions":"B", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "sort":["^cust_contact_name"], 
+  "buttons":[{"link":"insert:Cust_Contact", "bindings": { "cust_id": "cust_id" } }],
+  "menu":"clients",
+  "fields":[
+    {"name":"cust_id","type":"bigint","foreignkey": 1,"control":"hidden"},
+    {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"link":"update:Cust_Contact","caption": "ID"},
+    {"name":"cust_contact_name","type":"varchar","length":"100","caption":"Name","actions":"B","link":"update:Cust_Contact"},
+    {"name":"cust_contact_title","type":"varchar","length":"50","caption":"Title","actions":"B"},
+    {"name":"cust_contact_phone","type":"varchar","length":"50","caption":"Phone","actions":"B"},
+    {"name":"cust_contact_email","type":"varchar","length":"100","caption":"Email","actions":"B"}
+  ]
+}

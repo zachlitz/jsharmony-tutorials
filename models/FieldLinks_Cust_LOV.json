@@ -1,0 +1,13 @@
+{ 
+  "FieldLinks_Cust_LOV": {
+    "table":"cust",
+    "layout":"grid",
+    "actions":"B",
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name","link":"select"},
+      {"control": "button", "value":"Select", "link": "select"}
+    ]
+  }
+}

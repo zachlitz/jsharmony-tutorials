@@ -6,7 +6,7 @@
     "buttons":[{"link":"insert:FieldUnbound_Tree_Category", "bindings": { "category_parent_id": "category_id" }, "text": "Add Subcategory" }],
     "fields": [
       {"name": "category_id","caption": "","control": "tree","always_editable":true, "unbound": true,
-        "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
+        "lov": { "sql": "select category_id code_id, category_parent_id code_parent_id, category_id code_val, category_name code_txt, 'folder' code_icon from category order by code_txt;" },
         "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" },
         "controlparams": { "expand_all": true },
         "onchange": "XPage.Select({ modelid: 'FieldUnbound_Tree_Category', onCancel: undoChange })",

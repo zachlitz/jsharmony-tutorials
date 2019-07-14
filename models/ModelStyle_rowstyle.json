@@ -1,16 +1,16 @@
 {
   "ModelStyle_rowstyle": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "title":"All Customers",
     "caption":["Customer","Customers"],
     "actions":"B",
-    "rowstyle": "<%=xejs.iif(datarow['c_sts']=='ACTIVE','color:red;','color:black;')%>",
-    "rowclass": "<%-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')%>",
+    "rowstyle": "<%=xejs.iif(datarow['cust_sts']=='ACTIVE','color:red;','color:black;')%>",
+    "rowclass": "<%-xejs.case(datarow['cust_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')%>",
     "fields":[
-      {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B"},
-      {"name":"c_sts","type":"varchar","length":"8","caption": "Status","actions":"B"}
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B"},
+      {"name":"cust_sts","type":"varchar","length":"8","caption": "Status","actions":"B"}
     ]
   }
 }

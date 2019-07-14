@@ -1,0 +1,50 @@
+{
+  "Cust_CustomForm": {
+    "layout": "form",
+    "title": "",
+    "caption":["","Status","Statuses"],
+    "actions": "B",
+    "unbound": 1,
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "oninit": "_this.oninit(xmodel);",
+    "ondestroy": "_this.ondestroy();",
+    "buttons": [
+      { "link": "js:_this.help();", "icon": "help", "text": "", "actions": "B" }
+    ],
+    "hide_system_buttons" : ["print","help"]
+  },
+
+  //Custom API Endpoint for getting list of customers and initial form data
+  "Cust_CustomForm_Get_Cust": {
+    "layout": "exec",
+    "title": "Select all orders for a customer",
+    "actions": "U",
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "sqlexec": [
+      "select cust_id,cust_name,cust_sts from cust;",
+      "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
+    ],
+    "sqltype": "multirecordset",
+    "fields": [
+    ]
+  },
+
+  //Custom API Endpoint for updating customer status
+  "Cust_CustomForm_Update_CustSts": {
+    "layout": "exec",
+    "title": "Update customer status",
+    "actions": "U",
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "sqlexec": "update cust set cust_sts=@cust_sts where cust_id=@cust_id", 
+    "fields": [
+      {"name":"cust_id","type":"bigint","actions":"U","control":"hidden"},
+      {"name":"cust_sts","type":"varchar","length":8,"actions":"U","control":"hidden"}
+    ]
+  }
+}

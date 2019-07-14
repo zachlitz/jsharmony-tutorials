@@ -2,13 +2,13 @@
   "ModelSQL_Exec_multirecordset": {
     "layout":"exec",
     "sqlexec": [
-      "select * from c where c_id=@c_id;",
-      "select * from cf where c_id=@c_id;"
+      "select * from cust where cust_id=@cust_id;",
+      "select * from cust_flag where cust_id=@cust_id;"
     ],
     "sqltype":"multirecordset",
-    "table":"c",
+    "table":"cust",
     "fields":[
-      {"name":"c_id","actions":"BIU"},
+      {"name":"cust_id","actions":"BIU"},
       {"name":"RUN","control":"button","value":"Run","caption":"",
         "onclick":"XPage.RunDBFunc(this,function(rslt){ XExt.Alert(XExt.ReplaceAll(JSON.stringify(rslt,null,4),' ','&nbsp;')); }, { noMessage: true });"}
     ]

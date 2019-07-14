@@ -1,0 +1,21 @@
+{
+  "Cust_Listing_Editable": {
+    "table":"cust",
+    "layout":"grid",
+    "title":"All Customers",
+    "caption":["Customer","Customers"],
+    "actions":"BIU", 
+    "roles": {"C_B":"B","C_X":"*"},
+    "sort":["^cust_name"], 
+    "buttons":[{"link":"insert:Cust"}],
+    "menu":"clients",
+    "commitlevel":"row",
+    "fields":[
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_sts","type":"varchar","length":8,"actions":"BIU","control":"dropdown","sample": "Active",
+        "lov": { "code": "cust_sts", "blank": 1 },"validate":["Required"],"default":"ACTIVE",
+        "caption": "Status","nl":1},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"BIU","control":"textbox_L"}
+    ]
+  }
+}

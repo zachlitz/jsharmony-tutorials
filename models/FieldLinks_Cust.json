@@ -1,0 +1,29 @@
+{ 
+  "FieldLinks_Cust": {
+    "table":"cust",
+    "layout":"form",
+    "onecolumn":true,
+    "popup":[600,400],
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status","validate":["Required"]},
+      {"name":"cust_doc","type":"file","caption":"Document", "controlparams": { "data_folder": "tutorials_cust_doc" }}
+    ],
+    "tabs":[
+      {"name":"Tab 1","target":"FormPopup_Cust_Tab1"},
+      {"name":"Tab 2","target":"FormPopup_Cust_Tab2"}
+    ]
+  },
+  "FormPopup_Cust_Tab1": {
+    "title":"",
+    "unbound":true,
+    "ejs":"Tab 1"
+  },
+  "FormPopup_Cust_Tab2": {
+    "title":"",
+    "unbound":true,
+    "ejs":"Tab 2"
+  }
+}

@@ -22,7 +22,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Inheritance",
   "Menu": ["Models","Models Overview"],
-  "Code": ["/models/CL.json"]
+  "Code": ["/models/Cust_Listing.json"]
 }
 </script>
 
@@ -45,39 +45,39 @@ By reducing repeated code, inheritance results in:
 <h3>How to implement inheritance</h3>
 Starting with a basic grid of contacts:
 <pre>
-"CCL_BASIC": {
-  "table":"v_cc",
+"CustContact_Listing_Basic": {
+  "table":"v_cust_contact",
   "layout":"grid",
   "title":"All Contacts",
   "actions":"B", 
-  "sort":["^cc_name"], 
+  "sort":["^cust_contact_name"], 
   "menu":"clients",
   "fields":[
-    {"name":"cc_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-    {"name":"cc_name","type":"varchar","length":"50","caption": "Contact","actions":"B"},
-    {"name":"c_name","type":"varchar","length":"50","caption": "Customer","actions":"B"}
+    {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+    {"name":"cust_contact_name","type":"varchar","length":"50","caption": "Contact","actions":"B"},
+    {"name":"cust_name","type":"varchar","length":"50","caption": "Customer","actions":"B"}
   ]
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/CCL_BASIC?popup=1','Inheritance - Contact Listing')%>
+<%-getScreenshot('jsHarmonyTutorials/CustContact_Listing_Basic?popup=1','Inheritance - Contact Listing')%>
 A developer may want to create another grid, based on that grid, but with the customer name replaced by the contact title:
 <pre>
-"CCL_INHERITED": {
-  "inherits": "CCL_BASIC",
+"CustContact_Listing_Inherited": {
+  "inherits": "CustContact_Listing_Basic",
   "fields":[
-    {"name":"cc_title","type":"varchar","length":"8","caption": "Title","actions":"B","__AFTER__":"cc_name"},
-    {"name":"c_name","__REMOVE__":1}
+    {"name":"cust_contact_title","type":"varchar","length":"8","caption": "Title","actions":"B","__AFTER__":"cust_contact_name"},
+    {"name":"cust_name","__REMOVE__":1}
   ]
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/CCL_INHERITED?popup=1','Inheritance - Inherited Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/CustContact_Listing_Inherited?popup=1','Inheritance - Inherited Grid')%>
 
 <h3>Inheritance Syntax</h3>
 
 <ul>
   <li>
     <b>"inherits": "MODEL NAME"</b><br/>
-    The inherits parameter references the parent model.  All properties of the parent model will be copied to the child model.  It's important to note, any JavaScript that embeds the parent model name will not be changed.  In the example above, if there was a JavaScript class "CCL_BASIC", it would still be called "CCL_BASIC" in the child model.  It should not cause problems, however it is recommended to use a different shared base class name in this situation for code readability.
+    The inherits parameter references the parent model.  All properties of the parent model will be copied to the child model.  It's important to note, any JavaScript that embeds the parent model name will not be changed.  In the example above, if there was a JavaScript class "CustContact_Listing_Basic", it would still be called "CustContact_Listing_Basic" in the child model.  It should not cause problems, however it is recommended to use a different shared base class name in this situation for code readability.
   </li>
   <li>
     <b>"__REMOVEPROPERTY__": 1</b><br/>

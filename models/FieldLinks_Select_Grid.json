@@ -1,11 +1,11 @@
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "onecolumn":true,
   "caption": ["Select Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
-    {"name": "c_parent_id", "caption": "Parent Customer ID", "control": "label","popuplov":{ "target":"FieldLinks_C_LOV", "codeval":"c_id" }}
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_parent_id", "caption": "Parent Customer ID", "control": "label","popuplov":{ "target":"FieldLinks_Cust_LOV", "code_val":"cust_id" }}
   ]
 }

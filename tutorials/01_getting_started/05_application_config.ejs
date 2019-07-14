@@ -125,7 +125,7 @@ config.system_settings = {
     "datatypes": true,         //Load data types from the database (type, length, precision, required validation, primary key, read-only)
     "attributes": true,        //Load extended attributes from the database (required validation, primary key, read-only)
     "controls": true,          //Load controls from the database
-    "lovs": true,              //Load LOVs (List of Values - UCOD/GCOD/UCOD2/GCOD2) from the database
+    "lovs": true,              //Load LOVs (List of Values - code/code/code2/code2) from the database
     "keys": true               //Generate primary and foreign keys based on table keys and bindings
   },
   //Model validation level - "standard", "strict"
@@ -169,22 +169,22 @@ config.field_mapping = {
   "user_last_tstmp": "user_last_tstmp",
   "user_role": "user_role",
   "rowcount": "xrowcount",
-  "codeval": "codeval",
-  "codetxt": "codetxt",
-  "codeseq": "codseq",
-  "codeparent": "codeparent",
+  "code_val": "code_val",
+  "code_txt": "code_txt",
+  "codeseq": "code_seq",
+  "code_parent": "code_parent",
 };
 
 //Front-end UI Field Mapping  ("UI Attribute" -> "DB Field Name")
 config.ui_field_mapping = {
-  "codeval": "codeval",
-  "codetxt": "codetxt",
-  "codeparentid": "codeparentid",
-  "codeicon": "codeicon",
-  "codeid": "codeid",
-  "codeparent": "codeparent",
+  "code_val": "code_val",
+  "code_txt": "code_txt",
+  "code_parent_id": "code_parent_id",
+  "code_icon": "code_icon",
+  "code_id": "code_id",
+  "code_parent": "code_parent",
   "codeseq": "codeseq",
-  "codetype": "codetype"
+  "code_type": "code_type"
 };
 
 //Replace "search_schema" with "replace_schema" in SQL statements
@@ -228,15 +228,15 @@ config.dynamic_bindings = {
   "JSHARMONY_NOTES": {   //Model ID or Model Group (from config.model_groups)
     "n_scope_id": "key", //Bind the "n_scope_id" column to the parent form's key
     "n_scope": {         //Bind the "n_scope" column based on the parent form's key name
-      "key:c_id": "'C'", //If the parent form's key name is "c_id", set the binding to the character string 'C'
-      "key:ct_id": "'CT'"
+      "key:cust_id": "'C'", //If the parent form's key name is "cust_id", set the binding to the character string 'C'
+      "key:cust_contact_id": "'CC'"
     }
   },
   "JSHARMONY_DOCUMENTS": {
     "d_scope_id": "key",
     "d_scope": {
-      "key:c_id": "'C'",
-      "key:ct_id": "'CT'"
+      "key:cust_id": "'C'",
+      "key:cust_contact_id": "'CC'"
     }
   }
 };
@@ -446,15 +446,15 @@ If a datalock is enabled for a site, every form and report in that site is requi
 <pre>
 config.datalocks = {
   "client":{   //The site ID where this datalock will be enabled
-    "c_id":{   //The datalock key (defined under site.datalock)
+    "cust_id":{   //The datalock key (defined under site.datalock)
                //An array of ("field_name"->"sql") pairs.  Forms fields matching the "field_name" will automatically have the datalock assigned
                //The datalock is a sql "where" expression, limiting "field_name" by the datalock key
-      "o_id":"o_id in (select o_id from o where o.c_id=@datalock_c_id)",
-      "o_contact":"o_contact in (select cc_id from cc where cc.c_id=@datalock_c_id)",
-      "ca_id":"ca_id in (select ca_id from ca where ca.c_id=@datalock_c_id)",
-      "cc_id":"cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)",
-      "cf_id":"cf_id in (select cf_id from cf where cf.c_id=@datalock_c_id)",
-      "e_id":"e_id in (select e_id from e where e.c_id=@datalock_c_id)"
+      "o_id":"o_id in (select o_id from o where o.cust_id=@datalock_cust_id)",
+      "o_contact":"o_contact in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
+      "cust_addr_id":"cust_addr_id in (select cust_addr_id from cust_addr where cust_addr.cust_id=@datalock_cust_id)",
+      "cust_contact_id":"cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
+      "cust_flag_id":"cust_flag_id in (select cust_flag_id from cust_flag where cust_flag.cust_id=@datalock_cust_id)",
+      "item_id":"item_id in (select item_id from item where item.cust_id=@datalock_cust_id)"
     }
   }
 };
@@ -505,12 +505,12 @@ site.onLoad = function (jsh) { };
 
 //Define datalocks for this site - evaluated on each request.  Use authentication data when available.
 site.datalock = {
-  "c_id": function (req) { return req.gdata[jsh.map.client_id]; }
+  "cust_id": function (req) { return req.gdata[jsh.map.client_id]; }
 };
 
 //For each of the datalocks in the site.datalocks section, define the database data types
 site.datalocktypes = {
-  "c_id": { 'name': "c_id", 'type': 'bigint' }
+  "cust_id": { 'name': "cust_id", 'type': 'bigint' }
 };
 </pre>
 
@@ -543,7 +543,7 @@ site.auth = {
   //Generate and return authentication token
   getToken = function (AppSrv, req, cb) {
     cb({
-      __auth_PE_ID: req.user_id,
+      __auth_sys_user_id: req.user_id,
       __auth_tstmp: tstmp,
       __auth_token: passhash
     });
@@ -597,12 +597,12 @@ configFactory.maincookiesalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 <pre>
 //Mapping between Site ID and the Model ID that will be used for the "Help" buttons
 configFactory.help_view = {
-  "main": "HSHOWL",
-  "client": "C_HSHOWL"
+  "main": "Help_Listing",
+  "client": "Client/Help_Listing"
 };
 
 //Key field that will be passed to the help_view, containing the ID of the model where the help button was pressed
-configFactory.help_panelid = "hp_code";
+configFactory.help_panelid = "help_target_code";
 </pre>
 
 <h3 data-level="2">Job Processor</h3>
@@ -645,7 +645,7 @@ configFactory.job_field_mapping = {
   "n_scope_id": "n_scope_id",
   "n_type": "n_type",
   "n_note": "n_note",
-  "c_id":  "c_id"
+  "cust_id":  "cust_id"
 };
 </pre>
 

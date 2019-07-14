@@ -52,20 +52,20 @@ jsHarmonyTutorials.prototype.Init = function(config){
   function genTutorialsLOV(lov,menu,parentid){
     for(var f in menu){
       var node = {};
-      node[jsh.uimap.codeid] = lov.length+1;
-      node[jsh.uimap.codeparentid] = parentid;
-      node[jsh.uimap.codeval] = f;
-      node[jsh.uimap.codetxt] = f;
-      node[jsh.uimap.codeicon] = 'folder';
+      node[jsh.uimap.code_id] = lov.length+1;
+      node[jsh.uimap.code_parent_id] = parentid;
+      node[jsh.uimap.code_val] = f;
+      node[jsh.uimap.code_txt] = f;
+      node[jsh.uimap.code_icon] = 'folder';
       //node[jsh.uimap.codeseq] = lov.length+1;
       lov.push(node);
       if(menu[f]=='PAGE'){
         var tutobj = tutorials[f];
-        node[jsh.uimap.codetxt] = tutobj.Title;
-        node[jsh.uimap.codeicon] = 'file';
+        node[jsh.uimap.code_txt] = tutobj.Title;
+        node[jsh.uimap.code_icon] = 'file';
       }
       else {
-        genTutorialsLOV(lov,menu[f],node[jsh.uimap.codeid]);
+        genTutorialsLOV(lov,menu[f],node[jsh.uimap.code_id]);
       }
     }
   }
@@ -96,18 +96,18 @@ jsHarmonyTutorials.prototype.Init = function(config){
     var nodeidx = parseInt(nodeid)-1;
     var node = tutorialsLOV[nodeidx];
     var orignode = node;
-    if(node[jsh.uimap['codeicon']]=='folder'){
+    if(node[jsh.uimap['code_icon']]=='folder'){
       //Find first file in that folder
       for(;nodeidx<tutorialsLOV.length;nodeidx++){
         node = tutorialsLOV[nodeidx];
-        if(node[jsh.uimap['codeicon']]=='file') break;
+        if(node[jsh.uimap['code_icon']]=='file') break;
       }
-      if(node[jsh.uimap['codeicon']]=='folder') return;
+      if(node[jsh.uimap['code_icon']]=='folder') return;
     }
     var nodectrl = jsh.$root('.tutorials_menu').find('.tree_item.tree_item_' + nodeid);
     if(nodectrl.length) XExt.scrollObjIntoView(jsh.$root('.tutorials_menu'), nodectrl);
-    if(curTutorial && (curTutorial.id==orignode[jsh.uimap['codeval']])) return;
-    _this.loadTutorial(node[jsh.uimap['codeval']]);
+    if(curTutorial && (curTutorial.id==orignode[jsh.uimap['code_val']])) return;
+    _this.loadTutorial(node[jsh.uimap['code_val']]);
   }
 
   _this.loadTutorial = function(tutorial,options,cb){
@@ -181,8 +181,8 @@ jsHarmonyTutorials.prototype.Init = function(config){
       //Change selected menu item + scroll into view if not visible
       for(var i=0;i<tutorialsLOV.length;i++){
         var node = tutorialsLOV[i];
-        if(node[jsh.uimap['codeval']] == tutorial){
-          XExt.TreeSelectNode(jsh.$root('.tutorials_menu'),node[jsh.uimap['codeval']])
+        if(node[jsh.uimap['code_val']] == tutorial){
+          XExt.TreeSelectNode(jsh.$root('.tutorials_menu'),node[jsh.uimap['code_val']])
           break;
         }
       }

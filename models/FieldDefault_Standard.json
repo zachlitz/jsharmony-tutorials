@@ -1,16 +1,16 @@
 {
   "layout":"form",
-  "table":"c",
+  "table":"cust",
   "onecolumn":true,
-  "breadcrumbs":{"sql":"select (select c_start_dt from c where c_id=@c_parent_id) parent_start_dt"},
+  "breadcrumbs":{"sql":"select (select cust_start_dt from cust where cust_id=@cust_parent_id) parent_start_dt"},
   "title":{ "insert":"Add Child Customer" },
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_parent_id","caption": "Parent Customer","lov":{"sql":"select c_id codeval,c_name codetxt from c order by c_name"}},
-    {"name":"c_name","caption":"Name","default":{ "sql": "select c_name||' :: Child' from c where c_id = @c_parent_id" }},
-    {"name":"c_sts","caption":"Status","default":"ACTIVE"},
-    {"name":"c_update_dt","caption":"Update Date","control":"date","default":"js:new Date()"},
-    {"name":"c_start_dt","caption":"Start Date","control":"date","default":"js:(function(){ var rslt = new Date(); var parent_start_dt = data && data._bcrumbs && data._bcrumbs.parent_start_dt && new Date(data._bcrumbs.parent_start_dt); if(rslt > parent_start_dt) rslt = parent_start_dt; debugger; return rslt; })()"},
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_parent_id","caption": "Parent Customer","lov":{"sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"}},
+    {"name":"cust_name","caption":"Name","default":{ "sql": "select cust_name||' :: Child' from cust where cust_id = @cust_parent_id" }},
+    {"name":"cust_sts","caption":"Status","default":"ACTIVE"},
+    {"name":"cust_update_dt","caption":"Update Date","control":"date","default":"js:new Date()"},
+    {"name":"cust_start_dt","caption":"Start Date","control":"date","default":"js:(function(){ var rslt = new Date(); var parent_start_dt = data && data._bcrumbs && data._bcrumbs.parent_start_dt && new Date(data._bcrumbs.parent_start_dt); if(rslt > parent_start_dt) rslt = parent_start_dt; debugger; return rslt; })()"},
   ]
 }

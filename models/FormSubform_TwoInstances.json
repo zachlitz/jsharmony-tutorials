@@ -1,40 +1,40 @@
 { 
-  "FormSubform_TwoInstances_C": {
-    "table":"c",
+  "FormSubform_TwoInstances_Cust": {
+    "table":"cust",
     "layout":"form",
     "onecolumn":true,
     "caption":["Customer","Customers"],
     "actions":"BIU",
     "fields":[
-      {"name":"c_name","caption":"Name"},
-      {"name":"c_sts","caption":"Status"},
-      {"control": "subform","target": "FormSubform_TwoInstances_C_CA_Billing","bindings":{ "c_id":"c_id", "ca_type":"'BILLING'" },"actions":"BU"},
-      {"control": "subform","target": "FormSubform_TwoInstances_C_CA_Shipping","bindings":{ "c_id":"c_id", "ca_type":"'SHIPPING'" },"actions": "BU"}
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status"},
+      {"control": "subform","target": "FormSubform_TwoInstances_Cust_Address_Billing","bindings":{ "cust_id":"cust_id", "cust_addr_type":"'BILLING'" },"actions":"BU"},
+      {"control": "subform","target": "FormSubform_TwoInstances_Cust_Address_Shipping","bindings":{ "cust_id":"cust_id", "cust_addr_type":"'SHIPPING'" },"actions": "BU"}
     ]
   },
-  "FormSubform_TwoInstances_C_CA": {
-    "table":"ca",
+  "FormSubform_TwoInstances_Cust_Address": {
+    "table":"cust_addr",
     "layout":"form",
     "onecolumn":true,
     "popup": [550,300],
     "caption":["Address","Addresses"],
     "fields":[
-      {"name":"c_id","key":1,"control":"hidden"},
-      {"name":"ca_type","key":1,"control":"hidden"},
-      {"name":"ca_country","caption":"Country"},
-      {"name":"ca_addr1","caption":"Address"},
-      {"name":"ca_addr2","caption":""},
-      {"name":"ca_city","caption":"City"},
-      {"name":"ca_state","caption":"State"},
-      {"name":"ca_zip","caption":"Zip"}
+      {"name":"cust_id","key":1,"control":"hidden"},
+      {"name":"cust_addr_type","key":1,"control":"hidden"},
+      {"name":"cust_addr_country","caption":"Country"},
+      {"name":"cust_addr_line1","caption":"Address"},
+      {"name":"cust_addr_line2","caption":""},
+      {"name":"cust_addr_city","caption":"City"},
+      {"name":"cust_addr_state","caption":"State"},
+      {"name":"cust_addr_zip","caption":"Zip"}
     ]
   },
-  "FormSubform_TwoInstances_C_CA_Billing": {
-    "inherits":"FormSubform_TwoInstances_C_CA",
+  "FormSubform_TwoInstances_Cust_Address_Billing": {
+    "inherits":"FormSubform_TwoInstances_Cust_Address",
     "title": "Billing Address"
   },
-  "FormSubform_TwoInstances_C_CA_Shipping": {
-    "inherits":"FormSubform_TwoInstances_C_CA",
+  "FormSubform_TwoInstances_Cust_Address_Shipping": {
+    "inherits":"FormSubform_TwoInstances_Cust_Address",
     "title": "Shipping Address"
   }
 }

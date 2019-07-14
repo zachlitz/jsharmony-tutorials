@@ -28,8 +28,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FieldHTMLEditor_Custom.js"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FieldHTMLEditor_Basic?action=update&c_id=1", "title": "HTML Editor" },
-    { "url": "jsHarmonyTutorials/FieldHTMLEditor_Custom?action=update&c_id=1", "title": "HTML Editor Custom Initialization" }
+    { "url": "jsHarmonyTutorials/FieldHTMLEditor_Basic?action=update&cust_id=1", "title": "HTML Editor" },
+    { "url": "jsHarmonyTutorials/FieldHTMLEditor_Custom?action=update&cust_id=1", "title": "HTML Editor Custom Initialization" }
   ]
 }
 </script>
@@ -49,19 +49,19 @@ The "htmlarea" control has the following field.controlparams parameters:
 }
 </pre>
 
-<%-getScreenshot('jsHarmonyTutorials/FieldHTMLEditor_Basic?action=update&c_id=1&popup=1','HTML Editor', { width: 1000, height: 1500 })%>
+<%-getScreenshot('jsHarmonyTutorials/FieldHTMLEditor_Basic?action=update&cust_id=1&popup=1','HTML Editor', { width: 1000, height: 1500 })%>
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "popup":[600,400],
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_portal_welcome","caption":"Portal Welcome Content","control":"htmlarea"},
-    {"name":"c_desc","caption":"Description","control":"htmlarea",
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_portal_welcome_txt","caption":"Portal Welcome Content","control":"htmlarea"},
+    {"name":"cust_desc","caption":"Description","control":"htmlarea",
       "controlparams":{
         "htmlarea_config": {
           "toolbar": [
@@ -143,24 +143,24 @@ The "removePlugins" and "allowedContent" properties are a CKEditor config proper
 In cases where the HTML Editor should only be started in certain situations, the CKEditor can be connected to an existing HTML textarea using JavaScript. This can be useful in custom forms, and in situations where a drop-down might define whether the content should be HTML or raw text.<br/>
 <br/>
 In the following example, the editor can be switched between HTML and Plain Text via a dropdown:
-<%-getScreenshot('jsHarmonyTutorials/FieldHTMLEditor_Custom?action=update&c_id=1&popup=1','Custom HTML Editor Initialization')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldHTMLEditor_Custom?action=update&cust_id=1&popup=1','Custom HTML Editor Initialization')%>
 <pre>
 //model.json
 //----------
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "popup":[600,400],
   "caption":["Customer","Customers"],
   "onload":"_this.onload(xmodel,callback);",
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_desc_editor_type","unbound":true,"control":"dropdown","caption":"Editor Type",
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_desc_editor_type","unbound":true,"control":"dropdown","caption":"Editor Type",
       "lov": { "values": { "TEXT": "Text", "HTML": "HTML" } },"default":"TEXT",
-      "onchange":"_this.c_desc_editor_type_change(obj,newval,e);"},
-    {"name":"c_desc","caption":"Description","control":"textarea","controlstyle":"width:500px;height:500px;"}
+      "onchange":"_this.cust_desc_editor_type_change(obj,newval,e);"},
+    {"name":"cust_desc","caption":"Description","control":"textarea","controlstyle":"width:500px;height:500px;"}
   ]
 }
 
@@ -171,29 +171,29 @@ jsh.App[modelid] = new (function(){
 
   //On form load
   this.onload = function(xmodel,callback){
-    _this.render_c_desc_editor();
+    _this.render_cust_desc_editor();
   }
 
   //On drop-down value change
-  this.c_desc_editor_type_change = function(obj,newval,e){
-    _this.render_c_desc_editor();
+  this.cust_desc_editor_type_change = function(obj,newval,e){
+    _this.render_cust_desc_editor();
   }
 
-  this.render_c_desc_editor = function(){
+  this.render_cust_desc_editor = function(){
     //Get the value of the dropdown
-    var c_desc_editor_type = xmodel.get('c_desc_editor_type');
+    var cust_desc_editor_type = xmodel.get('cust_desc_editor_type');
 
-    if(c_desc_editor_type=='HTML'){
+    if(cust_desc_editor_type=='HTML'){
       //If we should render an HTML editor
-      //Add an "id" attribute to the c_desc textarea, because it does not have one by default
-      $('.c_desc.xelem'+xmodel.class).attr('id',xmodel.class+'_c_desc');
-      //Initialize the editor on the c_desc textarea
-      XExt.CKEditor(xmodel.class+'_c_desc');
+      //Add an "id" attribute to the cust_desc textarea, because it does not have one by default
+      $('.cust_desc.xelem'+xmodel.class).attr('id',xmodel.class+'_cust_desc');
+      //Initialize the editor on the cust_desc textarea
+      XExt.CKEditor(xmodel.class+'_cust_desc');
     }
     else {
       //Otherwise, remove the CKEditor if it is currently displayed
       //Get the CKEditor object
-      var editor_id = xmodel.class+'_c_desc';
+      var editor_id = xmodel.class+'_cust_desc';
       var editor = (window.CKEDITOR?window.CKEDITOR.instances[editor_id]:undefined);
       if(editor){
         //Remove the editor

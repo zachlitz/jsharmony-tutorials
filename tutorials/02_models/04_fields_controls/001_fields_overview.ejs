@@ -27,7 +27,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FieldOverview_LineBreaks.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FieldOverview_LineBreaks?action=update&c_id=1", "title": "Fields Overview - Line Breaks" }
+    { "url": "jsHarmonyTutorials/FieldOverview_LineBreaks?action=update&cust_id=1", "title": "Fields Overview - Line Breaks" }
   ]
 }
 </script>
@@ -43,30 +43,30 @@ Columns that are not defined in the fields section will not be retrieved from th
 Since there is significant overlap between the columns selected from the database and the columns displayed on the form / grid in most database systems, jsHarmony combines them into one array called "fields":
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "title":"All Customers",
   "caption":["Customer","Customers"],
   "actions":"B", 
   "fields":[
-    {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-    {"name":"c_sts","type":"varchar","length":"8","caption":"Status","actions":"B"},
-    {"name":"c_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"update:C"}
+    {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+    {"name":"cust_sts","type":"varchar","length":"8","caption":"Status","actions":"B"},
+    {"name":"cust_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"update:Cust"}
   ]
 }
 </pre>
 Automatic schema recognition enabled many of the above properties to be automatically generated based on the database schema.  The above model could also be written as:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "title":"All Customers",
   "caption":["Customer","Customers"],
   "actions":"B", 
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_sts","caption":"Status"},
-    {"name":"c_name","caption":"Customer","caption_ext": "Customer Name","link":"update:C"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_sts","caption":"Status"},
+    {"name":"cust_name","caption":"Customer","caption_ext": "Customer Name","link":"update:Cust"}
   ]
 }
 </pre>
@@ -141,7 +141,7 @@ In order to run a Select, Update, Insert, or Delete statement, a Key field is re
 <pre>
 {
   "fields": [
-    {"name":"c_id", "type": "bigint", "key": 1}
+    {"name":"cust_id", "type": "bigint", "key": 1}
   ]
 }
 </pre>
@@ -153,7 +153,7 @@ Foreign Keys are columns that reference keys in other tables, and can be used in
 <pre>
 {
   "fields": [
-    {"name":"c_id", "type": "bigint", "foreignkey": 1}
+    {"name":"cust_id", "type": "bigint", "foreignkey": 1}
   ]
 }
 </pre>
@@ -165,7 +165,7 @@ Additionally, as an optimization, dropdown read-only fields on update will not h
 
 <pre>
 {
-  "name": "c_id",
+  "name": "cust_id",
   "readonly": true
 }
 </pre>
@@ -178,7 +178,7 @@ The field.locked_by_querystring property defines whether the field is still edit
 The field.locaked_by_querystring property is set to "true" by default, but can be overridden to false in the field definition:
 <pre>
 {
-  "name": "c_sts",
+  "name": "cust_sts",
   "locked_by_querystring": false
 }
 </pre>
@@ -191,18 +191,18 @@ The following properties are used to manage field line breaks:
   <li>field.block :: Make the field a "block" element, and add a line break both before and after the field</li>
 </ul>
 Field.block has the additional benefit of squashing the next field's "field.nl" property, so that it does not add an extra line break between the fields.
-<%-getScreenshot('jsHarmonyTutorials/FieldOverview_LineBreaks?action=update&c_id=1&popup=1','Field Line Breaks')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldOverview_LineBreaks?action=update&cust_id=1&popup=1','Field Line Breaks')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name": "c_id","eol": true},
+    {"name": "cust_id","eol": true},
     {"control":"html", "value":"Sample Text"},
-    {"name": "c_name","nl": true},
-    {"name": "c_sts","block": true}
+    {"name": "cust_name","nl": true},
+    {"name": "cust_sts","block": true}
   ]
 }
 </pre>

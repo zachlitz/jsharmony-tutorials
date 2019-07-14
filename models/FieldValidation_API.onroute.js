@@ -52,7 +52,7 @@ if (verb == 'post') {
 
     //Select the first customer
     function(cb){
-      appsrv.ExecRecordset(req._DBContext, "select c_name from c limit 1", [], {}, function(err, rslt){
+      appsrv.ExecRecordset(req._DBContext, "select cust_name from cust limit 1", [], {}, function(err, rslt){
         if(err) return cb(err);
         if(!rslt || !rslt.length || !rslt[0].length) return cb(err);
         customer = rslt[0][0];
@@ -69,7 +69,7 @@ if (verb == 'post') {
     if(err) return Helper.GenError(req, res, -99999, err);
 
     //Return API result
-    var message = (customer?customer.c_name:'System') + ' says ' + P.message;
+    var message = (customer?customer.cust_name:'System') + ' says ' + P.message;
     res.end(JSON.stringify({ '_success': 1, 'message': message }));
   });
 }

@@ -23,7 +23,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "ID": "list_of_values_popup_lov",
   "Title": "Popup LOV",
   "Menu": ["Models","List of Values"],
-  "Code": ["/models/C.json","/models/C.js"]
+  "Code": ["/models/Cust.json","/models/Cust.js"]
 }
 </script>
 Form / Popup LOV<br/>
@@ -31,9 +31,9 @@ Grid / Popup LOV
 
 "popuplov": {  //Enable POPUPLOV, requires target grid
   "target":  "J",
-  "codeval": "j_id",
+  "code_val": "j_id",
   "popupstyle": "height:200px;",
-  "popup_copy_results": { "c_name": "c_name" },
+  "popup_copy_results": { "cust_name": "cust_name" },
   "base_readonly":  1,
   "onpopup": "console.log('popup');", //(popupmodelid, parentmodelid, fieldid, onComplete)
   "popupiconstyle": "display:none;",

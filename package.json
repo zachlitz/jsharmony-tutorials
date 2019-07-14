@@ -1,6 +1,6 @@
 {
   "name": "jsharmony-tutorials",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "jsHarmony Tutorials",
   "main": "index.js",
   "scripts": {
@@ -35,6 +35,6 @@
     "jsharmony": "^1.1.84",
     "jsharmony-db-sqlite": "^1.1.21",
     "jsharmony-factory": "^1.1.42",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.14"
   }
 }

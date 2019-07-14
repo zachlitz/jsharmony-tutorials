@@ -27,8 +27,8 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/MultiselBasic_MultipleColumns.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/MultiselBasic_Standard?action=update&c_id=2", "title": "Basic Multisel" },
-    { "url": "jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=update&c_id=2", "title": "Multisel w/Multiple Columns" }
+    { "url": "jsHarmonyTutorials/MultiselBasic_Standard?action=update&cust_id=2", "title": "Basic Multisel" },
+    { "url": "jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=update&cust_id=2", "title": "Multisel w/Multiple Columns" }
   ]
 }
 </script>
@@ -39,39 +39,39 @@ The multisel layout provides an interface for editing many-to-many relationships
 The multisel enables a user to add a link connecting the keys of two different tables.  For example, in the situation where there is one table of Flags (Inactive, Credit Risk, etc), and another table of Customers, the multisel layout allows the user to select multiple Flags for each Customer record.
 
 <h3>Standard Multisel</h3>
-<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_Standard?action=update&c_id=2&popup=1','Basic Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_Standard?action=update&cust_id=2&popup=1','Basic Multisel')%>
 <pre>
 { 
   "MultiselBasic_Standard": {
-    "table":"cf",
+    "table":"cust_flag",
     "layout":"multisel",
     "caption":["Customer Flag","Customers Flags"],
     "fields":[
-      {"name":"c_id"},
-      {"name":"cf_type","caption":"Flag"}
+      {"name":"cust_id"},
+      {"name":"cust_flag_type","caption":"Flag"}
     ]
   }
 }
 </pre>
-The "cf" table contains two foreign keys - c_id (Customer ID), and cf_type (Flag Type).  Each checked checkbox will create a record in the "cf" table with a unique cf_id, which is automatically recognized from the table definition as the primary key.
+The "cust_flag" table contains two foreign keys - cust_id (Customer ID), and cust_flag_type (Flag Type).  Each checked checkbox will create a record in the "cust_flag" table with a unique cust_flag_id, which is automatically recognized from the table definition as the primary key.
 
 <h3>Multiple Columns</h3>
 The multisel can support multiple display columns, as well as links in the display columns:
-<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=update&c_id=2&popup=1','Multisel w/ Multiple Columns')%>
+<%-getScreenshot('jsHarmonyTutorials/MultiselBasic_MultipleColumns?action=update&cust_id=2&popup=1','Multisel w/ Multiple Columns')%>
 <pre>
 {
-  "table":"cf",
+  "table":"cust_flag",
   "layout":"multisel",
   "caption":["Customer Flag","Customers Flags"],
   "fields":[
-    {"name":"c_id"},
-    {"name":"cf_type","caption":"Flag"},
-    {"control":"html","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_CL&cf_type=codeval","caption":"Flagged Customers"}
+    {"name":"cust_id"},
+    {"name":"cust_flag_type","caption":"Flag"},
+    {"control":"html","value":"Flagged Customers","link":"update:MultiselBasic_MultipleColumns_Cust_Listing&cust_flag_type=code_val","caption":"Flagged Customers"}
   ]
 }
 </pre>
 
-If using the multisel value in an expression, be sure to use "codeval" instead of the field name.  This will ensure that the expression still works if the value is not selected.
+If using the multisel value in an expression, be sure to use "code_val" instead of the field name.  This will ensure that the expression still works if the value is not selected.
 
 <h3>Canonical Syntax</h3>
 The full multisel synatax should define a primary key, foreign key, and list of values:
@@ -80,12 +80,12 @@ The full multisel synatax should define a primary key, foreign key, and list of 
   "layout":"multisel",
   "title":"Customer Flags",
   "caption":["","Flag","Flags"],
-  "table":"cf",
+  "table":"cust_flag",
   "actions":"BU",
   "fields":[
-    {"name":"c_id","type":"bigint","foreignkey": 1,"control":"hidden"},
-    {"name":"cf_id","type":"bigint","key":1,"control":"hidden"},
-    {"name":"cf_type","caption":"Flag Type","actions":"B","lov": { "UCOD": "cf_type" }}
+    {"name":"cust_id","type":"bigint","foreignkey": 1,"control":"hidden"},
+    {"name":"cust_flag_id","type":"bigint","key":1,"control":"hidden"},
+    {"name":"cust_flag_type","caption":"Flag Type","actions":"B","lov": { "code": "cust_flag_type" }}
   ]
 }
 </pre>

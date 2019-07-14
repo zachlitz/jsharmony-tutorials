@@ -1,12 +1,12 @@
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "oninit":"_this.oninit(xmodel);",
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }

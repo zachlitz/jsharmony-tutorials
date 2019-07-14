@@ -26,14 +26,14 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Code": [
     "/models/FieldLinks_Standard_Form.json",
     "/models/FieldLinks_Standard_Grid.json",
-    "/models/FieldLinks_C.json",
+    "/models/FieldLinks_Cust.json",
     "/models/FieldLinks_Parameters_Form.json",
     "/models/FieldLinks_Parameters_Grid.json",
     "/models/FieldLinks_Download_Form.json",
     "/models/FieldLinks_Download_Grid.json",
     "/models/FieldLinks_Select_Form.json",
     "/models/FieldLinks_Select_Grid.json",
-    "/models/FieldLinks_C_LOV.json",
+    "/models/FieldLinks_Cust_LOV.json",
     "/models/FieldLinks_URL_Form.json",
     "/models/FieldLinks_URL_Grid.json",
     "/models/FieldLinks_JS_Form.json",
@@ -43,19 +43,19 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FieldLinks_Onclick_Precedence.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FieldLinks_Standard_Form?action=update&c_id=1", "title": "Standard Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Standard_Form?action=update&cust_id=1", "title": "Standard Links - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_Standard_Grid", "title": "Standard Links - Grid" },
-    { "url": "jsHarmonyTutorials/FieldLinks_Parameters_Form?action=update&ca_id=1", "title": "Link Parameters - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Parameters_Form?action=update&cust_addr_id=1", "title": "Link Parameters - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_Parameters_Grid", "title": "Link Parameters - Grid" },
-    { "url": "jsHarmonyTutorials/FieldLinks_Download_Form?action=update&c_id=1", "title": "Download Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Download_Form?action=update&cust_id=1", "title": "Download Links - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_Download_Grid", "title": "Download Links - Grid" },
-    { "url": "jsHarmonyTutorials/FieldLinks_Select_Form?action=update&c_id=1", "title": "Select Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_Select_Form?action=update&cust_id=1", "title": "Select Links - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_Select_Grid", "title": "Select Links - Grid" },
-    { "url": "jsHarmonyTutorials/FieldLinks_URL_Form?action=update&c_id=1", "title": "Custom URL Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_URL_Form?action=update&cust_id=1", "title": "Custom URL Links - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_URL_Grid", "title": "Custom URL Links - Grid" },
-    { "url": "jsHarmonyTutorials/FieldLinks_JS_Form?action=update&c_id=1", "title": "Custom JS Links - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_JS_Form?action=update&cust_id=1", "title": "Custom JS Links - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_JS_Grid", "title": "Custom JS Links - Grid" },
-    { "url": "jsHarmonyTutorials/FieldLinks_WindowOptions_Form?action=update&c_id=1", "title": "Window Options - Form" },
+    { "url": "jsHarmonyTutorials/FieldLinks_WindowOptions_Form?action=update&cust_id=1", "title": "Window Options - Form" },
     { "url": "jsHarmonyTutorials/FieldLinks_WindowOptions_Grid", "title": "Window Options - Grid" },
     { "url": "jsHarmonyTutorials/FieldLinks_Onclick_Precedence", "title": "Onclick Precedence" }
   ]
@@ -117,32 +117,34 @@ The link syntax is as follows:
 
 <b>Example Links:</b>
 <pre>
-update:C
-update:C&C_ID
-update:C&C_ID=5
-update:C&C_ID=NEW_C_ID
+update:Cust
+update:Cust&cust_id
+
+update:Cust&cust_id=5
+update:Cust&cust_id=NEW_cust_id
+
 url(target=_blank,width=800,height=600):https://www.example.com
-url:/C?action=update&C_ID=&lt;#=data.C_ID#&gt;
+url:/Cust?action=update&cust_id=&lt;#=data.cust_id#&gt;
 js:XExt.Alert('Test Popup');
 </pre>
 
 <h4>Form Example</h4>
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Standard_Form?action=update&c_id=1&popup=1','Standard Links')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Standard_Form?action=update&cust_id=1&popup=1','Standard Links')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Standard Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
 
-    {"control": "button", "value":"Insert", "link": "insert:FieldLinks_C"},
-    {"control": "button", "value":"Browse", "link": "browse:FieldLinks_C"},
-    {"control": "button", "value":"Update", "link": "update:FieldLinks_C"},
+    {"control": "button", "value":"Insert", "link": "insert:FieldLinks_Cust"},
+    {"control": "button", "value":"Browse", "link": "browse:FieldLinks_Cust"},
+    {"control": "button", "value":"Update", "link": "update:FieldLinks_Cust"},
     {"control": "button", "value":"Save & New", "link": "savenew:"},
-    {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
+    {"control": "button", "value":"Download", "link": "download:FieldLinks_Cust&cust_doc"},
     {"control": "button", "value":"URL", "link": "url:/_listing"},
     {"control": "button", "value":"JavaScript", "link": "js:XExt.Alert('JavaScript Command');"}
   ]
@@ -166,17 +168,18 @@ Links are generated based on the current record data.  The following parameters 
 Parameters are defined by adding them after the target model, separated by "&amp;":
 <pre>
 [b]No Parameters (Automatic Parameters)[/b]
-update:C
+update:Cust
 
 [b]One Parameter[/b]
-update:C&C_ID
-update:C&C_ID=5
-update:C&C_ID=C_ID_ON_PARENT
+update:Cust&cust_id
+
+update:Cust&cust_id=5
+update:Cust&cust_id=CUST_ID_ON_PARENT
 
 [b]Multiple Parameters[/b]
-update:C&C_ID&E_ID
-update:C&C_ID=5&E_ID=10
-update:C&C_ID=PARENT_C_ID&E_ID=FAVORITE_E_ID
+update:Cust&cust_id&item_id
+update:Cust&cust_id=5&item_id=10
+update:Cust&cust_id=PARENT_cust_id&item_id=favorite_item_id
 </pre>
 
 Parameters can be explicitly defined in a variety of ways:
@@ -195,24 +198,24 @@ Multiple tabs are supported:
 tabs={\"PARENT_MODEL1\":\"SELECTED_TAB_MODEL1\", \"PARENT_MODEL2\":\"SELECTED_TAB_MODEL2\"}
 
 The example below contains all of these scenarios:
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Parameters_Form?action=update&ca_id=1&popup=1','Link Parameters')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Parameters_Form?action=update&cust_addr_id=1&popup=1','Link Parameters')%>
 <pre>
 { 
-  "table":"ca",
+  "table":"cust_addr",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Link Parameters"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name":"ca_addr1","caption":"Address"},
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name":"cust_addr_line1","caption":"Address"},
     
-    {"control": "button", "value":"Auto Parameters", "link": "update:FieldLinks_C"},
-    {"control": "button", "value":"Explicit Parameters", "link": "update:FieldLinks_C&c_id"},
-    {"control": "button", "value":"Static Parameters - Number", "link": "update:FieldLinks_C&c_id=3"},
-    {"control": "button", "value":"Static Parameters - String", "link": "insert:FieldLinks_C&c_name='New customer'"},
-    {"control": "button", "value":"Multiple Parameters", "link": "insert:FieldLinks_C?c_name='New customer'&c_sts='ACTIVE'"},
-    {"control": "button", "value":"Field-Bound Parameters", "link": "insert:FieldLinks_C&c_name=ca_addr1"},
-    {"control": "button", "value":"Tab Selection", "link": "update:FieldLinks_C&tabs={\"jsHarmonyTutorials/FieldLinks_C\":\"jsHarmonyTutorials/FormPopup_C_Tab2\"}"}
+    {"control": "button", "value":"Auto Parameters", "link": "update:FieldLinks_Cust"},
+    {"control": "button", "value":"Explicit Parameters", "link": "update:FieldLinks_Cust&cust_id"},
+    {"control": "button", "value":"Static Parameters - Number", "link": "update:FieldLinks_Cust&cust_id=3"},
+    {"control": "button", "value":"Static Parameters - String", "link": "insert:FieldLinks_Cust&cust_name='New customer'"},
+    {"control": "button", "value":"Multiple Parameters", "link": "insert:FieldLinks_Cust?cust_name='New customer'&cust_sts='ACTIVE'"},
+    {"control": "button", "value":"Field-Bound Parameters", "link": "insert:FieldLinks_Cust&cust_name=cust_addr_line1"},
+    {"control": "button", "value":"Tab Selection", "link": "update:FieldLinks_Cust&tabs={\"jsHarmonyTutorials/FieldLinks_Cust\":\"jsHarmonyTutorials/FormPopup_Cust_Tab2\"}"}
   ]
 }
 </pre>
@@ -222,16 +225,16 @@ Both forms and grids can provide "Download" links and buttons, so that users can
 <%-getScreenshot('jsHarmonyTutorials/FieldLinks_Download_Grid?popup=1','Download Links')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "onecolumn":true,
   "caption": ["Download Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
-    {"control": "button", "value":"Download", "link": "download:FieldLinks_C&c_doc"},
-    {"control": "label", "value":"Download", "link": "download:FieldLinks_C&c_doc",
-     "type":"file", "controlparams": { "data_folder": "tutorials_c_doc", "data_file_prefix": "c_doc" } }
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+    {"control": "button", "value":"Download", "link": "download:FieldLinks_Cust&cust_doc"},
+    {"control": "label", "value":"Download", "link": "download:FieldLinks_Cust&cust_doc",
+     "type":"file", "controlparams": { "data_folder": "tutorials_cust_doc", "data_file_prefix": "cust_doc" } }
   ]
 }
 </pre>
@@ -257,67 +260,67 @@ If KEY_VALUE_FIELD is not defined, it will default to the primary key of the dow
 Select links can only be used within a Popup List of Values grid.  They provide an alternate way to select a value in a popup List of Values.<br/>
 <br/>
 Popup list of values are displayed when a user clicks on a magnifying glass next to a field with field.popuplov defined:
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Select_Form?popup=1&c_id=1&action=update','Select Links')%>
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Select_Form?popup=1&c_id=1&action=update','Select Links - Popup Open', { onload:function(){ return new Promise(function(resolve){
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Select_Form?popup=1&cust_id=1&action=update','Select Links')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_Select_Form?popup=1&cust_id=1&action=update','Select Links - Popup Open', { onload:function(){ return new Promise(function(resolve){
   var $ = jshInstance.$;
-  $('.c_parent_id_xlookup.xlookup').click();
-  jshInstance.XExt.waitUntil(function(){ return $('.xelemjsHarmonyTutorials_FieldLinks_C_LOV.unnamed_button_control_1').length; }, resolve);
+  $('.cust_parent_id_xlookup.xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return $('.xelemjsHarmonyTutorials_FieldLinks_Cust_LOV.unnamed_button_control_1').length; }, resolve);
 }); } })%>
 <pre>
 //Form with the Popup List of Values control
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Select Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
-    {"name": "c_parent_id", "caption": "Parent Customer ID", "control": "label","popuplov":{ "target":"FieldLinks_C_LOV", "codeval":"c_id" }}
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_parent_id", "caption": "Parent Customer ID", "control": "label","popuplov":{ "target":"FieldLinks_Cust_LOV", "code_val":"cust_id" }}
   ]
 }
 
 //Grid with the List of Values contents
-"FieldLinks_C_LOV": {
-  "table":"c",
+"FieldLinks_Cust_LOV": {
+  "table":"cust",
   "layout":"grid",
   "actions":"B",
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name","link":"select"},
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name","link":"select"},
     {"control": "button", "value":"Select", "link": "select"}
   ]
 }
 </pre>
 
-In this example, both the "c_name" field and the button have a "select" link.  When the user clicks on either of the controls, it will have the same effect as clicking the "Select" link on the left of the grid, selecting the row as the result of the List of Values popup.
+In this example, both the "cust_name" field and the button have a "select" link.  When the user clicks on either of the controls, it will have the same effect as clicking the "Select" link on the left of the grid, selecting the row as the result of the List of Values popup.
 
 <h3 data-level="2">Custom URL</h3>
 In some instances, it may be necessary to link to a custom URL.  Custom URLs can contain any of the data in the current model by using EJS.
 
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_URL_Form?action=update&c_id=1&popup=1','Custom URL Links')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_URL_Form?action=update&cust_id=1&popup=1','Custom URL Links')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption": ["URL Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
-    {"name": "c_email", "control": "hidden"},
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_email", "control": "hidden"},
 
-    {"control": "button", "value":"Internal URL", "link": "url:/&lt;%=xmodel.namespace%&gt;FieldLinks_C?action=update&c_id=&lt;%=data.c_id%&gt;"},
+    {"control": "button", "value":"Internal URL", "link": "url:/&lt;%=xmodel.namespace%&gt;FieldLinks_Cust?action=update&cust_id=&lt;%=data.cust_id%&gt;"},
     {"control": "button", "value":"External URL", "link": "url:https://www.apharmony.com"},
-    {"control": "button", "value":"Email", "link": "url:mailto:&lt;%=data.c_email%&gt;"}
+    {"control": "button", "value":"Email", "link": "url:mailto:&lt;%=data.cust_email%&gt;"}
   ]
 }
 </pre>
 
 In this example, the Internal URL dynamically adds the current model's namespace to the URL, and the key field.  The mailto link also integrates the current row's email address field.<br/>
 <br/>
-Any fields used in the EJS expressions must be defined in the fields array.  In this example, the "c_email" field is used.  Since "c_email" was not part of the original form, it was included as a hidden field so that it would still be selected from the database.<br/>
+Any fields used in the EJS expressions must be defined in the fields array.  In this example, the "cust_email" field is used.  Since "cust_email" was not part of the original form, it was included as a hidden field so that it would still be selected from the database.<br/>
 <br/>
 If the resulting link / EJS expression is blank, no action will be taken by the users browser.<br/>
 <br/>
@@ -325,7 +328,8 @@ The following EJS variables can be used in a url link EJS expression.  EJS varia
 <pre>
 All models
 ----------
-data    //The current row's data, ex: data.C_ID
+data    //The current row's data, ex: data.cust_id
+
 xmodel  //The jsHarmony Model instance
 modelid //The jsHarmony Model ID
 _GET    //The GET parameters
@@ -346,21 +350,21 @@ moment  //Moment.js library
 <h3 data-level="2">Custom JavaScript</h3>
 Links can be used to execute custom JavaScript expressions.
 
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_JS_Form?action=update&c_id=1&popup=1','Custom JS Links')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_JS_Form?action=update&cust_id=1&popup=1','Custom JS Links')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption": ["JS Links"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
-    {"name": "c_email", "control": "hidden"},
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_email", "control": "hidden"},
 
     {"control": "button", "value":"JavaScript Alert", "link": "js:XExt.Alert('Sample Alert');"},
-    {"control": "button", "value":"JavaScript popupForm", "link": "js:XExt.popupForm(xmodel.namespace+'FieldLinks_C','insert',{ 'c_name': 'New Customer' });"},
-    {"control": "button", "value":"JavaScript Email", "link": "js:var email = xmodel.get('c_email'); if(email){ var url = 'mailto:'+email; jsh.getFileProxy().prop('src', url); }"}
+    {"control": "button", "value":"JavaScript popupForm", "link": "js:XExt.popupForm(xmodel.namespace+'FieldLinks_Cust','insert',{ 'cust_name': 'New Customer' });"},
+    {"control": "button", "value":"JavaScript Email", "link": "js:var email = xmodel.get('cust_email'); if(email){ var url = 'mailto:'+email; jsh.getFileProxy().prop('src', url); }"}
   ]
 }
 </pre>
@@ -387,19 +391,19 @@ modelid   //The current jsHarmony Model's ID
 <h3 data-level="2">Window Options and Popup Windows</h3>
 By default, models with the model.popup property will open in a new window, while models without model.popup will open in the same window.  This behavior can be changed by using window options:
 
-<%-getScreenshot('jsHarmonyTutorials/FieldLinks_WindowOptions_Form?action=update&c_id=1&popup=1','Window Options')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLinks_WindowOptions_Form?action=update&cust_id=1&popup=1','Window Options')%>
 <pre>
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Link Window Options"],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "label"},
-    {"name": "c_name", "caption": "Customer Name", "control": "textbox"},
+    {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+    {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
     
-    {"control": "button", "value":"Link to Popup Form", "link": "update:FieldLinks_C"},
-    {"control": "button", "value":"Link to Popup Form in Same Window", "link": "update(target=_self):FieldLinks_C"},
+    {"control": "button", "value":"Link to Popup Form", "link": "update:FieldLinks_Cust"},
+    {"control": "button", "value":"Link to Popup Form in Same Window", "link": "update(target=_self):FieldLinks_Cust"},
     {"control": "button", "value":"Regular Link to Same Window", "link": "url:https://www.apharmony.com"},
     {"control": "button", "value":"Regular Link in Popup", "link": "url(target=_blank):https://www.apharmony.com"},
     {"control": "button", "value":"Regular Link in Popup w/Dimensions", "link": "url(target=_blank,width=600,height=600):https://www.apharmony.com"}

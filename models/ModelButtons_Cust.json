@@ -1,0 +1,16 @@
+{
+  "layout": "form", 
+  "table": "cust",
+  "actions": "BIUD", 
+  "caption": [ "", "Customer", "Customers" ],
+  "buttons":[
+    {"link":"update:Cust_Container&tabs={\"jsHarmonyTutorials/Cust_Container\":\"jsHarmonyTutorials/Cust_Contact_Listing\"}","actions":"U","text":"Edit Contacts"},
+    {"link":"js:XExt.popupForm('Cust_Container','update',{'cust_id':XModels[modelid].controller.form.Data.cust_id},{width:850,height:600})","text":"Edit Customer Via JavaScript","actions":"U"}
+  ],
+  "popup":[1000,700],
+  "fields": [
+    {"name":"cust_id", "type": "bigint", "actions":"B","key": 1},
+    {"name": "cust_name","type": "varchar","length": 50,"actions": "BIU","control": "textbox","caption": "Customer Name","nl": 1},
+    {"name":"cust_sts","type":"varchar","length":8,"actions":"BIU","control":"textbox","caption": "Status","default":"ACTIVE","nl":1}
+  ]
+}

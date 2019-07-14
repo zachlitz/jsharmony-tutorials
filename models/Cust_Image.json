@@ -1,0 +1,21 @@
+{
+  "layout": "form", 
+  "title": "Customer Image",
+  "table": "cust",
+  "caption": [ "", "Customer", "Customers" ],
+  "onecolumn":true,
+  "fields": [
+    {"name": "cust_name","caption": "Customer Name"},
+
+    {"name":"cust_image","type":"file",
+       "control":"file_upload","caption":"Client Document",
+       "controlparams": { 
+         "image": {
+          "crop": [800,600],
+          "format": "jpg"
+        },
+        "download_button":"Download",
+        "data_folder": "cust_image"
+       }}    
+  ]
+}

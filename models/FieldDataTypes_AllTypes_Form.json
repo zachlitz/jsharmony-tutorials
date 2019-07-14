@@ -1,7 +1,7 @@
 {
   "layout": "form",
   "title": "System Data Types",
-  "table": "alltypes",
+  "table": "all_types",
   "onecolumn": true,
   "caption": ["Item", "Items"],
   "actions": "BIUD",
@@ -22,8 +22,8 @@
     {"name":"x_varcharmax", "type":"varchar", "length":-1},
     {"name":"x_char", "type":"char", "length":100},
     {"name":"x_binary", "type":"binary", "length":100},
-    {"name":"x_encascii","type":"encascii","password": "alltypes_x_encascii_password","hash": "x_hash"},
-    {"name":"x_hash","type":"hash","salt": "alltypes_x_hash_salt","control":"label"},
-    {"name":"x_file","type":"file","controlparams":{"data_folder":"tutorials_allcontrols"}}
+    {"name":"x_encascii","type":"encascii","password": "all_types_x_encascii_password","hash": "x_hash"},
+    {"name":"x_hash","type":"hash","salt": "all_types_x_hash_salt","control":"label"},
+    {"name":"x_file","type":"file","controlparams":{"data_folder":"tutorials_all_controls"}}
   ]
 }

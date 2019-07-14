@@ -1,44 +1,44 @@
 {
-  "ModelBindings_Automatic_CCL": {
-    "table":"cc",
+  "ModelBindings_AutomatiCust_Contact_Listing": {
+    "table":"cust_contact",
     "layout":"grid",
     "caption":["Contact","Contacts"],
     "actions":"B",
-    "buttons":[{"link":"insert:ModelBindings_Automatic_C"},{"link":"insert:ModelBindings_Automatic_CC"}],
+    "buttons":[{"link":"insert:ModelBindings_Automatic_Cust"},{"link":"insert:ModelBindings_Automatic_CustContact"}],
     "fields":[
-      {"name":"c_id","control":"hidden"},
-      {"name":"cc_name","caption": "Contact Name","link":"update:ModelBindings_Automatic_CC"},
-      {"control":"linkbutton","caption": "Edit Customer","link":"update:ModelBindings_Automatic_C"},
-      {"control":"button","caption": "Edit Contact","link":"update:ModelBindings_Automatic_CC"},
-      {"control":"linkbutton","caption": "Edit Contact","link":"update:ModelBindings_Automatic_CC"}
+      {"name":"cust_id","control":"hidden"},
+      {"name":"cust_contact_name","caption": "Contact Name","link":"update:ModelBindings_Automatic_CustContact"},
+      {"control":"linkbutton","caption": "Edit Customer","link":"update:ModelBindings_Automatic_Cust"},
+      {"control":"button","caption": "Edit Contact","link":"update:ModelBindings_Automatic_CustContact"},
+      {"control":"linkbutton","caption": "Edit Contact","link":"update:ModelBindings_Automatic_CustContact"}
 
     ]
   },
-  "ModelBindings_Automatic_C": {
+  "ModelBindings_Automatic_Cust": {
     "layout": "form", 
-    "table": "c",
+    "table": "cust",
     "onecolumn":true,
     "caption": [ "Customer", "Customers" ],
     "popup":[1000,700],
     "fields": [
-      {"name": "c_name","caption": "Customer Name"},
-      {"name":"c_sts","caption": "Status"}
+      {"name": "cust_name","caption": "Customer Name"},
+      {"name":"cust_sts","caption": "Status"}
     ]
   },
-  "ModelBindings_Automatic_CC": {
+  "ModelBindings_Automatic_CustContact": {
     "layout": "form", 
-    "table": "cc",
+    "table": "cust_contact",
     "onecolumn":true,
     "caption": [ "Contact", "Contacts" ],
     "buttons":[
-      {"link":"update:ModelBindings_Automatic_C","actions":"U","text":"Edit Customer"}
+      {"link":"update:ModelBindings_Automatic_Cust","actions":"U","text":"Edit Customer"}
     ],
     "popup":[1000,700],
     "fields": [
-      {"name":"c_id","caption":"Customer","lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true }, "actions":"BI" },
-      {"name":"cc_name","caption": "Contact Name"},
-      {"name":"cc_title","caption":"Title"},
-      {"name":"cc_email","caption":"Email"}
+      {"name":"cust_id","caption":"Customer","lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name", "blank": true }, "actions":"BI" },
+      {"name":"cust_contact_name","caption": "Contact Name"},
+      {"name":"cust_contact_title","caption":"Title"},
+      {"name":"cust_contact_email","caption":"Email"}
     ]
   }
 }

@@ -1,0 +1,12 @@
+{ 
+  "FormPopup_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "actions":"B",
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer","control":"label","link":"update:FormPopup_Cust"}
+    ]
+  }
+}

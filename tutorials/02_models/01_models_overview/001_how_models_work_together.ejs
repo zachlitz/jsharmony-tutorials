@@ -32,10 +32,10 @@ There are six basic model layouts: "grid", "form", "form-m", "multisel", "exec",
 Grids are the heart of a jsHarmony application.  Grids enable a user to view, add, or edit data, multiple records at a time.  Grids may be designed with either editable controls or read-only rows, and can link to a popup form for further editing.<br/>
 
 <h4>Editable Grid:</h4>
-<%-getScreenshot('jsHarmonyTutorials/CL_EDITABLE?popup=1','Editable Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Listing_Editable?popup=1','Editable Grid')%>
 
 <h4>Read-only Grid:</h4>
-<%-getScreenshot('jsHarmonyTutorials/CL?popup=1','Read-only Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Listing?popup=1','Read-only Grid')%>
 
 Most systems will start with a grid, and then progress to forms for editing data.
 
@@ -47,35 +47,35 @@ Forms consists of fields and additional child forms.  Child forms can be embedde
 All parent and child form data will be saved in one transaction, and only the topmost writable parent form will have a "Save" button.
 
 <h4>Simple Form:</h4>
-<%-getScreenshot('jsHarmonyTutorials/C?c_id=1','Simple Form')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust?cust_id=1','Simple Form')%>
 
 <h4>Parent / Child Subforms:</h4>
-<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=update','Parent / Child Subforms')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Container?cust_id=1&action=update','Parent / Child Subforms')%>
 The above example consists of 4 forms:
 <ul>
-  <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
-  <li>The select tab (C_SUB), with two subforms</li>
-  <li>The first subform "Address" (C_CA)</li>
-  <li>The second subform "File" (C_SUB_FILE)</li>
+  <li>The container form with tabs for "Overview" and "Contacts" (Cust_Container)</li>
+  <li>The select tab (Cust_Subform), with two subforms</li>
+  <li>The first subform "Address" (Cust_Address)</li>
+  <li>The second subform "File" (Cust_Subform_File)</li>
 </ul>
 
 <h4>Parent / Child Grid:</h4>
-<%-getScreenshot('jsHarmonyTutorials/CW?action=update&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_CCL"%7D','Parent / Child Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Container?action=update&cust_id=2&tabs=%7B"jsHarmonyTutorials%2FCust_Container"%3A"jsHarmonyTutorials%2FCust_Contact_Listing"%7D','Parent / Child Grid')%>
 The above example consists of 2 forms:
 <ul>
-  <li>The container form with tabs for "Overview" and "Contacts" (CW)</li>
-  <li>The select tab (C_CCL) with the grid</li>
+  <li>The container form with tabs for "Overview" and "Contacts" (Cust_Container)</li>
+  <li>The select tab (Cust_Contact_Listing) with the grid</li>
 </ul>
 
 <h3 data-level="2">Form-m Layout</h3>
 Form-m enables a user to view, add, or edit multiple records.  Data is edited one record at a time, using backward / forward navigation.<br/>
 <br/>
 A "form-m" is typically used for navigating a small subset of data, and is implemented as a subform of a parent form (ex. editing multiple addresses of a Customer).  All new or modified data is saved in one transaction.
-<%-getScreenshot('jsHarmonyTutorials/C_CA_CONTAINER?c_id=1&action=update','Form-m')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Address_CONTAINER?cust_id=1&action=update','Form-m')%>
 
 <h3 data-level="2">Multisel Layout</h3>
 A multisel displays a checkbox-based List of Values, where multiple values can be selected per "key".  Multisels are primarily used to enter data in many-to-many relationships.
-<%-getScreenshot('jsHarmonyTutorials/CW?action=update&c_id=2&tabs=%7B"jsHarmonyTutorials%2FCW"%3A"jsHarmonyTutorials%2FC_EXEC"%7D','Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Container?action=update&cust_id=2&tabs=%7B"jsHarmonyTutorials%2FCust_Container"%3A"jsHarmonyTutorials%2FCust_Exec"%7D','Multisel')%>
 
 <h3 data-level="2">Exec Layout</h3>
 Exec forms are unbound, except during initial load.  Exec forms can be used for:

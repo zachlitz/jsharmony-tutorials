@@ -1,0 +1,18 @@
+{
+  "layout": "form", 
+  "title": "Customer Information",
+  "table": "cust",
+  "actions": "BIUD", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "caption": [ "", "Customer", "Customers" ],
+  "menu": "clients",
+  "popup":[1000,700],
+  "fields": [
+    {"name":"cust_id", "type": "bigint", "actions":"B","key": 1,"control":"hidden"},
+    {"name": "cust_name","type": "varchar","length": 50,"actions": "BIU","nl": 1,"control": "textbox",
+     "caption": "Customer Name","captionstyle": "width:120px;text-align:right;"},
+    {"name":"cust_sts","type":"varchar","length":8,"actions":"BIU","control":"dropdown","sample": "Active",
+     "lov": { "code": "cust_sts", "blank": 1 },"validate":["Required"],"default":"ACTIVE",
+     "caption": "Status","nl":1}
+  ]
+}

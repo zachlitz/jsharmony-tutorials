@@ -2,7 +2,7 @@
   "layout":"form",
   "caption": "Automatic Field Properties",
   "onecolumn":true,
-  "table":"allcontrols",
+  "table":"all_controls",
   "popup":[800,600],
   "fields": [
     {"name":"x_primary"},

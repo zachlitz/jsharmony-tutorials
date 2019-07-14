@@ -1,23 +1,23 @@
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption":["Customer","Customers"],
   "buttons":[{"link":"insert:FieldCustomSQL_Form"}],
   "fields":[
-    {"name":"c_id","caption": "ID","link":"update:FieldCustomSQL_Form"},
-    {"name":"c_name","caption":"Customer",
-     "sqlsearch":"(c_name||' '||c_desc)",
-     "sqlsearchsound": "c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=%%%SOUNDEX%%%)"
+    {"name":"cust_id","caption": "ID","link":"update:FieldCustomSQL_Form"},
+    {"name":"cust_name","caption":"Customer",
+     "sqlsearch":"(cust_name||' '||cust_desc)",
+     "sqlsearchsound": "cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=%%%SOUNDEX%%%)"
     },
-    {"name":"c_sts","caption":"Status",
-     "sqlsort":"(select codseq from ucod_c_sts where ucod_c_sts.codeval=c.c_sts)"
+    {"name":"cust_sts","caption":"Status",
+     "sqlsort":"(select code_seq from code_cust_sts where code_cust_sts.code_val=cust.cust_sts)"
     },
-    {"name":"c_start_dt","caption":"Start Year",
+    {"name":"cust_start_dt","caption":"Start Year",
       "type":"int",
-      "sqlselect":"(cast(strftime('%Y', c_start_dt) as integer))", //Extract the year from the date field
-      "sqlinsert":"(date(@c_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
-      "sqlupdate":"(date(@c_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
-      "sqlwhere":"c_start_dt >= (date(@c_start_dt||'-01-01'))" //If c_start_dt is in querystring, display any start date >= the value
+      "sqlselect":"(cast(strftime('%Y', cust_start_dt) as integer))", //Extract the year from the date field
+      "sqlinsert":"(date(@cust_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
+      "sqlupdate":"(date(@cust_start_dt||'-01-01'))", //Convert the input year ("integer") to a date YYYY-01-01
+      "sqlwhere":"cust_start_dt >= (date(@cust_start_dt||'-01-01'))" //If cust_start_dt is in querystring, display any start date >= the value
      }
   ]
 }

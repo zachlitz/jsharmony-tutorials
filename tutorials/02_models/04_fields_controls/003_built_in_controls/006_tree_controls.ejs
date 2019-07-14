@@ -41,7 +41,7 @@ The tree control uses a similar syntax to the list of values, and has the follow
   
   //The "List of Values" expression for populating the tree nodes
   "lov": {
-    "sql": "select ----- as codeid, ----- as codeparentid, ----- as codeval, ----- as codetxt, ----- as codeicon from ----- where 1=1 %%%DATALOCKS%%% order by -----",
+    "sql": "select ----- as code_id, ----- as code_parent_id, ----- as code_val, ----- as code_txt, ----- as code_icon from ----- where 1=1 %%%DATALOCKS%%% order by -----",
     "datalock":{ ... }
   },
 
@@ -66,13 +66,13 @@ The tree control uses a similar syntax to the list of values, and has the follow
 </pre>
 The tree List of Values expression should return a table of tree nodes, defined as follows:
 <ul>
-  <li>codeid :: The unique ID of the tree node</li>
-  <li>codeparentid :: The ID of the parent node</li>
-  <li>codeval :: The value of the node that will be saved to the database, if selected</li>
-  <li>codetxt :: The display text of the node</li>
-  <li>codeicon :: The icon name to be used for the node (same format as the model.buttons icons)</li>
+  <li>code_id :: The unique ID of the tree node</li>
+  <li>code_parent_id :: The ID of the parent node</li>
+  <li>code_val :: The value of the node that will be saved to the database, if selected</li>
+  <li>code_txt :: The display text of the node</li>
+  <li>code_icon :: The icon name to be used for the node (same format as the model.buttons icons)</li>
 </ul>
-The codeid and codeparentid fields recursively define the tree structure.  The codeval field is used for getting / setting the currently selected tree node.  The codetxt and codeicon properties are used to render each individual tree node.
+The code_id and code_parent_id fields recursively define the tree structure.  The code_val field is used for getting / setting the currently selected tree node.  The code_txt and code_icon properties are used to render each individual tree node.
 
 <h3>Example</h3>
 The following example uses a tree control to select the parent category in a category tree:
@@ -87,7 +87,7 @@ The following example uses a tree control to select the parent category in a cat
     {"name": "category_id", "caption": "Category ID", "control": "label"},
     {"name": "category_name", "caption": "Category Name", "control": "textbox", "validate": ["Required"]},
     {"name": "category_parent_id","caption": "Parent Category","control": "tree",
-      "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category where category_id<>ifnull(@category_id,0) order by codetxt;" },
+      "lov": { "sql": "select category_id code_id, category_parent_id code_parent_id, category_id code_val, category_name code_txt, 'folder' code_icon from category where category_id<>ifnull(@category_id,0) order by code_txt;" },
       "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" }
     }
   ]

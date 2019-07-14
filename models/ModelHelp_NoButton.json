@@ -1,12 +1,12 @@
 { 
   "ModelHelp_NoButton": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "caption":["Customer","Customers"],
     "hide_system_buttons":["help"],
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"}
     ]
   }
 }

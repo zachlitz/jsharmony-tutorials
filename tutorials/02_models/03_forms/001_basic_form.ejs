@@ -34,14 +34,14 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FormBasic_EditableDefault.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=1", "title": "Standard Form" },
-    { "url": "jsHarmonyTutorials/FormBasic_Subform_C?action=update&c_id=1", "title": "Parent / Subform" },
-    { "url": "jsHarmonyTutorials/FormBasic_Tabbed_CW?action=update&c_id=1", "title": "Tabbed Form", "windowparams": "width=1200,height=700" },
+    { "url": "jsHarmonyTutorials/FormBasic_Standard?action=update&cust_id=1", "title": "Standard Form" },
+    { "url": "jsHarmonyTutorials/FormBasic_Subform_Cust?action=update&cust_id=1", "title": "Parent / Subform" },
+    { "url": "jsHarmonyTutorials/FormBasic_Tabbed_Cust_Container?action=update&cust_id=1", "title": "Tabbed Form", "windowparams": "width=1200,height=700" },
     { "url": "jsHarmonyTutorials/FormBasic_Unbound", "title": "Unbound Form" },
     { "url": "jsHarmonyTutorials/FormBasic_CustomSQL?action=insert", "title": "Custom SQL" },
-    { "url": "jsHarmonyTutorials/FormBasic_Controls?action=update&c_id=1", "title": "Form Controls" },
+    { "url": "jsHarmonyTutorials/FormBasic_Controls?action=update&cust_id=1", "title": "Form Controls" },
     { "url": "jsHarmonyTutorials/FormBasic_HTMLContent", "title": "HTML Content" },
-    { "url": "jsHarmonyTutorials/FormBasic_EditableDefault?action=insert&c_sts=ACTIVE", "title": "Editable Default Querystring Value" }
+    { "url": "jsHarmonyTutorials/FormBasic_EditableDefault?action=insert&cust_sts=ACTIVE", "title": "Editable Default Querystring Value" }
   ]
 }
 </script>
@@ -52,92 +52,92 @@ Forms enable editing data, one record at a time.  Grids usually list rows, and t
 Forms are defined by setting the "layout" to "form".
 
 <h4>Standard Form</h4>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=2&popup=1','Basic Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=update&cust_id=2&popup=1','Basic Form')%>
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 </pre>
 
 <h4>Form with Subforms</h4>
 Forms can contain subforms:
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Subform_C?action=update&c_id=1&popup=1','Form w/Subform')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Subform_Cust?action=update&cust_id=1&popup=1','Form w/Subform')%>
 <pre>
 //Parent Form
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "CA"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "CustAddr"}
   ]
 }
 
 //Subform
-"CA": {
-  "table":"ca",
+"CustAddr": {
+  "table":"cust_addr",
   "layout":"form-m",
   "onecolumn":true,
   "caption":["Address","Addresses"],
   "fields":[
-    {"name":"ca_country","caption":"Country"},
-    {"name":"ca_addr1","caption":"Address"},
-    {"name":"ca_addr2","caption":""},
-    {"name":"ca_city","caption":"City"},
-    {"name":"ca_state","caption":"State"},
-    {"name":"ca_zip","caption":"Zip"}
+    {"name":"cust_addr_country","caption":"Country"},
+    {"name":"cust_addr_line1","caption":"Address"},
+    {"name":"cust_addr_line2","caption":""},
+    {"name":"cust_addr_city","caption":"City"},
+    {"name":"cust_addr_state","caption":"State"},
+    {"name":"cust_addr_zip","caption":"Zip"}
   ]
 }
 </pre>
 
 <h4>Tabbed Forms</h4>
 Forms can be tabbed:
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Tabbed_CW?action=update&c_id=1&popup=1','Tabbed Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Tabbed_Cust_Container?action=update&cust_id=1&popup=1','Tabbed Form')%>
 <pre>
 //Tabbed Parent Form
-"FormBasic_Tabbed_CW": {
-  "table":"c",
+"FormBasic_Tabbed_Cust_Container": {
+  "table":"cust",
   "layout":"form",
   "caption":["Customer","Customers"],
   "tabpanelstyle":"min-width:500px;",
   "tabs":[
-    {"name":"Overview","target":"FormBasic_Tabbed_C"},
-    {"name":"Contacts","caption": "Contacts","target":"FormBasic_Tabbed_CCL"}
+    {"name":"Overview","target":"FormBasic_Tabbed_Cust"},
+    {"name":"Contacts","caption": "Contacts","target":"FormBasic_Tabbed_CustContact_Listing"}
   ]
 }
 
 //Overview Tab
-"FormBasic_Tabbed_C": {
-  "table":"c",
+"FormBasic_Tabbed_Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 
 //Contacts Tab
-"FormBasic_Tabbed_CCL": {
-  "table":"cc",
+"FormBasic_Tabbed_CustContact_Listing": {
+  "table":"cust_contact",
   "layout":"grid",
   "caption":["Contact","Contacts"],
   "fields":[
-    {"name":"cc_name","caption":"Name"},
-    {"name":"cc_title","caption":"Title"},
-    {"name":"cc_email","caption":"Email"}
+    {"name":"cust_contact_name","caption":"Name"},
+    {"name":"cust_contact_title","caption":"Title"},
+    {"name":"cust_contact_email","caption":"Email"}
   ]
 }
 </pre>
@@ -168,16 +168,16 @@ It is best practice to use a table, since primary keys and foreign keys can be a
 Custom SQL can be used to override any of the SQL statements.  For example:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
-  "sqlinsert":"%%%SQL%%%; update c set c_start_dt = date('now', 'localtime');",
+  "sqlinsert":"%%%SQL%%%; update cust set cust_start_dt = date('now', 'localtime');",
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"name":"c_start_dt","caption":"Start Date","control":"label"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"name":"cust_start_dt","caption":"Start Date","control":"label"}
   ]
 }
 </pre>
@@ -191,19 +191,19 @@ The "fields" property defines the fields that are selected from the database.<br
 Primary keys are automatically added to the table, if they are defined as primary keys in the database.  Foreign keys for tables are automatically added when required by bindings.<br/>
 <br/>
 A variety of controls are available.  The control can be set using the "control" property:
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Controls?action=update&c_id=1&popup=1','Form Controls')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Controls?action=update&cust_id=1&popup=1','Form Controls')%>
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name","control":"textzoom"},
-    {"name":"c_sts","caption":"Status","control":"dropdown_L"},
-    {"name":"c_start_dt","caption":"Start Date","control":"date_mmddyy"},
-    {"name":"c_desc","caption":"Notes","control":"textarea"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name","control":"textzoom"},
+    {"name":"cust_sts","caption":"Status","control":"dropdown_L"},
+    {"name":"cust_start_dt","caption":"Start Date","control":"date_mmddyy"},
+    {"name":"cust_desc","caption":"Notes","control":"textarea"}
   ]
 }
 </pre>
@@ -239,20 +239,20 @@ Insert mode is accessed by adding "?action=insert" to the querystring:<br/>
 <h4>Browse Mode</h4>
 Browse mode is accessed by adding "?action=browse&PRIMARYKEY=VALUE" to the querystring:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormBasic_Standard?action=browse&c_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=browse&amp;c_id=1</a>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=browse&c_id=1&popup=1','Form Browse Mode')%>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=browse&cust_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=browse&amp;cust_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=browse&cust_id=1&popup=1','Form Browse Mode')%>
 
 <h4>Update Mode</h4>
 Update mode is accessed by adding "?action=update&PRIMARYKEY=VALUE" to the querystring:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=update&amp;c_id=1</a>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=update&c_id=1&popup=1','Form Update Mode')%>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=update&cust_id=1" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=update&amp;cust_id=1</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=update&cust_id=1&popup=1','Form Update Mode')%>
 
 <h3 data-level="2">Default Values</h3>
 Default values can be set on insert by adding the field value to the querystring:<br/>
 <br/>
-<a href="/jsHarmonyTutorials/FormBasic_Standard?action=insert&c_sts=ACTIVE" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=insert&amp;c_sts=ACTIVE</a>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=insert&c_sts=ACTIVE&popup=1','Form Insert Mode Default Value')%>
+<a href="/jsHarmonyTutorials/FormBasic_Standard?action=insert&cust_sts=ACTIVE" target="_blank">/jsHarmonyTutorials/FormBasic_Standard?action=insert&amp;cust_sts=ACTIVE</a>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_Standard?action=insert&cust_sts=ACTIVE&popup=1','Form Insert Mode Default Value')%>
 
 <h4>Always Editable on Insert</h4>
 Passing a default value will make the field read-only.  In order to keep the field editable, set the "locked_by_querystring" property to false:
@@ -260,8 +260,8 @@ Passing a default value will make the field read-only.  In order to keep the fie
 <pre>
 {
   "fields":[
-    { "name":"c_sts", "caption":"Status", "locked_by_querystring":false }
+    { "name":"cust_sts", "caption":"Status", "locked_by_querystring":false }
   ]
 }
 </pre>
-<%-getScreenshot('jsHarmonyTutorials/FormBasic_EditableDefault?action=insert&c_sts=ACTIVE&popup=1','Form Insert Mode Default Value Editable')%>
+<%-getScreenshot('jsHarmonyTutorials/FormBasic_EditableDefault?action=insert&cust_sts=ACTIVE&popup=1','Form Insert Mode Default Value Editable')%>

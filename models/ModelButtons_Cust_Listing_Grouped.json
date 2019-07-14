@@ -1,0 +1,18 @@
+{
+  "ModelButtons_Cust_Listing_Grouped": {
+    "table":"cust",
+    "layout":"grid",
+    "title":"All Customers",
+    "caption":["Customer","Customers"],
+    "actions":"B", 
+    "menu":"clients",
+    "buttons":[
+      {"group":"Actions","link":"insert:ModelButtons_Cust","icon":"insert"},
+      {"group":"Actions","link":"update:ModelButtons_Cust_Listing","icon":"search","text":"View Customers"}
+    ],
+    "fields":[
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"update:ModelButtons_Cust"}
+    ]
+  }
+}

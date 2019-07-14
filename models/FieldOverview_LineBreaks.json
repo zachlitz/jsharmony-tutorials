@@ -1,12 +1,12 @@
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name": "c_id","eol": true},
+    {"name": "cust_id","eol": true},
     {"control":"html", "value":"Sample Text"},
-    {"name": "c_name","nl": true},
-    {"name": "c_sts","block": true}
+    {"name": "cust_name","nl": true},
+    {"name": "cust_sts","block": true}
   ]
 }

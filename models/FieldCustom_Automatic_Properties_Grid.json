@@ -1,7 +1,7 @@
 { 
   "layout":"grid",
   "caption": "Automatic Field Properties",
-  "table":"allcontrols",
+  "table":"all_controls",
   "popup":[800,600],
   "fields": [
     {"name":"x_primary"},

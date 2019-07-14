@@ -1,13 +1,13 @@
 { 
   "GridBasic_Controls": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "actions":"B",
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_id","caption": "ID","control":"textbox_VS"},
-      {"name":"c_name","caption":"Customer","control":"label"},
-      {"name":"c_sts","caption":"Status","control":"dropdown_S"}
+      {"name":"cust_id","caption": "ID","control":"textbox_VS"},
+      {"name":"cust_name","caption":"Customer","control":"label"},
+      {"name":"cust_sts","caption":"Status","control":"dropdown_S"}
     ]
   }
 }

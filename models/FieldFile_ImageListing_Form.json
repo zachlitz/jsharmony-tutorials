@@ -1,17 +1,17 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": "Image Listing",
   "fields": [
     {"name":"x_primary", "type":"int", "key":1},
     {"name":"x_image_with_thumbnails","control":"image","type":"file","caption":"Image",
-      "controlparams": { "data_folder": "tutorials_allcontrols" },
+      "controlparams": { "data_folder": "tutorials_all_controls" },
       "controlstyle": "max-width: 200px; max-height: 100px;"
     },
     {"control":"image","type":"file","caption":"Thumbnail",
       "controlparams": {
-        "data_folder": "tutorials_allcontrols",
+        "data_folder": "tutorials_all_controls",
         "data_file_prefix": "x_image_with_thumbnails",
         "show_thumbnail": "small"
       }

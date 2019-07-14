@@ -273,8 +273,8 @@ The following key tables are stored in the jsharmony schema:
 
   <li>Settings Configuration (PPD)</li>
   <li>Developer / System / User Settings (XPP, GPP, PPP)</li>
-  <li>Developer List of Values (GCOD_H, GCOD2_H, GCOD*)</li>
-  <li>System List of Values (UCOD_H, UCOD2_H, UCOD*)<br/>&nbsp;</li>
+  <li>Developer List of Values (code_H, code2_H, code*)</li>
+  <li>System List of Values (code_H, code2_H, code*)<br/>&nbsp;</li>
 
   <li>Job Processor Tables (RQST, RQST_*)</li>
   <li>Automated Request Queue (RQ)</li>
@@ -287,10 +287,10 @@ The value for the current user is determined by auth.getContextUser in the jsHar
 <pre>
 jsh.Sites['default'].auth.getContextUser = function(user_info, jsh){ return 'S' + user_info[jsh.map.user_id]; };
 </pre>
-The jsHarmony Factory sets the context user to the following defaults, where PE_ID is the user ID:
+The jsHarmony Factory sets the context user to the following defaults, where sys_user_id is the user ID:
 <ul>
-  <li><b>Main system:</b> 'S'+PE_ID</li>
-  <li><b>Client Portal:</b> 'C'+PE_ID</li>
+  <li><b>Main system:</b> 'S'+sys_user_id</li>
+  <li><b>Client Portal:</b> 'C'+sys_user_id</li>
 </ul>
 <br/>
 <b>Unique IDs</b><br/>
@@ -319,8 +319,8 @@ jsHarmony works best when each table has a unique integer ID column.  In instanc
 -- Tutorial for using settings<br/>
 <br/>
 <b>Built-in List of Values</b><br/>
-UCOD_COUNTRY / UCOD2_COUNTRY_STATE<br/>
-UCOD_AC / UCOD_AHC / UCOD_AC1<br/>
+code_COUNTRY / code2_COUNTRY_STATE<br/>
+code_AC / code_AHC / code_AC1<br/>
 V_YEARS<br/>
 V_MONTHS<br/>
 <br/>

@@ -1,10 +1,10 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": "File Upload",
   "fields": [
     {"name":"x_primary", "type":"int", "key":1},
-    {"name":"x_file","type":"file","caption":"x_file", "controlparams": { "data_folder": "tutorials_allcontrols" }}
+    {"name":"x_file","type":"file","caption":"x_file", "controlparams": { "data_folder": "tutorials_all_controls" }}
   ]
 }

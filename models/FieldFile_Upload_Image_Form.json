@@ -1,5 +1,5 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": "Image Upload",
@@ -7,7 +7,7 @@
     {"name":"x_primary", "type":"int", "key":1},
     {"name":"x_image_basic","type":"file",
       "controlparams": {
-        "data_folder": "tutorials_allcontrols", 
+        "data_folder": "tutorials_all_controls", 
         "image": {
           "format": "jpg"
         }
@@ -15,7 +15,7 @@
     },
     {"name":"x_image_crop","type":"file",
       "controlparams": {
-        "data_folder": "tutorials_allcontrols", 
+        "data_folder": "tutorials_all_controls", 
         "image": {
           "crop": [300,300],
           "format": "jpg"
@@ -24,7 +24,7 @@
     },
     {"name":"x_image_resize","type":"file",
       "controlparams": {
-        "data_folder": "tutorials_allcontrols", 
+        "data_folder": "tutorials_all_controls", 
         "image": {
           "resize": [300,300],
           "format": "jpg"
@@ -33,7 +33,7 @@
     },
     {"name":"x_image_resize_extend","type":"file",
       "controlparams": {
-        "data_folder": "tutorials_allcontrols", 
+        "data_folder": "tutorials_all_controls", 
         "image": {
           "resize": [300,300,{ "upsize": true, "extend":  true }],
           "format": "jpg"

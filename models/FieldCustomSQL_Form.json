@@ -1,19 +1,19 @@
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "popup":[900,400],
   "fields":[
-    {"name":"c_id","caption": "ID","sqlinsert":"(select max(c_id)+2 from c)","actions":"BI","readonly":true},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_start_dt","caption":"Start Year",
+    {"name":"cust_id","caption": "ID","sqlinsert":"(select max(cust_id)+2 from cust)","actions":"BI","readonly":true},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_start_dt","caption":"Start Year",
      "type":"int",
-     "sqlselect":"(cast(strftime('%Y', c_start_dt) as integer))",
-     "sqlinsert":"(date(@c_start_dt||'-01-01'))",
-     "sqlupdate":"(date(@c_start_dt||'-01-01'))"
+     "sqlselect":"(cast(strftime('%Y', cust_start_dt) as integer))",
+     "sqlinsert":"(date(@cust_start_dt||'-01-01'))",
+     "sqlupdate":"(date(@cust_start_dt||'-01-01'))"
     },
-    {"name":"c_update_dt","control":"hidden",
+    {"name":"cust_update_dt","control":"hidden",
      "sqlinsert":"(date('now', 'localtime'))",
      "sqlupdate":"(date('now', 'localtime'))"
     }

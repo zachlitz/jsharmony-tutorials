@@ -1,0 +1,17 @@
+{
+  "ModelBreadcrumbs_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "actions":"B", 
+    "title":"All Customers",
+    "caption":["Customer","Customers"],
+    "breadcrumbs": {
+      "parents": []
+    },
+    "buttons":[{"link":"insert:ModelBreadcrumbs_Cust"}],
+    "fields":[
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"update:ModelBreadcrumbs_Cust"}
+    ]
+  }
+}

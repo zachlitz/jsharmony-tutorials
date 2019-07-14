@@ -1,14 +1,14 @@
 {
-  "C_CA_CONTAINER": {
+  "Cust_Address_Container": {
     "layout": "form",
-    "table": "c",
+    "table": "cust",
     "title": "",
     "actions": "BIUD",
     "caption": [ "", "Customer", "Customers" ],
     "popup":[800,400],
     "fields": [
-      {"name": "C_CA","control": "subform","controlstyle": "width:360px;margin-right:10px;",
-        "target": "C_CA","bindings": { "c_id": "c_id" },"actions": "BIUD","caption": "Address" }
+      {"name": "Cust_Address","control": "subform","controlstyle": "width:360px;margin-right:10px;",
+        "target": "Cust_Address","bindings": { "cust_id": "cust_id" },"actions": "BIUD","caption": "Address" }
     ]
   }
 }

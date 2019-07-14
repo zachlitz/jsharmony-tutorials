@@ -1,14 +1,14 @@
 { 
   "ModelSQL_Grid_sqlselect_sort": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "caption":["Customer","Customers"],
-    "sqlselect":"select c_id, c_name,c_sts from c where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by (case when c_sts='ACTIVE' then 0 else 1 end),%%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%",
-    "rowclass": "<#-xejs.case(datarow['c_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')#>",
+    "sqlselect":"select cust_id, cust_name,cust_sts from cust where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by (case when cust_sts='ACTIVE' then 0 else 1 end),%%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%",
+    "rowclass": "<#-xejs.case(datarow['cust_sts']=='ACTIVE','xgrid_row_highlight','xgrid_row_disabled')#>",
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"},
-      {"name":"c_sts","caption":"Status"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"},
+      {"name":"cust_sts","caption":"Status"}
     ]
   }
 }

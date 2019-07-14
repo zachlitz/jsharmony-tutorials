@@ -1,13 +1,13 @@
 {
   "ModelStyle_cellstyle_grid": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "title":"All Customers",
     "caption":["Customer","Customers"],
     "actions":"B",
     "fields":[
-      {"name":"c_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
-      {"name":"c_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B",
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B",
        "cellstyle": "border: 4px dashed black;",
        "cellclass": "fieldWithErrors"
       }

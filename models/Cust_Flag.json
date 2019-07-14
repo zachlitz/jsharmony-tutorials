@@ -1,0 +1,15 @@
+{
+  "layout":"multisel",
+  "title":"Customer Flags",
+  "caption":["","Flag","Flags"],
+	"table":"cust_flag",
+	"actions":"BU",
+  "roles": {"CX_B":"B","CX_X":"*"},
+	"fields":[
+	  {"name":"cust_id","type":"bigint","foreignkey": 1,"control":"hidden"},
+	  {"name":"cust_flag_id","type":"bigint","key":1,"control":"hidden"},
+	  {"name":"cust_flag_type","type":"varchar","length":"8",
+       "caption":"Flag Type","actions":"B",
+       "lov": { "code": "cust_flag_type" }}
+	]
+}

@@ -1,0 +1,16 @@
+{
+  "table":"v_cust",
+  "layout":"grid", 
+  "title":"All Customers",
+  "caption":["Customer","Customers"],
+  "actions":"B", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "sort":["^cust_name"], 
+  "buttons":[{"link":"insert:Cust"}],
+  "menu":"clients",
+  "fields":[
+    {"name":"cust_id","type":"bigint","actions":"B","key":1,"link":"update:Cust","caption": "ID","datalock":"client_cust_id"},
+    {"name":"cust_sts_txt","type":"varchar","length":"8","caption":"Status","actions":"B"},
+    {"name":"cust_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"update:Cust"}
+  ]
+}

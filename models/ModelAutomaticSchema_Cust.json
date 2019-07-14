@@ -1,0 +1,13 @@
+{
+  "ModelAutomaticSchema_Cust": {
+    "table":"cust",
+    "layout":"form",
+    "onecolumn":true,
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status"}
+    ]
+  }
+}

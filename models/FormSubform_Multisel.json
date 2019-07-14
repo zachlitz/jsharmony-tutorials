@@ -1,22 +1,22 @@
 { 
-  "FormSubform_Multisel_C": {
-    "table":"c",
+  "FormSubform_Multisel_Cust": {
+    "table":"cust",
     "layout":"form",
     "onecolumn":true,
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_name","caption":"Name"},
-      {"name":"c_sts","caption":"Status"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status"},
       {"control": "subform","target": "FormSubform_Multisel_CC"}
     ]
   },
   "FormSubform_Multisel_CC": {
-    "table":"cf",
+    "table":"cust_flag",
     "layout":"multisel",
     "caption":["Customer Flag","Customers Flags"],
     "fields":[
-      {"name":"c_id"},
-      {"name":"cf_type","caption":"Flag"}
+      {"name":"cust_id"},
+      {"name":"cust_flag_type","caption":"Flag"}
     ]
   }
 }

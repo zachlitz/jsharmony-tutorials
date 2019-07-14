@@ -24,18 +24,18 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Title": "Model Buttons",
   "Menu": ["Models","Models Overview"],
   "Code": [
-    "/models/ModelButtons_CL.json",
-    "/models/ModelButtons_C.json",
-    "/models/ModelButtons_CL_Grouped.json",
-    "/models/ModelButtons_CL_JavaScript.json",
+    "/models/ModelButtons_Cust_Listing.json",
+    "/models/ModelButtons_Cust.json",
+    "/models/ModelButtons_Cust_Listing_Grouped.json",
+    "/models/ModelButtons_Cust_Listing_JavaScript.json",
     "/models/ModelButtons_Icons.json",
     "/models/ModelButtons_Icons.onroute.js"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/ModelButtons_CL", "title": "Grid Buttons" },
-    { "url": "jsHarmonyTutorials/ModelButtons_C?action=update&c_id=2", "title": "Form Buttons" },
-    { "url": "jsHarmonyTutorials/ModelButtons_CL_Grouped", "title": "Buttons w/ Drop-down Groups" },
-    { "url": "jsHarmonyTutorials/ModelButtons_CL_JavaScript", "title": "JavaScript Button Links" },
+    { "url": "jsHarmonyTutorials/ModelButtons_Cust_Listing", "title": "Grid Buttons" },
+    { "url": "jsHarmonyTutorials/ModelButtons_Cust?action=update&cust_id=2", "title": "Form Buttons" },
+    { "url": "jsHarmonyTutorials/ModelButtons_Cust_Listing_Grouped", "title": "Buttons w/ Drop-down Groups" },
+    { "url": "jsHarmonyTutorials/ModelButtons_Cust_Listing_JavaScript", "title": "JavaScript Button Links" },
     { "url": "jsHarmonyTutorials/ModelButtons_Icons", "title": "Icon Listing" }
   ]
 }
@@ -43,13 +43,13 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 
 <h3>Buttons Overview</h3>
 Buttons are displayed in the top-right of each model.  
-<%-getScreenshot('jsHarmonyTutorials/ModelButtons_CL?popup=1','Model Buttons')%>
+<%-getScreenshot('jsHarmonyTutorials/ModelButtons_Cust_Listing?popup=1','Model Buttons')%>
 
 Custom buttons can be added to the button toolbar by adding to the model.buttons array:
 <pre>
 {
   "buttons":[
-    {"link":"insert:C"}
+    {"link":"insert:Cust"}
   ],
 }
 </pre>
@@ -60,11 +60,11 @@ Buttons have a variety of properties for configuring text, icon, and style:
 {
   "buttons":[
     {
-      "link":"insert:C",
+      "link":"insert:Cust",
       "text":"Add %%%CAPTION%%%",
       "icon":"insert",
       "style":"border:2px solid black;",
-      "class":"CL_buttonInsertC",
+      "class":"Cust_Listing_buttonInsertC",
       "nl":1
     }
   ],
@@ -104,16 +104,16 @@ config.default_buttons = <%=JSON.stringify((req?req.getJSH().Config.default_butt
 
 <h3>Button Groups</h3>
 Button Groups combine buttons into a drop-down menu.
-<%-getScreenshot('jsHarmonyTutorials/ModelButtons_CL_Grouped?popup=1','Model Buttons',{ onload:function(){     return new Promise(function(resolve){
-  jshInstance.$('.xelemModelButtons_CL_Grouped.xactions_dropdown').click()
+<%-getScreenshot('jsHarmonyTutorials/ModelButtons_Cust_Listing_Grouped?popup=1','Model Buttons',{ onload:function(){     return new Promise(function(resolve){
+  jshInstance.$('.xelemModelButtons_Cust_Listing_Grouped.xactions_dropdown').click()
   return resolve();
 }); } })%>
 Button groups can be defined via the "group" attribute, that specifies the name of the drop-down menu:
 <pre>
 {
   "buttons":[
-    {"group":"Actions","link":"insert:ModelButtons_C","icon":"insert"},
-    {"group":"Actions","link":"ModelButtons_CL","icon":"search","text":"View Customers"}
+    {"group":"Actions","link":"insert:ModelButtons_Cust","icon":"insert"},
+    {"group":"Actions","link":"ModelButtons_Cust_Listing","icon":"search","text":"View Customers"}
   ]
 }
 </pre>
@@ -185,35 +185,35 @@ The model id and action parameter are generated based on the link target above. 
 {
   "buttons":[
     {
-      "link": "update:CW",
-      "bindings": { "c_id": "c_id_billto" }
+      "link": "update:Cust_Container",
+      "bindings": { "cust_id": "cust_id_billto" }
     }
   ]
 }
-//When c_id_billto is "5" on the parent form
-URL: /CW?action=update&c_id=5
+//When cust_id_billto is "5" on the parent form
+URL: /Cust_Container?action=update&cust_id=5
 
 {
   "buttons":[
     {
       "link": "update:EW",
-      "bindings": { "E_ID": "E_ID" }
+      "bindings": { "item_id": "item_id" }
     }
   ]
 }
-//When E_ID is "3" on the parent form
-URL: /E?action=update&E_ID=3
+//When item_id is "3" on the parent form
+URL: /Item?action=update&item_id=3
 
 {
   "buttons":[
     {
-      "link": "update:CW&tabs={\"CW\":\"C_CCL\"}",
-      "bindings": { "c_id": "c_id" }
+      "link": "update:Cust_Container&tabs={\"Cust_Container\":\"Cust_Contact_Listing\"}",
+      "bindings": { "cust_id": "cust_id" }
     }
   ]
 }
-//When c_id is "1" on the parent form
-URL: /CL?action=update&c_id=1tabs={"CW":"C_CCL"}
+//When cust_id is "1" on the parent form
+URL: /Cust_Listing?action=update&cust_id=1tabs={"Cust_Container":"Cust_Contact_Listing"}
 </pre>
 
 <h3>JavaScript</h3>
@@ -240,7 +240,7 @@ Redirects to a target URL
 @param string url : The target URL
 @return false
 
-Example: XExt.navTo('/CW?c_id=4')
+Example: XExt.navTo('/Cust_Container?cust_id=4')
 </pre>
 
 <h4>XExt.popupForm(modelid, action, params, windowparams, win)</h4>
@@ -248,7 +248,7 @@ Example: XExt.navTo('/CW?c_id=4')
 Opens a model in a popup window
 @param string modelid      : The target model id
 @param string action       : The model action, must be "insert", "update", or "browse"
-@param object params       : Querystring parameters for the popup, ex. { "c_id": 4 }
+@param object params       : Querystring parameters for the popup, ex. { "cust_id": 4 }
 @param object windowparams : Parameters passed to window.open
                              Default: { width: 1000, height: 600, resizable: 1, scrollbars: 1 }
 @param window win          : (Optional) Target window for the redirect.
@@ -261,14 +261,14 @@ Note: If the window width and height is not specified, it will default to:
         1. The model.popup size if available
         2. 1000 x 600
 
-Example: XExt.popupForm('CW','update',{'c_id':XModels[modelid].controller.form.Data.c_id()},{width:850,height:600});
+Example: XExt.popupForm('Cust_Container','update',{'cust_id':XModels[modelid].controller.form.Data.cust_id()},{width:850,height:600});
 </pre>
 
 <h4>XExt.popupReport (modelid, params, windowparams, win)</h4>
 <pre>
 Opens a report PDF in a popup window
 @param string modelid      : The target report model id
-@param object params       : Querystring parameters for the report, ex. { "c_id": 4 }
+@param object params       : Querystring parameters for the report, ex. { "cust_id": 4 }
 @param object windowparams : Parameters passed to window.open
                              Default: { width: 1000, height: 600, resizable: 1, scrollbars: 1 }
 @param window win          : (Optional) Target window for the redirect.
@@ -281,7 +281,7 @@ Note: If the window width and height is not specified, it will default to:
         1. The model.popup size if available
         2. 1000 x 600
 
-Example: XExt.popupReport('RPE',{ 'pe_sts': 'ACTIVE' },{width:850,height:600});
+Example: XExt.popupReport('RPE',{ 'sys_user_sts': 'ACTIVE' },{width:850,height:600});
 </pre>
 
 <h3>Hiding Buttons via Actions / Security / Roles</h3>
@@ -290,7 +290,7 @@ Buttons can be restricted to be hidden based on the current action, or based on 
 {
   "buttons":[
     {
-      "link":"update:CW",
+      "link":"update:Cust_Container",
       "actions":"BIU",
       "roles": {
         "main":{"DADMIN":"*"},
@@ -317,7 +317,7 @@ By default, buttons with links starting with "insert:" will be hidden if the use
 <pre>
 {
   "buttons":[
-    "link":"insert:C",
+    "link":"insert:Cust",
     "hide_when_target_inaccessible": false
   ]
 }

@@ -1,0 +1,15 @@
+{ 
+  "GridSearch_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "grid_expand_search": true,
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer",
+       "sqlsearch":"cust_name||' '||cust_desc",
+       "sqlwhere":"(cust_name like '%'||@cust_name||'%' or cust_desc like '%'||@cust_name||'%')"
+      }
+    ]
+  }
+}

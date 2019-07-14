@@ -1,0 +1,25 @@
+{
+  "layout": "form", 
+  "title": "<#=bcrumbs.cust_name#> Contacts",
+  "table": "cust_contact",
+  "actions": "BIUD", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "caption": [ "", "Contact", "Contacts" ],
+  "menu": "clients",
+  "breadcrumbs":{
+    "sql": "select cust_name from cust where cust_id=(ifnull(@cust_id,(select cust_id from cust_contact where cust_contact_id=@cust_contact_id)))",
+    "sql_params":["cust_id"]
+  },
+  "popup":[1000,700],
+  "fields": [
+    {"name":"cust_id", "type": "bigint", "caption": "Customer ID","actions":"BI","default":"js:XExt.UndefinedBlank(jsh._GET['cust_id'])","control":"textbox","readonly":1,"captionstyle": "width:120px;text-align:right;"},
+    {"name":"cust_contact_id", "type": "bigint", "key": 1},
+    {"name":"cust_contact_name","type":"varchar","length":"100","caption":"Name","actions":"BIU","nl": 1,"control": "textbox",
+     "captionstyle": "width:120px;text-align:right;",
+     "default": { "sql": "select 'Contact #'||(ifnull((select count(*) from cust_contact where cust_id=@cust_id),0)+1)", "sql_params": ["cust_id"] } 
+     },
+    {"name":"cust_contact_title","type":"varchar","length":"50","caption":"Title","actions":"BIU","nl": 1,"control": "textbox"},
+    {"name":"cust_contact_phone","type":"varchar","length":"50","caption":"Phone","actions":"BIU","nl": 1,"control": "textbox"},
+    {"name":"cust_contact_email","type":"varchar","length":"100","caption":"Email","actions":"BIU","nl": 1,"control": "textbox"}
+  ]
+}

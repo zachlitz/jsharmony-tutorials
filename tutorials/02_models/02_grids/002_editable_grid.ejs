@@ -23,15 +23,15 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
   "Title": "Editable Grid",
   "Menu": ["Models","Grids"],
   "Code": [
-    "/models/GridEditable_CL.json"
+    "/models/GridEditable_Cust_Listing.json"
   ],
-  "Demo": "jsHarmonyTutorials/GridEditable_CL?popup=1"
+  "Demo": "jsHarmonyTutorials/GridEditable_Cust_Listing?popup=1"
 }
 </script>
 
 <h3>Introduction</h3>
 Editable grids provide for in-line editing of grid data.  See the <a href="/tutorials/grid_basic">Basic Grid</a> tutorial for information on how to set up a basic editable grid.
-<%-getScreenshot('jsHarmonyTutorials/GridEditable_CL?popup=1','Editable Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/GridEditable_Cust_Listing?popup=1','Editable Grid')%>
 
 <h3>Grid Commit Levels</h3>
 A commit happens when data is saved to the server.  the following commit levels are available:
@@ -58,8 +58,8 @@ Grid validation can run at either the "row" or "cell" level.  By default, valida
 }
 </pre>
 
-<%-getScreenshot('jsHarmonyTutorials/GridEditable_CL?popup=1','Grid Validation', { onload:function(){ return new Promise(function(resolve){
-  jshInstance.$root('.c_name').first().focus().val('').change().blur();
+<%-getScreenshot('jsHarmonyTutorials/GridEditable_Cust_Listing?popup=1','Grid Validation', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.cust_name').first().focus().val('').change().blur();
   jshInstance.$root('.save').click();
   window.setTimeout(resolve, 100);
 }); } })%>
@@ -106,7 +106,7 @@ When the user adds a new row, by default, the row is added to the top of the gri
 }
 </pre>
 
-<%-getScreenshot('jsHarmonyTutorials/GridEditable_CL?popup=1','Grid Insert', { onload:function(){ return new Promise(function(resolve){
+<%-getScreenshot('jsHarmonyTutorials/GridEditable_Cust_Listing?popup=1','Grid Insert', { onload:function(){ return new Promise(function(resolve){
   jshInstance.$root('.xbuttoninsert').click();
   window.setTimeout(resolve, 100);
 }); } })%>

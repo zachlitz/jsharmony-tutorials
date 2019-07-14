@@ -1,0 +1,49 @@
+{ 
+  "Cust_Listing": {
+    "table":"v_cust",
+    "layout":"grid", 
+    "title":"All Customers",
+    "caption":["Customer","Customers"],
+    "actions":"B", 
+    "roles": {"C_B":"B","C_X":"*"},
+    "sort":["^cust_name"], 
+    "buttons":[{"link":"insert:Cust"}],
+    "menu":"clients",
+    "fields":[
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"link":"update:Cust","caption": "ID"},
+      {"name":"cust_sts_txt","type":"varchar","length":"8","caption":"Status","actions":"B"},
+      {"name":"cust_name","type":"varchar","length":"50","caption":"Customer","caption_ext": "Customer Name","actions":"B","link":"update:Cust"}
+    ]
+  },
+  "Cust_Listing_Tabs": {
+    "inherits": "Cust_Listing",
+    //"buttons":[{"link":"insert:Cust_Container"}],
+    "fields": [
+      {"name":"cust_id","link":"update:Cust_Container"},
+      {"name":"cust_name","link":"update:Cust_Container"}
+    ]
+  },
+  "Cust_Listing_Encrypt": {
+    "inherits": "Cust_Listing",
+    "fields": [
+      {"name":"cust_id","link":"update:Cust_Encrypt"},
+      {"name":"cust_name","link":"update:Cust_Encrypt"},
+      {"name":"cust_einhash","type":"hash","length":20,"salt":"cust_einhash","enable_search":true,"caption": "EIN"}
+    ]
+  },
+  "Cust_Listing_File": {
+    "inherits": "Cust_Listing",
+    "fields": [
+      {"name":"cust_id","link":"update:Cust_File"},
+      {"name":"cust_name","link":"update:Cust_File"}
+    ]
+  },
+  "Cust_Listing_Dev": {
+    "inherits": "Cust_Listing",
+    "buttons":[{"link":"insert:Cust_Container_Dev"}],
+    "fields": [
+      {"name":"cust_id","link":"update:Cust_Container_Dev"},
+      {"name":"cust_name","link":"update:Cust_Container_Dev"}
+    ]
+  }
+}

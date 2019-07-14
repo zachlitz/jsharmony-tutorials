@@ -1,0 +1,14 @@
+{
+  "ModelStyle_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "title":"All Customers",
+    "caption":["Customer","Customers"],
+    "actions":"B", 
+    "css": ".xbody_ModelStyle_Cust_Listing .xform_title { color: red; }",
+    "fields":[
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"update:ModelButtons_Cust"}
+    ]
+  }
+}

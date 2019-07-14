@@ -1,0 +1,25 @@
+{ 
+  "GridCustom_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "actions":"B",
+    "caption":["Customer","Customers"],
+    "templates": { "grid": ".xgrid_GridCustom_Cust_Listing_template" },
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"}
+    ]
+  },
+  "GridCustom_Cust": {
+    "table":"cust",
+    "layout":"form",
+    "onecolumn":true,
+    "popup":[600,400],
+    "caption":["Customer","Customers"],
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status","validate":["Required"]}
+    ]
+  }
+}

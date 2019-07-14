@@ -1,5 +1,5 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"grid",
   "caption": ["Item", "Items"],
   "popup":[900,400],

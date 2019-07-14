@@ -22,7 +22,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "Title": "Datalocks",
   "Menu": ["Models","Models Overview"],
-  "Code": ["/models/ModelDatalocks_CC.json"]
+  "Code": ["/models/ModelDatalocks_CustContact.json"]
 }
 </script>
 
@@ -66,7 +66,7 @@ One of the challenges of building client portals is ensuring security.  Datalock
 <h3>Defining Site Datalocks</h3>
 Datalocks must first be defined in the Site config.  The site.datalock[KEY_FIELD] function should return the key field value.  In the standard implementation, the key field value would be stored in req.gdata upon authentication.<br/>
 <br/>
-If using the jsHarmony Factory, the c_id (Customer ID) datalock is already defined for the Customer Portal, so only the datalock query SQL statements need to be configured.
+If using the jsHarmony Factory, the cust_id (Customer ID) datalock is already defined for the Customer Portal, so only the datalock query SQL statements need to be configured.
 <pre>
 var site = jsh.Sites['main'];
 site.datalock = {
@@ -80,10 +80,10 @@ For example:
 <pre>
 var site = jsh.Sites['main'];
 site.datalock = {
-  "c_id": function (req) { return req.gdata['c_id']; }
+  "cust_id": function (req) { return req.gdata['cust_id']; }
 };
 site.datalocktypes = {
-  "c_id": { 'name': "c_id", 'type': 'bigint' }
+  "cust_id": { 'name': "cust_id", 'type': 'bigint' }
 };
 </pre>
 
@@ -102,13 +102,13 @@ For example:
 <pre>
 config.datalocks = {
   "client":{
-    "c_id":{
-      "o_id":"o_id in (select o_id from o where o.c_id=@datalock_c_id)",
-      "o_contact":"o_contact in (select cc_id from cc where cc.c_id=@datalock_c_id)",
-      "ca_id":"ca_id in (select ca_id from ca where ca.c_id=@datalock_c_id)",
-      "cc_id":"cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)",
-      "cf_id":"cf_id in (select cf_id from cf where cf.c_id=@datalock_c_id)",
-      "e_id":"e_id in (select e_id from e where e.c_id=@datalock_c_id)",
+    "cust_id":{
+      "o_id":"o_id in (select o_id from o where o.cust_id=@datalock_cust_id)",
+      "o_contact":"o_contact in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
+      "cust_addr_id":"cust_addr_id in (select cust_addr_id from cust_addr where cust_addr.cust_id=@datalock_cust_id)",
+      "cust_contact_id":"cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
+      "cust_flag_id":"cust_flag_id in (select cust_flag_id from cust_flag where cust_flag.cust_id=@datalock_cust_id)",
+      "item_id":"item_id in (select item_id from item where item.cust_id=@datalock_cust_id)",
       "always": "1=1",
       "never": "1=2"
     }
@@ -120,7 +120,7 @@ The datalock SQL is a "where" expression, which should limit FIELD_NAME to only 
 <br/>
 When processing datalocks, forms fields named "FIELD_NAME" will then automatically have the datalock applied to that field. Datalocks can also be named differently from field names, however those datalocks will not be automatically linked to fields.<br/>
 <br/>
-In the example above, the Customer ID datalock (c_id) will be applied to the Orders table (with the key o_id).  Any Order Listing will only show Orders that are accessible by that Customer.
+In the example above, the Customer ID datalock (cust_id) will be applied to the Orders table (with the key o_id).  Any Order Listing will only show Orders that are accessible by that Customer.
 
 <h3>Using Site Datalocks in Models</h3>
 
@@ -138,8 +138,8 @@ For example:
 <pre>
 {
   "fields":[
-    {"name":"o_id","type":"bigint","key":1,"datalock":{ "c_id": "o_id" } },
-    {"name":"other_field","type":"bigint","foreignkey":1,"datalock":{ "c_id": "always" } }
+    {"name":"o_id","type":"bigint","key":1,"datalock":{ "cust_id": "o_id" } },
+    {"name":"other_field","type":"bigint","foreignkey":1,"datalock":{ "cust_id": "always" } }
   ]
 }
 </pre>
@@ -152,7 +152,7 @@ For every database statement, the datalocks expression %%%DATALOCKS%%% is comput
   <li>
     For each DATALOCK_KEY_FIELD in the current site:
     <ul>
-      <li>Add a SQL parameter to the SQL command: @datalock_DATALOCK_KEY_FIELD, ex. @datalock_c_id</li>
+      <li>Add a SQL parameter to the SQL command: @datalock_DATALOCK_KEY_FIELD, ex. @datalock_cust_id</li>
       <li>
         For each field in the model:
         <ul>
@@ -173,18 +173,18 @@ There are two types of datalocks:
 <h4>SQL "where" clause datalocks</h4>
 SQL "where" clause datalocks are added to the where clause of a select, update, and delete statement
 <pre>
-select * from cc where 1=1 /*WHERE-CLAUSE DATALOCKS*/
+select * from cust_contact where 1=1 /*WHERE-CLAUSE DATALOCKS*/
 //===Evaluates to:
-select * from cc where 1=1 and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)
+select * from cust_contact where 1=1 and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)
 </pre>
 <h4>SQL "pre-check" datalocks</h4>
 SQL "pre-check" datalocks are run before insert / update statements to verify that input parameters such as foreign keys are valid:
 <pre>
 /*PRE-CHECK DATALOCKS*/
-update cc set cc_name=@cc_name where cc_id=@cc_id /*WHERE-CLAUSE DATALOCKS*/;
+update cust_contact set cust_contact_name=@cust_contact_name where cust_contact_id=@cust_contact_id /*WHERE-CLAUSE DATALOCKS*/;
 //===Evaluates to:
-do $$begin if not exists(select * from (select @cc_id as cc_id) dual where cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)) then raise exception 'INVALID ACCESS'; end if; end$$; 
-update cc set cc_name=@cc_name where cc_id=@cc_id and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id));
+do $$begin if not exists(select * from (select @cust_contact_id as cust_contact_id) dual where cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)) then raise exception 'INVALID ACCESS'; end if; end$$; 
+update cust_contact set cust_contact_name=@cust_contact_name where cust_contact_id=@cust_contact_id and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id));
 </pre>
 
 <h3>Datalock SQL per API Call</h3>
@@ -192,20 +192,20 @@ update cc set cc_name=@cc_name where cc_id=@cc_id and cc_id in (select cc_id fro
 &nbsp;<br/>
 
 <b>Select - Grid</b>
-<pre>select * from c where 1=1 ***WHERE_CLAUSE_DATALOCKS***</pre>
+<pre>select * from cust where 1=1 ***WHERE_CLAUSE_DATALOCKS***</pre>
 
 <b>Select - Form / Form-m</b>
-<pre>select * from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***</pre>
+<pre>select * from cust where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***</pre>
 
 <b>Select - Multisel</b>
 <pre>
 ***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN QUERY)***
-select * from (select * from cf where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***) outer join %%%LOVSQL%%%
+select * from (select * from cust_flag where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***) outer join %%%LOVSQL%%%
 //%%%LOVSQL%%% can also have separate datalocks if it is a custom SQL expression
 </pre>
 
 <b>Select - Tab Code</b>
-<pre>select c_sts from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***</pre>
+<pre>select cust_sts from cust where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***</pre>
 
 <b>Select - SQL Title</b>
 <pre>Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL</pre>
@@ -224,7 +224,7 @@ If the LOV is using a custom sql, sql2, or sqlmp expression:
 <pre>***PRE_CHECK_DATALOCKS (PARAMETERS USED IN THE BREADCRUMBS EXPRESSION)***</pre>
 
 <b>Select - Download</b>
-<pre>select filename,filesize from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***</pre>
+<pre>select filename,filesize from cust where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***</pre>
 
 <b>Select - Report</b>
 <pre>Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL, if not running within in a batch</pre>
@@ -235,22 +235,22 @@ If the LOV is using a custom sql, sql2, or sqlmp expression:
 <b>Insert</b>
 <pre>
 ***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN INSERT)***
-insert into c(columns) values(values);
+insert into cust(columns) values(values);
 //For encryption
-update c set c_encrypted=@c_encrypted where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***
+update cust set cust_encrypted=@cust_encrypted where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***
 </pre>
 
 <b>Update - Grid/Form/Form-m</b>
 <pre>
 ***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN UPDATE)***
-update c set column=value where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***
+update cust set column=value where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***
 </pre>
 
 <b>Update - Multisel</b>
 <pre>
 ***PRE_CHECK_DATALOCKS (FOREIGN KEYS USED IN UPDATE)***
-delete from cf where c_id=@c_id and cf_type not in (...) ***WHERE_CLAUSE_DATALOCKS***
-insert into cf (select codeval from (%%%LOVSQL%%%) where codeval in (...) and codeval not in (select cf_type from cf where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***))
+delete from cust_flag where cust_id=@cust_id and cust_flag_type not in (...) ***WHERE_CLAUSE_DATALOCKS***
+insert into cust_flag (select code_val from (%%%LOVSQL%%%) where code_val in (...) and code_val not in (select cust_flag_type from cust_flag where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***))
 //%%%LOVSQL%%% can also have separate datalocks if it is a custom SQL expression
 </pre>
 
@@ -262,22 +262,22 @@ Replace ***WHERE_CLAUSE_DATALOCKS*** in custom SQL
 
 <b>Delete</b>
 <pre>
-delete from c where c_id=@c_id ***WHERE_CLAUSE_DATALOCKS***
+delete from cust where cust_id=@cust_id ***WHERE_CLAUSE_DATALOCKS***
 </pre>
 
 <h3>Datalock SQL Examples</h3>
 In the examples below, the following model definition will be used:
 <pre>
 {
-  "CC": {
+  "CustContact": {
     "layout": "form", 
-    "table": "cc",
+    "table": "cust_contact",
     "actions": "BIUD", 
     "caption": [ "", "Contact", "Contacts" ],
     "fields": [
-      {"name":"cc_id","type":"bigint","actions":"B","key":1,"control":"label","caption":"ID","datalock":{ "c_id": "cc_id" } },
-      {"name":"c_id","type":"bigint","actions":"BI","foreignkey":1,"control":"hidden","datalock":{ "c_id": "c_id" } },
-      {"name":"cc_name","type":"varchar","length":"100","caption":"Name","actions":"BIU","control": "textbox","nl": 1 }
+      {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"control":"label","caption":"ID","datalock":{ "cust_id": "cust_contact_id" } },
+      {"name":"cust_id","type":"bigint","actions":"BI","foreignkey":1,"control":"hidden","datalock":{ "cust_id": "cust_id" } },
+      {"name":"cust_contact_name","type":"varchar","length":"100","caption":"Name","actions":"BIU","control": "textbox","nl": 1 }
     ]
   }
 }
@@ -285,32 +285,39 @@ In the examples below, the following model definition will be used:
 
 <h4>SELECT Statement</h4>
 <pre>
-Base SQL Statement:  select cc_id,c_id,cc_name from cc where 1=1 %%%DATALOCKS%%%
-Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
-Final SQL Statement: select cc_id,c_id,cc_name from cc where 1=1 and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+Base SQL Statement:  select cust_contact_id,cust_id,cust_contact_name from cust_contact where 1=1 %%%DATALOCKS%%%
+Datalock Clause:     and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
+Final SQL Statement: select cust_contact_id,cust_id,cust_contact_name from cust_contact where 1=1 and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
 </pre>
 
 <h4>UPDATE Statement</h4>
 <pre>
-Base SQL Statement:  update c set c_name=@c_name where cc_id=@cc_id %%%DATALOCKS%%%
-Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
-//No pre-checks because the c_id and cc_id are not being updated
-Final SQL Statement: update c set c_name=@c_name where cc_id=@cc_id and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+Base SQL Statement:  update cust set cust_name=@cust_name where cust_contact_id=@cust_contact_id %%%DATALOCKS%%%
+Datalock Clause:     and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
+//No pre-checks because the cust_id and cust_contact_id are not being updated
+Final SQL Statement: update cust set cust_name=@cust_name where cust_contact_id=@cust_contact_id and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
 </pre>
 
 <h4>INSERT Statement</h4>
 <pre>
-Base SQL Statement:  with xrslt as (insert into cc(c_id,cc_name) values (@c_id,@cc_name)) returning cc_id as cc_id) select cc_id from xrslt;
-Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
-Final SQL Statement: do $$begin if not exists(select * from (select @cc_id as cc_id) dual where cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id)) then raise exception 'INVALID ACCESS'; end if; end$$; 
-                     with xrslt as (insert into cc(c_id,cc_name) values (@c_id,@cc_name)) returning cc_id as cc_id) select cc_id from xrslt;
+Base SQL Statement:  with xrslt as (insert into cust_contact(cust_id,cust_contact_name) values (@cust_id,@cust_contact_name)) returning cust_contact_id as cust_contact_id) select cust_contact_id from xrslt;
+Datalock Clause:     and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
+Final SQL Statement: do $$begin if not exists(select * from (select @cust_contact_id as cust_contact_id) dual where cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)) then raise exception 'INVALID ACCESS'; end if; end$$; 
+                     with xrslt as (insert into cust_contact(cust_id,cust_contact_name) values (@cust_id,@cust_contact_name)) returning cust_contact_id as cust_contact_id) select cust_contact_id from xrslt;
 </pre>
 
 <h4>DELETE Statement</h4>
 <pre>
-Base SQL Statement:  delete from  c where cc_id=@cc_id %%%DATALOCKS%%%
-Datalock Clause:     and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
-Final SQL Statement: delete from  c where cc_id=@cc_id and cc_id in (select cc_id from cc where cc.c_id=@datalock_c_id) and c_id=@datalock_c_id
+Base SQL Statement:  delete from  cust where cust_contact_id=@cust_contact_id %%%DATALOCKS%%%
+Datalock Clause:     and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
+Final SQL Statement: delete from  cust where cust_contact_id=@cust_contact_id and cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id) and cust_id=@datalock_cust_id
+
 </pre>
 
 <h3>Datalock Implementation Requirements</h3>
@@ -384,7 +391,7 @@ Datalocks should be ignored for a field or SQL statement only if the end user sh
 If datalocks should be ignored for the entire model, add the DATALOCK_KEY_FIELD to the model.nodatalock array:
 <pre>
 {
-  "nodatalock": ["c_id"]
+  "nodatalock": ["cust_id"]
 }
 </pre>
 
@@ -392,14 +399,14 @@ If datalocks should be ignored for the entire model, add the DATALOCK_KEY_FIELD 
 If datalocks should be ignored for a title's sql statement, add the DATALOCK_KEY_FIELD to the model.title.nodatalock array:
 <pre>
 {
-  "title": { "sql":"select getdate()", "nodatalock": ["c_id"] }
+  "title": { "sql":"select getdate()", "nodatalock": ["cust_id"] }
 }
 //Or, for separate insert/browse/update titles
 {
   "title": { 
-    "insert": { "sql":"select getdate()", "nodatalock": ["c_id"] },
-    "browse": { "sql":"select getdate()", "nodatalock": ["c_id"] },
-    "update": { "sql":"select getdate()", "nodatalock": ["c_id"] }
+    "insert": { "sql":"select getdate()", "nodatalock": ["cust_id"] },
+    "browse": { "sql":"select getdate()", "nodatalock": ["cust_id"] },
+    "update": { "sql":"select getdate()", "nodatalock": ["cust_id"] }
   }
 }
 </pre>
@@ -409,10 +416,10 @@ If datalocks should be ignored for a LOV (List of Values), add the DATALOCK_KEY_
 <pre>
 {
   "fields": [
-    { "name": "cc_id", "type": "varchar", "length": 8, "actions": "BIU", "control": "dropdown", 
+    { "name": "cust_contact_id", "type": "varchar", "length": 8, "actions": "BIU", "control": "dropdown", 
       "lov": { 
-        "sql": "select cc_id as codeval, cc_name as codetxt from cc order by cc_name",
-        "nodatalock": ["c_id"]
+        "sql": "select cust_contact_id as code_val, cust_contact_name as code_txt from cust_contact order by cust_contact_name",
+        "nodatalock": ["cust_id"]
       },
     }
   ]
@@ -424,10 +431,10 @@ If datalocks should be ignored for a Default Value SQL expression, add the DATAL
 <pre>
 {
   "fields": [
-    { "name": "cc_id", "type": "varchar", "length": 8, "actions": "BIU", "control": "dropdown", 
+    { "name": "cust_contact_id", "type": "varchar", "length": 8, "actions": "BIU", "control": "dropdown", 
       "default": { 
-        "sql": "select cc_id from cc limit 1",
-        "nodatalock": ["c_id"]
+        "sql": "select cust_contact_id from cust_contact limit 1",
+        "nodatalock": ["cust_id"]
       },
     }
   ]
@@ -441,7 +448,7 @@ If datalocks should be ignored for a report data query, add the DATALOCK_KEY_FIE
   "reportdata" : {
     "global_data": {
       "sql": "select (select gpp_val from jsharmony.gpp where gpp_attrib='NAME') as company_name",
-      "nodatalock": ["c_id"] 
+      "nodatalock": ["cust_id"] 
     },
 }
 </pre>

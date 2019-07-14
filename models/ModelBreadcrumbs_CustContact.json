@@ -1,0 +1,24 @@
+{
+  "ModelBreadcrumbs_CustContact": {
+    "layout": "form", 
+    "table": "cust_contact",
+    "actions": "BIUD", 
+    "caption": [ "", "Contact", "Contacts" ],
+    "breadcrumbs": {
+      "parents": ["ModelBreadcrumbs_Cust_Listing","<a href='/ModelBreadcrumbs_Cust?action=update&cust_id=<#=bcrumbs.cust_id#>'><#=bcrumbs.cust_name#></a>"],
+      "insert": {
+        "sql": "select cust_id,cust_name from cust where cust_id=@cust_id",
+        "title": "New Contact"
+      },
+      "update": {
+        "sql": "select cust_contact.cust_id,cust_name,cust_contact_name from cust_contact inner join cust on cust_contact.cust_id=cust.cust_id where cust_contact_id=@cust_contact_id",
+        "title": "<#=bcrumbs.cust_contact_name#>"
+      }
+    },
+    "fields": [
+      {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"control":"label","caption":"ID","datalock":{ "cust_id": "cust_contact_id" } },
+      {"name":"cust_id","type":"bigint","actions":"BIU","foreignkey":1,"control":"hidden","datalock":{ "cust_id": "cust_id" } },
+      {"name":"cust_contact_name","type":"varchar","length":"100","caption":"Name","actions":"BIU","control": "textbox","nl": 1 }
+    ]
+  }
+}

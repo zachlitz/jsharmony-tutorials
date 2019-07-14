@@ -47,7 +47,7 @@ The model datasource is set using the "table" property.  The value of the "table
 Schemas can be used in the table property by setting the value to SCHEMA.TABLE:
 <pre>
 {
-  "table": "public.c"
+  "table": "public.cust"
 }
 </pre>
 
@@ -121,7 +121,7 @@ Since "multisel" joins against the List of Values (LOV), the %%%LOVSQL%%% parame
 Custom "required" search clauses are most easily implemented using the model's "sqlwhere" property:
 <pre>
 {
-  "sqlwhere": "c_sts='ACTIVE'"
+  "sqlwhere": "cust_sts='ACTIVE'"
 }
 </pre>
 
@@ -130,7 +130,7 @@ Simple sort expressions can be built using model.sort, as described in the <a hr
 Additional permanent prefixed or suffixed sort expressions can be added using "model.sqlselect", for instance to always display "ACTIVE" customers on top:
 <pre>
 {
-  "sqlselect":"select c_id, c_name,c_sts from c where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by (case when c_sts='ACTIVE' then 0 else 1 end),%%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%"
+  "sqlselect":"select cust_id, cust_name,cust_sts from cust where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by (case when cust_sts='ACTIVE' then 0 else 1 end),%%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%"
 }
 </pre>
 
@@ -149,9 +149,9 @@ The sqlinsert statement should return the new primary key.  This will be used to
 The sqlinsertencrypt statement should return the # of rows that were updated.  This validates that the update completed successfully.
 <pre>
   Sample sqlinsert:
-    with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+    with xrslt as (insert into cust(cust_name,cust_sts)  values(@cust_name,@cust_sts) returning cust_id as cust_id) select cust_id from xrslt;
   Sample sqlinsertencrypt:
-    with xrslt as (update c set c_ssn=@c_ssn,c_ssnhash=@c_ssnhash where 1=1 and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+    with xrslt as (update cust set cust_ssn=@cust_ssn,cust_ssnhash=@cust_ssnhash where 1=1 and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 </pre>
 
 <h4>model.sqlupdate</h4>
@@ -224,52 +224,52 @@ A model with the "unbound" attribute will not execute any SQL statements for Sel
 For the model:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption":["Customer","Customers"],
   "grid_rowcount":1,
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Customer"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Customer"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 </pre>
 
 <pre>
 On Load:
-  sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1   order by c_id asc limit 51 offset 0
-  sqlrowcount: select count(*) as cnt from c where  1=1
-  LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+  sqlselect: select cust_id,cust_name,cust_sts,(select code_txt from public.code_cust_sts where code_val=(cust_sts)) as __code_txt__cust_sts from cust where  1=1   order by cust_id asc limit 51 offset 0
+  sqlrowcount: select count(*) as cnt from cust where  1=1
+  LOV: select code_val,code_txt from public.code_cust_sts where (code_end_dt is null or code_end_dt>current_date) order by code_seq,code_txt
 
 On Search:
-  sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1   and ( c_name ilike @search_0_c_name) order by c_id asc limit 51 offset 0
-             @search_0_c_name:"%ACME%"
-  sqlrowcount: select count(*) as cnt from c where  1=1   and ( c_name ilike @search_0_c_name)
-             @search_0_c_name:"%ACME%"
+  sqlselect: select cust_id,cust_name,cust_sts,(select code_txt from public.code_cust_sts where code_val=(cust_sts)) as __code_txt__cust_sts from cust where  1=1   and ( cust_name ilike @search_0_cust_name) order by cust_id asc limit 51 offset 0
+             @search_0_cust_name:"%ACME%"
+  sqlrowcount: select count(*) as cnt from cust where  1=1   and ( cust_name ilike @search_0_cust_name)
+             @search_0_cust_name:"%ACME%"
 
 On Insert:
-  sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+  sqlinsert: with xrslt as (insert into cust(cust_name,cust_sts)  values(@cust_name,@cust_sts) returning cust_id as cust_id) select cust_id from xrslt;
 
 On Update:
-  sqlupdate: with xrslt as (update c set c_name=@c_name,c_sts=@c_sts where 1=1 and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+  sqlupdate: with xrslt as (update cust set cust_name=@cust_name,cust_sts=@cust_sts where 1=1 and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 
 On Delete:
-  sqldelete: with xrslt as (delete from c where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+  sqldelete: with xrslt as (delete from cust where 1=1  and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 </pre>
 
 <h3>Sample Form SQL</h3>
 For the model:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 </pre>
@@ -277,74 +277,74 @@ For the model:
 <pre>
 On Load:
   Insert:
-    LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+    LOV: select code_val,code_txt from public.code_cust_sts where (code_end_dt is null or code_end_dt>current_date) order by code_seq,code_txt
   Browse/Update:
-    sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1  and c_id=@c_id
-    LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+    sqlselect: select cust_id,cust_name,cust_sts,(select code_txt from public.code_cust_sts where code_val=(cust_sts)) as __code_txt__cust_sts from cust where  1=1  and cust_id=@cust_id
+    LOV: select code_val,code_txt from public.code_cust_sts where (code_end_dt is null or code_end_dt>current_date) order by code_seq,code_txt
 
 On Insert:
-  sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+  sqlinsert: with xrslt as (insert into cust(cust_name,cust_sts)  values(@cust_name,@cust_sts) returning cust_id as cust_id) select cust_id from xrslt;
 
 On Update:
-  sqlupdate: with xrslt as (update c set c_name=@c_name,c_sts=@c_sts where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+  sqlupdate: with xrslt as (update cust set cust_name=@cust_name,cust_sts=@cust_sts where 1=1  and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 
 On Delete:
-  sqldelete: with xrslt as (delete from c where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+  sqldelete: with xrslt as (delete from cust where 1=1  and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 </pre>
 
 <h3>Sample Form-m SQL</h3>
 For the model:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form-m",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 </pre>
 
 <pre>
 On Load:
-  sqlselect: select c_id,c_name,c_sts,(select codetxt from public.UCOD_c_sts where codeval=(c_sts)) as __codetxt__c_sts from c where  1=1  order by c_id asc
-  LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+  sqlselect: select cust_id,cust_name,cust_sts,(select code_txt from public.code_cust_sts where code_val=(cust_sts)) as __code_txt__cust_sts from cust where  1=1  order by cust_id asc
+  LOV: select code_val,code_txt from public.code_cust_sts where (code_end_dt is null or code_end_dt>current_date) order by code_seq,code_txt
 
 On Insert:
-  sqlinsert: with xrslt as (insert into c(c_name,c_sts)  values(@c_name,@c_sts) returning c_id as c_id) select c_id from xrslt;
+  sqlinsert: with xrslt as (insert into cust(cust_name,cust_sts)  values(@cust_name,@cust_sts) returning cust_id as cust_id) select cust_id from xrslt;
 
 On Update:
-  sqlupdate: with xrslt as (update c set c_name=@c_name,c_sts=@c_sts where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+  sqlupdate: with xrslt as (update cust set cust_name=@cust_name,cust_sts=@cust_sts where 1=1  and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 
 On Delete:
-  sqldelete: with xrslt as (delete from c where 1=1  and c_id=@c_id returning 1) select count(*) xrowcount from xrslt;
+  sqldelete: with xrslt as (delete from cust where 1=1  and cust_id=@cust_id returning 1) select count(*) xrowcount from xrslt;
 </pre>
 
 <h3>Sample Multisel SQL</h3>
 For the model:
 <pre>
 {
-  "table":"cf",
+  "table":"cust_flag",
   "layout":"multisel",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id"},
-    {"name":"cf_id"},
-    {"name":"cf_type","caption":"Flag"}
+    {"name":"cust_id"},
+    {"name":"cust_flag_id"},
+    {"name":"cust_flag_type","caption":"Flag"}
   ]
 }
 </pre>
 
 <pre>
 On Load:
-  sqlselect: select cf_type ,coalesce(codeval::text,cf_type::text) codeval,coalesce(coalesce(codetxt::text,codeval::text),cf_type::text) codetxt from (select * from cf where 1=1  and c_id=@c_id) cf full outer join (select codeval,codetxt,codseq from UCOD_cf_type where (CODETDT is null or CODETDT>current_date)) multiparent on multiparent.codeval = cf.cf_type order by codseq,codetxt
+  sqlselect: select cust_flag_type ,coalesce(code_val::text,cust_flag_type::text) code_val,coalesce(coalesce(code_txt::text,code_val::text),cust_flag_type::text) code_txt from (select * from cust_flag where 1=1  and cust_id=@cust_id) cust_flag full outer join (select code_val,code_txt,code_seq from code_cust_flag_type where (code_end_dt is null or code_end_dt>current_date)) multiparent on multiparent.code_val = cust_flag.cust_flag_type order by code_seq,code_txt
 
 On Save:
-  with xrslt_delete as (delete from cf where 1=1  and c_id=@c_id and cf_type::text not in (@multisel0,@multisel1)  returning 1),xrslt_insert as (insert into cf(c_id,cf_type) select @c_id,codeval from (select codeval,codetxt,codseq from UCOD_cf_type where (CODETDT is null or CODETDT>current_date)) multiparent where codeval::text in (@multisel0,@multisel1) and codeval not in (select cf_type from cf where 1=1  and c_id=@c_id ) returning 1) select (select count(*) from xrslt_delete)+(select count(*) from xrslt_insert) xrowcount;
+  with xrslt_delete as (delete from cust_flag where 1=1  and cust_id=@cust_id and cust_flag_type::text not in (@multisel0,@multisel1)  returning 1),xrslt_insert as (insert into cust_flag(cust_id,cust_flag_type) select @cust_id,code_val from (select code_val,code_txt,code_seq from code_cust_flag_type where (code_end_dt is null or code_end_dt>current_date)) multiparent where code_val::text in (@multisel0,@multisel1) and code_val not in (select cust_flag_type from cust_flag where 1=1  and cust_id=@cust_id ) returning 1) select (select count(*) from xrslt_delete)+(select count(*) from xrslt_insert) xrowcount;
     @multisel0: "SELECTED_VALUE_0"
     @multisel1: "SELECTED_VALUE_1"
 </pre>
@@ -353,13 +353,13 @@ On Save:
 For the model:
 <pre>
 {
-  "table":"c",
+  "table":"cust",
   "layout":"exec",
   "onecolumn":true,
   "caption":["Customer","Customers"],
-  "sqlexec": "select @c_sts as status", 
+  "sqlexec": "select @cust_sts as status", 
   "fields":[
-    {"name":"c_sts","caption":"Status"},
+    {"name":"cust_sts","caption":"Status"},
     {"name":"RUN","control":"button","value":"Run","caption":"",
       "onclick":"XPage.RunDBFunc(this,function(rslt){ XExt.Alert(rslt[modelid][0].status); }, { noMessage: true });"}
   ]
@@ -368,10 +368,10 @@ For the model:
 
 <pre>
 On Load:
-  LOV: select codeval,codetxt from public.UCOD_c_sts where (CODETDT is null or CODETDT>current_date) order by codseq,codetxt
+  LOV: select code_val,code_txt from public.code_cust_sts where (code_end_dt is null or code_end_dt>current_date) order by code_seq,code_txt
 
 On Button Click:
-  sqlexec: select @c_sts as status
+  sqlexec: select @cust_sts as status
 </pre>
 
 <h3>SQL Return Type - model.sqltype</h3>
@@ -380,13 +380,13 @@ On Button Click:
 {
   "layout":"exec",
   "sqlexec": [
-    "select * from c where c_id=@c_id;",
-    "select * from cf where c_id=@c_id;"
+    "select * from cust where cust_id=@cust_id;",
+    "select * from cust_flag where cust_id=@cust_id;"
   ],
   "sqltype":"multirecordset",
-  "table":"c",
+  "table":"cust",
   "fields":[
-    {"name":"c_id","actions":"BIU"}
+    {"name":"cust_id","actions":"BIU"}
   ]
 }
 </pre>
@@ -399,14 +399,14 @@ For select statements, replace FIELD with EXPRESSION
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_modified","sqlselect":"current_timestamp"}
+    {"name":"cust_id"},
+    {"name":"cust_modified","sqlselect":"current_timestamp"}
   ]
 }
 
 Resulting SQL
 -------------
-select c_id, current_timestamp from c
+select cust_id, current_timestamp from cust
 </pre>
 
 <h4>field.sqlwhere</h4>
@@ -414,14 +414,14 @@ For select statements in grids, if field is in querystring / bindings, use this 
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_name","sqlwhere":"(c_name like '%'||@c_name||'%' or c_desc like '%'||@c_name||'%')"}
+    {"name":"cust_id"},
+    {"name":"cust_name","sqlwhere":"(cust_name like '%'||@cust_name||'%' or cust_desc like '%'||@cust_name||'%')"}
   ]
 }
 
 Resulting SQL
 -------------
-select c_id,c_name from c where (c_name like '%'||@c_name||'%' or c_desc like '%'||@c_name||'%')
+select cust_id,cust_name from cust where (cust_name like '%'||@cust_name||'%' or cust_desc like '%'||@cust_name||'%')
 </pre>
 
 <h4>field.sqlinsert</h4>
@@ -429,14 +429,14 @@ For insert statements, replace FIELD_VALUE with EXPRESSION
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_modified","sqlinsert":"current_timestamp"}
+    {"name":"cust_id"},
+    {"name":"cust_modified","sqlinsert":"current_timestamp"}
   ]
 }
 
 Resulting SQL
 -------------
-insert into c(c_modified) values(current_timestamp);
+insert into cust(cust_modified) values(current_timestamp);
 </pre>
 
 <h4>field.sqlupdate</h4>
@@ -444,14 +444,14 @@ For update statements, replace FIELD_VALUE with EXPRESSION
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_modified","sqlupdate":"current_timestamp"}
+    {"name":"cust_id"},
+    {"name":"cust_modified","sqlupdate":"current_timestamp"}
   ]
 }
 
 Resulting SQL
 -------------
-update c set c_modified=current_timestamp
+update cust set cust_modified=current_timestamp where cust_id=@cust_id
 </pre>
 
 <h4>field.sqlsearch</h4>
@@ -459,15 +459,15 @@ For grids, use the specified search expression.
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_name","sqlsearch":"(c_name||' '||c_desc)"}
+    {"name":"cust_id"},
+    {"name":"cust_name","sqlsearch":"(cust_name||' '||cust_desc)"}
   ]
 }
 
 Resulting SQL
 -------------
-If the user searches the c_name field for any rows containing "ACME":
-  select c_id,c_name from c where (c_name||' '||c_desc) like '%ACME%'
+If the user searches the cust_name field for any rows containing "ACME":
+  select cust_id,cust_name from cust where (cust_name||' '||cust_desc) like '%ACME%'
 </pre>
 
 <h4>field.sqlsearchsound</h4>
@@ -479,15 +479,15 @@ For grids, use the specified Soundex search expression.  The field supports the 
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_name","sqlsearchsound":"c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex(%%%FIELD%%%))"}
+    {"name":"cust_id"},
+    {"name":"cust_name","sqlsearchsound":"cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=soundex(%%%FIELD%%%))"}
   ]
 }
 
 Resulting SQL
 -------------
-If the user searches the c_name field for any rows that sound like "John":
-  select c_id,c_name from c where c_id in (select table_id from sdx where table_name='c' and field_name='c_name' and sdx_val=soundex('John'))
+If the user searches the cust_name field for any rows that sound like "John":
+  select cust_id,cust_name from cust where cust_id in (select table_id from soundex where table_name='cust' and field_name='cust_name' and soundex_val=soundex('John'))
 </pre>
 
 <h4>field.sqlsort</h4>
@@ -495,15 +495,15 @@ For grids, use the specified sort expression.
 <pre>
 {
   "fields":[
-    {"name":"c_id"},
-    {"name":"c_name","sqlsort":"ifnull(c_name,c_id)"}
+    {"name":"cust_id"},
+    {"name":"cust_name","sqlsort":"ifnull(cust_name,cust_id)"}
   ]
 }
 
 Resulting SQL
 -------------
-If the user sorts by the c_name column:
-  select c_id,c_name from c order by (ifnull(c_name,c_id)) desc
+If the user sorts by the cust_name column:
+  select cust_id,cust_name from cust order by (ifnull(cust_name,cust_id)) desc
 </pre>
 
 <h3>Multiple Databases</h3>

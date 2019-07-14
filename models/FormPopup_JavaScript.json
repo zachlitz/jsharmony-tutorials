@@ -1,14 +1,14 @@
 { 
   "FormPopup_JavaScript": {
-    "table":"c",
+    "table":"cust",
     "layout":"form",
     "onecolumn":true,
     "caption":["Customer","Customers"],
     "actions":"B",
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Name"},
-      {"control":"button","value":"Edit","onclick":"XExt.popupForm(xmodel.namespace+'FormPopup_C', 'update', {'c_id':XModels[modelid].controller.form.Data.c_id})"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {"control":"button","value":"Edit","onclick":"XExt.popupForm(xmodel.namespace+'FormPopup_Cust', 'update', {'cust_id':XModels[modelid].controller.form.Data.cust_id})"}
     ]
   }
 }

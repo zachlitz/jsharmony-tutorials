@@ -1,10 +1,10 @@
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID","link":"update:FieldDataTypes_CustomDatatype_Form"},
-    {"name":"c_name","caption":"Customer"},
-    {"name":"c_overdue_amt","caption":"Overdue Amt","type":"money"}
+    {"name":"cust_id","caption": "ID","link":"update:FieldDataTypes_CustomDatatype_Form"},
+    {"name":"cust_name","caption":"Customer"},
+    {"name":"cust_overdue_amt","caption":"Overdue Amt","type":"money"}
   ]
 }

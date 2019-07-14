@@ -1,0 +1,29 @@
+{
+  "layout": "form", 
+  "title": "Customer Information",
+  "table": "cust",
+  "actions": "BIUD", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "caption": [ "", "Customer", "Customers" ],
+  "menu": "clients",
+  "popup":[1000,700],
+  "tabpos":"bottom",
+  "tabcode": "cust_name",
+  "tabs":[
+    {"name":"FILE","caption": "File","target":"Cust_Subform_File","bindings":{"cust_id":"cust_id"},"actions":"BU"},
+    {"name":"ENCRYPTED","caption": "Encrypted Data","target":"Cust_Subform_Encrypt","bindings":{"cust_id":"cust_id"},"actions":"BU",
+      "showcode": ["Creative Engineering"]}
+  ],
+  "fields": [
+    {"name":"cust_id", "type": "bigint", "actions":"B","key": 1,"control":"hidden"},
+    {"name": "cust_name","type": "varchar","length": 50,"actions": "BIU","nl": 1,"control": "textbox",
+     "caption": "Customer Name","captionstyle": "width:120px;text-align:right;"},
+    {"name":"cust_sts","type":"varchar","length":8,"actions":"BIU","control":"dropdown","sample": "Active",
+     "lov": { "code": "cust_sts", "blank": 1 },"validate":["Required"],"default":"ACTIVE",
+     "caption": "Status","nl":1},
+    {"control":"html","value":"<br/>&nbsp;"},
+    {"name": "Cust_Address","control": "subform","controlstyle": "width:360px;margin-right:10px;",
+      "target": "Cust_Address","bindings": { "cust_id": "cust_id" },"actions": "BIUD","caption": "Address" },
+    {"control":"html","value":"&nbsp;"}
+  ]
+}

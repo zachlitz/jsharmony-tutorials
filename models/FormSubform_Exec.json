@@ -1,12 +1,12 @@
 { 
-  "FormSubform_Exec_C": {
-    "table":"c",
+  "FormSubform_Exec_Cust": {
+    "table":"cust",
     "layout":"form",
     "onecolumn":true,
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_name","caption":"Name"},
-      {"name":"c_sts","caption":"Status"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status"},
       {"control": "subform","target": "FormSubform_Exec_Activate"}
     ]
   },
@@ -14,9 +14,9 @@
     "layout": "exec", 
     "onecolumn":true,
     "title": "Activate Customer",
-    "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
+    "sqlexec": "update cust set cust_sts='ACTIVE' where cust_id=@cust_id", 
     "fields": [
-      {"name":"c_id","control":"hidden","validate": ["Required"]},
+      {"name":"cust_id","control":"hidden","validate": ["Required"]},
       {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc(function(){XPage.Refresh();});"}
     ]
   }

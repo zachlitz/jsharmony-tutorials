@@ -2,8 +2,8 @@
   "FormExec_API_Multirecordset": {
     "layout": "exec",
     "sqlexec": [
-      "select c_id,c_name,c_sts from c;",
-      "select codeval,codetxt from ucod_c_sts where (CODETDT is null or CODETDT>datetime('now','localtime')) order by codseq;"
+      "select cust_id,cust_name,cust_sts from cust;",
+      "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
     ],
     "sqltype": "multirecordset"
   }

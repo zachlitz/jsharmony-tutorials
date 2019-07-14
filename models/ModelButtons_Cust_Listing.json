@@ -1,0 +1,15 @@
+{
+  "ModelButtons_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "title":"All Customers",
+    "caption":["Customer","Customers"],
+    "actions":"B", 
+    "menu":"clients",
+    "buttons":[{"link":"insert:ModelButtons_Cust"}],
+    "fields":[
+      {"name":"cust_id","type":"bigint","actions":"B","key":1,"caption": "ID"},
+      {"name":"cust_name","type":"varchar","length":"50","caption": "Customer Name","actions":"B","link":"update:ModelButtons_Cust"}
+    ]
+  }
+}

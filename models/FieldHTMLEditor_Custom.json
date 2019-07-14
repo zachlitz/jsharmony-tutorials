@@ -1,16 +1,16 @@
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "popup":[600,400],
   "caption":["Customer","Customers"],
   "onload":"_this.onload(xmodel,callback);",
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_desc_editor_type","unbound":true,"control":"dropdown","caption":"Editor Type",
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_desc_editor_type","unbound":true,"control":"dropdown","caption":"Editor Type",
       "lov": { "values": { "TEXT": "Text", "HTML": "HTML" } },"default":"TEXT",
-      "onchange":"_this.c_desc_editor_type_change(obj,newval,e);"},
-    {"name":"c_desc","caption":"Description","control":"textarea","controlstyle":"width:500px;height:500px;"}
+      "onchange":"_this.cust_desc_editor_type_change(obj,newval,e);"},
+    {"name":"cust_desc","caption":"Description","control":"textarea","controlstyle":"width:500px;height:500px;"}
   ]
 }

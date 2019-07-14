@@ -34,9 +34,9 @@ If the title is not defined, the model.caption will be used as the title.  If th
 
 <h4>Browser Window Title (document.title)</h4>
 The topmost form's title will be used as the window title. (ex., "Customer Information")
-<%-getScreenshot('jsHarmonyTutorials/C_SUB?c_id=1&action=update','Parent / Child Grid',{ height: 300 })%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Subform?cust_id=1&action=update','Parent / Child Grid',{ height: 300 })%>
 On a tabbed form, if the parent form's title is set to blank, the window title will be set to the title of the selected tab. (ex., "Customer Information")
-<%-getScreenshot('jsHarmonyTutorials/CW?c_id=1&action=update','Parent / Child Grid',{ height: 300 })%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Container?cust_id=1&action=update','Parent / Child Grid',{ height: 300 })%>
 
 <h3 data-level="2">Static Text</h3>
 In the simplest scenario, a model can have a text title:
@@ -107,7 +107,7 @@ Titles can be generated using custom SQL.
 Keys and foreign keys that are defined in model.fields can be used as SQL parameters.
 <pre>
 {
-  "title": { "sql": "select c_name||' Contacts' from c where c_id=@c_id" }
+  "title": { "sql": "select cust_name||' Contacts' from cust where cust_id=@cust_id" }
 }
 </pre>
 
@@ -117,8 +117,8 @@ Different titles can be displayed when inserting, browsing, or updating data:
 {
   "title": {
     "insert": "New Customer",
-    "browse": {"sql": "select c_name||' (Read-only)' from c where c_id=@c_id" },
-    "update": {"sql": "select c_name from c where c_id=@c_id" }
+    "browse": {"sql": "select cust_name||' (Read-only)' from cust where cust_id=@cust_id" },
+    "update": {"sql": "select cust_name from cust where cust_id=@cust_id" }
   }
 }
 </pre>
@@ -129,6 +129,6 @@ Similarly, on a browse action, if the "browse" title is not set, the "update" ti
 In some instances, the developer may choose to ignore datalocks in the query:
 <pre>
 {
-  "title": { "sql": "select c_name||' Contacts' from c where c_id=@c_id", "nodatalock": ["c_id"] }
+  "title": { "sql": "select cust_name||' Contacts' from cust where cust_id=@cust_id", "nodatalock": ["cust_id"] }
 }
 </pre>

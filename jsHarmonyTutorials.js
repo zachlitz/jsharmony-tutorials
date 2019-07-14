@@ -79,12 +79,12 @@ jsHarmonyTutorials.prototype.InitTutorialsData = function(cb){
   var _this = this;
   async.waterfall([
     async.apply(HelperFS.createFolderIfNotExists, _this.jsh.Config.datadir),
-    async.apply(HelperFS.createFolderIfNotExists, path.join(_this.jsh.Config.datadir,'tutorials_c_doc')),
-    async.apply(HelperFS.createFolderIfNotExists, path.join(_this.jsh.Config.datadir,'tutorials_allcontrols')),
-    async.apply(HelperFS.clearFiles, path.join(_this.jsh.Config.datadir,'tutorials_c_doc'), 0, 0),
-    async.apply(HelperFS.clearFiles, path.join(_this.jsh.Config.datadir,'tutorials_allcontrols'), 0, 0),
-    async.apply(HelperFS.copyRecursive, path.join(__dirname,'data','tutorials_c_doc'), path.join(_this.jsh.Config.datadir,'tutorials_c_doc'), {}),
-    async.apply(HelperFS.copyRecursive, path.join(__dirname,'data','tutorials_allcontrols'), path.join(_this.jsh.Config.datadir,'tutorials_allcontrols'), {}),
+    async.apply(HelperFS.createFolderIfNotExists, path.join(_this.jsh.Config.datadir,'tutorials_cust_doc')),
+    async.apply(HelperFS.createFolderIfNotExists, path.join(_this.jsh.Config.datadir,'tutorials_all_controls')),
+    async.apply(HelperFS.clearFiles, path.join(_this.jsh.Config.datadir,'tutorials_cust_doc'), 0, 0),
+    async.apply(HelperFS.clearFiles, path.join(_this.jsh.Config.datadir,'tutorials_all_controls'), 0, 0),
+    async.apply(HelperFS.copyRecursive, path.join(__dirname,'data','tutorials_cust_doc'), path.join(_this.jsh.Config.datadir,'tutorials_cust_doc'), {}),
+    async.apply(HelperFS.copyRecursive, path.join(__dirname,'data','tutorials_all_controls'), path.join(_this.jsh.Config.datadir,'tutorials_all_controls'), {}),
     function(data_cb){ console.log('Data initialized'); return data_cb(); }
   ], cb);
 }
@@ -132,7 +132,7 @@ jsHarmonyTutorials.prototype.Auth = function(){
       req._DBContext = 'system';
       req._roles = {'SYSADMIN':'SYSADMIN', 'DEV':'DEV'};
 
-      jsh.AppSrv.ExecRow('login', 'select '+jsh.map.user_firstname+','+jsh.map.user_lastname+' from jsharmony.pe where '+jsh.map.user_id+'=@user_id', [jsh.AppSrv.DB.types.BigInt], { 'user_id': req.user_id }, function(err,rslt){
+      jsh.AppSrv.ExecRow('login', 'select '+jsh.map.user_firstname+','+jsh.map.user_lastname+' from jsharmony.sys_user where '+jsh.map.user_id+'=@user_id', [jsh.AppSrv.DB.types.BigInt], { 'user_id': req.user_id }, function(err,rslt){
         if(rslt && rslt[0]){
           req.user_name = rslt[0][jsh.map.user_firstname] + ' ' + rslt[0][jsh.map.user_lastname];
         }

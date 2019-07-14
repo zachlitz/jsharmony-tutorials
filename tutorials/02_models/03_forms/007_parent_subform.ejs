@@ -38,19 +38,19 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
     "/models/FormSubform_Styling.json"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FormSubform_Form_PrimaryKey_C?c_id=1&action=update", "title": "Subform - Form Layout - Via Primary Key" },
-    { "url": "jsHarmonyTutorials/FormSubform_Form_ForeignKey_C?c_id=2&action=update", "title": "Subform - Form Layout - Via Foreign Key" },
-    { "url": "jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=update", "title": "Subform - Form-m Layout" },
-    { "url": "jsHarmonyTutorials/FormSubform_Grid_C?c_id=1&action=update", "title": "Subform - Grid Layout" },
-    { "url": "jsHarmonyTutorials/FormSubform_Multisel_C?c_id=1&action=update", "title": "Subform - Multisel Layout" },
-    { "url": "jsHarmonyTutorials/FormSubform_Exec_C?c_id=1&action=update", "title": "Subform - Exec Layout" },
-    { "url": "jsHarmonyTutorials/FormSubform_Nested_E?e_id=1&action=update", "title": "Multi-level Nested Subforms" },
-    { "url": "jsHarmonyTutorials/FormSubform_InsertLink_C?c_id=2&action=update", "title": "Custom 'Insert' Link" },
-    { "url": "jsHarmonyTutorials/FormSubform_TwoInstances_C?action=update&c_id=1", "title": "Two Subforms of the Same Model" },
-    { "url": "jsHarmonyTutorials/FormSubform_ReadOnlyParent_CW?action=insert", "title": "Subform with Read-only Parent (Insert)" },
-    { "url": "jsHarmonyTutorials/FormSubform_SameTable_C?action=insert", "title": "Subform targeting the same table as the parent (Insert)" },
-    { "url": "jsHarmonyTutorials/FormSubform_Unbound_C?c_id=1&action=update", "title": "Unbound Subform" },
-    { "url": "jsHarmonyTutorials/FormSubform_Styling_C?c_id=1&action=update", "title": "Subform Container Style" }
+    { "url": "jsHarmonyTutorials/FormSubform_Form_PrimaryKey_Cust?cust_id=1&action=update", "title": "Subform - Form Layout - Via Primary Key" },
+    { "url": "jsHarmonyTutorials/FormSubform_Form_ForeignKey_Cust?cust_id=2&action=update", "title": "Subform - Form Layout - Via Foreign Key" },
+    { "url": "jsHarmonyTutorials/FormSubform_FormM_Cust?cust_id=1&action=update", "title": "Subform - Form-m Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Grid_Cust?cust_id=1&action=update", "title": "Subform - Grid Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Multisel_Cust?cust_id=1&action=update", "title": "Subform - Multisel Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Exec_Cust?cust_id=1&action=update", "title": "Subform - Exec Layout" },
+    { "url": "jsHarmonyTutorials/FormSubform_Nested_Item?item_id=1&action=update", "title": "Multi-level Nested Subforms" },
+    { "url": "jsHarmonyTutorials/FormSubform_InsertLink_Cust?cust_id=2&action=update", "title": "Custom 'Insert' Link" },
+    { "url": "jsHarmonyTutorials/FormSubform_TwoInstances_Cust?action=update&cust_id=1", "title": "Two Subforms of the Same Model" },
+    { "url": "jsHarmonyTutorials/FormSubform_ReadOnlyParent_Cust_Container?action=insert", "title": "Subform with Read-only Parent (Insert)" },
+    { "url": "jsHarmonyTutorials/FormSubform_SameTable_Cust?action=insert", "title": "Subform targeting the same table as the parent (Insert)" },
+    { "url": "jsHarmonyTutorials/FormSubform_Unbound_Cust?cust_id=1&action=update", "title": "Unbound Subform" },
+    { "url": "jsHarmonyTutorials/FormSubform_Styling_Cust?cust_id=1&action=update", "title": "Subform Container Style" }
   ]
 }
 </script>
@@ -93,206 +93,206 @@ Subforms that link to another Form layout are used to model 1-to-1 relationships
 If using subforms with a Form layout, it is necessary to set the "action" on the subform control.  If the parent and subform both link to the same table, the subform should not be available on Insert, since otherwise two insert statements on the same table will be executed.
 
 <h4>Primary Key</h4>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_PrimaryKey_C?c_id=1&action=update&popup=1','Subform Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_PrimaryKey_Cust?cust_id=1&action=update&popup=1','Subform Form')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_EXT","actions":"BIU"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "CustExt","actions":"BIU"}
   ]
 },
-"C_EXT": {
-  "table":"c_ext",
+"CustExt": {
+  "table":"cust_ext",
   "layout":"form",
   "onecolumn":true,
   "popup": [500,250],
   "caption":["Information","Information"],
   "fields":[
-    {"name":"c_ext_desc","caption":"Description","control":"textarea"}
+    {"name":"cust_ext_desc","caption":"Description","control":"textarea"}
   ]
 }
 </pre>
 
 <h4>Foreign Key</h4>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_ForeignKey_C?c_id=1&action=update&popup=1','Subform Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Form_ForeignKey_Cust?cust_id=1&action=update&popup=1','Subform Form')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "CA","actions":"BIU","bindings":{ "c_id":"c_id","ca_type":"'BILLING'" }}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "CustAddr","actions":"BIU","bindings":{ "cust_id":"cust_id","cust_addr_type":"'BILLING'" }}
   ]
 },
-"CA": {
-  "table":"ca",
+"CustAddr": {
+  "table":"cust_addr",
   "layout":"form",
   "onecolumn":true,
   "popup": [550,300],
   "caption":["Address","Addresses"],
   "fields":[
-    {"name":"c_id","key":1,"control":"hidden","actions":"BI"},
-    {"name":"ca_type","key":1,"control":"hidden","actions":"BI"},
-    {"name":"ca_country","caption":"Country"},
-    {"name":"ca_addr1","caption":"Address"},
-    {"name":"ca_addr2","caption":""},
-    {"name":"ca_city","caption":"City"},
-    {"name":"ca_state","caption":"State"},
-    {"name":"ca_zip","caption":"Zip"}
+    {"name":"cust_id","key":1,"control":"hidden","actions":"BI"},
+    {"name":"cust_addr_type","key":1,"control":"hidden","actions":"BI"},
+    {"name":"cust_addr_country","caption":"Country"},
+    {"name":"cust_addr_line1","caption":"Address"},
+    {"name":"cust_addr_line2","caption":""},
+    {"name":"cust_addr_city","caption":"City"},
+    {"name":"cust_addr_state","caption":"State"},
+    {"name":"cust_addr_zip","caption":"Zip"}
   ]
 }
 </pre>
 If using foreign keys for the bindings, it is necessary to specify the bindings manually, and to mark the foreign keys as primary keys on the subform.  It may also be necessary to designate the "BI" action on the foreign key fields, so that the columns are included in the insert statement.
 
 <h3 data-level="2">Subform Layout: Form-m</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_FormM_C?c_id=1&action=update&popup=1','Subform Form-m')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_FormM_Cust?cust_id=1&action=update&popup=1','Subform Form-m')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_CA"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "Cust_Address"}
   ]
 },
-"C_CA": {
-  "table":"ca",
+"Cust_Address": {
+  "table":"cust_addr",
   "layout":"form-m",
   "onecolumn":true,
   "caption":["Address","Addresses"],
   "fields":[
-    {"name":"ca_country","caption":"Country"},
-    {"name":"ca_addr1","caption":"Address"},
-    {"name":"ca_addr2","caption":""},
-    {"name":"ca_city","caption":"City"},
-    {"name":"ca_state","caption":"State"},
-    {"name":"ca_zip","caption":"Zip"}
+    {"name":"cust_addr_country","caption":"Country"},
+    {"name":"cust_addr_line1","caption":"Address"},
+    {"name":"cust_addr_line2","caption":""},
+    {"name":"cust_addr_city","caption":"City"},
+    {"name":"cust_addr_state","caption":"State"},
+    {"name":"cust_addr_zip","caption":"Zip"}
   ]
 }
 </pre>
 
 <h3 data-level="2">Subform Layout: Grid</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Grid_C?c_id=1&action=update&popup=1','Subform Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Grid_Cust?cust_id=1&action=update&popup=1','Subform Grid')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_CC"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "Cust_Contact"}
   ]
 },
-"C_CC": {
-  "table":"cc",
+"Cust_Contact": {
+  "table":"cust_contact",
   "layout":"grid",
   "caption":["Contact","Contacts"],
   "fields":[
-    {"name":"cc_name","caption":"Name"},
-    {"name":"cc_title","caption":"Title"},
-    {"name":"cc_email","caption":"Email"}
+    {"name":"cust_contact_name","caption":"Name"},
+    {"name":"cust_contact_title","caption":"Title"},
+    {"name":"cust_contact_email","caption":"Email"}
   ]
 }
 </pre>
 
 <h3 data-level="2">Subform Layout: Multisel</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Multisel_C?c_id=1&action=update&popup=1','Subform Multisel')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Multisel_Cust?cust_id=1&action=update&popup=1','Subform Multisel')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_CF"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "Cust_Flag"}
   ]
 },
-"C_CF": {
-  "table":"cf",
+"Cust_Flag": {
+  "table":"cust_flag",
   "layout":"multisel",
   "caption":["Customer Flag","Customers Flags"],
   "fields":[
-    {"name":"c_id"},
-    {"name":"cf_type","caption":"Flag"}
+    {"name":"cust_id"},
+    {"name":"cust_flag_type","caption":"Flag"}
   ]
 }
 </pre>
 
 <h3 data-level="2">Subform Layout: Exec</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Exec_C?c_id=1&action=update&popup=1','Subform Exec')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Exec_Cust?cust_id=1&action=update&popup=1','Subform Exec')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_Activate"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "Cust_Activate"}
   ]
 },
-"C_Activate": {
+"Cust_Activate": {
   "layout": "exec", 
   "onecolumn":true,
   "title": "Activate Customer",
-  "sqlexec": "update c set c_sts='ACTIVE' where c_id=@c_id", 
+  "sqlexec": "update cust set cust_sts='ACTIVE' where cust_id=@cust_id", 
   "fields": [
-    {"name":"c_id","control":"hidden"},
+    {"name":"cust_id","control":"hidden"},
     {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc(function(){XPage.Refresh();});"}
   ]
 }
 </pre>
 
 <h3 data-level="2">Nested Subforms</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Nested_E?e_id=1&action=update&popup=1','Subform Nested')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Nested_Item?item_id=1&action=update&popup=1','Subform Nested')%>
 <pre>
-"E": {
-  "table":"e",
+"Item": {
+  "table":"item",
   "layout":"form",
   "onecolumn":true,
   "caption":["Equipment","Equipment"],
   "fields":[
-    {"name":"e_k","caption":"ID"},
-    {"name":"e_name","caption":"Name"},
-    {"name":"c_id","caption":"Customer","lov": { "sql": "select c_id codeval,c_name codetxt from c order by c_name", "blank": true } },
-    {"control": "subform","target": "C","actions":"BU"}
+    {"name":"item_code","caption":"Code"},
+    {"name":"item_name","caption":"Name"},
+    {"name":"cust_id","caption":"Customer","lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name", "blank": true } },
+    {"control": "subform","target": "Cust","actions":"BU"}
   ]
 },
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "CC"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "CustContact"}
   ]
 },
-"CC": {
-  "table":"cc",
+"CustContact": {
+  "table":"cust_contact",
   "layout":"grid",
   "caption":["Contact","Contacts"],
   "fields":[
-    {"name":"cc_name","caption":"Name"},
-    {"name":"cc_title","caption":"Title"},
-    {"name":"cc_email","caption":"Email"}
+    {"name":"cust_contact_name","caption":"Name"},
+    {"name":"cust_contact_title","caption":"Title"},
+    {"name":"cust_contact_email","caption":"Email"}
   ]
 }
 </pre>
@@ -304,34 +304,34 @@ More information on bindings can be found in the <a href="/tutorials/model_bindi
 
 <h3>Subform "Insert" Link</h3>
 When using a subform with a "form" layout, when the subform record does not exist, an "Insert" link will be displayed:
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_InsertLink_C?c_id=2&action=update&popup=1','Subform Form - Insert Link')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_InsertLink_Cust?cust_id=2&action=update&popup=1','Subform Form - Insert Link')%>
 By default, the insert button links to "insert:MODELID", where "MODELID" is the model ID of the subform.  Bindings from the parent form are passed in the querystring parameters.<br/>
 <br/>
 It is recommended to add the model.popup property to the child subform, so that the "Insert" link will open in a new window, and the existing record will stay open.<br/>
 <br/>
 The insert link URL can be customized using the field.controlparams.insert_link property on the subform control.  In the example below, the Description field is given a default value via the insert link:
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_EXT","actions":"BIU",
-     "controlparams":{ "insert_link":"insert:C_EXT&c_ext_desc='Sample'" }
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "CustExt","actions":"BIU",
+     "controlparams":{ "insert_link":"insert:CustExt&cust_ext_desc='Sample'" }
     }
   ]
 },
-"C_EXT": {
-  "table":"c_ext",
+"CustExt": {
+  "table":"cust_ext",
   "layout":"form",
   "onecolumn":true,
   "popup": [500,250],
   "caption":["Information","Information"],
   "fields":[
-    {"name":"c_ext_desc","caption":"Description","control":"textarea"}
+    {"name":"cust_ext_desc","caption":"Description","control":"textarea"}
   ]
 }
 </pre>
@@ -339,47 +339,47 @@ The insert link URL can be customized using the field.controlparams.insert_link 
 <h3>Multiple Subforms of the same Model</h3>
 If a model needs to be displayed twice on the same page, it is necessary to create a second instance of that model through inheritance:
 
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_C?action=update&c_id=1&popup=1','Two Subforms of the Same Model')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_Cust?action=update&cust_id=1&popup=1','Two Subforms of the Same Model')%>
 
 If the subform records have not yet been created, an "Insert" link is displayed:
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_C?action=update&c_id=2&popup=1','Two Subforms of the Same Model')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_TwoInstances_Cust?action=update&cust_id=2&popup=1','Two Subforms of the Same Model')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "actions":"BIU",
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_CA_Billing","bindings":{ "c_id":"c_id", "ca_type":"'BILLING'" },"actions":"BU"},
-    {"control": "subform","target": "C_CA_Shipping","bindings":{ "c_id":"c_id", "ca_type":"'SHIPPING'" },"actions": "BU"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "Cust_Address_Billing","bindings":{ "cust_id":"cust_id", "cust_addr_type":"'BILLING'" },"actions":"BU"},
+    {"control": "subform","target": "Cust_Address_Shipping","bindings":{ "cust_id":"cust_id", "cust_addr_type":"'SHIPPING'" },"actions": "BU"}
   ]
 },
-"C_CA": {
-  "table":"ca",
+"Cust_Address": {
+  "table":"cust_addr",
   "layout":"form",
   "onecolumn":true,
   "popup": [550,300],
   "caption":["Address","Addresses"],
   "fields":[
-    {"name":"c_id","key":1,"control":"hidden"},
-    {"name":"ca_type","key":1,"control":"hidden"},
-    {"name":"ca_country","caption":"Country"},
-    {"name":"ca_addr1","caption":"Address"},
-    {"name":"ca_addr2","caption":""},
-    {"name":"ca_city","caption":"City"},
-    {"name":"ca_state","caption":"State"},
-    {"name":"ca_zip","caption":"Zip"}
+    {"name":"cust_id","key":1,"control":"hidden"},
+    {"name":"cust_addr_type","key":1,"control":"hidden"},
+    {"name":"cust_addr_country","caption":"Country"},
+    {"name":"cust_addr_line1","caption":"Address"},
+    {"name":"cust_addr_line2","caption":""},
+    {"name":"cust_addr_city","caption":"City"},
+    {"name":"cust_addr_state","caption":"State"},
+    {"name":"cust_addr_zip","caption":"Zip"}
   ]
 },
-"C_CA_Billing": {
-  "inherits":"C_CA",
+"Cust_Address_Billing": {
+  "inherits":"Cust_Address",
   "title": "Billing Address"
 },
-"C_CA_Shipping": {
-  "inherits":"C_CA",
+"Cust_Address_Shipping": {
+  "inherits":"Cust_Address",
   "title": "Shipping Address"
 }
 </pre>
@@ -392,32 +392,32 @@ In the client-side API calls, in the Form-m example above, the following data wo
 <pre>
 [
   {
-		"model": "C",
+		"model": "Cust",
     "method": "put",
 		"query": "",
-		"post": "c_name=ACME+Industries&c_sts=DEACTIVE"
+		"post": "cust_name=ACME+Industries&cust_sts=DEACTIVE"
   }, 
   {
-    "model": "CA",
+    "model": "CustAddr",
     "method": "put",
 		"query": "",
-		"post": "ca_country=USA&ca_addr1=123+Test+St.&ca_addr2=&ca_city=Chicago&ca_state=IL&ca_zip=60103&c_id=%25%25%25c_id%25%25%25"
+		"post": "cust_addr_country=USA&cust_addr_line1=123+Test+St.&cust_addr_line2=&cust_addr_city=Chicago&cust_addr_state=IL&cust_addr_zip=60103&cust_id=%25%25%25cust_id%25%25%25"
 	}
 ]
 </pre>
-The value for c_id in the "CA" model is passed as "%%%c_id%%%".
+The value for cust_id in the "CustAddr" model is passed as "%%%cust_id%%%".
 
 <h4>Transactions: Server-side</h4>
-Internally, after the C insert is complete, the resulting c_id is passed back via a select statement and stored in transtbl (any data passed back from a SQL statement in a transaction is stored in transtbl).  Then the CA insert is processed as follows:
+Internally, after the cust insert is complete, the resulting cust_id is passed back via a select statement and stored in transtbl (any data passed back from a SQL statement in a transaction is stored in transtbl).  Then the CustAddr insert is processed as follows:
 <pre>
-dbtasks['CA'] = function(dbtrans, callback, transtbl){
+dbtasks['CustAddr'] = function(dbtrans, callback, transtbl){
   sql_params = _this.ApplyTransTblEscapedParameters(sql_params, transtbl);
   db.Row(dbcontext, sql, sql_ptypes, sql_params, dbtrans, function (err, rslt, stats) {
     ...
   });
 };
 </pre>
-The AppSrv.ApplyTransTblEscapedParameters function replaces %%%c_id%%% in sql_params with the c_id from transtbl.
+The AppSrv.ApplyTransTblEscapedParameters function replaces %%%cust_id%%% in sql_params with the cust_id from transtbl.
 
 <h3>Actions / Roles / Insert vs Browse vs Update Mode</h3>
 There are four types of Actions used in determining subform behavior:
@@ -454,25 +454,25 @@ If querystring.action = "update"
 
 <h3 data-level="2">Read-only Parent with Editable Child</h3>
 Since the subform's actions are independent of the parent model and parent control, it is possible to have a read-only parent with an editable child.  Parent fields are rendered empty on insert.
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_ReadOnlyParent_CW?action=insert&popup=1','Form / Subform - Read Only Parent')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_ReadOnlyParent_Cust_Container?action=insert&popup=1','Form / Subform - Read Only Parent')%>
 <pre>
-"C_HEAD": {
-  "table":"c",
+"Cust_Container": {
+  "table":"cust",
   "layout":"form",
   "actions":"B",
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"control": "subform","target": "C","actions":"BIU"}
+    {"name":"cust_name","caption":"Name"},
+    {"control": "subform","target": "Cust","actions":"BIU"}
   ]
 },
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"}
   ]
 }
 </pre>
@@ -480,56 +480,56 @@ Since the subform's actions are independent of the parent model and parent contr
 <h3 data-level="2">Parent Form and Child Form that reference the same table</h3>
 
 If the Parent Form and Child Form reference the same table, the subform field should not have the "I" action, so that the subform will be hidden on insert:
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_SameTable_C?action=insert&popup=1','Form / Subform - Same Table - Insert')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_SameTable_Cust?action=insert&popup=1','Form / Subform - Same Table - Insert')%>
 
 The subform will then be automatically displayed once the record is saved:
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_SameTable_C?c_id=1&action=update&popup=1','Form / Subform - Same Table - Update')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_SameTable_Cust?cust_id=1&action=update&popup=1','Form / Subform - Same Table - Update')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "C_DOC","actions": "BU"}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "cust_doc","actions": "BU"}
   ]
 }
 
-"C_DOC": {
-  "table":"c",
+"cust_doc": {
+  "table":"cust",
   "layout":"form",
   "caption":["Document","Documents"],
   "fields":[
-    {"name":"c_doc","type":"file","caption":"Document","controlparams": {"data_folder": "tutorials_c_doc"} }
+    {"name":"cust_doc","type":"file","caption":"Document","controlparams": {"data_folder": "tutorials_cust_doc"} }
   ]
 }
 </pre>
 
 <h3 data-level="2">Parent Form with Unbound Subform</h3>
 A parent form can contain a subform that is linked without any bindings:
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Unbound_C?c_id=1&action=update&popup=1','Form / Subform - Unbound')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Unbound_Cust?cust_id=1&action=update&popup=1','Form / Subform - Unbound')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
-    {"control": "subform","target": "CL_INFO","bindings":{}}
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
+    {"control": "subform","target": "Cust_Listing_Info","bindings":{}}
   ]
 },
-"CL_INFO": {
+"Cust_Listing_Info": {
   "layout":"grid",
   "caption":["Key Customers"],
-  "sort":["ve_cnt"],
-  "sqlselect":"select c.c_id,c_name,count(e_id) e_cnt from c left outer join e on e.c_id=c.c_id where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% group by c.c_id order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%",
+  "sort":["vitem_cnt"],
+  "sqlselect":"select cust.cust_id,cust_name,count(item_id) item_cnt from cust left outer join item on item.cust_id=cust.cust_id where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% group by cust.cust_id order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%",
   "fields":[
-    {"name":"c_name", "caption":"Customer Name" },
-    {"name":"e_cnt", "caption":"# Equipment" }
+    {"name":"cust_name", "caption":"Customer Name" },
+    {"name":"item_cnt", "caption":"# Equipment" }
   ]
 }
 </pre>
@@ -538,32 +538,32 @@ A parent form can contain a subform that is linked without any bindings:
 The subform components can be styled via the model styles available in the <a href="/tutorials/model_styling">Model Styling Tutorials</a>.<br/>
 <br/>
 Additionally, the subform container can be styled using the subform field's "controlclass" and "controlstyle" attributes:
-<%-getScreenshot('jsHarmonyTutorials/FormSubform_Styling_C?c_id=1&action=update&popup=1','Subform Container Style')%>
+<%-getScreenshot('jsHarmonyTutorials/FormSubform_Styling_Cust?cust_id=1&action=update&popup=1','Subform Container Style')%>
 <pre>
-"C": {
-  "table":"c",
+"Cust": {
+  "table":"cust",
   "layout":"form",
   "onecolumn":true,
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_name","caption":"Name"},
-    {"name":"c_sts","caption":"Status"},
+    {"name":"cust_name","caption":"Name"},
+    {"name":"cust_sts","caption":"Status"},
     {
       "control": "subform",
-      "target": "CC",
+      "target": "CustContact",
       "controlstyle": "border: 4px dashed black;",
       "controlclass": "fieldWithErrors"
     }
   ]
 },
-"CC": {
-  "table":"cc",
+"CustContact": {
+  "table":"cust_contact",
   "layout":"grid",
   "caption":["Contact","Contacts"],
   "fields":[
-    {"name":"cc_name","caption":"Name"},
-    {"name":"cc_title","caption":"Title"},
-    {"name":"cc_email","caption":"Email"}
+    {"name":"cust_contact_name","caption":"Name"},
+    {"name":"cust_contact_title","caption":"Title"},
+    {"name":"cust_contact_email","caption":"Email"}
   ]
 }
 </pre>

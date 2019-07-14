@@ -1,0 +1,36 @@
+{
+  "layout": "form", 
+  "title": "Client Document",
+  "table": "cust",
+  "actions": "BIUD", 
+  "roles": {"C_B":"B","C_X":"*"},
+  "caption": [ "", "Customer", "Customers" ],
+  "menu": "clients",
+  "popup":[1000,700],
+  "fields": [
+    {"name":"cust_id", "type": "bigint", "actions":"B","key": 1,"control":"hidden"},
+
+    {"name":"cust_doc","type":"file","actions":"BIU",
+       "control":"file_upload","caption":"Client Document",
+       "controlparams": { 
+         "data_folder": "tutorials_cust_doc",
+         "sqlparams": {"FILE_SIZE":   "cust_doc_size",
+                       "FILE_EXT":    "cust_doc_ext",
+                       "FILE_NAME":   "cust_doc_filename",
+                       "FILE_UU":     "cust_doc_upuser",
+                       "FILE_UTSTMP": "cust_doc_uptstmp"
+         },
+         "download_button": "Download File",
+         "upload_button": "Upload New File",
+         "delete_button": "Delete File"
+       }},
+    {"name":"cust_doc_ext","type":"varchar","length":16,"actions":"B",
+     "control":"label_VS","caption":"Extension","captionstyle":"width:72px;text-align:right;"},
+	  {"name":"cust_doc_size","type":"bigint","actions":"B",
+     "control":"label_S","caption":"Bytes"},
+    {"name":"cust_doc_uptstmp","type":"datetime","length":7,"control":"hidden"},
+    {"name":"cust_doc_upuser","type":"varchar","length": 20,"control":"hidden"},
+    {"name":"cust_doc_filename","type":"varchar","sqlselect":"cust_id||cust_doc_ext","actions":"B","control":"hidden"}
+    
+  ]
+}

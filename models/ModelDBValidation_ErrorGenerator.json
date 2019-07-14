@@ -1,5 +1,5 @@
 {
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],

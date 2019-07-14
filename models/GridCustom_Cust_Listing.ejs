@@ -1,0 +1,6 @@
+<div class="xelem<%=model.class%> xgrid_GridCustom_Cust_Listing_placeholder"></div>
+<script class="xgrid_GridCustom_Cust_Listing_template" type="text/x-ejs-template" data-target=".xgrid_GridCustom_Cust_Listing_placeholder">
+  <%% _.each(datatable, function(row){  %%>
+    <a href="#" onclick="<%%-js('XExt.popupForm("<%=model.namespace%>GridCustom_Cust","update",{"cust_id":'+row.cust_id+'})')%%>"><%%=row.cust_name%%></a><br/>
+  <%% }); %%>
+</script>

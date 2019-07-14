@@ -1,10 +1,10 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
   "popup":[900,400],
-  "sqlselect": "select x_primary,x_textbox from allcontrols where x_primary=@x_primary",
+  "sqlselect": "select x_primary,x_textbox from all_controls where x_primary=@x_primary",
   "fields": [
     {"control":"html","value":"<h3>Bound Field</h3>","block":true},
     {"name":"x_textbox", "caption": "x_textbox"},

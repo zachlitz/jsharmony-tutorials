@@ -1,0 +1,14 @@
+{
+  "ModelBreadcrumbs_CustContact_Listing": {
+    "layout": "grid", 
+    "table": "cust_contact",
+    "actions": "B", 
+    "caption": [ "", "Contact", "Contacts" ],
+    "buttons":[{"link":"insert:ModelBreadcrumbs_CustContact"}],
+    "fields": [
+      {"name":"cust_contact_id","type":"bigint","actions":"B","key":1,"caption":"ID" },
+      {"name":"cust_id","type":"bigint","actions":"BI","foreignkey":1,"control":"hidden" },
+      {"name":"cust_contact_name","type":"varchar","length":"100","caption":"Name","actions":"B","link":"update:ModelBreadcrumbs_CustContact" }
+    ]
+  }
+}

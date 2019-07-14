@@ -77,7 +77,7 @@ Unbound fields can be used with dropdowns, textboxes, labels, or any of the stan
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Basic?action=update&x_primary=1&popup=1','Basic Unbound Controls')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
@@ -107,7 +107,7 @@ When an API operation causes a reload of local data, the unbound values are cach
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Cache_Form?action=update&x_primary=1&popup=1','Cached Unbound Data Between Refresh - Form')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
@@ -126,7 +126,7 @@ When an API operation causes a reload of local data, the unbound values are cach
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Cache_FormM?action=update&popup=1','Cached Unbound Data Between Refresh - Form-M')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form-m",
   "onecolumn":true,
   "caption": ["Item", "Items"],
@@ -145,7 +145,7 @@ When an API operation causes a reload of local data, the unbound values are cach
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Cache_Grid?popup=1','Cached Unbound Data Between Refresh - Grid')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"grid",
   "caption": ["Item", "Items"],
   "popup":[900,400],
@@ -181,7 +181,7 @@ The following examples demonstrate how to fields with the "always_editable" prop
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_AlwaysEditable?action=browse&x_primary=1&auto_initial_qs1=Test&auto_initial_qs2=Test&popup=1','Unbound field.always_editable property - Browse')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
@@ -214,20 +214,20 @@ The following methods for unbound field initial values are supported:
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_InitialValue?action=update&x_primary=1&auto_initial_qs=abc&popup=1','Unbound Default / Initial Values')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
   "popup":[900,400],
-  "sqlselect": "select x_primary,x_textbox,'Initial Value' as auto_initial_db from allcontrols where x_primary=@x_primary",
+  "sqlselect": "select x_primary,x_textbox,'Initial Value' as auto_initial_db from all_controls where x_primary=@x_primary",
   "fields": [
     {"control":"html","value":"<h3>Bound Field</h3>","block":true},
     {"name":"x_textbox", "caption": "x_textbox"},
     {"control":"html","value":"<h3>Unbound Fields</h3>","block":true},
     {"caption":"Default Value (Static)","unbound":true, "control":"textbox", "default":"Test" },
     {"caption":"Default Value (JS)","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)" },
-    {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from allcontrols where x_primary = @x_primary" } },
-    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select c_id codeval, c_name codetxt from c order by c_name", "blank": true } },
+    {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from all_controls where x_primary = @x_primary" } },
+    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select cust_id code_val, cust_name code_txt from cust order by cust_name", "blank": true } },
     {"caption":"Default Value (via querystring)", "unbound":true, "control":"textbox", "name": "auto_initial_qs" },
     {"caption":"Default Value (via Model SQL Select)", "unbound":true, "control":"textbox", "name": "auto_initial_db" }
   ]
@@ -274,12 +274,12 @@ The following form provides a simple example of the "xmodel.get" and "xmodel.set
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_JS?action=update&x_primary=1&popup=1','Unbound Field JavaScript Integration')%>
 <pre>
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": ["Item", "Items"],
   "popup":[900,400],
-  "sqlselect": "select x_primary,x_textbox from allcontrols where x_primary=@x_primary",
+  "sqlselect": "select x_primary,x_textbox from all_controls where x_primary=@x_primary",
   "fields": [
     {"control":"html","value":"<h3>Bound Field</h3>","block":true},
     {"name":"x_textbox", "caption": "x_textbox"},
@@ -308,26 +308,26 @@ The following example links an unbound parent form to a bound child grid.  The d
   "caption": ["Customer", "Customers"],
   "unbound": true,
   "fields": [
-    {"name": "c_sts", "caption": "Status","control": "dropdown", "unbound": true,
-      "lov": { "UCOD": "c_sts", "blank": "(All)" },
-      "onchange": "XPage.Select({ modelid: 'Dashboard_CL', onCancel: undoChange });"
+    {"name": "cust_sts", "caption": "Status","control": "dropdown", "unbound": true,
+      "lov": { "code": "cust_sts", "blank": "(All)" },
+      "onchange": "XPage.Select({ modelid: 'Dashboard_Cust_Listing', onCancel: undoChange });"
     },
     {"control": "html", "value":"Note: The 'Deactivated' status is an expired CODE, so it does not display in the dropdown"},
-    {"control": "subform", "target": "Dashboard_CL", "bindings": { "c_sts": "c_sts" } },
+    {"control": "subform", "target": "Dashboard_Cust_Listing", "bindings": { "cust_sts": "cust_sts" } },
     {"control": "html", "value":"Note: Status dropdown in the grid is read-only because of the binding"},
     {"control": "html", "value":"Note: Grid commitlevel defaults to 'page' because the grid not the top-level form.", "nl":1},
   ]
 }
 
-//"Dashboard_CL" - Dashboard Customer Listing Grid
+//"Dashboard_Cust_Listing" - Dashboard Customer Listing Grid
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption": ["Customer", "Customers"],
   "fields": [
-    {"name":"c_id", "caption": "ID"},
-    {"name":"c_name", "caption": "Name"},
-    {"name":"c_sts", "caption": "Status"}
+    {"name":"cust_id", "caption": "ID"},
+    {"name":"cust_name", "caption": "Name"},
+    {"name":"cust_sts", "caption": "Status"}
   ]
 }
 </pre>
@@ -367,13 +367,13 @@ callback   - (Optional) Function executed on successful completion of XPage.Sele
 Examples
 --------
 //Refresh read-only model
-XPage.Select({ modelid: 'CL' });
+XPage.Select({ modelid: 'Cust_Listing' });
 
 //Refresh updateable model
-XPage.Select({ modelid: 'Dashboard_CL', onCancel: undoChange });
+XPage.Select({ modelid: 'Dashboard_Cust_Listing', onCancel: undoChange });
 
 //Refresh, ignoring any unsaved changes
-XPage.Select({ modelid: 'Dashboard_CL', force: true });
+XPage.Select({ modelid: 'Dashboard_Cust_Listing', force: true });
 </pre>
 
 <h3 level="2">Tree Editor (Unbound Parent / Child Form)</h3>
@@ -392,7 +392,7 @@ The initially selected node is defined by the tree's field.default property.  Th
   "buttons":[{"link":"insert:Tree_Category", "bindings": { "category_parent_id": "category_id" }, "text": "Add Subcategory" }],
   "fields": [
     {"name": "category_id","caption": "","control": "tree","always_editable":true, "unbound": true,
-      "lov": { "sql": "select category_id codeid, category_parent_id codeparentid, category_id codeval, category_name codetxt, 'folder' codeicon from category order by codetxt;" },
+      "lov": { "sql": "select category_id code_id, category_parent_id code_parent_id, category_id code_val, category_name code_txt, 'folder' code_icon from category order by code_txt;" },
       "default": { "sql": "select category_id from category where category_parent_id is null order by category_name limit 1" },
       "controlparams": { "expand_all": true },
       "onchange": "XPage.Select({ modelid: 'Tree_Category', onCancel: undoChange })",
@@ -430,12 +430,12 @@ The "Form Launcher" demonstrates an unbound popuplov control, as well as shortcu
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher?popup=1','Unbound Example: Shortcut Form Launcher w/Popup LOV')%>
 <h4>Customer Launcher Form - Magnifying Glass - Popup LOV Selection</h4>
 <%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher?popup=1','Unbound Example: Shortcut Form Launcher w/Popup LOV - Popup LOV Selection', { onload:function(){ return new Promise(function(resolve){
-  jshInstance.$('.c_id_xlookup').click();
-  jshInstance.XExt.waitUntil(function(){ return !!jshInstance.$('.c_name:visible').length; }, resolve);
+  jshInstance.$('.cust_id_xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return !!jshInstance.$('.cust_name:visible').length; }, resolve);
 }); }
 })%>
 <h4>Customer Editor Form</h4>
-<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher_C?action=update&c_id=1&popup=1','Unbound Example: Shortcut Form Launcher - Popup')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldUnbound_Launcher_Cust?action=update&cust_id=1&popup=1','Unbound Example: Shortcut Form Launcher - Popup')%>
 <pre>
 //"Customer_Launcher" - Customer Launcher
 { 
@@ -444,35 +444,35 @@ The "Form Launcher" demonstrates an unbound popuplov control, as well as shortcu
   "unbound": true,
   "popup": [600, 400],
   "fields": [
-    {"name": "c_id", "caption": "Customer ID", "control": "textbox", "unbound": true, "validate": ["Required"],
-      "popuplov":{ "target":"Customer_List_of_Values_Grid", "codeval":"c_id" } },
+    {"name": "cust_id", "caption": "Customer ID", "control": "textbox", "unbound": true, "validate": ["Required"],
+      "popuplov":{ "target":"Customer_List_of_Values_Grid", "code_val":"cust_id" } },
     {"control": "button", "value": "Edit Customer", "link": "update:Customer_Editor"}
   ]
 }
 
 //"Customer_List_of_Values_Grid" - Displayed when the user clicks the magnifying glass
 {
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "actions":"B",
   "caption":["Customer","Customers"],
   "fields":[
-    {"name":"c_id","caption": "ID"},
-    {"name":"c_name","caption":"Name","link":"select"}
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name","link":"select"}
   ]
 }
 
 //"Customer_Editor" - Displayed when user clicks the "Edit Customer" button
 {
-  "table":"c",
+  "table":"cust",
   "layout":"form",
   "onecolumn": true,
   "popup": [600, 400],
   "caption": ["Customer", "Customers"],
   "fields": [
-    {"name":"c_id", "caption": "ID"},
-    {"name":"c_name", "caption": "Name"},
-    {"name":"c_sts", "caption": "Status"}
+    {"name":"cust_id", "caption": "ID"},
+    {"name":"cust_name", "caption": "Name"},
+    {"name":"cust_sts", "caption": "Status"}
   ]
 }
 

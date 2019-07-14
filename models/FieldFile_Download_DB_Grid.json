@@ -1,18 +1,18 @@
 { 
-  "table":"c",
+  "table":"cust",
   "layout":"grid",
   "caption": "File Download - DB Optimized",
   "fields": [
-    {"name":"c_id", "key":1,"caption":"ID"},
-    {"name":"c_doc","type":"file","control":"file_download","caption":"Client Document",
+    {"name":"cust_id", "key":1,"caption":"ID"},
+    {"name":"cust_doc","type":"file","control":"file_download","caption":"Client Document",
       "controlparams": { 
-        "data_folder": "tutorials_c_doc",
+        "data_folder": "tutorials_cust_doc",
         "sqlparams": {
-          "FILE_EXT":    "c_doc_ext",
-          "FILE_NAME":   "c_doc_filename"
+          "FILE_EXT":    "cust_doc_ext",
+          "FILE_NAME":   "cust_doc_filename"
         }
       }
     },
-   {"name":"c_doc_filename","sqlselect":"c_id||c_doc_ext","control":"hidden"}
+   {"name":"cust_doc_filename","sqlselect":"cust_id||cust_doc_ext","control":"hidden"}
   ]
 }

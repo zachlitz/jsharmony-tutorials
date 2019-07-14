@@ -1,11 +1,11 @@
 { 
-  "table":"allcontrols",
+  "table":"all_controls",
   "layout":"form",
   "onecolumn":true,
   "caption": "File Download",
   "fields": [
     {"name":"x_primary", "type":"int", "key":1},
-    {"name":"x_file","type":"file","control":"file_download","controlparams": { "data_folder": "tutorials_allcontrols" },"caption":"x_file"},
+    {"name":"x_file","type":"file","control":"file_download","controlparams": { "data_folder": "tutorials_all_controls" },"caption":"x_file"},
     {"control": "label", "value":"Download", "link": "download:FieldFile_Download_Form&x_file","caption":"Download Link"}
   ]
 }

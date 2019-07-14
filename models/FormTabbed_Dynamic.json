@@ -1,17 +1,17 @@
 { 
   "FormTabbed_Dynamic": {
-    "table":"c",
+    "table":"cust",
     "layout":"form",
     "tabpanelstyle":"width:540px;",
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_name","caption":"","control":"label_h3"},
-      {"name":"c_sts","control":"hidden"}
+      {"name":"cust_name","caption":"","control":"label_h3"},
+      {"name":"cust_sts","control":"hidden"}
     ],
-    "tabcode":"c_sts",
+    "tabcode":"cust_sts",
     "tabs": [
-      { "name": "Overview", "target": "FormTabbed_Dynamic_C" },
-      { "name": "Contacts", "target": "FormTabbed_Dynamic_CCL", "showcode": "ACTIVE" }
+      { "name": "Overview", "target": "FormTabbed_Dynamic_Cust" },
+      { "name": "Contacts", "target": "FormTabbed_DynamiCust_Contact_Listing", "showcode": "ACTIVE" }
     ]
   },
 
@@ -22,25 +22,25 @@
     ]
   },
 
-  "FormTabbed_Dynamic_C": {
-    "table":"c",
+  "FormTabbed_Dynamic_Cust": {
+    "table":"cust",
     "layout":"form",
     "onecolumn":true,
     "caption":["Customer Overview"],
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Name"},
-      {"name":"c_sts","caption":"Status"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status"}
     ]
   },
 
-  "FormTabbed_Dynamic_CCL": {
-    "table":"cc",
+  "FormTabbed_DynamiCust_Contact_Listing": {
+    "table":"cust_contact",
     "layout":"grid",
     "caption":["Customer Contact","Customer Contacts"],
     "fields":[
-      {"name":"cc_name","caption":"Name"},
-      {"name":"cc_title","caption":"Title"}
+      {"name":"cust_contact_name","caption":"Name"},
+      {"name":"cust_contact_title","caption":"Title"}
     ]
   }
 }

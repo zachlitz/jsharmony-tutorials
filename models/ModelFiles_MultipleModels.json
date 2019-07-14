@@ -1,20 +1,20 @@
 {
-  "ModelFiles_MultipleModels_C": {
-    "table":"c",
+  "ModelFiles_MultipleModels_Cust": {
+    "table":"cust",
     "layout":"grid",
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"}
     ]
   },
-  "ModelFiles_MultipleModels_CC": {
-    "table":"cc",
+  "ModelFiles_MultipleModels_CustContact": {
+    "table":"cust_contact",
     "layout":"grid",
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"cc_id","caption": "ID"},
-      {"name":"cc_name","caption":"Contact"}
+      {"name":"cust_contact_id","caption": "ID"},
+      {"name":"cust_contact_name","caption":"Contact"}
     ]
   }
 }

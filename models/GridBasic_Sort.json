@@ -1,11 +1,11 @@
 { 
   "GridBasic_Sort": {
-    "table":"c",
+    "table":"cust",
     "layout":"grid",
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_id","caption": "ID"},
-      {"name":"c_name","caption":"Customer","sqlsort":"ifnull(c_name,c_id)"}
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer","sqlsort":"ifnull(cust_name,cust_id)"}
     ]
   }
 }

@@ -1,30 +1,30 @@
 { 
-  "FormSubform_Form_ForeignKey_C": {
-    "table":"c",
+  "FormSubform_Form_ForeignKey_Cust": {
+    "table":"cust",
     "layout":"form",
     "onecolumn":true,
     "caption":["Customer","Customers"],
     "fields":[
-      {"name":"c_name","caption":"Name"},
-      {"name":"c_sts","caption":"Status"},
-      {"control": "subform","target": "FormSubform_Form_ForeignKey_CA","actions":"BIU","bindings":{ "c_id":"c_id","ca_type":"'BILLING'" }}
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status"},
+      {"control": "subform","target": "FormSubform_Form_ForeignKey_CA","actions":"BIU","bindings":{ "cust_id":"cust_id","cust_addr_type":"'BILLING'" }}
     ]
   },
   "FormSubform_Form_ForeignKey_CA": {
-    "table":"ca",
+    "table":"cust_addr",
     "layout":"form",
     "onecolumn":true,
     "popup": [550,300],
     "caption":["Address","Addresses"],
     "fields":[
-      {"name":"c_id","key":1,"control":"hidden","actions":"BI"},
-      {"name":"ca_type","key":1,"control":"hidden","actions":"BI"},
-      {"name":"ca_country","caption":"Country"},
-      {"name":"ca_addr1","caption":"Address"},
-      {"name":"ca_addr2","caption":""},
-      {"name":"ca_city","caption":"City"},
-      {"name":"ca_state","caption":"State"},
-      {"name":"ca_zip","caption":"Zip"}
+      {"name":"cust_id","key":1,"control":"hidden","actions":"BI"},
+      {"name":"cust_addr_type","key":1,"control":"hidden","actions":"BI"},
+      {"name":"cust_addr_country","caption":"Country"},
+      {"name":"cust_addr_line1","caption":"Address"},
+      {"name":"cust_addr_line2","caption":""},
+      {"name":"cust_addr_city","caption":"City"},
+      {"name":"cust_addr_state","caption":"State"},
+      {"name":"cust_addr_zip","caption":"Zip"}
     ]
   }
 }
