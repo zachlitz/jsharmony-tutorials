@@ -8,8 +8,8 @@
       "controlparams": { 
         "data_folder": "tutorials_cust_doc",
         "sqlparams": {
-          "FILE_EXT":    "cust_doc_ext",
-          "FILE_NAME":   "cust_doc_filename"
+          "file_extension":    "cust_doc_ext",
+          "file_name":   "cust_doc_filename"
         }
       }
     },

@@ -9,11 +9,11 @@
       "controlparams": { 
         "data_folder": "tutorials_cust_doc",
         "sqlparams": {
-          "FILE_SIZE":   "cust_doc_size",
-          "FILE_EXT":    "cust_doc_ext",
-          "FILE_NAME":   "cust_doc_filename",
-          "FILE_UU":     "cust_doc_upuser",
-          "FILE_UTSTMP": "cust_doc_uptstmp"
+          "file_size":   "cust_doc_size",
+          "file_extension":    "cust_doc_ext",
+          "file_name":   "cust_doc_filename",
+          "file_upload_user":     "cust_doc_upuser",
+          "file_upload_timestamp": "cust_doc_uptstmp"
         }
       }
     },

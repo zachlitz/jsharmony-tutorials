@@ -161,9 +161,9 @@ The "sqlupdate" statement is executed for Grid, Form, Form-m, and Multisel updat
 The "sqldelete" statement is executed for Grid, Form, and Form-m deletes.  The sqldelete statement should return the # of rows that were deleted.  This validates that the delete completed successfully.
 
 <h4>model.sqldownloadselect</h4>
-The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" and "file_download" controls.  The SQL statement should return the FILE_NAME and FILE_EXT.  The names of the FILE_NAME and FILE_EXT columns are defiend in the field.controlparams property.
+The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" and "file_download" controls.  The SQL statement should return the file_name and file_extension.  The names of the file_name and file_extension columns are defiend in the field.controlparams property.
 <pre>
-select d_id,d_ext,(('D'::text || d.d_id::character varying::text) || COALESCE(d.d_ext, ''::character varying)::text) as "d_filename" from jsharmony.D where 1=1  and d_id=@d_id
+select doc_id,doc_ext,(('D'::text || doc.doc_id::character varying::text) || COALESCE(doc.doc_ext, ''::character varying)::text) as "doc_filename" from jsharmony.doc where 1=1  and doc_id=@doc_id
 </pre>
 
 <h4>model.sqlexec</h4>

@@ -62,7 +62,7 @@ config.system_settings.automatic_schema = {        //Set "automatic_schema": fal
   "datatypes": true,         //Load data types from the database (type, length, precision)
   "attributes": true,        //Load extended attributes from the database (required validation, primary key, read-only)
   "controls": true,          //Load controls from the database
-  "lovs": true,              //Load LOVs (List of Values - code/code/code2/code2) from the database
+  "lovs": true,              //Load LOVs (List of Values - code/code2) from the database
   "keys": true               //Generate primary and foreign keys based on table keys and bindings
 },
 </pre>
@@ -163,13 +163,13 @@ The field.control will be automatically set based on the database field:
 <h3>automatic_schema.lovs</h3>
 If a field name is the same as a database column that has:
 <ul>
-  <li>A foreign key to a code/code2/code/code2 table</li>
-  <li>The same name as a column in another table with a foreign key to a code/code2/code/code2 table (in order to support views)</li>
+  <li>A foreign key to a code/code2 table</li>
+  <li>The same name as a column in another table with a foreign key to a code/code2 table (in order to support views)</li>
   <li>The same name as a code/code table, without the code_ prefix, ex. code_cust_sts -> cust_sts</li>
 </ul>
 A "lov" attribute will be added to the column, linking to that list of values table.<br/>
 <br/>
-Two-dimensional list of values will be automatically added, as long as the foreign keys are defined to the code2/code2 tables.
+Two-dimensional list of values will be automatically added, as long as the foreign keys are defined to the code2 tables.
 
 <h3>automatic_schema.keys</h3>
 For "form", "form-m", editable "grid", and "multisel" models, if a field with the primary key (field.key) attribute has not been defined in a model, it will be automatically added based on the database schema.  This only works for tables, since views may contain multiple primary keys from multiple tables.<br/>

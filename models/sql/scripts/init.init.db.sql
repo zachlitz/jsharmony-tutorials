@@ -364,18 +364,6 @@ Test Line 3',
 insert into all_controls(x_label) values ('Third row');
 
 
-insert into jsharmony.sys_user(sys_user_id,sys_user_fname,sys_user_lname,sys_user_email,sys_user_startdt,sys_user_pw1,sys_user_pw2)
-  select 1, 'Admin', 'User', 'admin@jsharmony.com', datetime('now','localtime'),'******','******'
-  where not exists(select * from jsharmony.sys_user where sys_user_id=1);
-
-insert into jsharmony.help_target(help_target_code, help_target_desc)
-  select 'ModelHelp_Cust_Listing', 'Help Example - Cust_Listing'
-  where not exists(select * from jsharmony.help_target where help_target_code = 'ModelHelp_Cust_Listing');
-
-insert into jsharmony.help(help_target_code, help_title, help_text, help_listing_main, help_listing_client)
-  select 'ModelHelp_Cust_Listing', 'Customer Listing', '<p><strong>Sample</strong> Help Content</p><p>&nbsp\;</p>', 1, 1
-  where not exists(select * from jsharmony.help where help_target_code = 'ModelHelp_Cust_Listing');
-
 /*********scope codes*********/
 update jsharmony.code_doc_scope set code_code='cust' where code_val='C';
 update jsharmony.code_note_scope set code_code='cust' where code_val='C';

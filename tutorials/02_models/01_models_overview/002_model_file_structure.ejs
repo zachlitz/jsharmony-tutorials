@@ -180,6 +180,22 @@ If multiple models are stored in one file, the separate JS, CSS, EJS files would
 <div>Model 2</div>
 </pre>
 
+<h3 data-level="2">Source Files Prefix</h3>
+The additional ejs, css, js, and onroute files can alternatively be loaded from a different file prefix, using the "source_files_prefix" attribute.
+<pre>
+For example:
+//MODELID.json
+{
+  "source_files_prefix": "OTHERID"
+}
+
+Will load the ejs, css, js, and onroute files from:
+OTHERID.ejs
+OTHERID.css
+OTHERID.js
+OTHERID.onroute.js
+</pre>
+
 <h3>Report Models</h3>
 Reports consist of both an "Exec" form, and the Report EJS template.
 

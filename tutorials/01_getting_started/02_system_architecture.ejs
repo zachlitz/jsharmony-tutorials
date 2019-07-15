@@ -187,8 +187,8 @@ Reports consist of two components: the form to enter the report parameters, and 
 <h3>Job Processor Architecture</h3>
 The job processor checks the database for new jobs every few seconds, and executes any jobs it receives.
 <ol>
-  <li>The jsharmony.RQST (job request) table is populated by database triggers, backend processes, or by running a batch report</li>
-  <li>The Job Processor checks the jsharmony.RQST table every few seconds for a new job</li>
+  <li>The jsharmony.job (job request) table is populated by database triggers, backend processes, or by running a batch report</li>
+  <li>The Job Processor checks the jsharmony.job table every few seconds for a new job</li>
   <li>
     When a new job is found, the Job Processor parses the request and performs its actions, which may include:
     <ol>
@@ -318,10 +318,10 @@ jsHarmony works best when each table has a unique integer ID column.  In instanc
 -- Tutorial for using settings<br/>
 <br/>
 <b>Built-in List of Values</b><br/>
-code_COUNTRY / code2_COUNTRY_STATE<br/>
-code_AC / code_AHC / code_AC1<br/>
-V_YEARS<br/>
-V_MONTHS<br/>
+code_country / code2_country_state<br/>
+code_ac / code_ahc / code_ac1<br/>
+v_year<br/>
+v_month<br/>
 <br/>
 <b>Audit Trail</b><br/>
 ?? How to add audit trail<br/>

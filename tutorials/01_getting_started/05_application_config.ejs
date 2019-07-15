@@ -125,7 +125,7 @@ config.system_settings = {
     "datatypes": true,         //Load data types from the database (type, length, precision, required validation, primary key, read-only)
     "attributes": true,        //Load extended attributes from the database (required validation, primary key, read-only)
     "controls": true,          //Load controls from the database
-    "lovs": true,              //Load LOVs (List of Values - code/code/code2/code2) from the database
+    "lovs": true,              //Load LOVs (List of Values - code/code2) from the database
     "keys": true               //Generate primary and foreign keys based on table keys and bindings
   },
   //Model validation level - "standard", "strict"
@@ -170,9 +170,20 @@ config.field_mapping = {
   "user_role": "user_role",
   "rowcount": "xrowcount",
   "code_val": "code_val",
+  "code_val1": "code_val1",
+  "code_val2": "code_val2",
   "code_txt": "code_txt",
-  "codeseq": "code_seq",
+  "code_seq": "code_seq",
+  "code_end_date": "code_end_date",
   "code_parent": "code_parent",
+  "timestamp": "timestamp",
+  "current_user": "current_user",
+  "code_sys": "code_sys",
+  "code_app": "code_app",
+  "code2_sys": "code2_sys",
+  "code2_app": "code2_app",
+  "code": "code",
+  "code2": "code2"
 };
 
 //Front-end UI Field Mapping  ("UI Attribute" -> "DB Field Name")
@@ -183,7 +194,7 @@ config.ui_field_mapping = {
   "code_icon": "code_icon",
   "code_id": "code_id",
   "code_parent": "code_parent",
-  "codeseq": "codeseq",
+  "code_seq": "code_seq",
   "code_type": "code_type"
 };
 
@@ -219,8 +230,8 @@ config.macros = {
 
 //Model Groups - Define groups of models for Dynamic Bindings
 config.model_groups = {
-  "JSHARMONY_NOTES": ["NWUCS", "NWUS", "NWCS", "NWCSC_BASE", "NWCSC", "NWCSCB"],
-  "JSHARMONY_DOCUMENTS": ["DL_BASE"]
+  "JSHARMONY_NOTES": ["Note_UserCustSys_Tabs", "Note_UserSys_Tabs", "Note_CustSys_Tabs", "Base/Note_CustSys_Tabs_Browse", "Client/Note_CustSys_Tabs", "Note_CustSys_Tabs_Browse"],
+  "JSHARMONY_DOCUMENTS": ["Base/Doc_Listing"]
 };
 
 //Dynamic Bindings - For automatic bindings, when the child form in the model group, define advanced bindings for modules
@@ -307,7 +318,10 @@ config.silentStart = false;
 this.loadModels = true;
 
 //Google Maps API Key
-config.google_settings = { API_KEY: 'XXXXXXXXXXXXXX' };
+config.google_settings = {
+  api_key: 'XXXXXXXXXXXXXX',
+  unauthenticated_access: false   //Enable Google API access for unauthenticated users
+};
 
 //Config objects for additional modules loaded into jsHarmony
 config.modules = {
@@ -447,10 +461,10 @@ If a datalock is enabled for a site, every form and report in that site is requi
 config.datalocks = {
   "client":{   //The site ID where this datalock will be enabled
     "cust_id":{   //The datalock key (defined under site.datalock)
-               //An array of ("field_name"->"sql") pairs.  Forms fields matching the "field_name" will automatically have the datalock assigned
-               //The datalock is a sql "where" expression, limiting "field_name" by the datalock key
-      "o_id":"o_id in (select o_id from o where o.cust_id=@datalock_cust_id)",
-      "o_contact":"o_contact in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
+                  //An array of ("field_name"->"sql") pairs.  Forms fields matching the "field_name" will automatically have the datalock assigned
+                  //The datalock is a sql "where" expression, limiting "field_name" by the datalock key
+      "order_id":"order_id in (select order_id from order where order.cust_id=@datalock_cust_id)",
+      "order_contact":"order_contact in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
       "cust_addr_id":"cust_addr_id in (select cust_addr_id from cust_addr where cust_addr.cust_id=@datalock_cust_id)",
       "cust_contact_id":"cust_contact_id in (select cust_contact_id from cust_contact where cust_contact.cust_id=@datalock_cust_id)",
       "cust_flag_id":"cust_flag_id in (select cust_flag_id from cust_flag where cust_flag.cust_id=@datalock_cust_id)",
@@ -615,19 +629,19 @@ this.auto_start_job_processor = true;
 
 //Translate Database Fields to fields in Job Processor ("DB field": "Job Processor Field")
 configFactory.job_field_mapping = {
-  "rqst_id": "rqst_id",
-  "rqst_atype": "rqst_atype",
-  "rqst_aname": "rqst_aname",
-  "rqst_parms": "rqst_parms",
-  "rqst_source": "rqst_source",
-  "d_id": "d_id",
-  "d_scope": "d_scope",
-  "d_scope_id": "d_scope_id",
-  "d_ctgr": "d_ctgr",
-  "d_desc": "d_desc",
-  "rq_id": "rq_id",
-  "rq_name": "rq_name",
-  "rq_message": "rq_message",
+  "job_id": "job_id",
+  "job_atype": "job_atype",
+  "job_aname": "job_aname",
+  "job_parms": "job_parms",
+  "job_source": "job_source",
+  "doc_id": "doc_id",
+  "doc_scope": "doc_scope",
+  "doc_scope_id": "doc_scope_id",
+  "doc_ctgr": "doc_ctgr",
+  "doc_desc": "doc_desc",
+  "queue_id": "queue_id",
+  "queue_name": "queue_name",
+  "queue_message": "queue_message",
   "email_txt_attrib": "email_txt_attrib",
   "email_to": "email_to",
   "email_cc": "email_cc",
@@ -636,15 +650,15 @@ configFactory.job_field_mapping = {
   "email_subject": "email_subject",
   "email_text": "email_text",
   "email_html": "email_html",
-  "email_d_id": "email_d_id",
-  "email_d_filename": "email_d_filename",
+  "email_doc_id": "email_doc_id",
+  "email_doc_filename": "email_doc_filename",
   "sms_txt_attrib": "sms_txt_attrib",
   "sms_to": "sms_to",
   "sms_body": "sms_body",
-  "n_scope": "n_scope",
-  "n_scope_id": "n_scope_id",
-  "n_type": "n_type",
-  "n_note": "n_note",
+  "note_scope": "note_scope",
+  "note_scope_id": "note_scope_id",
+  "note_type": "note_type",
+  "note_body": "note_body",
   "cust_id":  "cust_id"
 };
 </pre>

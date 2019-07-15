@@ -35,6 +35,7 @@ Model:
   "grid_require_search": 1
   "grid_expand_search": 1
   "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
+  "default_search": [{"Column":"...", "Value":"...", "Comparison":"...", "Join":"..."}],
 
 Field:
   "sqlsearch":"cust_name||' '||cust_desc"
@@ -58,6 +59,44 @@ The message displayed in the grid when no results are returned for a query.  By 
 No results found %%%FORSEARCHPHRASE%%%
 </pre>
 The %%%FORSEARCHPHRASE%%% variable will automatically be replaced with the search phrase.
+
+<h4>model.default_search</h4>
+The "default_search" property can be used to set the initial default values for the search query.  Multiple search expressions are supported.
+<pre>
+{
+  "default_search": [
+    {"Column":"[i]field 1[/i]", "Value":"[i]value 1[/i]", "Comparison":"[i]comparison_type[/i]", "Join":"[i]join_type[/i]"},
+    {"Column":"[i]field 2[/i]", "Value":"[i]value 2[/i]", "Comparison":"[i]comparison_type[/i]", "Join":"[i]join_type[/i]"},
+  ],
+}
+
+[i]comparison_type[/i] :=
+  &gt;
+  &lt;
+  &gt;=
+  &lt;
+  =
+  &lt;&gt;
+  contains
+  notcontains
+  beginswith
+  endswith
+  null       //Comparison type for "Blank"
+  notnull    //Comparison type for "Not Blank"
+  soundslike
+
+[i]join_type[/i] :=
+  and
+  or
+</pre>
+For example:
+<pre>
+{
+  "default_search": [
+    {"Column":"cust_name", "Value":"Smith", "Comparison":"contains", "Join":"and"}
+  ],
+}
+</pre>
 
 <h4>field.sqlsearch</h4>
 The field "sqlsearch" property can be used to customize the data that is searched.  This can be used to extend the search across additional fields.
