@@ -64,7 +64,7 @@ As opposed to unbound forms, "exec" forms connect to the database on load to pop
   "sqlexec": "update cust set cust_sts='ACTIVE' where cust_id=@cust_id", 
   "fields": [
     {"name":"cust_id","caption":"Customer","control":"dropdown",
-     "lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name", "blank": true },
+     "lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name" },
      "validate": ["Required"]
     },
     {"control":"button","value":"Activate","onclick":"xmodel.controller.RunDBFunc();"}

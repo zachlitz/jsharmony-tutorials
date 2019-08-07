@@ -1,0 +1,106 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "list_of_values_creation",
+  "Title": "Creating / Editing Codes",
+  "Menu": ["Models","Codes / List of Values"],
+  "Code": ["/models/Cust.json","/models/Cust.js"]
+}
+</script>
+
+<h3>Types of Codes</h3>
+
+Drop-down lists can have their values either hard-coded in the field definition, or stored in the database.<br/>
+<br/>
+It is recommended to store the drop-down lists in the database, to enable:
+<ul>
+  <li>Centralized Administration of Drop-downs</li>
+  <li>Improved Maintenance (Only one definition of drop-down values per unique field)</li>
+  <li>Referential Integrity (using foreign keys)</li>
+</ul>
+Drop-down lists are stored in "Code" tables.<br/>
+<br/>
+There are three types of code tables:
+
+<ul>
+  <li>1D Codes (For standard drop-down list)</li>
+  <li>2D Codes (For parent / child drop-downs)</li>
+  <li>Codes using Custom SQL Expressions</li>
+</ul>
+
+<h3>Creating Codes</h3>
+
+The jsHarmony Factory comes with administration tools to create and manage 1D and 2D codes:
+<ul>
+  <li>Developer -> 1D Codes <a href="/jsHarmonyFactory/Dev/Code_Listing" target="_blank">(preview)</a></li>
+  <li>Developer -> 2D Codes <a href="/jsHarmonyFactory/Dev/Code2_Listing" target="_blank">(preview)</a></li>
+</ul>
+
+<h4>Code Listing</h4>
+<%-getScreenshot('jsHarmonyFactory/Dev/Code_Listing?popup=1','Code Listing')%>
+
+<h4>Adding a Code</h4>
+1. First, add a row to the Code Listing grid:
+<%-getScreenshot('jsHarmonyFactory/Dev/Code_Listing?popup=1','Code Listing - Insert', { height: 150, onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.xbuttoninsert').click();
+  window.setTimeout(function(){
+    jshInstance.$root('.code_name').first().val('sample_code');
+    jshInstance.$root('.code_desc').first().val('Sample Code');
+    window.setTimeout(resolve, 300);
+  }, 100);    
+}); } })%>
+
+2. Next, click the "Create Table" button:
+
+<%-getScreenshot('jsHarmonyFactory/Dev/Code_Listing?popup=1&state='+encodeURIComponent('{"jsHarmonyFactory/Dev/Code_Listing":{"Search":[{"Column":"ALL","Value":"sample_code","Comparison":"contains"}]}}'),'Code Listing - Insert - Create Table Button', { height: 150 })%>
+
+<%-getScreenshot('jsHarmonyFactory/Dev/CreateCode?action=update&code_schema=&code_name=sample_code&code_desc=Sample%20Code','Create Table')%>
+
+The code table will now be available.  Values can be added to the code table by clicking the "Edit Codes" button in the grid.
+
+<h3>Maintaining Codes</h3>
+
+Code values can be edited by clicking on the "Edit Codes" button on the Code Listing (Developer->1D Codes or Developer->2D Codes) screen:
+
+<%-getScreenshot('jsHarmonyFactory/Dev/Code_Value_Listing?popup=1&code_name=cust_sts&code_schema=','Edit Codes')%>
+
+<h3>Admin-Editable Codes</h3>
+
+The "Type" drop-down on the Code Listing screen has two options:
+
+<ul>
+  <li>System</li>
+  <li>App (Admin-Editable)</li>
+</ul>
+
+System codes are only editable by users with the "Developer" role, using the "Developer" tab.<br/>
+<br/>
+App (Admin-Editable) codes are editable by both Developers and users with the "System Administration" privilege on the "Administration" tab.<br/>
+<br/>
+Generally, "System" codes should be used when the code values are part of application logic, while "Admin-Editable" codes should be used wherever the code values are not hard-coded in the programs.
+
+<h3>Archiving Code Values</h3>
+Code Values can be archived, so that they will continue to display for historic data, but will not be an option for new data entry.<br/>
+<br/>
+For example, under the "Maintaining Codes" section above, the "DEACTIVE" code value has been archived.<br/>
+<br/>
+Removing the code entirely would break old data using that code.  Instead, setting a "Termination Date" (Term. Dt) on the code prevents it from being displayed on drop-downs, unless the record is currently set to that value.

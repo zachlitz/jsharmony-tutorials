@@ -1,0 +1,11 @@
+{ 
+  "FieldLOV_Basic_CustomControl": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Static Drop-down Lists - Custom Control",
+    "fields":[
+      {"control":"x_customdropdown","caption":"Item"}
+    ]
+  }
+}

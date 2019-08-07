@@ -1,0 +1,264 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "list_of_values_popup_lov",
+  "Title": "Popup List of Values",
+  "Menu": ["Models","Codes / List of Values"],
+  "Code": [
+    "/models/FieldLOV_Popup_Basic_Form.json",
+    "/models/FieldLOV_Popup_Basic_Grid.json",
+    "/models/FieldLOV_Popup_BaseReadonly.json",
+    "/models/FieldLOV_Popup_CopyResults.json",
+    "/models/FieldLOV_Popup_PopupIconStyle.json",
+    "/models/FieldLOV_Popup_PopupStyle.json",
+    "/models/FieldLOV_Popup_InitializingSearch.json",
+    "/models/FieldLOV_Popup_InitializingSearch.js"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_Basic_Form?popup=1&action=update&cust_id=2", "title": "Popup List of Values - Basic Form" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_Basic_Grid?popup=1", "title": "Popup List of Values - Basic Grid" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_BaseReadonly?popup=1&action=update&cust_id=2", "title": "Popup List of Values - popuplov.base_readonly" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_CopyResults?popup=1&action=update&cust_id=2", "title": "Popup List of Values - popuplov.popup_copy_results" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_PopupIconStyle?popup=1&action=update&cust_id=2", "title": "Popup List of Values - popuplov.popupiconstyle" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_PopupStyle?popup=1&action=update&cust_id=2", "title": "Popup List of Values - popuplov.popupstyle" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Popup_InitializingSearch?popup=1&action=update&cust_id=2", "title": "Popup List of Values - Events / Initializing Search" }
+  ]
+}
+</script>
+
+<h3>Introduction</h3>
+The popup list of values can be used when the drop-down control needs more functionality, such as multiple columns, search capability, or paging.<br/>
+<br/>
+The popup list of values load a grid in a popup, allowing the user to select a row of that grid as the value for the field in the parent form:
+
+<pre>
+{
+  "name": "cust_parent_id",
+  "caption": "Parent Customer ID",
+  "control": "textbox",
+  "popuplov":{ "target":"FieldLOV_Popup_Cust_LOV", "code_val":"cust_id" }
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_Basic_Form?popup=1&action=update&cust_id=2','Popup List of Values - Basic Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_Basic_Form?popup=1&action=update&cust_id=2','Popup List of Values - Basic Form - Popup Open', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.cust_parent_id_xlookup.xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return $('.xrow_jsHarmonyTutorials_FieldLOV_Popup_Cust_LOV').length; }, resolve);
+}); } })%>
+
+The popup list of values can also be used in a grid:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_Basic_Grid?popup=1','Popup List of Values - Basic Grid')%>
+
+The popup model must be a grid.  In the popup model field definition, setting the field.link to "select" will make that field clickable as the popup list of values selection:
+<pre>
+{
+  "table":"cust",
+  "layout":"grid",
+  "actions":"B",
+  "caption":["Customer","Customers"],
+  "fields":[
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Name","link":"select"}
+  ]
+}
+</pre>
+
+<h3>Syntax</h3>
+The syntax for the field.popuplov property is as follows:
+<pre>
+{
+  "popuplov": {
+    "target":  "J",     //Model ID with Popup Content
+    "code_val": "j_id", //Popup Grid Field Name whose value will be passed back on selection
+
+    //Copy Results - Additional fields that will be copied from popup grid to parent row
+    "popup_copy_results": { "parent_model_field": "popup_model_field" },
+
+    "popupstyle": "width:200px;height:200px;", //Popup Container Style
+    "popupiconstyle": "display:none;"          //Popup Icon Link Style
+
+    //Base Read-only - If true, make the parent control read-only, but still selectable via the popup form
+    "base_readonly": false,                    
+    
+    //--Events
+    //onpopup - Execute when the popup button is clicked, but before the popup is loaded
+    //          * Must execute "onComplete()" callback for popup to open
+    "onpopup": "console.log('popup'); onComplete();", //(popupmodelid, parentmodelid, fieldid, onComplete)
+    
+  }
+}
+</pre>
+
+<h3>Read-only Controls - popuplov.base_readonly</h3>
+When using the popup list of values with a textbox as the base control, the textbox will still be editable for free text entry.<br/>
+<br/>
+The base control can be set to be read-only, while still enabling data entry via the popup icon, using the popuplov.base_readonly property:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_BaseReadonly?popup=1&action=update&cust_id=2','Popup List of Values - popuplov.base_readonly')%>
+<pre>
+{
+  "name": "cust_parent_id",
+  "caption": "Parent Customer ID",
+  "control": "textbox",
+  "popuplov":{
+    "target":"FieldLOV_Popup_Cust_LOV",
+    "code_val":"cust_id",
+    "base_readonly": true
+  }
+}
+</pre>
+
+<h3>Using Additional Popup Grid Fields - popuplov.popup_copy_results</h3>
+A popup list of values can store its results in more than one field on the parent form, by using the "popuplov.popup_copy_results" attribute:
+<pre>
+"popup_copy_results": {
+  "<i>parent_model_field1</i>": "<i>popup_model_field1</i>",
+  "<i>parent_model_field2</i>": "<i>popup_model_field2</i>",
+},
+</pre>
+For example, in the "cust_parent_id" example, the value of the field is a Customer ID.  However, it might be more user-friendly to instead display the Customer Name:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_CopyResults?popup=1&action=update&cust_id=2','Popup List of Values - popuplov.popup_copy_results')%>
+<pre>
+[
+  {
+    "name": "cust_parent_name",
+    "caption": "Parent Customer",
+    "control": "label",
+    "sqlselect":"select cust_name from cust cust_parent where cust_parent.cust_id=cust.cust_parent_id"
+  },
+  {
+    "name": "cust_parent_id",
+    "control":"hidden",
+    "popuplov":{
+      "target":"FieldLOV_Popup_Cust_LOV",
+      "code_val":"cust_id",
+      "popup_copy_results": { "cust_parent_name": "cust_name" }
+    }
+  }
+]
+</pre>
+The two fields - cust_parent_name and cust_parent_id, look like one field because cust_parent_id is hidden.<br/>
+<br/>
+However, because field.popuplov is defined for cust_parent_id, the popup icon is still displayed.  When a popup value is selected, it will popuplate both cust_parent_id and cust_parent_name.<br/>
+<br/>
+Additionally, in order to populate the cust_parent_name on Form Load, cust_parent_name defines a field.sqlselect statement to get the current Customer Name on load.
+
+<h3>Styling the Popup List of Values</h3>
+In addition to the standard field and model styling properties, the popup list of values has two additional properties for styling: popupiconstyle and popupstyle.
+
+<h4>field.popuplov.popupiconstyle</h4>
+The field.popuplov.popupiconstyle property adds style attributes to the &lt;a&gt; link surrounding the popup magnifying glass icon:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_PopupIconStyle?popup=1&action=update&cust_id=2','Popup List of Values - popuplov.popupiconstyle')%>
+<pre>
+{
+  "name": "cust_parent_id",
+  "caption": "Parent Customer ID",
+  "control": "textbox",
+  "popuplov":{
+    "target":"FieldLOV_Popup_Cust_LOV",
+    "code_val":"cust_id",
+    "popupiconstyle":"display:inline-block; border:4px dashed red;"
+  }
+}
+</pre>
+
+<h4>field.popuplov.popupstyle</h4>
+The field.popuplov.popupstyle property styles the container DIV with the popup grid.  Setting the width and height styles will change the width and height of the popup:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_PopupStyle?popup=1&action=update&cust_id=2','Popup List of Values - popuplov.popupstyle', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.cust_parent_id_xlookup.xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return $('.xrow_jsHarmonyTutorials_FieldLOV_Popup_Cust_LOV').length; }, resolve);
+}); } })%>
+<pre>
+{
+  "name": "cust_parent_id",
+  "caption": "Parent Customer ID",
+  "control": "textbox",
+  "popuplov":{
+    "target":"FieldLOV_Popup_Cust_LOV",
+    "code_val":"cust_id",
+    "popupstyle":"width:400px; height:200px; border:4px dashed red;"
+  }
+}
+</pre>
+
+<h3>Events</h3>
+In addition to standard field events such as "onchange", the popup has an addition event: field.popup.onpopup:
+
+<h3 data-level="2">field.popup.onpopup</h3>
+<pre>
+//--Events
+//onpopup(popupmodelid, parentmodelid, fieldid, onComplete)
+//  Execute when the popup button is clicked, but before the popup is loaded
+//  * Must execute "onComplete()" callback for popup to open
+//
+//  Parameters
+//    popupmodelid (string):  The model ID of the popup grid
+//    parentmodelid (string): The model ID of the parent control
+//    fieldid (string):       The field.name of the parent control
+//    onComplete (function):  A callback, that must be executed in order for the popup to load
+//
+//Example: "onpopup": "console.log('popup'); onComplete();",
+</pre>
+
+<h3 data-level="2">Initializing the Search Filter</h3>
+The field.popup.onpopup event can be used to initialize the search filter on the grid with a default filter.<br/>
+<br/>
+In the following example, the filter for the Parent Customer can be set to exclude the current Customer ID:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Popup_InitializingSearch?popup=1&action=update&cust_id=2','Popup List of Values - Events / Initializing Search', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.cust_parent_id_xlookup.xlookup').click();
+  jshInstance.XExt.waitUntil(function(){ return $('.xrow_jsHarmonyTutorials_FieldLOV_Popup_Cust_LOV').length; }, resolve);
+}); } })%>
+<pre>
+//Field Definition
+{
+  "name": "cust_parent_id",
+  "caption": "Parent Customer ID",
+  "control": "textbox",
+  "popuplov":{
+    "target":"FieldLOV_Popup_Cust_LOV",
+    "code_val":"cust_id",
+    "popupstyle":"width:500px;",
+    "onpopup":"_this.LOV_search(popupmodelid, parentmodelid, fieldid, onComplete);"
+  }
+}
+
+//model.js
+jsh.App[modelid] = new (function(){
+  var _this = this;
+
+  this.LOV_search = function(popupmodelid, parentmodelid, fieldid, onComplete){
+    //Filter out current customer ID
+    var popupmodel = jsh.XModels[popupmodelid];
+    var cust_id = xmodel.get('cust_id');
+    if(cust_id){
+      //Search by the C_IDs
+      popupmodel.controller.SetSearch([new jsh.XSearch.SearchItem('cust_id', cust_id.toString(), 'or', '<>')], true);
+    }
+    onComplete();
+  }
+  
+})();
+</pre>

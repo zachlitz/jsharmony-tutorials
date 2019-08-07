@@ -12,7 +12,7 @@
     {"caption":"Default Value (Static)","unbound":true, "control":"textbox", "default":"Test" },
     {"caption":"Default Value (JS)","unbound":true, "control":"textbox", "default":"js:Math.round(Math.random()*1000)" },
     {"caption":"Default Value (SQL)","unbound":true, "control":"textbox", "default": { "sql": "select x_textarea from all_controls where x_primary = @x_primary" } },
-    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select cust_id code_val, cust_name code_txt from cust order by cust_name", "blank": true } },
+    {"caption":"SQL Dropdown List of Values","unbound":true, "control":"dropdown", "lov": { "sql": "select cust_id code_val, cust_name code_txt from cust order by cust_name" } },
     {"caption":"Default Value (via querystring)", "unbound":true, "control":"textbox", "name": "auto_initial_qs" },
     {"caption":"Default Value (via Model SQL Select)", "unbound":true, "control":"textbox", "name": "auto_initial_db" }
   ]

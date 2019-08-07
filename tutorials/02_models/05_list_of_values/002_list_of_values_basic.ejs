@@ -1,0 +1,246 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "list_of_values_basic",
+  "Title": "Basic List of Values",
+  "Menu": ["Models","Codes / List of Values"],
+  "Code": [
+    "/models/FieldLOV_Basic_Static.json",
+    "/models/FieldLOV_Basic_CustomControl.json",
+    "/models/_controls.json",
+    "/models/FieldLOV_Basic_Macro.json",
+    "/models/_config.json",
+    "/models/FieldLOV_Basic_Code.json",
+    "/models/FieldLOV_Basic_CustomSQL.json",
+    "/models/FieldLOV_Basic_DefaultValue_BlankCaption.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldLOV_Basic_Static", "title": "Basic List of Values - Static" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Basic_CustomControl", "title": "Basic List of Values - Custom Control" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Basic_Macro", "title": "Basic List of Values - Macro" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Basic_Code", "title": "Basic List of Values - Database Code Tables" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Basic_CustomSQL", "title": "Basic List of Values - Database Custom SQL" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Basic_DefaultValue_BlankCaption", "title": "Basic List of Values - Default Values / Blank Captions" }
+  ]
+}
+</script>
+
+<h3>Introduction</h3>
+Drop-down lists can be populated using the following types of "list of values" (LOV):
+<ul>
+  <li>
+    Static List of Values
+    <ul>
+      <li>In the field definition</li>
+      <li>In a custom control definition</li>
+      <li>In a macro</li>
+    </ul>
+  </li>
+  <li>
+    Database List of Values
+    <ul>
+      <li>Code Tables</li>
+      <li>Custom SQL</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Static LOV - Field Definition</h3>
+If a list of values will be shared between models, it is recommended to define it as a custom control, macro, or database code.<br/>
+<br/>
+However, if a list of values will be used in only one model, it can be defined as part of the field using the lov.values property:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Basic_Static?popup=1','Basic List of Values - Static')%>
+<pre>
+//Standard attribute array syntax
+{
+  "control":"dropdown"
+  "caption":"Standard Attribute Array Definition",
+  "lov":{
+    "values":[
+      { "code_val": "ACTIVE", "code_txt": "Active" },
+      { "code_val": "CLOSED", "code_txt": "Closed" }
+    ]
+  }
+}
+
+//Key-value syntax
+{
+  "control":"dropdown",
+  "caption":"Key-Value Definition",
+  "lov":{
+    "values":{
+      "ACTIVE": "Active",
+      "CLOSED": "Closed" 
+    }
+  }
+}
+</pre>
+The standard syntax ("attribute array") defines the drop-drown list of values as an array.  The following attributes are available:
+<ul>
+  <li><b>code_val</b> - The field value</li>
+  <li><b>code_txt</b> - The display caption</li>
+</ul>
+The key-value syntax is a short-hand syntax that maps the key-value pair as follows:
+<pre>
+key -> code_val
+value -> code_txt
+
+For example:
+{ "ACTIVE": "Active" } maps to { "code_val": "ACTIVE", "code_txt": "Active" }
+</pre>
+
+<h3>Static LOV - Custom Control Definition</h3>
+Custom Control definitions enable the list of values to be shared between multiple controls.<br/>
+<br/>
+First, the control would need to be defined in "models\_controls.json", as described in the <a href="/tutorials/field_custom_controls#extending_controls_controls_json">Custom Controls</a> tutorial.
+<pre>
+"x_customdropdown":{
+  "for": "x_customdropdown",
+  "control": "dropdown",
+  "lov": { "values": { "ONE": "One", "TWO": "Two" } }
+},
+</pre>
+Next, the each model would reference that shared custom control, and add / override properties as required:
+<pre>
+{
+  "control":"x_customdropdown",
+  "caption":"Item"
+}
+</pre>
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Basic_CustomControl?popup=1','Basic List of Values - Custom Control')%>
+
+
+<h3>Static LOV - Macro Definition</h3>
+Macros can also be used to abstract repeated properties.  Macros are defined in "models\_config.json":
+<pre>
+"macros": {
+  "LOV_STATUS_CONNECTION": [
+    { "code_val": "ONLINE", "code_txt": "Online" },
+    { "code_val": "OFFLINE", "code_txt": "Offline" }
+  ] 
+}
+</pre>
+Next, the macro can be used in the model's field definition:
+<pre>
+{
+  "control":"dropdown",
+  "caption":"Status",
+  "lov":{"values":"#LOV_STATUS_CONNECTION"}
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Basic_Macro?popup=1','Basic List of Values - Macro')%>
+
+<h3>Database LOV - Code Tables</h3>
+The drop-down list of values can also be loaded from the database. The jsHarmony Factory has built-in tools for creating and managing Codes (list of values).  Information about creating and editing database list of values can be found in the <a href="/tutorials/list_of_values_creation">Creating / Editing Codes</a> tutorials.<br/>
+<br/>
+Database list of values can be defined as follows:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Basic_Code?popup=1','Basic List of Values - Database Code Tables')%>
+<pre>
+//Code Table w/Schema
+{
+  "control":"dropdown",
+  "caption":"AC Status",
+  "lov":{"code":"ac","schema":"jsharmony"}
+},
+
+//No Schema
+{
+  "control":"dropdown",
+  "caption":"Customer Status",
+  "lov":{"code":"cust_sts"}
+},
+
+//Schema.CodeName syntax
+{
+  "control":"dropdown",
+  "caption":"AC Status - schema.codename",
+  "lov":{"code":"jsharmony.ac"}
+}
+</pre>
+The "code" first needs to be defined in the jsHarmony Factory.  SQL is automatically generated as follows:
+<pre>
+select code_val,code_txt from SCHEMA.code_CODENAME where (code_end_dt is null or code_end_dt > datetime('now','localtime')) order by code_seq,code_txt
+</pre>
+The built-in database list of values automatically handles "archived" codes (disabling instead of deleting codes, based on  code_end_dt).  More information on archiving codes can be found in the <a href="/tutorials/list_of_values_archived_codes">Archived Codes</a> tutorials.
+
+<h3>Database LOV - Custom SQL</h3>
+Database List of Values can also be loaded using Custom SQL expressions:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Basic_CustomSQL?popup=1','Basic List of Values - Database Custom SQL')%>
+<pre>
+{
+  "control":"dropdown",
+  "caption": "Customer",
+  "lov":{
+    "sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"
+  }
+}
+</pre>
+The following fields must be returned from the field.lov.sql SQL statement:
+<ul>
+  <li><b>code_val</b> - The field value</li>
+  <li><b>code_txt</b> - The display caption</li>
+</ul>
+
+More information about defining custom SQL list of values can be found in the <a href="/tutorials/list_of_values_custom">Custom SQL List of Values</a> tutorials.
+
+<h3>Default Values / Blank Captions</h3>
+Default values can be assigned to a drop-down list using the "field.default" property:
+<pre>
+{
+  "control":"dropdown",
+  "caption":"List w/Default",
+  "default":"VALUE1",
+  "lov":{
+    "values":{"VALUE1":"Value 1","VALUE2":"Value 2"}
+  } 
+}
+</pre>
+
+If a default value is not provided, the "blank" value will be selected by default.  Normally, the blank value will have the caption "Please Select...", however this can be customized using the "field.lov.blank" property:
+<pre>
+{
+  "control":"dropdown",
+  "caption":"List w/Custom Blank Text",
+  "lov":{
+    "blank": "Select an option",
+    "values":{"VALUE1":"Value 1","VALUE2":"Value 2"}
+  } 
+}
+</pre>
+
+The blank value can also be removed by setting field.lov.blank to false, however if doing so, it is necessary to set a default value if the field is used as part of an insert operation:
+<pre>
+{
+  "control":"dropdown",
+  "caption":"List w/o Blank",
+  "default":"VALUE1",
+  "lov":{
+    "blank": false,
+    "values":{"VALUE1":"Value 1","VALUE2":"Value 2"}
+  }
+}
+</pre>
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Basic_DefaultValue_BlankCaption?popup=1','Basic List of Values - Default Values / Blank Captions')%>

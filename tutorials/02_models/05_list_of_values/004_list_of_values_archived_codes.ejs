@@ -20,14 +20,96 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
-  "Title": "Archived LOV Codes",
-  "Menu": ["Models","List of Values"],
-  "Code": ["/models/Cust.json","/models/Cust.js"]
+  "ID": "list_of_values_archived_codes",
+  "Title": "Archived Codes",
+  "Menu": ["Models","Codes / List of Values"],
+  "Code": [
+    "/models/FieldLOV_Archive_Cust.json",
+    "/models/FieldLOV_Archive_Order.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldLOV_Archive_Cust?popup=1&action=insert", "title": "Archived Code - Basic List" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Archive_Cust?popup=1&action=update&cust_id=1", "title": "Archived Code - Edit with Archived Value" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Archive_Cust?popup=1&action=insert&cust_sts=REVIEW", "title": "Archived Code - Undefined Value (via Querystring)" },
+    { "url": "jsHarmonyTutorials/FieldLOV_Archive_Order", "title": "Archived Code - lov.sqlselect" }
+  ]
 }
 </script>
-List of Values - Archived Codes
 
-** Screenshot of archiving code
+<h3>Introduction</h3>
+There are a few challenges with disabling / removing a code after it has been in production for a while:
+<ul>
+  <li>If using a relational database, the old code cannot be removed without removing or changing the old data</li>
+  <li>If the old code is just disabled, instead of removed, then the user interface needs:
+    <ul>
+      <li>A way to display the caption of the old code</li>
+      <li>A way to allow the user to make changes to old data, without removing / changing the old code</li>
+    </ul>
+  </li>
+</ul>
+Archived codes address these issues.
 
-__code_val_xxx__
-lov.sqlselect
+<h3>How to Archive Codes</h3>
+When using the jsHarmony Factory, Codes can be archived by setting a "Termination Date" (Term Dt):
+
+<%-getScreenshot('jsHarmonyFactory/Dev/Code_Value_Listing?popup=1&code_name=cust_sts&code_schema=','Edit Codes')%>
+
+The termination date goes into effect on the specified date - until then, all drop-downs will continue to list that code.<br/>
+<br/>
+When using Custom SQL for the list of values, the Termination Date logic must be manually handled in the SQL:
+<pre>
+select code_val,code_txt from code_table where (code_end_dt is null or code_end_dt > datetime('now','localtime')) order by code_seq,code_txt
+</pre>
+
+<h3>How Archived Codes are Displayed</h3>
+In the "cust_sts" code table above, the "DEACTIVE" code has been archived.<br/>
+<br/>
+When adding a new record, or editing an existing record that did not have that code set, the "DEACTIVE" code does not appear:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Archive_Cust?popup=1&action=insert','Archived Code - Add', { beforeScreenshot:function(jsh, page, cb){
+  page.click('.cust_sts').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
+
+However, when editing a record that has the customer status previously set to "DEACTIVE", the code will appear in the drop-down.  Additionally, since the display caption is set in the code table, the caption will be displayed instead of the raw code:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Archive_Cust?popup=1&action=update&cust_id=1','Archived Code - Edit with Value', { beforeScreenshot:function(jsh, page, cb){
+  page.click('.cust_sts').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
+
+If however, if the value of a drop-down is set to a value not in the code table, such as "REVIEW" in the example below, the raw code will be displayed:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Archive_Cust?popup=1&action=insert&cust_sts=REVIEW','Archived Code - Undefined Value', { beforeScreenshot:function(jsh, page, cb){
+  page.click('.cust_sts').then(cb).catch(function (err) { jsh.Log.error(err); });
+} })%>
+
+<h3>Archived Codes SQL Implementation</h3>
+Archived codes are not returned from the database in the list of values - they are returned as part of the model select statement.<br/>
+<br/>
+In the customer status example above, the list of values select statement is:
+<pre>
+select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq,code_txt
+</pre>
+The "DEACTIVE" code is not returned in the results.  However, the form select statement is:
+<pre>
+select cust_id,cust_name,cust_sts,(select code_txt from code_cust_sts where code_val=(cust_sts)) as __code_txt__cust_sts from cust where  1=1  and cust_id=@cust_id
+</pre>
+Both the drop-down value and caption are returned in the results:
+<ul>
+  <li><b>cust_sts</b> - Drop-down value</li>
+  <li><b>__code_txt__cust_sts</b> - Drop-down caption</li>
+</ul>
+The drop-down caption defaults to the following when using code tables:
+<pre>
+select code_txt from code_CODENAME where code_val=(FIELDNAME)
+</pre>
+However, when using custom SQL for list of values, the drop-down caption must be manually defined.<br/>
+<br/>
+The drop-down caption is set using the field.lov.sqlselect property:
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_Archive_Order?popup=1','Archived Code - lov.sqlselect')%>
+<pre>
+{
+  "name":"cust_id",
+  "caption":"Customer",
+  "lov":{
+    "sql":"select cust_id code_val,cust_name code_txt from cust",
+    "sqlselect":"select cust_name from cust where cust.cust_id=sale.cust_id"
+  }
+}
+</pre>

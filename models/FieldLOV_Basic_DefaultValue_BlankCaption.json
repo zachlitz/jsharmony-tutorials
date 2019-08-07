@@ -1,0 +1,29 @@
+{ 
+  "FieldLOV_Basic_DefaultValue_BlankCaption": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Static Drop-down Lists - Default Values and Blank Captions",
+    "fields":[
+      {"control":"dropdown","caption":"List w/Default",
+        "default":"VALUE1",
+        "lov":{
+          "values":{"VALUE1":"Value 1","VALUE2":"Value 2"}
+        } 
+      },
+      {"control":"dropdown","caption":"List w/Custom Blank Text",
+        "lov":{
+          "blank": "Select an option",
+          "values":{"VALUE1":"Value 1","VALUE2":"Value 2"}
+        } 
+      },
+      {"control":"dropdown","caption":"List w/o Blank",
+        "default":"VALUE1",
+        "lov":{
+          "blank": false,
+          "values":{"VALUE1":"Value 1","VALUE2":"Value 2"}
+        } 
+      }
+    ]
+  }
+}

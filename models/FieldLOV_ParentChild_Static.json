@@ -1,0 +1,34 @@
+{ 
+  "FieldLOV_ParentChild_Static": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Parent / Child List of Values - Static",
+    "fields":[
+      {
+        "name":"Make",
+        "control":"dropdown",
+        "lov":{
+          "values":[
+            { "code_val": "FORD", "code_txt": "Ford" },
+            { "code_val": "TOYOTA", "code_txt": "Toyota" }
+          ]
+        }
+      },
+      {
+        "name":"Model",
+        "control":"dropdown",
+        "lov":{
+          "parent":"Make",
+          "values":[
+            { "code_parent": "FORD", "code_val": "FORD_F150", "code_txt": "F150" },
+            { "code_parent": "FORD", "code_val": "FORD_MUSTANG", "code_txt": "Mustang" },
+            { "code_parent": "TOYOTA", "code_val": "TOYOTA_COROLLA", "code_txt": "Corolla" },
+            { "code_parent": "TOYOTA", "code_val": "TOYOTA_CAMRY", "code_txt": "Camry" },
+            { "code_parent": "TOYOTA", "code_val": "TOYOTA_AVALON", "code_txt": "Avalon" }
+          ]
+        }
+      }
+    ]
+  }
+}

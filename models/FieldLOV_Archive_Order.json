@@ -1,0 +1,18 @@
+{ 
+  "FieldLOV_Archive_Order": {
+    "layout":"grid",
+    "table":"sale",
+    "caption":"Archived Codes - lov.sqlselect",
+    "fields":[
+      {"name":"sale_id","caption":"Sales Order #"},
+      {
+        "name":"cust_id",
+        "caption":"Customer",
+        "lov":{
+          "sql":"select cust_id code_val,cust_name code_txt from cust",
+          "sqlselect":"select cust_name from cust where cust.cust_id=sale.cust_id"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{ 
+  "FieldLOV_Archive_Cust": {
+    "layout":"form",
+    "table":"cust",
+    "onecolumn":true,
+    "caption":"Archived Codes",
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {"name":"cust_sts","caption":"Status","locked_by_querystring": false, "lov":{"code":"cust_sts"} }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{ 
+  "FieldLOV_Basic_Static": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Static Drop-down Lists",
+    "fields":[
+      {"control":"dropdown","caption":"Standard Attribute Array Definition",
+        "lov":{
+          "values":[{ "code_val": "ACTIVE", "code_txt": "Active" },{ "code_val": "CLOSED", "code_txt": "Closed" }]
+        }
+      },
+      {"control":"dropdown","caption":"Key-Value Definition",
+        "lov":{
+          "values":{ "ACTIVE": "Active", "CLOSED": "Closed" }
+        }
+      }
+    ]
+  }
+}

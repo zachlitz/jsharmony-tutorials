@@ -1,0 +1,13 @@
+{ 
+  "FieldLOV_Basic_Code": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Database Drop-down Lists - Code Tables",
+    "fields":[
+      {"control":"dropdown","caption":"AC Status","lov":{"code":"ac","schema":"jsharmony"} },
+      {"control":"dropdown","caption":"Customer Status","lov":{"code":"cust_sts"} },
+      {"control":"dropdown","caption":"AC Status - schema.codename","lov":{"code":"jsharmony.ac"} }
+    ]
+  }
+}

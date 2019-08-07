@@ -3,6 +3,9 @@
     "zebra1": { "actions": "BIUD", "roles": {"SYSADMIN":"*"} },
     "dotmatrix1": { "actions": "BIUD", "roles": {"SYSADMIN":"*"} }
   },
+  "macros": {
+    "LOV_STATUS_CONNECTION": [{ "code_val": "ONLINE", "code_txt": "Online" },{ "code_val": "OFFLINE", "code_txt": "Offline" }] 
+  },
   "datalocks": {
     "client": {
       "cust_id": {

@@ -270,7 +270,7 @@ If using foreign keys for the bindings, it is necessary to specify the bindings 
   "fields":[
     {"name":"item_code","caption":"Code"},
     {"name":"item_name","caption":"Name"},
-    {"name":"cust_id","caption":"Customer","lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name", "blank": true } },
+    {"name":"cust_id","caption":"Customer","lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name" } },
     {"control": "subform","target": "Cust","actions":"BU"}
   ]
 },

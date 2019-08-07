@@ -139,6 +139,7 @@ config.max_filesize = 50000000; //Default 50MB file upload size limit
 config.max_user_temp_foldersize = 50000000; //Default 50MB limit for users' temp staging folder
 config.public_temp_expiration = 5 * 60;     //Clear public temp files after 5 min
 config.user_temp_expiration = 6 * 60 * 60;  //Clear users' temp files after 6 hours
+config.report_timeout = 90 * 1000;          //Timeout for report generation (default 90 seconds)
 
 //Valid file upload extensions
 config.valid_extensions = [".jpg", ".jpeg", ".pdf", ".png", ".gif", ".txt", ".xlsm", ".xls", ".xlsx", ".bak", ".zip",".csv"];

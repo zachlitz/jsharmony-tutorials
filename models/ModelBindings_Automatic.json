@@ -35,7 +35,7 @@
     ],
     "popup":[1000,700],
     "fields": [
-      {"name":"cust_id","caption":"Customer","lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name", "blank": true }, "actions":"BI" },
+      {"name":"cust_id","caption":"Customer","lov": { "sql": "select cust_id code_val,cust_name code_txt from cust order by cust_name" }, "actions":"BI" },
       {"name":"cust_contact_name","caption": "Contact Name"},
       {"name":"cust_contact_title","caption":"Title"},
       {"name":"cust_contact_email","caption":"Email"}

@@ -1,0 +1,36 @@
+{ 
+  "FieldLOV_ParentChild_MultiParent": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Parent / Child List of Values - Multiple Parents",
+    "fields":[
+      {
+        "name":"cust_id",
+        "control":"dropdown",
+        "caption": "Customer",
+        "lov":{
+          "sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"
+        }
+      },
+      {
+        "name":"sale_id",
+        "control":"dropdown",
+        "caption":"Sales Order",
+        "lov":{
+          "parent":"cust_id",
+          "sql2":"select cust_id code_parent, sale_id code_val, ('#'||sale_id) code_txt from v_sale order by sale_id"
+        }
+      },
+      {
+        "name":"sale_line_id",
+        "control":"dropdown",
+        "caption":"Sales Order Line",
+        "lov":{
+          "parents":["cust_id","sale_id"],
+          "sqlmp":"select cust_id code_parent1, sale.sale_id code_parent2, sale_line_id code_val, sale_line_desc code_txt from sale_line inner join sale on sale_line.sale_id = sale.sale_id order by sale_line_id"
+        }
+      }
+    ]
+  }
+}

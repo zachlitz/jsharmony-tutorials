@@ -1,0 +1,12 @@
+{ 
+  "FieldLOV_ParentChild_Code": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Parent / Child List of Values - Code Tables",
+    "fields":[
+      {"name":"x_country","control":"dropdown","lov":{"code":"jsharmony.country"} },
+      {"name":"x_state","control":"dropdown","lov":{"parent":"x_country","code2":"jsharmony.country_state"} }
+    ]
+  }
+}

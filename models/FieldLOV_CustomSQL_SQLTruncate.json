@@ -1,0 +1,19 @@
+{ 
+  "FieldLOV_CustomSQL_SQLTruncate": {
+    "layout":"form",
+    "table":"sale",
+    "onecolumn":true,
+    "caption":"Custom SQL - lov.sqltruncate",
+    "fields":[
+      {"name":"sale_id","caption":"Sales Order #"},
+      {
+        "name":"cust_id",
+        "caption":"Customer",
+        "lov":{
+          "sql":"select cust_id code_val,cust_name code_txt from cust where 1=1 %%%TRUNCATE%%%",
+          "sqltruncate":"cust_id=@cust_id"
+        }
+      }
+    ]
+  }
+}

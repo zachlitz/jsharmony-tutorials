@@ -5,7 +5,7 @@
   "caption": ["Item", "Items"],
   "popup":[900,400],
   "fields": [
-    { "name": "x_error", "lov": { "blank": true, "values": {
+    { "name": "x_error", "lov": { "values": {
       "application_error": "application_error",
       "application_warning": "application_warning",
       "execute_form": "execute_form",

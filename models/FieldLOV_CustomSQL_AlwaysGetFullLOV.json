@@ -1,0 +1,20 @@
+{ 
+  "FieldLOV_CustomSQL_AlwaysGetFullLOV": {
+    "layout":"form",
+    "table":"cust",
+    "onecolumn":true,
+    "caption":"Custom SQL - lov.always_get_full_lov",
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Name"},
+      {
+        "name":"cust_sts",
+        "caption":"Status",
+        "lov":{
+          "code":"cust_sts",
+          "always_get_full_lov":true
+        }
+      }
+    ]
+  }
+}

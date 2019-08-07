@@ -1,0 +1,11 @@
+{ 
+  "FieldLOV_Basic_Macro": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Static Drop-down Lists - Macro",
+    "fields":[
+      {"control":"dropdown","caption":"Status","lov":{"values":"#LOV_STATUS_CONNECTION"} }
+    ]
+  }
+}

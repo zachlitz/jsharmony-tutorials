@@ -1,0 +1,19 @@
+{ 
+  "FieldLOV_CustomSQL_SQLSelect_Form": {
+    "layout":"form",
+    "table":"sale",
+    "onecolumn":true,
+    "caption":"Custom SQL - lov.sqlselect",
+    "fields":[
+      {"name":"sale_id","caption":"Sales Order #"},
+      {
+        "name":"cust_id",
+        "caption":"Customer",
+        "lov":{
+          "sql":"select cust_id code_val,cust_name code_txt from cust where 1=1 %%%TRUNCATE%%%",
+          "sqlselect":"select cust_name from cust where cust.cust_id=sale.cust_id"
+        }
+      }
+    ]
+  }
+}

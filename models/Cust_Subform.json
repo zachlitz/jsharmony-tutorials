@@ -19,7 +19,7 @@
     {"name": "cust_name","type": "varchar","length": 50,"actions": "BIU","nl": 1,"control": "textbox",
      "caption": "Customer Name","captionstyle": "width:120px;text-align:right;"},
     {"name":"cust_sts","type":"varchar","length":8,"actions":"BIU","control":"dropdown","sample": "Active",
-     "lov": { "code": "cust_sts", "blank": 1 },"validate":["Required"],"default":"ACTIVE",
+     "lov": { "code": "cust_sts" },"validate":["Required"],"default":"ACTIVE",
      "caption": "Status","nl":1},
     {"control":"html","value":"<br/>&nbsp;"},
     {"name": "Cust_Address","control": "subform","controlstyle": "width:360px;margin-right:10px;",

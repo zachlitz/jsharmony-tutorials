@@ -1,0 +1,198 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "list_of_values_parent_child",
+  "Title": "Parent / Child List of Values",
+  "Menu": ["Models","Codes / List of Values"],
+  "Code": [
+    "/models/FieldLOV_ParentChild_Static.json",
+    "/models/FieldLOV_ParentChild_Code.json",
+    "/models/FieldLOV_ParentChild_CustomSQL.json",
+    "/models/FieldLOV_ParentChild_MultiParent.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FieldLOV_ParentChild_Static", "title": "Parent / Child List of Values - Static Values" },
+    { "url": "jsHarmonyTutorials/FieldLOV_ParentChild_Code", "title": "Parent / Child List of Values - Database Code Tables" },
+    { "url": "jsHarmonyTutorials/FieldLOV_ParentChild_CustomSQL", "title": "Parent / Child List of Values - Custom SQL" },
+    { "url": "jsHarmonyTutorials/FieldLOV_ParentChild_MultiParent", "title": "Parent / Child List of Values - Multiple Parents" }
+  ]
+}
+</script>
+
+<h3>Introduction</h3>
+Parent / Child list of values are used when one list of values is dependent on the selection of another list of values.<br/>
+<br/>
+The "parent" field is usually a basic list of values, while the child field needs to have a two-dimensional array of child values for each parent value.
+
+<h3>Parent / Child LOV - Static Field Values</h3>
+In the simplest case, the Parent / Child List of Values can be defined as part of the field:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_ParentChild_Static?popup=1','Parent / Child List of Values - Static Values')%>
+<pre>
+"fields":[
+  {
+    "name":"Make",
+    "control":"dropdown",
+    "lov":{
+      "values":[
+        { "code_val": "FORD", "code_txt": "Ford" },
+        { "code_val": "TOYOTA", "code_txt": "Toyota" }
+      ]
+    }
+  },
+  {
+    "name":"Model",
+    "control":"dropdown",
+    "lov":{
+      "parent":"Make",
+      "values":[
+        { "code_parent": "FORD", "code_val": "FORD_F150", "code_txt": "F150" },
+        { "code_parent": "FORD", "code_val": "FORD_MUSTANG", "code_txt": "Mustang" },
+        { "code_parent": "TOYOTA", "code_val": "TOYOTA_COROLLA", "code_txt": "Corolla" },
+        { "code_parent": "TOYOTA", "code_val": "TOYOTA_CAMRY", "code_txt": "Camry" },
+        { "code_parent": "TOYOTA", "code_val": "TOYOTA_AVALON", "code_txt": "Avalon" }
+      ]
+    }
+  }
+]
+</pre>
+In this example, the Parent is the "Make" field, while the Child is the "Model" field.  As the parent value changes, the child drop-down values will update.<br/>
+<br/>
+The child list of values must be defined as an attribute array with the following properties:
+<ul>
+  <li><b>code_parent</b> - The parent field value</li>
+  <li><b>code_val</b> - The field value</li>
+  <li><b>code_txt</b> - The display caption</li>
+</ul>
+Additionally, the "field.lov.parent" attribute references the field.name of the parent field.<br/>
+<br/>
+Custom Controls and Macros can be used to reuse statically defined List of Values.  More information on using Custom Controls and Macros to define list of values can be found in the <a href="/tutorials/list_of_values_basic">Basic List of Values</a> tutorials.
+
+<h3>Parent / Child LOV - Database Code Tables</h3>
+When using the jsHarmony Factory, it is recommended to take advantage of the built-in database Code Tables.  The Parent / Child tables are the "2D Codes" (2-dimensional).
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_ParentChild_Code?popup=1','Parent / Child List of Values - Database Code Tables')%>
+<pre>
+"fields":[
+  {
+    "name":"x_country",
+    "control":"dropdown",
+    "lov":{"code":"jsharmony.country"}
+  },
+  {
+    "name":"x_state",
+    "control":"dropdown",
+    "lov":{
+      "parent":"x_country",
+      "code2":"jsharmony.country_state"
+    }
+  }
+]
+</pre>
+Similar to the static definition, the field.lov.parent references the parent field.name, while the field.lov.code2 references the name of the code field.
+
+<h3>Parent / Child LOV - Database Custom SQL</h3>
+Custom SQL can be used to select the parent / child list of values:
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_ParentChild_CustomSQL?popup=1','Parent / Child List of Values - Custom SQL')%>
+<pre>
+"fields":[
+  {
+    "name":"cust_id",
+    "control":"dropdown",
+    "caption": "Customer",
+    "lov":{
+      "sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"
+    }
+  },
+  {
+    "name":"sale_id",
+    "control":"dropdown",
+    "caption":"Sales Order",
+    "lov":{
+      "parent":"cust_id",
+      "sql2":"select cust_id code_parent, sale_id code_val, ('#'||sale_id) code_txt from v_sale order by sale_id"
+    }
+  }
+]
+</pre>
+Instead of field.lov.sql (as used in the basic list of values), the child field uses field.lov.sql2, and needs to return a "code_parent" field to link to the code_val of the parent list of values.<br/>
+<br/>
+The following fields must be returned from the field.lov.sql2 SQL statement:
+<ul>
+  <li><b>code_parent</b> - The parent field value</li>
+  <li><b>code_val</b> - The field value</li>
+  <li><b>code_txt</b> - The display caption</li>
+</ul>
+
+<h3>Parent / Child LOV - Multiple Parents</h3>
+The dropdowns can also be used with multiple parents.  In the example below:
+<ul>
+  <li>cust_id is a basic list of values</li>
+  <li>sale_id is a parent / child (two-dimensional) list of values</li>
+  <li>sale_line_id is a parent / child / child (three-dimensional) list of values</li>
+</ul>
+
+
+<%-getScreenshot('jsHarmonyTutorials/FieldLOV_ParentChild_MultiParent?popup=1','Parent / Child List of Values - Multiple Parents')%>
+<pre>
+"fields":[
+  {
+    "name":"cust_id",
+    "control":"dropdown",
+    "caption": "Customer",
+    "lov":{
+      "sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"
+    }
+  },
+  {
+    "name":"sale_id",
+    "control":"dropdown",
+    "caption":"Sales Order",
+    "lov":{
+      "parent":"cust_id",
+      "sql2":"select cust_id code_parent, sale_id code_val, ('#'||sale_id) code_txt from v_sale order by sale_id"
+    }
+  },
+  {
+    "name":"sale_line_id",
+    "control":"dropdown",
+    "caption":"Sales Order Line",
+    "lov":{
+      "parents":["cust_id","sale_id"],
+      "sqlmp":"select cust_id code_parent1, sale.sale_id code_parent2, sale_line_id code_val, sale_line_desc code_txt from sale_line inner join sale on sale_line.sale_id = sale.sale_id order by sale_line_id"
+    }
+  }
+]
+</pre>
+For dimensions greater than two, the "field.lov.parents" array is used instead of "field.lov.parent", and "field.lov.sqlmp" is used instead of "field.lov.sql2".<br/>
+<br/>
+The following fields must be returned from the field.lov.sqlmp statement:
+<ul>
+  <li><b>code_parent1</b> - The parent field value for the first parent in the field.lov.parents array</li>
+  <li><b>code_parent2</b> - The parent field value for the second parent in the field.lov.parents array</li>
+  <li><b>code_parent<i>N</i></b> - The parent field value for the <i>Nth</i> parent in the field.lov.parents array</li>
+  <li><b>code_val</b> - The field value</li>
+  <li><b>code_txt</b> - The display caption</li>
+</ul>
+
+More information about defining custom SQL list of values can be found in the <a href="/tutorials/list_of_values_custom">Custom SQL List of Values</a> tutorials.

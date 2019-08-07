@@ -1,0 +1,27 @@
+{ 
+  "FieldLOV_ParentChild_CustomSQL": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Parent / Child List of Values - Custom SQL",
+    "fields":[
+      {
+        "name":"cust_id",
+        "control":"dropdown",
+        "caption": "Customer",
+        "lov":{
+          "sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"
+        }
+      },
+      {
+        "name":"sale_id",
+        "control":"dropdown",
+        "caption":"Sales Order",
+        "lov":{
+          "parent":"cust_id",
+          "sql2":"select cust_id code_parent, sale_id code_val, ('#'||sale_id) code_txt from v_sale order by sale_id"
+        }
+      }
+    ]
+  }
+}

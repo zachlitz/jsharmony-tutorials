@@ -1,0 +1,11 @@
+{ 
+  "FieldLOV_Basic_CustomSQL": {
+    "unbound":true,
+    "layout":"form",
+    "onecolumn":true,
+    "caption":"Database Drop-down Lists - Custom SQL",
+    "fields":[
+      {"control":"dropdown","caption": "Customer","lov":{"sql":"select cust_id code_val,cust_name code_txt from cust order by cust_name"}}
+    ]
+  }
+}

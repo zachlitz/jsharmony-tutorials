@@ -80,6 +80,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   //Do not generate screenshot if image already exists
   if(fs.existsSync(fpath)) return callback();
 
+  var origParams = params||{};
   params = _.extend({ 
     x: 0, 
     y: 0, 
@@ -95,14 +96,22 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   if(!params.browserWidth) params.browserWidth = params.x + params.width;
   if(!params.browserHeight) params.browserHeight = _this.DEFAULT_SCREENSHOT_SIZE[1];
 
-  var getCropRectangle = function(selector){
+  var getPageInfo = function(selector){
     document.querySelector('html').style.overflow = 'hidden';
-    if(!selector) return null;
     return new Promise(function(resolve){
-      if(!jshInstance) return resolve();
+      var pageSize = {
+        pageWidth: document.body.scrollWidth,
+        pageHeight: document.body.scrollHeight,
+      };
+      if(!selector) return resolve(pageSize);
+      if(!jshInstance) return resolve(pageSize);
       var $ = jshInstance.$;
+      pageSize = {
+        pageWidth: $(document).width(),
+        pageHeight: $(document).height(),
+      }
       var jobjs = $(selector);
-      if(!jobjs.length) return resolve();
+      if(!jobjs.length) return resolve(pageSize);
       var startpos = null;
       var endpos = null;
       for(var i=0;i<jobjs.length;i++){
@@ -120,11 +129,15 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
         if(offEnd.left > endpos.left) endpos.left = offEnd.left;
         if(offEnd.top > endpos.top) endpos.top = offEnd.top;
       }
-      return resolve({ 
-        x: startpos.left, 
-        y: startpos.top, 
-        width: endpos.left - startpos.left, 
-        height: endpos.top - startpos.top
+      return resolve({
+        cropRectangle: {
+          x: startpos.left, 
+          y: startpos.top, 
+          width: endpos.left - startpos.left, 
+          height: endpos.top - startpos.top,
+        },
+        pageWidth: pageSize.width,
+        pageHeight: pageSize.height,
       });
     });
   }
@@ -135,14 +148,14 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     page.setViewport({ width: params.browserWidth, height: params.browserHeight }).then(function(){
       page.goto(fullurl).then(function(){
         page.evaluate(params.onload).then(function(){
-          page.evaluate(getCropRectangle, params.cropToSelector).then(function(cropRectangle){
+          page.evaluate(getPageInfo, params.cropToSelector).then(function(pageInfo){
             var takeScreenshot = function(){
               setTimeout(function(){
                 console.log(_this.basepath + '/public/screenshots/'+fname);
                 var screenshotParams = { path: fpath, type: 'png' };
-                if(cropRectangle) params.postClip = cropRectangle;
+                if(pageInfo.cropRectangle) params.postClip = pageInfo.cropRectangle;
                 if(params.height){
-                  screenshotParams.clip = { x: params.x, y: params.y, width: params.width, height: params.height };
+                  screenshotParams.clip = { x: params.x, y: params.y, height: params.height, width: (origParams.width ? origParams.width : pageInfo.pageWidth) };
                 }
                 else screenshotParams.fullPage = true;
                 page.screenshot(screenshotParams).then(function(){
@@ -156,7 +169,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
               }, params.waitBeforeScreenshot);
             }
             if(params.beforeScreenshot){
-              params.beforeScreenshot(jsh, page, takeScreenshot, cropRectangle);
+              params.beforeScreenshot(jsh, page, takeScreenshot, pageInfo.cropRectangle);
             }
             else takeScreenshot();
           }).catch(function (err) { jsh.Log.error(err); });
@@ -189,8 +202,12 @@ exports.getScreenshotFilename = function(url, desc, params){
   if(!params) params = {};
 
   //Generate file name
-  var fname = url;
-  fname = url + '____' + desc;
+  var fname = url || '';
+  if(fname && (fname[0]=='/')) fname = fname.substr(1);
+  if(fname.length > 150){
+    fname = fname.substr(0,150);
+  }
+  fname = fname + '____' + desc;
   if(params.width) fname += '_' + params.width;
   if(params.height) fname += '_' + params.height;
   fname = fname.toString().replace(/[^a-zA-Z0-9]+/g, '_');

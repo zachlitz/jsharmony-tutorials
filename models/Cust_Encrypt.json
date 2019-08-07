@@ -12,7 +12,7 @@
     {"name": "cust_name","type": "varchar","length": 50,"actions": "BIU","nl": 1,"control": "textbox",
      "caption": "Customer Name","captionstyle": "width:120px;text-align:right;"},
     {"name":"cust_sts","type":"varchar","length":8,"actions":"BIU","control":"dropdown","sample": "Active",
-     "lov": { "code": "cust_sts", "blank": 1 },"validate":["Required"],"default":"ACTIVE",
+     "lov": { "code": "cust_sts" },"validate":["Required"],"default":"ACTIVE",
      "caption": "Status","nl":1},
 	  {"name":"cust_ein","type":"encascii","length":16,"actions":"BIU",
      "validate": ["IsEIN","MinLength:9","MaxLength:9","Required"], "password": "cust_ein","hash": "cust_einhash","format": "ein",

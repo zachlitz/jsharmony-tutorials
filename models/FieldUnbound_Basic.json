@@ -11,7 +11,7 @@
     {"unbound":true, "control":"textbox", "caption": "Textbox", "validate": ["Required"]},
     {"unbound":true, "control":"html", "value": "<b>Content</b>", "caption": "HTML"},
     {"unbound":true, "control":"label", "value": "Content", "caption": "Label"},
-    {"unbound":true, "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" }, "blank": true },"caption":"Dropdown"},
+    {"unbound":true, "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" } },"caption":"Dropdown"},
     {"unbound":true, "control":"date", "caption":"Date"},
     {"unbound":true, "control":"hidden"}
   ]

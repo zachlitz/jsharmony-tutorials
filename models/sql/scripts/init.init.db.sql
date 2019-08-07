@@ -6,13 +6,19 @@ begin;
 delete from jsharmony.note;
 delete from jsharmony.cust_user_role;
 delete from jsharmony.cust_user;
+delete from jsharmony.code where code_name='sample_code';
+delete from jsharmony.code where code_name='sale_sts';
 delete from jsharmony.code where code_name='cust_sts';
+delete from jsharmony.code where code_name='cust_flag_type';
 
 drop table if exists all_controls;
 drop table if exists all_types;
 drop table if exists category;
+drop view if exists v_sale;
 drop view if exists v_cust_contact;
 drop view if exists v_cust;
+drop table if exists sale_line;
+drop table if exists sale;
 drop table if exists item;
 drop table if exists cust_flag;
 drop table if exists cust_contact;
@@ -21,6 +27,7 @@ drop table if exists cust_ext;
 drop table if exists cust;
 drop table if exists soundex;
 
+drop table if exists code_sale_sts;
 drop table if exists code_cust_sts;
 drop table if exists code_cust_flag_type;
 
@@ -51,6 +58,17 @@ insert into code_cust_flag_type(code_seq,code_val,code_txt) values (1,'PREF','Pr
 insert into code_cust_flag_type(code_seq,code_val,code_txt) values (2,'CRDTRISK','Credit Risk');
 insert into code_cust_flag_type(code_seq,code_val,code_txt) values (3,'PAPER','Paper-only');
 insert into code_cust_flag_type(code_seq,code_val,code_txt,code_end_dt) values (4,'DEDIREP','Dedicated Rep','2017-11-19' );
+
+/*********code_order_sts*********/
+create_code('code_sale_sts');
+INSERT INTO jsharmony_code (code_name, code_desc) VALUES ('sale_sts', 'Sales Order Status');
+insert into code_sale_sts(code_seq,code_val,code_txt) values (1,'PENDING','Pending');
+insert into code_sale_sts(code_seq,code_val,code_txt) values (2,'SHIPPED','Shipped');
+insert into code_sale_sts(code_seq,code_val,code_txt) values (3,'COMPLETED','Completed');
+insert into code_sale_sts(code_seq,code_val,code_txt) values (4,'CANCELED','Canceled');
+
+/*********sample_code*********/
+INSERT INTO jsharmony_code (code_name, code_desc) VALUES ('sample_code', 'Sample Code');
 
 /*********cust*********/
 create table cust (
@@ -167,6 +185,51 @@ insert into item(cust_id,item_code,item_name) values (1,'A392','Maier C6');
 insert into item(cust_id,item_code,item_name) values (1,'A214','Maier ML-26');
 insert into item(cust_id,item_code,item_name) values (2,'515-231','Milwaukee Portable Drill Press');
 
+/*********sale*********/
+create table sale (
+  sale_id integer primary key autoincrement not null,
+  cust_id integer not null,
+  sale_contact integer,
+  sale_sts text not null,
+  sale_po text,
+  sale_dt text,
+  sale_desc text,
+  foreign key (cust_id) references cust(cust_id),
+  foreign key (sale_contact) references cust_contact(cust_contact_id),
+  foreign key (sale_sts) references code_sale_sts(code_val)
+);
+
+create trigger sale_after_insert after insert on sale
+begin
+  select case when (NEW.sale_contact is not null) and not exists(select * from cust_contact where cust_contact_id=NEW.sale_contact and cust_id=NEW.cust_id) then raise(FAIL,'Application Error - Sales Order Contact must be a child record of the Sales Order Customer ID') end\;
+end;
+create trigger sale_after_update after update on sale
+begin
+  select case when (NEW.sale_contact is not null) and not exists(select * from cust_contact where cust_contact_id=NEW.sale_contact and cust_id=NEW.cust_id) then raise(FAIL,'Application Error - Sales Order Contact must be a child record of the Sales Order Customer ID') end\;
+end;
+
+insert into sale(cust_id,sale_contact,sale_sts,sale_po,sale_dt) values (1,NULL,'PENDING',null,datetime('now','localtime'));
+insert into sale(cust_id,sale_contact,sale_sts,sale_po,sale_dt) values (2,3,'COMPLETED',null,datetime('now','localtime'));
+insert into sale(cust_id,sale_contact,sale_sts,sale_po,sale_dt) values (2,NULL,'CANCELED','123 Test St',datetime('now','localtime'));
+insert into sale(cust_id,sale_contact,sale_sts,sale_po,sale_dt) values (2,NULL,'PENDING',null,datetime('now','localtime'));
+insert into sale(cust_id,sale_contact,sale_sts,sale_po,sale_dt) values (2,NULL,'PENDING',null,datetime('now','localtime'));
+
+/*********order_line*********/
+create table sale_line (
+  sale_line_id integer primary key autoincrement not null,
+  sale_id integer not null,
+  sale_line_desc text not null,
+  sale_line_amt number,
+  sale_line_qty number,
+  sale_line_tot number,
+  foreign key (sale_id) references sale(sale_id)
+);
+insert into sale_line(sale_id,sale_line_desc,sale_line_amt,sale_line_qty,sale_line_tot) values (1,'Item 1',129.12,2,258.24);
+insert into sale_line(sale_id,sale_line_desc,sale_line_amt,sale_line_qty,sale_line_tot) values (2,'Item 1',49.42,1,49.42);
+insert into sale_line(sale_id,sale_line_desc,sale_line_amt,sale_line_qty,sale_line_tot) values (3,'Item 1',23.11,1,23.11);
+insert into sale_line(sale_id,sale_line_desc,sale_line_amt,sale_line_qty,sale_line_tot) values (3,'Item 2',5.14,3,15.42);
+insert into sale_line(sale_id,sale_line_desc,sale_line_amt,sale_line_qty,sale_line_tot) values (4,'Item 1',3.93,1,3.93);
+
 /*********v_cust*********/
 create view v_cust as
   select cust_id,cust_sts,cust_name,code_cust_sts.code_txt as cust_sts_txt,cust_einhash
@@ -178,6 +241,23 @@ create view v_cust_contact as
   select cust_contact_id,cust_contact_name,cust_contact_title,cust_contact_phone,cust_contact_email,cust_contact.cust_id,cust_name
     from cust_contact
     inner join cust on cust.cust_id=cust_contact.cust_id;
+
+/*********v_sale*********/
+create view v_sale as
+  select
+    sale_id, 
+    sale.cust_id, 
+    cust_name,
+    sale_sts,
+    code_sale_sts.code_txt sale_sts_txt,
+    sale_po,
+    sale_dt,
+    sale_contact,
+    sale.rowid rowid,
+    ifnull((select sum(sale_line_tot) from sale_line where sale_line.sale_id = sale.sale_id),0) sale_tot
+    from sale
+    left outer join cust on sale.cust_id = cust.cust_id
+    left outer join code_sale_sts on code_sale_sts.code_val = sale_sts;
 
 /********category*********/
 create table category (

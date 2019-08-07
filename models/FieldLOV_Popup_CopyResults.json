@@ -1,0 +1,14 @@
+{
+  "FieldLOV_Popup_CopyResults":{ 
+    "table":"cust",
+    "layout":"form",
+    "onecolumn":true,
+    "caption": "Basic Popup LOV - popuplov.popup_copy_results",
+    "fields": [
+      {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+      {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+      {"name": "cust_parent_name", "caption": "Parent Customer", "control": "label", "sqlselect":"select cust_name from cust cust_parent where cust_parent.cust_id=cust.cust_parent_id"},
+      {"name": "cust_parent_id", "control":"hidden", "popuplov":{ "target":"FieldLOV_Popup_Cust_LOV", "code_val":"cust_id", "popup_copy_results": { "cust_parent_name": "cust_name" } }}
+    ]
+  }
+}

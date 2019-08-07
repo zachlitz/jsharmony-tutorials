@@ -1,0 +1,20 @@
+{
+  "FieldLOV_Popup_InitializingSearch":{ 
+    "table":"cust",
+    "layout":"form",
+    "onecolumn":true,
+    "caption": "Basic Popup LOV - Initializing Popup Search Filters",
+    "fields": [
+      {"name": "cust_id", "caption": "Customer ID", "control": "label"},
+      {"name": "cust_name", "caption": "Customer Name", "control": "textbox"},
+      {"name": "cust_parent_id", "caption": "Parent Customer ID", "control": "textbox",
+        "popuplov":{
+          "target":"FieldLOV_Popup_Cust_LOV",
+          "code_val":"cust_id",
+          "popupstyle":"width:500px;",
+          "onpopup":"_this.LOV_search(popupmodelid, parentmodelid, fieldid, onComplete);"
+        }
+      }
+    ]
+  }
+}
