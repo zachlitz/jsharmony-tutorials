@@ -1,0 +1,7 @@
+{
+  "ModelErrorHandling_ShowSystemErrors_Enabled": {
+    "layout":"form",
+    "unbound":true,
+    "onroute":"sample_undefined_variable"
+  }
+}

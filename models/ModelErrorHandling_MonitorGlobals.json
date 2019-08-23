@@ -1,0 +1,7 @@
+{
+  "ModelErrorHandling_MonitorGlobals": {
+    "layout":"form",
+    "unbound":true,
+    "onload":"window.sample_variable = true;"
+  }
+}

@@ -1,0 +1,82 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "model_database_tools",
+  "Title": "Database Tools",
+  "Menu": ["Models","Models Overview"]
+}
+</script>
+
+<h3>Introduction</h3>
+
+The jsHarmony Factory comes with basic tools for working with the database.  The following tools are accessible via the "Developer" tab:
+<ul>
+  <li><b>DB SQL</b> - For running SQL queries</li>
+  <li><b>DB Script</b> - For running database scripts</li>
+  <li><b>DB Schema</b> - For exploring the database schema</li>
+</ul>
+
+<h3>DB SQL</h3>
+The DB SQL tool can be used to execute SQL:
+<%-getScreenshot('jsHarmonyFactory/Dev/DBSQL','Database Tools - DB SQL', { onload:function(){ return new Promise(function(resolve){
+  var jsh = jshInstance;
+  jsh.$root('.sql').val('select * from cust;');
+  jsh.$root('.runsql').click();
+  jsh.XExt.waitUntil(function(){ return !!jsh.$root('.rslt_container').text().trim(); }, function(){
+    resolve();
+  });
+}); } })%>
+A variety of sample scripts, such as "Create Table" and "List Tables" are available via the drop-down.
+
+<h3>DB Scripts</h3>
+The DB Scripts tool can be used to execute scripts under the models\sql\scripts folder:
+<%-getScreenshot('jsHarmonyFactory/Dev/DBScripts','Database Tools - DB Scripts', { width: 1200 }) %>
+
+The scripts can be saved in the following folders:
+<pre>
+/models/sql/scripts/*.sql
+/models/sql/scripts/*.[dbType].sql
+/models/sql/scripts/[scriptGroup]/*.sql
+/models/sql/scripts/[scriptGroup]/*.[dbType].sql
+/models/sql/scripts/[scriptGroup]/[dbType]/*.sql
+
+Any of the above scripts can also be localized to an individual database:
+/models/sql/[dbID]/*
+
+* dbType can be mssql, pgsql, or sqlite
+* dbID is the array key index in jsHarmony.DBConfig - the default dbID is "default"
+</pre>
+
+The scripts are grouped by the jsHarmony module.  Local scripts are grouped under the "application" module.
+
+<h3>DB Schema</h3>
+The DB Schema tool can be used to explore the database table, view, and function definition, and to view table data:
+<%-getScreenshot('jsHarmonyFactory/Dev/DBSchema','Database Tools - DB Schema', { onload:function(){ return new Promise(function(resolve){
+  var jsh = jshInstance;
+  jsh.$root('.table_name.expandable').first().click();
+  resolve();
+}); } })%>
+
+<h3>Database Logging</h3>
+A variety of debugging flags are available for logging all database statements run by the jsHarmony system.<br/>
+<br/>
+More information about database logging can be found in the <a href="/tutorials/model_error_handling#logging_database_statements">Error Handling / Debugging Tools</a> tutorials.

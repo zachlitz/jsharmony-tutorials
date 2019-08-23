@@ -1,0 +1,211 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "model_error_handling",
+  "Title": "Error Handling / Debugging Tools",
+  "Menu": ["Models","Models Overview"]
+}
+</script>
+
+<h3>Introduction</h3>
+Both jsHarmony and the jsHarmony Factory have a variety of debugging parameters available to help track problems.<br/>
+<br/>
+A full list of debug parameters can be found in the <a href="/tutorials/GETTING_STARTED_APPLICATION_CONFIG#debug_settings">Application Config</a> overview.<br/>
+<br/>
+Additionally, the features below can be used to further debug problems, or send proactive error notifications in the production environment.
+
+<h3>Emails on System Crash</h3>
+If the system crashes in production, an error report will be send to the email defined by config.error_email.  This can be set in app.config.js:
+
+<pre>
+//Admin email address for error notifications
+config.error_email = 'user@company.com';
+</pre>
+
+The config.mailer_settings will need to be configured in order for emails to be sent.<br/>
+<br/>
+During a fatal system crash, an error will be logged to data\log\lasterror.log.  On the next system startup / restart, this file will be read, and the contents will be sent to the email address defined in config.error_email.
+
+<h3>Development / Test Environment</h3>
+When working in the development / test environment, it can be necessary to disable certain components, such as the job processor, or modify all emails to forward to a different address so that customers do not receive email notifications.<br/>
+<br/>
+A local app.config.js can be created for a development environment by adding the computer hostname to the filename:
+<pre>
+app.config.HOSTNAME.js
+
+For example:
+//app.config.mycomputer.js
+//------------------------
+exports = module.exports = function(jsh, config, dbconfig){
+  //System Settings
+  config.error_email = 'user@company.com';
+  config.debug_params.disable_email = true;
+
+  //Job Processor Settings
+  var configFactory = config.modules['jsHarmonyFactory'];
+  configFactory.debug_params.email_override = 'user@company.com';
+  configFactory.debug_params.sms_override = '+12223334444';
+  configFactory.debug_params.no_job_email = true;
+  configFactory.debug_params.no_job_sms = true;
+  configFactory.debug_params.disable_job_processor = true;
+}
+</pre>
+On startup, the system will first read app.config.js, and then read app.config.HOSTNAME.js, so the hostname-specific app.config file only needs to contain overrides.<br/>
+<br/>
+The "email_override" and "sms_override" only apply to the jsHarmony Factory job processor, which is the recommended method to send from the system.
+
+<h4>Simulating Latency</h4>
+Since running jsHarmony locally is very fast, so it can be challenging to simulate latency over slow networks.  The "delay_requests" feature enables that by adding a latency to every request:
+<pre>
+config.delay_requests = 1000;
+</pre>
+Adding the line above to the app.config.js will add 1 second of latency to each request.
+
+<h3>Log Levels / Debugging Information</h3>
+The following parameters can be used in app.config.js to get additional debug / logging information:
+<pre>
+config.debug_params.jsh_error_level = 15;
+config.debug_params.appsrv_requests = true;
+config.debug_params.hide_deprecated = false;
+config.debug_params.report_debug = true;
+config.debug_params.auth_debug = true;
+
+var configFactory = config.modules['jsHarmonyFactory'];
+configFactory.debug_params.job_requests = true;
+</pre>
+
+<h3 data-level="2">config.debug_params.jsh_error_level</h3>
+The "config.debug_params.jsh_error_level" property is a bitmask that defines the general error level that is logged and displayed:
+<pre>
+config.debug_params.jsh_error_level
+
+1 = ERROR
+2 = WARNING
+4 = INFO
+8 = PERFORMANCE
+
+For example, display all messages, jsh_error_level shoud be set to:
+ERROR + WARNING + INFO + PERFORMANCE = 1 + 2 + 4 + 8 = 15
+</pre>
+
+<h3 data-level="2">config.debug_params.appsrv_requests</h3>
+The "config.debug_params.appsrv_requests" property is a boolean that defines whether to log all application server requests to the console.
+
+<h3 data-level="2">config.debug_params.hide_deprecated</h3>
+The "config.debug_params.hide_deprecated" property is a boolean that defines whether to hide messages about old model / field / config attributes being deprecated.
+
+<h3 data-level="2">config.debug_params.report_debug</h3>
+The "config.debug_params.report_debug" property is a boolean that defines whether to log report debugging information, such as null values and page dimensions, to the console.
+
+<h3 data-level="2">config.debug_params.auth_debug</h3>
+The "config.debug_params.auth_debug" property is a boolean that defines whether to log all login hashes to the console.
+
+<h3 data-level="2">configFactory.debug_params.job_requests</h3>
+The "configFactory.debug_params.job_requests" property is a boolean that defines whether to log all job processor requests to the console.
+
+<h3>Displaying System Errors</h3>
+By default, if a user request causes a system error, the message is displayed on screen.  This should be disabled in production, using the "show_system_errors" flag:
+<pre>
+** For each site in the system ('main', 'client', etc.)
+var site = jsh.Sites['main'];
+site.show_system_errors = false;
+</pre>
+<h4>System Errors Enabled:</h4>
+<%-getScreenshot('jsHarmonyTutorials/ModelErrorHandling_ShowSystemErrors_Enabled','Error Handling - Show System Error Details')%>
+
+<h4>System Errors Disabled:</h4>
+<%-getScreenshot('jsHarmonyTutorials/ModelErrorHandling_ShowSystemErrors_Disabled','Error Handling - Do Not Show System Error Details')%>
+
+<h3>Monitoring Global Variables</h3>
+jsHarmony comes with a client-side global variable monitor.  If global variable monitoring is enabled, and  a new global variable is created client-side, a popup message will be displayed:
+<%-getScreenshot('jsHarmonyTutorials/ModelErrorHandling_MonitorGlobals','Error Handling - Monitor Globals', { onload:function(){ return new Promise(function(resolve){
+  window.setTimeout(resolve, 1000);
+}); } })%>
+To enable global variable monitoring:
+<pre>
+//app.config.js
+config.debug_params.monitor_globals = true;
+</pre>
+To ignore variables that should be declared in the global scope:
+<pre>
+//app.config.js
+config.debug_params.ignore_globals = ['correct_global_variable'];
+</pre>
+
+<h3>Logging Database Statements</h3>
+Database statements can be logged to disk to troubleshoot database-related errors:
+<pre>
+config.debug_params.db_requests = true;
+config.debug_params.db_raw_sql = true;
+config.debug_params.db_error_sql_state = true;
+config.debug_params.db_log_level = 6;
+</pre>
+
+<h3 data-level="2">config.debug_params.db_requests</h3>
+The "config.debug_params.db_requests" property is a boolean that defines whether to log parametrized database SQL statements to the console.
+
+<h3 data-level="2">config.debug_params.db_raw_sql</h3>
+The "config.debug_params.db_raw_sql" property is a boolean that defines whether to log the raw SQL statements to the console.
+
+<h3 data-level="2">config.debug_params.db_error_sql_state</h3>
+The "config.debug_params.db_error_sql_state" property is a boolean that defines whether to log the SQL statement and all parameters when an error occurs.
+
+<h3 data-level="2">config.debug_params.db_log_level</h3>
+The "config.debug_params.db_log_level" property is a bitmask that defines whether to log database-level WARNINGS and NOTICES:
+<pre>
+config.debug_params.db_log_level
+*   ERROR message are hard fails and always logged
+2 = WARNING
+4 = NOTICE
+
+For example, display both WARNINGS and NOTICES, db_log_level shoud be set to:
+WARNING + NOTICE = 6
+
+</pre>
+
+<h3>Model Viewer</h3>
+In the jsHarmony Factory Developer tab, the Model Viewer shows the final parsed model and field definition for all models, with all fields added and properties resolved:
+<%-getScreenshot('jsHarmonyFactory/Dev/Models?modelid=jsHarmony%2F_BASE_HTML_MESSAGE','Error Handling - Model Viewer')%>
+The user must have the Developer role in order to use the Model Viewer.
+
+<h3>Debug Console</h3>
+The Debug Console brings the command line into the browser, with a popup developer console.  The user must have the Developer role in order to use the Debug Console, and also the "config.debu_params.log_socket" must be enabled:
+<pre>
+//app.config.js
+config.debug_params.log_socket = true;
+</pre>
+
+The Debug Console can be access by pressing "CTRL + ALT + D", or by clicking "Launch Debug Console" on the Developer tab.<br/>
+
+<%-getScreenshot('jsHarmonyFactory/Dev/DebugConsole','Error Handling - Debug Console', { onload:function(){ return new Promise(function(resolve){
+  var jsh = jshInstance;
+  jsh.xDebugConsole.start();
+  window.setTimeout(function(){
+    jsh.xDebugConsole.settings.running = 0;
+    jsh.XExt.ClearSettingsCookie();
+  }, 500);
+  window.setTimeout(resolve, 1000);
+}); } })%>
+
+Checking a log source, such as "Database Raw SQL", will dynamically enable logging of the corresponding debug parameter: "config.debug_params.db_raw_sql"<br/>
+<br/>
+Using the Debug Console should generally be avoided in production, since the log could grow quickly due to the additional log sources.  If used in production, the service should be restarted afterwards to ensure normal operation.

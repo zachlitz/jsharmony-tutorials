@@ -1,29 +1,29 @@
-.xbody_Cust_CustomForm {
+.xbody_<%=model.class%> {
   display:block;
   padding-right:29px;
 }
 
-.Cust_CustomForm_instructions {
+.<%=model.class%>_instructions {
   font-family: monospace;
   background-color: #f7f7f9;
   padding:18px 20px;
   margin-bottom:30px;
 }
 
-h3.Cust_CustomForm_status_title {
+h3.<%=model.class%>_status_title {
   font-size:24px;
 }
 
-.Cust_CustomForm_status {
+.<%=model.class%>_status {
   border:5px solid #f7f7f9;
   padding: 18px;
 }
 
-.Cust_CustomForm_status_container.highlighted .Cust_CustomForm_status {
+.<%=model.class%>_status_container.highlighted .<%=model.class%>_status {
   background-color:#ff0000;
 }
 
-.Cust_CustomForm_customer {
+.<%=model.class%>_customer {
   display:inline-block;
   background-color:#007bff;
   color: #fff;
@@ -32,6 +32,6 @@ h3.Cust_CustomForm_status_title {
   font-size:14px;
 }
 
-.Cust_CustomForm_customer.drag {
+.<%=model.class%>_customer.drag {
   opacity: 0.8;
 }

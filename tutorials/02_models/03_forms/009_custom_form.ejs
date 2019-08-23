@@ -1,0 +1,256 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "form_custom",
+  "Title": "Custom Forms",
+  "Menu": ["Models","Forms"],
+  "Code": [
+    "/models/FormCustom.json",
+    "/models/FormCustom.ejs",
+    "/models/FormCustom.js",
+    "/models/FormCustom.css"
+  ],
+  "Demo": "jsHarmonyTutorials/FormCustom"
+}
+</script>
+
+<h3>Introduction</h3>
+Custom forms can be used to create fully custom interfaces for jsHarmony applications.<br/>
+<br/>
+In this custom form example, we will be building a draggable interface to change the Customer Status:
+<%-getScreenshot('jsHarmonyTutorials/FormCustom?popup=1','Custom Form')%>
+
+<h3>model.json - Model and API Definitions</h3>
+Custom forms usually consist of two components:
+<ul>
+  <li>An unbound form with custom JavaScript</li>
+  <li>REST API endpoints</li>
+</ul>
+
+<h3 data-level="2">Model Definition</h3>
+The unbound form for the Status Interface is be defined as follows:
+<pre>
+"FormCustom": {
+  "layout": "form",
+  "title": "",
+  "caption":["","Status","Statuses"],
+  "actions": "B",
+  "unbound": 1,
+  "roles": {
+    "main": {"*":"*"}
+  },
+  "oninit": "_this.oninit(xmodel);",
+  "ondestroy": "_this.ondestroy();",
+  "buttons": [
+    { "link": "js:_this.help();", "icon": "help", "text": "", "actions": "B" }
+  ],
+  "hide_system_buttons" : ["print","help"]
+}
+</pre>
+The key elements are the "unbound" property and the "oninit" and "ondestroy" events.  The "oninit" event is called when the form is loaded, and is where the custom databindings are initialized.<br/>
+<br/>
+A custom help button is also implemented, for demonstration purposes.<br/>
+<br/>
+API endpoints are also necessary in order to interface with the database and filesystem.  The standard jsHarmony API endoints can be accessed using POST requests.<br/>
+<br/>
+
+<h3 data-level="2">API - Getting a list of customers</h3>
+The POST request below is used for retrieving a list of all the customers and their current status:
+<pre>
+Model definition
+================
+"FormCustom_Get_Cust": {
+  "layout": "exec",
+  "title": "Select all orders for a customer",
+  "actions": "U",
+  "roles": {
+    "main": {"*":"*"}
+  },
+  "sqlexec": [
+    "select cust_id,cust_name,cust_sts from cust;",
+    "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
+  ],
+  "sqltype": "multirecordset",
+  "fields": [
+  ]
+}
+</pre>
+<pre>
+JavaScript Code
+===============
+XForm.prototype.XExecutePost( xmodel.namespace+'FormCustom_Get_Cust', { }, function (rslt) { //On Success
+  if ('_success' in rslt) {
+    _this.cust = rslt[emodelid][0];
+    _this.LOV.cust_sts = rslt[emodelid][1];
+  }
+  else XExt.Alert('Error while loading data');
+}, function (err) {
+  //Custom error handler, if necessary
+});
+
+POST Request
+============
+URL: /_d/jsHarmonyTutorials/FormCustom_Get_Cust/
+POST Data:
+
+POST Response
+=============
+{
+  "jsHarmonyTutorials/FormCustom_Get_Cust":[
+    [
+      {"cust_id":1,"cust_name":"ACME Industries","cust_sts":"DEACTIVE"},
+      {"cust_id":2,"cust_name":"Creative Engineering","cust_sts":"ACTIVE"},
+      {"cust_id":3,"cust_name":"Coffee Brothers","cust_sts":"ACTIVE"}
+    ],
+    [
+      {"code_val":"ACTIVE","code_txt":"Active"},
+      {"code_val":"INACTIVE","code_txt":"Inactive"},
+      {"code_val":"CREDITH","code_txt":"Credit Hold"},
+      {"code_val":"HOLD","code_txt":"Hold"},
+      {"code_val":"CLOSED","code_txt":"Closed"}
+    ]
+  ],
+  "_success":1,
+  "_stats":{"jsHarmonyTutorials/FormCustom_Get_Cust":{"warnings":[],"notices":[]}}
+}
+</pre>
+
+<h3 data-level="2">API - Updating the Status</h3>
+The POST request below is used to update the status:
+<pre>
+Model definition
+================
+"FormCustom_Update_CustSts": {
+  "layout": "exec",
+  "title": "Update customer status",
+  "actions": "U",
+  "roles": {
+    "main": {"*":"*"}
+  },
+  "sqlexec": "update cust set cust_sts=@cust_sts where cust_id=@cust_id", 
+  "fields": [
+    {"name":"cust_id","type":"bigint","actions":"U","control":"hidden"},
+    {"name":"cust_sts","type":"varchar","length":8,"actions":"U","control":"hidden"}
+  ]
+}
+</pre>
+<pre>
+JavaScript Code
+===============
+var params = { cust_id: cust_id, cust_sts: cust_sts };
+XForm.prototype.XExecutePost(xmodel.namespace+'FormCustom_Update_CustSts', params, function (rslt) { //On Success
+  if ('_success' in rslt) {
+    //Success
+  }
+  else XExt.Alert('Error while saving status');
+}, function (err) {
+  //Custom error handler, if necessary
+});
+
+POST Request
+============
+URL: /_d/jsHarmonyTutorials/FormCustom_Update_CustSts/
+POST Data: cust_id=3&cust_sts=INACTIVE
+
+POST Response
+=============
+{
+  "jsHarmonyTutorials/FormCustom_Update_CustSts":null,
+  "_success":1,
+  "_stats":{"jsHarmonyTutorials/FormCustom_Update_CustSts":{"warnings":[],"notices":[]}}
+}
+</pre>
+
+<h3>model.css - CSS Style Sheets</h3>
+The CSS styles and classes on custom forms should be named specific to that form, so that it will not interfere with other forms.<br/>
+<br/>
+Ideally, use &lt;%=model.class%&gt; in the stylesheet and JavaScript code to make the stylesheet independent of the model, so that the code can be inherited or copied between different models without renaming:
+<pre>
+.&lt;%=model.class%&gt;_instructions {
+  ...
+}
+</pre>
+The xbody_%%%MODEL_CLASS%%% class is auto-added to the container div of each model, and can be referenced as follows:
+<pre>
+.xbody_&lt;%=model.class%&gt; {
+  ...
+}
+</pre>
+
+<h3>model.ejs - HTML</h3>
+The model.ejs file should also use the &lt;%=model.class%&gt; tag to resolve to the current model in the class names:
+<pre>
+&lt;div class="&lt;%=model.class%&gt;_container"&gt;&lt;/div&gt;
+</pre>
+
+If defining an EJS template inside of model.ejs, use the &lt;# #&gt; tags, which will be escaped to &lt;% %&gt; client-side:
+<pre>
+&lt;# _.each(data.cust_sts, function(cust_sts){ #&gt;
+  &lt;#=cust_sts.code_txt#&gt; Customers&lt;/h3&gt;
+&lt;# }); #&gt;
+</pre>
+
+<h3>model.js - JavaScript</h3>
+The structure of the custom form JavaScript file is as follows:
+<pre>
+jsh.App[modelid] = new (function(){
+  var _this = this;
+
+  //Member Variables
+  this.cust = [];
+
+  //Member Methods
+  this.oninit = function(xmodel){
+    
+  };
+
+})();
+</pre>
+
+The following member methods are implemented in the custom form example:
+
+<h4>Model Events</h4>
+<ul>
+  <li>oninit</li>
+  <li>ondestroy</li>
+</ul>
+
+<h4>API Interface</h4>
+<ul>
+  <li>loadData</li>
+  <li>updateStatus</li>
+</ul>
+
+<h4>Render Function</h4>
+<ul>
+  <li>render</li>
+</ul>
+
+<h4>Mouse Event Handling</h4>
+<ul>
+  <li>onmousemove</li>
+  <li>onmouseup</li>
+  <li>onmousedown_customer</li>
+  <li>dragBegin</li>
+  <li>dragMove</li>
+  <li>dragEnd</li>
+</ul>

@@ -1,5 +1,5 @@
 {
-  "Cust_CustomForm": {
+  "FormCustom": {
     "layout": "form",
     "title": "",
     "caption":["","Status","Statuses"],
@@ -17,7 +17,7 @@
   },
 
   //Custom API Endpoint for getting list of customers and initial form data
-  "Cust_CustomForm_Get_Cust": {
+  "FormCustom_Get_Cust": {
     "layout": "exec",
     "title": "Select all orders for a customer",
     "actions": "U",
@@ -34,7 +34,7 @@
   },
 
   //Custom API Endpoint for updating customer status
-  "Cust_CustomForm_Update_CustSts": {
+  "FormCustom_Update_CustSts": {
     "layout": "exec",
     "title": "Update customer status",
     "actions": "U",

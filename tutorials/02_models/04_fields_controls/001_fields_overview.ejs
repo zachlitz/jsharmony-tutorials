@@ -130,8 +130,14 @@ The field's "actions" property can consist of any of the following characters:
 </ul>
 If the "B" action is not defined, the field is not selected from the database and is not rendered to the screen.  However, the field can still be used as part of an SQL "where" condition, or as a Key or Foreign Key.<br/>
 <br/>
-One way to hide fields in inherited models is to set the field's "actions" to "" (empty string).<br/>
+One way to hide fields in inherited models is to set the field's "actions" to "" (empty string).
+
+<h4>Automatic Actions</h4>
+If field.actions is not defined, it will be defaulted based on the model layout, model properties, field database definition, and field properties.<br/>
 <br/>
+If you come across a situation where the automatic action is incorrect, and could be improved by adjusting the default field.actions algorithm, please submit a suggested rule change via a support ticket on jsHarmony's GitHub page.
+
+<h4>Roles</h4>
 Roles can be used to change field behavior based on user roles.  For instance, the field can be set to read-only for certain users.<br/>
 <br/>
 Learn more about Actions / Roles in the <a href="/tutorials/model_actions">Model Actions / Roles</a> tutorial.
@@ -159,7 +165,7 @@ Foreign Keys are columns that reference keys in other tables, and can be used in
 </pre>
 
 <h3>Read-only Fields</h3>
-The field.readonly property can be used to make a field read-only.  This is different from changing the field.action to "B", in that the field value can still be saved on Insert using Default Values or Querystring parameters, or updated using JavaScript.<br/>
+The field.readonly property can be used to make a field read-only.  This is different from changing the field.actions to "B", in that the field value can still be saved on Insert using Default Values or Querystring parameters, or updated using JavaScript.<br/>
 <br/>
 Additionally, as an optimization, dropdown read-only fields on update will not have the full List of Values returned by default, since they only need to display the current record.
 

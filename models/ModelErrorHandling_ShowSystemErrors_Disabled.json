@@ -1,0 +1,7 @@
+{
+  "ModelErrorHandling_ShowSystemErrors_Disabled": {
+    "layout":"form",
+    "unbound":true,
+    "onroute":"var _ = require('lodash'); req.jshsite = _.extend({}, req.jshsite, { show_system_errors: false}); sample_undefined_variable"
+  }
+}

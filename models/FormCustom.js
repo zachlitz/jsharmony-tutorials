@@ -24,13 +24,15 @@ jsh.App[modelid] = new (function(){
     $(document).unbind('mouseup', _this.onmouseup);
   }
 
+  //Launch Help form
   this.help = function(){
-    XExt.popupForm('/jsHarmonyFactory/Help_Listing', 'update', { help_target_code: 'Cust_CustomForm' });
+    XExt.popupForm('/jsHarmonyFactory/Help_Listing', 'update', { help_target_code: 'FormCustom' });
   }
 
+  //Get customer status data from the database API
   this.loadData = function(onComplete){
-    var emodelid = xmodel.namespace+'Cust_CustomForm_Get_Cust';
-    //Execute the Cust_CustomForm_Get_Cust model
+    var emodelid = xmodel.namespace+'FormCustom_Get_Cust';
+    //Execute the FormCustom_Get_Cust model
     XForm.prototype.XExecutePost(emodelid, { }, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Populate arrays + Render
@@ -46,9 +48,10 @@ jsh.App[modelid] = new (function(){
     });
   }
 
+  //Save new customer status to database API
   this.updateStatus = function(cust_id, cust_sts, onComplete){
-    //Execute the Cust_CustomForm_Update_CustSts model
-    XForm.prototype.XExecutePost(xmodel.namespace+'Cust_CustomForm_Update_CustSts', { cust_id: cust_id, cust_sts: cust_sts }, function (rslt) { //On Success
+    //Execute the FormCustom_Update_CustSts model
+    XForm.prototype.XExecutePost(xmodel.namespace+'FormCustom_Update_CustSts', { cust_id: cust_id, cust_sts: cust_sts }, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Re-render
         _this.loadData(onComplete);
@@ -59,6 +62,7 @@ jsh.App[modelid] = new (function(){
     });
   }
 
+  //Re-render Customer Status interface
   this.render = function(){
     //Create array of customers per customer status
     var data = { 
@@ -70,27 +74,30 @@ jsh.App[modelid] = new (function(){
       data.cust_sts.push(_.extend({}, cust_sts, { cust: cust_per_sts }));
     });
     //Render the EJS template
-    var tmpl = jsh.$root('.Cust_CustomForm_template').html();
-    var jcontainer = jsh.$root('.Cust_CustomForm_container');
+    var tmpl = jsh.$root('.'+xmodel.class+'_template').html();
+    var jcontainer = jsh.$root('.'+xmodel.class+'_container');
     jcontainer.html(XExt.renderClientEJS(tmpl, { data: data, _: _, jsh: jsh }));
     //Bind mousedown event for dragging
-    jcontainer.find('.Cust_CustomForm_customer').mousedown(function(e){
-      if(e.which==1){//left mouse button
-        e.preventDefault();
-        e.stopPropagation();
-        _this.dragTarget = $(this);
-        _this.dragType = 'cust';
-        _this.dragBegin();
-      }
-    });
+    jcontainer.find('.'+xmodel.class+'_customer').mousedown(this.onmousedown_customer);
   }
 
-  //Local handler for "mousemove" event
+  //Handler for "mousedown" event on a customer element
+  this.onmousedown_customer = function(e){
+    if(e.which==1){//left mouse button
+      e.preventDefault();
+      e.stopPropagation();
+      _this.dragTarget = $(e.target);
+      _this.dragType = 'cust';
+      _this.dragBegin();
+    }
+  }
+
+  //Handler for "mousemove" event
   this.onmousemove = function(e){
     if(_this.dragTarget){ _this.dragMove(); }
   }
 
-  //Local handler for "mouseup" event
+  //Handler for "mouseup" event
   this.onmouseup = function(e) {
     if(_this.dragTarget){
       _this.dragEnd();
@@ -100,13 +107,13 @@ jsh.App[modelid] = new (function(){
     }
   }
 
-  //Mouse Drag - Fired on Start
+  //Mouse Drag - Fired on start of drag event
   this.dragBegin = function(){
     $('.xcontext_menu').hide();
     _this.dragStarted = true;
 
     if(_this.dragType=='cust'){
-      jsh.$root('.Cust_CustomForm_customer.drag').remove();
+      jsh.$root('.'+xmodel.class+'_customer.drag').remove();
       var jclone = _this.dragTarget.clone();
       jclone.css({
         position:'absolute',
@@ -125,32 +132,32 @@ jsh.App[modelid] = new (function(){
 
     if(_this.dragType=='cust'){
       //Update dragged object position
-      var jclone = jsh.$root('.Cust_CustomForm_customer.drag');
+      var jclone = jsh.$root('.'+xmodel.class+'_customer.drag');
       jclone.css('left', jsh.mouseX);
       jclone.css('top', jsh.mouseY);
 
       //Highlight background on target container
       var cust_sts = '';
-      jsh.$root('.Cust_CustomForm_status_container').each(function(){
+      jsh.$root('.'+xmodel.class+'_status_container').each(function(){
         if(XExt.isMouseWithin(this)){
           cust_sts = $(this).data('code_val');
         }
       });
-      if(cust_sts) _this.dragDestination = jsh.$root('.Cust_CustomForm_status_container[data-code_val='+cust_sts+']');
+      if(cust_sts) _this.dragDestination = jsh.$root('.'+xmodel.class+'_status_container[data-code_val='+cust_sts+']');
       else _this.dragDestination = null;
 
-      jsh.$root('.Cust_CustomForm_status_container').not(_this.dragDestination).removeClass('highlighted');
+      jsh.$root('.'+xmodel.class+'_status_container').not(_this.dragDestination).removeClass('highlighted');
       jsh.$root(_this.dragDestination).addClass('highlighted');
     }
   }
 
-  //Mouse Drag - Fired on Complete
+  //Mouse Drag - Fired on complete of drag event
   this.dragEnd = function(){
     if(!_this.dragStarted) return;
 
     if(_this.dragType=='cust'){
-      jsh.$root('.Cust_CustomForm_customer.drag').remove();
-      jsh.$root('.Cust_CustomForm_status_container').removeClass('highlighted');
+      jsh.$root('.'+xmodel.class+'_customer.drag').remove();
+      jsh.$root('.'+xmodel.class+'_status_container').removeClass('highlighted');
       if(_this.dragDestination){
         var cust_id = _this.dragTarget.data('cust_id');
         var cust_sts = _this.dragDestination.data('code_val');
