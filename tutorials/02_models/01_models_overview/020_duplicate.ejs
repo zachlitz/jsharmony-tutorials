@@ -22,7 +22,133 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 {
   "ID": "duplicating_records",
   "Title": "Duplicating Records",
-  "Menu": ["Models","Models Overview"]
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/models/ModelDuplicate_Cust_Duplicate.json",
+    "/models/ModelDuplicate_Cust_Form.json",
+    "/models/ModelDuplicate_Cust_Listing.json"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/ModelDuplicate_Cust_Form?cust_id=1&action=update", "title": "Duplicate Button - Form" },
+    { "url": "jsHarmonyTutorials/ModelDuplicate_Cust_Listing", "title": "Duplicate Button - Grid" }
+  ]
 }
 </script>
-Duplicate Button
+
+<h3>Introduction</h3>
+A "duplicate" button can be added to forms and grids.  The duplicate button operates as follows:
+<ol>
+  <li>When the duplicate button is clicked, it opens a target popup model, with layout "exec"</li>
+  <li>The popup model should have input parameters for fields that are unique to the new record.</li>
+  <li>When the user clicks the submit button on the popup model, the popup model's sqlexec is executed to perform the duplicate operation</li>
+  <li>If a duplicate.link_on_success is specified, the target link model will be opened in a popup window (ideally linking to the new record)</li>
+</ol>
+
+<h3>Syntax</h3>
+<pre>
+//Model.json
+{
+  "duplicate": {
+    "target": "[i]EXEC_MODEL_ID[/i]",
+    "bindings": { "[i]CHILD_FIELD1[/i]":"[i]PARENT_FIELD1[/i]", ... },
+    "button_text": "Duplicate",
+    "link_on_success":"update:[i]NEW_MODEL_ID[/i]&[i]new_model_key[/i]=[i]exec_model_result_key[/i]"
+  }
+}
+</pre>
+The duplicate.target parameter should be a model with an "exec" layout, whose model.sqlexec property will execute the SQL to create a new record.<br/>
+<br/>
+The duplicate.bindings parameter has the bindings between the parent model (with the model.duplicate property) and the duplicate.target model.<br/>
+Bindings can be defined using the syntax in the <a href="/tutorials/model_bindings#syntax">Bindings Tutorial</a>.<br/>
+<br/>
+The duplcate.button_text parameter can be used to specify text for the Duplicate button.  By default the text will be "Duplicate" on forms, and only the icon will be displayed on grids.<br/>
+<br/>
+The duplicate.link_on_success property can be used to specify a model that will be launched in a popup window when the duplicate operation has completed.<br/>
+More information on the syntax for the link can be found in the <a href="/tutorials/model_buttons#link_bindings">Button Tutorial</a>.
+
+<h3>Duplicate - Form</h3>
+In the following example, a "duplicate" button is added to the Custom form:
+<pre>
+//ModelDuplicate_Cust_Form
+{
+  "table":"cust",
+  "layout":"form",
+  "onecolumn":true,
+  "caption":["Customer","Customers"],
+  "duplicate":{
+    "target": "ModelDuplicate_Cust_Duplicate",
+    "link_on_success":"update:ModelDuplicate_Cust_Form&cust_id=new_cust_id",
+    "button_text":"Duplicate Customer"
+  },
+  "fields":[
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Customer"},
+    {"name":"cust_sts","caption":"Status"},
+    {"name":"cust_start_dt","caption":"Start Date"},
+    {"name":"cust_email","caption":"Email"},
+    {"name":"cust_desc","caption":"Description"}
+  ]
+}
+</pre>
+The duplicate.link_on_success property links back to an instance of the same model.<br/>
+<br/>
+The exec model tht performs the duplication is defined below:
+<pre>
+//ModelDuplicate_Cust_Duplicate
+{
+  "table":"cust",
+  "layout":"exec",
+  "title":"Duplicate Customer",
+  "sqlexec":[
+    "insert into cust",
+    "  (cust_name, cust_sts, cust_start_dt, cust_email, cust_desc)",
+    "  select @cust_name, cust_sts, cust_start_dt, cust_email, cust_desc from cust where cust_id=@cust_id;",
+    "select cust_id new_cust_id from cust where rowid = (select ifnull(last_insert_rowid_override,last_insert_rowid()) from jsharmony_meta);"
+  ],
+  "popup":[450,200],
+  "fields":[
+    {"name":"cust_id","control":"hidden","actions":"BU"},
+    {"name":"new_cust_id","control":"hidden","actions":"B"},
+    {"name":"cust_name","caption":"New Customer Name"}
+  ]
+}
+</pre>
+The exec model has a field for the "New Customer Name" (since customer name needs to be unique), and then the SQL operations returns the new ID number in the "new_cust_id" field.<br/>
+<br/>
+Actions needed to be explicitly defined since the usual primary key ("cust_id") is used here as an input parameter instead of as a key.<br/>
+<br/>
+The form is rendered as follows:
+<%-getScreenshot('jsHarmonyTutorials/ModelDuplicate_Cust_Form?cust_id=1&action=update&popup=1','Duplicate Button - Form')%>
+The exec model is displayed in a popup when the Duplicate button is clicked:
+<%-getScreenshot('jsHarmonyTutorials/ModelDuplicate_Cust_Form?cust_id=1&action=update&popup=1','Duplicate Button - Popup', { onload:function(){ return new Promise(function(resolve){
+  var $ = jshInstance.$;
+  $('.xform_button.duplicate').click();
+  jshInstance.XExt.waitUntil(function(){ return $('.xformjsHarmonyTutorials_ModelDuplicate_Cust_Duplicate:visible').length; }, resolve);
+}); } })%>
+
+<h3>Duplicate - Grid</h3>
+Duplicate buttons can also be used on a grid:
+<pre>
+{
+  "table":"cust",
+  "layout":"grid",
+  "caption":["Customer","Customers"],
+  "duplicate":{
+    "target": "ModelDuplicate_Cust_Duplicate",
+    "link_on_success":"update:ModelDuplicate_Cust_Form&cust_id=new_cust_id",
+    "button_text":"Duplicate Customer"
+  },
+  "fields":[
+    {"name":"cust_id","caption": "ID"},
+    {"name":"cust_name","caption":"Customer"},
+    {"name":"cust_sts","caption":"Status"},
+    {"name":"cust_start_dt","caption":"Start Date"},
+    {"name":"cust_email","caption":"Email"},
+    {"name":"cust_desc","caption":"Description"}
+  ]
+}
+</pre>
+In this example, the same duplicate exec form is used as in the "form" example above.<br/>
+<br/>
+The grid with the duplicate button is rendered as below:
+<%-getScreenshot('jsHarmonyTutorials/ModelDuplicate_Cust_Form?cust_id=1&action=update&popup=1','Duplicate Button - Grid')%>

@@ -140,6 +140,7 @@ Encoding
 Decoding
 --------
 Returns an ISO date string "YYYY-MM-DDTHH:mm:ss.SSSS"
+</pre>
 
 <h3 data-level="2">tstmp</h3>
 The "tstmp" formatter converts a date string or Date object to a formatted date string with the format: 'MM/DD/YY HH:mm'
@@ -158,6 +159,7 @@ Encoding
 Decoding
 --------
 Returns an ISO date string "YYYY-MM-DDTHH:mm:ss.SSSS"
+</pre>
 
 <h3 data-level="2">MMDDYY</h3>
 The "MMDDYY" formatter converts a date string or Date object to a formatted date string with the format: 'MM/DD/YY'
@@ -176,6 +178,7 @@ Encoding
 Decoding
 --------
 Returns an ISO date string "YYYY-MM-DDTHH:mm:ss.SSSS"
+</pre>
 
 <h3 data-level="2">time</h3>
 The "time" formatter converts a time string into a formatted time string using Moment.js formatting.  There is one required parameter:
@@ -201,6 +204,7 @@ Encoding
 Decoding
 --------
 Returns an ISO date string, with the time added to 1970-01-01: "1970-01-01THH:mm:ss.SSSS"
+</pre>
 
 <h3 data-level="2">decimal</h3>
 The "decimal" formatter converts number into a formatted string.  There is one required parameter:
@@ -252,6 +256,7 @@ Encoding
 Decoding
 --------
 Returns a string of the number.
+</pre>
 
 <h3 data-level="2">decimalcomma</h3>
 The "decimalcomma" formatter converts number into a formatted string, adding commas as the thousandth separator.  There is one required parameter:
@@ -277,6 +282,7 @@ Encoding
 Decoding
 --------
 Returns a string of the number, with the fixed number of decimal places, without commas.
+</pre>
 
 <h3 data-level="2">comma</h3>
 The "comma" formatter converts a number into a string with thousandth separators.
@@ -295,6 +301,7 @@ Encoding
 Decoding
 --------
 Returns a string of the number, without commas.
+</pre>
 
 <h3 data-level="2">ssn</h3>
 The "ssn" formatter converts a 9-digit string of numbers into a formatted SSN (Social Security Number).  Any non-numeric characters will be stripped.
@@ -313,6 +320,7 @@ Encoding
 Decoding
 --------
 Returns "111223333"   //Nine-digit SSN number as string
+</pre>
 
 <h3 data-level="2">ein</h3>
 The "ein" formatter converts a 9-digit string of numbers into a formatted EIN (Employer Identification Number).  Any non-numeric characters will be stripped.
@@ -331,6 +339,7 @@ Encoding
 Decoding
 --------
 Returns "112222222"   //Nine-digit EIN number as string
+</pre>
 
 <h3 data-level="2">bool</h3>
 The "bool" formatter converts a boolean type into a string.  The boolean decoder supports the following values:
@@ -354,6 +363,7 @@ Encoding
 Decoding
 --------
 Returns boolean true / false
+</pre>
 
 <h3>Formatting data using JavaScript</h3>
 The formatters can be used to encode / decode data used in other parts of the system.  For instance, it can be useful to apply a phone formatter to data that either comes from the user or from the database.<br/>

@@ -1,0 +1,19 @@
+{ 
+  "ModelDuplicate_Cust_Duplicate": {
+    "table":"cust",
+    "layout":"exec",
+    "title":"Duplicate Customer",
+    "sqlexec":[
+      "insert into cust",
+      "  (cust_name, cust_sts, cust_start_dt, cust_email, cust_desc)",
+      "  select @cust_name, cust_sts, cust_start_dt, cust_email, cust_desc from cust where cust_id=@cust_id;",
+      "select cust_id new_cust_id from cust where rowid = (select ifnull(last_insert_rowid_override,last_insert_rowid()) from jsharmony_meta);"
+    ],
+    "popup":[450,200],
+    "fields":[
+      {"name":"cust_id","control":"hidden","actions":"BU"},
+      {"name":"new_cust_id","control":"hidden","actions":"B"},
+      {"name":"cust_name","caption":"New Customer Name"}
+    ]
+  }
+}

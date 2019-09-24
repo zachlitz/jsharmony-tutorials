@@ -1,0 +1,20 @@
+{ 
+  "ModelDuplicate_Cust_Listing": {
+    "table":"cust",
+    "layout":"grid",
+    "caption":["Customer","Customers"],
+    "duplicate":{
+      "target": "ModelDuplicate_Cust_Duplicate",
+      "link_on_success":"update:ModelDuplicate_Cust_Form&cust_id=new_cust_id",
+      "button_text":"Duplicate Customer"
+    },
+    "fields":[
+      {"name":"cust_id","caption": "ID"},
+      {"name":"cust_name","caption":"Customer"},
+      {"name":"cust_sts","caption":"Status"},
+      {"name":"cust_start_dt","caption":"Start Date"},
+      {"name":"cust_email","caption":"Email"},
+      {"name":"cust_desc","caption":"Description"}
+    ]
+  }
+}

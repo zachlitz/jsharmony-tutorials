@@ -25,6 +25,7 @@ jsh.App[modelid] = new (function(){
     //Execute API call
     XForm.Post(
       xmodel.namespace + 'FieldValidation_API', 
+      {},
       data, 
       function(rslt){ 
         //Display the resulting JSON in a dialog box
