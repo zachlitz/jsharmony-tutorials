@@ -379,7 +379,7 @@ Reports can be run in two modes:
 <h4>In-session Report Datalocks</h4>
 In-session reports can have datalocks applied from the user's authentication information.  It is important to ensure that when users can run "in-session" reports, all the parameters have datalocks defined, and the "reportdata" has datalocks defined for all queries.
 
-<h4>Batch Report Dattalocks</h4>
+<h4>Batch Report Datalocks</h4>
 Batch reports are run without datalocks.  It is important to ensure that users cannot queue reports or see data that they should not have access to.<br/>
 <br/>
 If the "jobqueue" attribute is used, it should contain a valid %%%DATALOCKS%%% expression, to ensure that the user will not be able to queue reports that would give them access to other clients' data.<br/>

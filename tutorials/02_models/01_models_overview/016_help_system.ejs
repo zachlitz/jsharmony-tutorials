@@ -147,7 +147,7 @@ jshsite.help = function(req, res, jsh, helpid, onComplete){
 When the jshsite.help function is called, it is passed the model.helpid property of the current model.  The function can:
 <ul>
   <li>Return the "helpurl" link to the target help file.</li>
-  <li>Return an "helpurl_onclick" event that will be attached to the help buttons.  The "helpurl_onclick" can open a popup or perform additional processing.</li>
+  <li>Return a "helpurl_onclick" event that will be attached to the help buttons.  The "helpurl_onclick" can open a popup or perform additional processing.</li>
 </ul>
 
 On the client-side, the helpurl and helpurl_onclick are attached on model initialization, to the model help buttons, and to any element with the "toplink_help" class that does not have the "static" class.

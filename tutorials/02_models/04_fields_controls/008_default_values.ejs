@@ -42,7 +42,7 @@ There are five ways to apply default values:
 <ul>
   <li>Using field.default with a static value</li>
   <li>Using field.default with a client-side JavaScript-generated value</li>
-  <li>Using field.default with an SQL-generated value</li>
+  <li>Using field.default with a SQL-generated value</li>
   <li>Sending the default value in the URL querystring</li>
   <li>Returning the default value in the model.sqlselect query (for unbound fields only)</li>
 </ul>
@@ -167,7 +167,7 @@ The field.default.sql_params property contains an array of the parameters that w
 <br/>
 When using the default values in a site with datalocks, it is necessary to add a %%%DATALOCKS%%% expression to the where clause of field.default.sql.  If datalocks can safely be ignored for the field, the datalock id can instead be added to the field.default.nodatalock array.<br/>
 <br/>
-The following example uses an SQL default value to set the default value for the Customer Name based on the parent Customer Name.
+The following example uses a SQL default value to set the default value for the Customer Name based on the parent Customer Name.
 <pre>
 {"name":"cust_name","caption":"Name","default":{ "sql": "select cust_name||' :: Child' from cust where cust_id = @cust_parent_id" }}
 </pre>
