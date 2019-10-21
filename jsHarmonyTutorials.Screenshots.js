@@ -91,7 +91,7 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     postClip: null, //{ x: 0, y: 0, width: xxx, height: yyy }
     cropToSelector: null, //Selector
     onload: function(){},
-    waitBeforeScreenshot: 0
+    waitBeforeScreenshot: 150
   }, params);
   if(!params.browserWidth) params.browserWidth = params.x + params.width;
   if(!params.browserHeight) params.browserHeight = _this.DEFAULT_SCREENSHOT_SIZE[1];

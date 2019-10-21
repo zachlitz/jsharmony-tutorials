@@ -10,7 +10,7 @@
     { "name": "cust_addr_country","type": "varchar","length": 8,"actions": "BIU",
       "control": "dropdown", "lov": { "code": "country", "schema":"jsharmony" },
       "validate": [ "Required" ],
-      "default": "USA","caption": "Country","eol": 1 },
+      "default": "USA","caption": "Country","captionstyle": "width:70px;","eol": 1 },
     { "name": "cust_addr_line1","type": "varchar","length": 50,"actions": "BIU",
       "control": "textbox_M","validate": [ "MaxLength:50" ],
       "caption": "Address","captionstyle": "width:70px;","eol": 1 },
