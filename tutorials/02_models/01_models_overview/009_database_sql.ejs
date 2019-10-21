@@ -161,7 +161,7 @@ The "sqlupdate" statement is executed for Grid, Form, Form-m, and Multisel updat
 The "sqldelete" statement is executed for Grid, Form, and Form-m deletes.  The sqldelete statement should return the # of rows that were deleted.  This validates that the delete completed successfully.
 
 <h4>model.sqldownloadselect</h4>
-The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" and "file_download" controls.  The SQL statement should return the file_name and file_extension.  The names of the file_name and file_extension columns are defiend in the field.controlparams property.
+The "sqldownloadselect" statement is used for downloading files linked to database records using "file_upload" and "file_download" controls.  The SQL statement should return the file_name and file_extension.  The names of the file_name and file_extension columns are defined in the field.controlparams property.
 <pre>
 select doc_id,doc_ext,(('D'::text || doc.doc_id::character varying::text) || COALESCE(doc.doc_ext, ''::character varying)::text) as "doc_filename" from jsharmony.doc where 1=1  and doc_id=@doc_id
 </pre>
@@ -193,7 +193,7 @@ All other statements are executed as standard non-transaction statements.<br/>
 In parent / child forms, the "select" statements are executed as an asynchronous tree, with the Parent "select" performed first.  Then any bindings from the Parent "select" statement can be applied to the parameters of the Child forms.<br/>
 
 <h4>sql_params</h4>
-The model.breadcrumbs, field.lov, and field.default properties additionally have an "sql_params" property.  This is used to keep track of the SQL parameters required for the respective SQL statement.<br/>
+The model.breadcrumbs, field.lov, and field.default properties additionally have a "sql_params" property.  This is used to keep track of the SQL parameters required for the respective SQL statement.<br/>
 <br/>
 In most cases, sql_params is automatically generated on system load, by parsing the model fields and checking which fields are present as parameters in the SQL.  If these are not automatically recognized, it may be necessary to manually populate the sql_params array.<br/>
 <br/>

@@ -356,7 +356,7 @@ Examples
 </pre>
 
 <h3 data-level="2">MinValue</h3>
-The "MinValue" validator checks that a field is less than a certian value.  There is one required parameter:
+The "MinValue" validator checks that a field is less than a certain value.  There is one required parameter:
 <ul>
   <li>MINIMUM_VALUE - The minimum allowed value for the field</li>
 </ul>
@@ -594,7 +594,7 @@ Examples
 </pre>
 
 <h3 data-level="2">Extension (File Validator)</h3>
-The "Extension" validator checks that a uploaded file has a valid extension.  File extension validation is case-insensitive.  There is one required parameter:
+The "Extension" validator checks that an uploaded file has a valid extension.  File extension validation is case-insensitive.  There is one required parameter:
 <ul>
   <li>file_extensionENSIONS - An array of possible file extensions.  A period "." is required before each extension.</li>
 </ul>
@@ -691,7 +691,7 @@ Validators return a function that is executed on validation.
 
 Validator function parameters are:
   _caption   The caption of the field being validated
-  _val       The value fo the field being validated
+  _val       The value of the field being validated
   _obj       The validation object, containing all the other fields being validated
 
 Validator functions should return:
@@ -716,7 +716,7 @@ Custom in-line validators can be implemented via the "js" validator:
 
 VALIDATION_FUNCTION is called with the following parameters:
   _caption   The caption of the field being validated
-  _val       The value fo the field being validated
+  _val       The value of the field being validated
   _obj       The validation object, containing all the other fields being validated
 
 The return value of VALIDATION_FUNCTION should be:
@@ -739,7 +739,7 @@ Validation can be also be implemented in database triggers.  Database validation
 More information is available in the <a href="/tutorials/model_database_validation">Database Validation / Error Handling</a> tutorial.
 
 <h3>API Validation (Server-side)</h3>
-Server-side valiation of models is automatically performed using field validators.  When implementing fully custom server-side API endpoints, however, it is necessary to manually validate API access and API parameters.<br/>
+Server-side validation of models is automatically performed using field validators.  When implementing fully custom server-side API endpoints, however, it is necessary to manually validate API access and API parameters.<br/>
 <br/>
 Three functions are used for API validation:
 <ul>

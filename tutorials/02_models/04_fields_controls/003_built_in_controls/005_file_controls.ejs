@@ -366,7 +366,7 @@ The "file_upload" control can also be used to upload and automatically resize / 
 }
 </style>
 
-Either "resize" or "crop" can be added to post-process the image so that it fits a target dimension.  Crop will resize the image to be larger than the bounding box and then crop the edges, while resize will resize to image to fit within the bounding box.<br/>
+Either "resize" or "crop" can be added to post-process the image so that it fits a target dimension.  Crop will resize the image to be larger than the bounding box and then crop the edges, while resize will resize the image to fit within the bounding box.<br/>
 <br/>
 Resize has two additional options: upsize and extend.  Upsize will increase the size of the image if it is initially smaller than the box.  Extend will add a white background so that the resulting image will be centered within the target box.<br/>
 <br/>
@@ -392,7 +392,7 @@ Uploaded images can be embedded using the following URL:
 
 The view option returns the file directly, instead of setting the headers to download the file as an attachment.
 
-Additionally, it is recommended to add an "_" parameter with the current timestamp in order to block caching, so that the latest version of the image is always downloaded.
+Additionally, it is recommended to add a "_" parameter with the current timestamp in order to block caching, so that the latest version of the image is always downloaded.
 
 For example:
 &lt;img src="/_dl/jsHarmonyTutorials/FieldFile_Upload_Image_Form/1/x_image_resize_extend?view=1&_=<%=Date.now()%>" /&gt;
@@ -430,7 +430,7 @@ Each thumbnail has the same "crop" and "resize" options as the primary image.<br
 The first thumbnail is displayed on the form after upload.  An alternate thumbnail can be selected for the preview via the field.controlparams.show_thumbnail property.
 
 <h3>Image Control / Listing</h3>
-Images can be embedded in grids and forms by using the "image" control.  The "image" control only displayed if the image exists, avoiding broken image links.
+Images can be embedded in grids and forms by using the "image" control.  The "image" control only displays if the image exists, avoiding broken image links.
 <%-getScreenshot('jsHarmonyTutorials/FieldFile_ImageListing_Grid?popup=1','Image Listing')%>
 <pre>
 { 
@@ -459,7 +459,7 @@ The first "Image" column displays the full-size image, and uses the field.contro
 <br/>
 The second "Thumbnail" column displays the thumbnail instead.<br/>
 <br/>
-Where possible, it is recommended to use thumbnail display, since the images will more quickly.<br/>
+Where possible, it is recommended to use thumbnail display, since the images will load more quickly.<br/>
 <br/>
 Both columns link to a popup with the original image on click.  This behavior can be changed by setting field.controlparams.preview_on_click to false.<br/>
 <br/>
