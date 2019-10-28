@@ -99,15 +99,18 @@ jsHarmonyTutorials.prototype.InitFactoryDB = function(cb){
   db.Scalar('','JSHARMONY_FACTORY_INSTALLED',[],{ },function(err,rslt){
     if(err || !rslt){
       console.log('Initializing database tables, please wait...');
-      db.RunScripts(_this.jsh, ['*','init','init'], { }, function(err, rslt){
-        console.log('Initializing database functions, please wait...');
+      db.RunScripts(_this.jsh, ['*','init','core','init'], { }, function(err, rslt){
         if(err){ console.log('Error initializing database'); console.log(err); return; }
-        db.RunScripts(_this.jsh, ['*','restructure'], { }, function(err, rslt){
-          console.log('Initializing database data, please wait...');
+        db.RunScripts(_this.jsh, ['*','init','cust','init'], { }, function(err, rslt){
           if(err){ console.log('Error initializing database'); console.log(err); return; }
-          db.RunScripts(_this.jsh, ['*','init_data'], { sqlFuncs: sqlFuncs }, function(err, rslt){
+          console.log('Initializing database functions, please wait...');
+          db.RunScripts(_this.jsh, ['*','restructure'], { }, function(err, rslt){
             if(err){ console.log('Error initializing database'); console.log(err); return; }
-            _this.InitTutorialsDB(cb);
+            console.log('Initializing database data, please wait...');
+            db.RunScripts(_this.jsh, ['*','init_data'], { sqlFuncs: sqlFuncs }, function(err, rslt){
+              if(err){ console.log('Error initializing database'); console.log(err); return; }
+              _this.InitTutorialsDB(cb);
+            });
           });
         });
       });
@@ -147,7 +150,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
   var _this = this;
   return { 
     auth: _this.Auth(),
-    menu: menu.bind(null, 'S'),
+    menu: menu(_this.jsh.Modules['jsHarmonyFactory']).bind(null, 'S'),
     public_apps: [
       { '*':  express.static(path.join(_this.basepath, 'public')) },
       { '*':  function(req, res, next){
