@@ -29,6 +29,6 @@ insert into jsharmony.help_target(help_target_code, help_target_desc)
   select 'ModelHelp_Cust_Listing', 'Help Example - Cust_Listing'
   where not exists(select * from jsharmony.help_target where help_target_code = 'ModelHelp_Cust_Listing');
 
-insert into jsharmony.help(help_target_code, help_title, help_text, help_listing_main, help_listing_client)
-  select 'ModelHelp_Cust_Listing', 'Customer Listing', '<p><strong>Sample</strong> Help Content</p><p>&nbsp\;</p>', 1, 1
-  where not exists(select * from jsharmony.help where help_target_code = 'ModelHelp_Cust_Listing');
+insert into jsharmony.help(help_id, help_target_code, help_title, help_text, help_listing_main, help_listing_client)
+  select 1, 'ModelHelp_Cust_Listing', 'Customer Listing', '<p><strong>Sample</strong> Help Content</p><p>&nbsp\;</p>', 1, 1
+  where not exists(select * from jsharmony.help where (help_target_code = 'ModelHelp_Cust_Listing') or (help_id = 1));

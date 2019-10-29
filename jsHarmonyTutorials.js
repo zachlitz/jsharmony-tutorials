@@ -52,7 +52,7 @@ jsHarmonyTutorials.prototype = new jsHarmonyModule();
 jsHarmonyTutorials.prototype.Application = function(){
   var _this = this;
   var jsh = new jsHarmony();
-  var factory = new jsHarmonyFactory();
+  var factory = new jsHarmonyFactory(null, { clientPortal: true });
   jsh.AddModule(factory);
   jsh.AddModule(this);
   jsh.Sites[factory.mainSiteID] = _.extend(this.getFactoryConfig(),jsh.Sites[factory.mainSiteID]);
