@@ -210,6 +210,7 @@ jsHarmonyTutorials.prototype.getFactoryConfig = function(){
             if(!config.Code) config.Code = [];
             async.eachSeries(config.Code,function(codefile,cb){
               var codepath = _this.basepath + codefile;
+              if(codefile.indexOf('/node_modules/jsharmony/')==0) codepath = path.join(_this.jsh.Modules['jsharmony'].Config.moduledir, codefile.substr(24));
               fs.readFile(codepath, 'utf8', function(err,data){
                 if(err) return cb(err);
                 rslt.source[codefile] = data;
