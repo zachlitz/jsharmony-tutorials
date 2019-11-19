@@ -21,6 +21,8 @@
 
     {"unbound":true, "control":"textbox", "caption":"Field 12", "format":"bool", "default":true }, { "control":"html", "value": "(bool) true" },
 
+    {"unbound":true, "control":"textarea", "caption":"Field 13", "format":"json", "default":"{\"key\":\"value\"}" }, { "control":"html", "value": "<div style='display:inline-block;vertical-align:top;'>(json) {\"key\":\"value\"}</div>" },
+
     {"control":"button", "value": "Reapply Formatting", "onclick": "_.each(xmodel.fields, function(field){ xmodel.set(field.name, xmodel.get(field.name)); });  XExt.Alert('Formatting reapplied'); "}
   ]
 }
