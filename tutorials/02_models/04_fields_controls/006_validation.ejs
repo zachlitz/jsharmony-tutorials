@@ -62,7 +62,7 @@ The following validators are available:
   "IsDecimalComma:3",     //Parameter: MAX_NUMBER_OF_DECIMAL_PLACES
   "IsFloat",
   "IsBinary:50",          //Parameters: MAX_LENGTH
-  "IsvalidJson",
+  "IsJSON",
   "MaxValue:999",         //Parameter: MAXIMUM_VALUE
   "MinValue:100",         //Parameter: MINIMUM_VALUE
   "RegEx:'/regex/','be a correct value.'",  //Parameters: 'REGULAR_EXPRESSION','ERROR_MESSAGE_SUFFIX'
@@ -145,7 +145,7 @@ The following example implements all of the built-in standard validators:
     {"unbound":true, "control":"textbox", "validate":["IsDecimalComma:2"], "caption":"Field 8" }, { "control":"html", "value": "(IsDecimalComma:2)" },
     {"unbound":true, "control":"textbox", "validate":["IsFloat"], "caption":"Field 9" }, { "control":"html", "value": "(IsFloat)" },
     {"unbound":true, "control":"textbox", "validate":["IsBinary"], "caption":"Field 10" }, { "control":"html", "value": "(IsBinary)" },
-    {"unbound":true, "control":"textbox", "validate":["IsValidJson"], "caption":"Field 11" }, { "control":"html", "value": "(IsValidJson)" },
+    {"unbound":true, "control":"textbox", "validate":["IsJSON"], "caption":"Field 11" }, { "control":"html", "value": "(IsJSON)" },
     {"unbound":true, "control":"textbox", "validate":["MaxValue:999","IsFloat"], "caption":"Field 12" }, { "control":"html", "value": "(MaxValue:999)" },
     {"unbound":true, "control":"textbox", "validate":["MinValue:100","IsFloat"], "caption":"Field 13" }, { "control":"html", "value": "(MinValue:100)" },
     {"unbound":true, "control":"textbox", "validate":["RegEx:'/^\\\\d{4}$/','be a four digit number.'"], "caption":"Field 14" }, { "control":"html", "value": "(RegEx:'/^\\\\d{4}$/','be a four digit number.')" },
@@ -340,16 +340,16 @@ Examples
                     //Ex: GB
 </pre>
 
-<h3 data-level="2">IsValidJson</h3>
-The "IsValidJson" validator checks that a field is correctly formatted <a href="http://www.json.org/">JSON</a>. IsValidJson will return a success if the field is blank.  IsBinary must be combined with the Required validator to ensure that the value is both not blank and a JSON string.
+<h3 data-level="2">IsJSON</h3>
+The "IsJSON" validator checks that a field is correctly formatted <a rel="nofollow" href="http://www.json.org/">JSON</a>. IsJSON will return a success if the field is blank.  IsJSON must be combined with the Required validator to ensure that the value is both not blank and a JSON string.
 <pre>
 Syntax
 ------
-• IsValidJson
+• IsJSON
 
 Examples
 --------
-• "IsValidJson"     //Allow empty strings, and JSON strings
+• "IsJSON"     //Allow empty strings, and JSON strings
 </pre>
 
 <h3 data-level="2">MaxValue</h3>

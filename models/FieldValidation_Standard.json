@@ -15,7 +15,7 @@
     {"unbound":true, "control":"textbox", "validate":["IsDecimalComma:2"], "caption":"Field 8" }, { "control":"html", "value": "(IsDecimalComma:2)" },
     {"unbound":true, "control":"textbox", "validate":["IsFloat"], "caption":"Field 9" }, { "control":"html", "value": "(IsFloat)" },
     {"unbound":true, "control":"textbox", "validate":["IsBinary"], "caption":"Field 10" }, { "control":"html", "value": "(IsBinary)" },
-    {"unbound":true, "control":"textbox", "validate":["IsValidJson"], "caption":"Field 11" }, { "control":"html", "value": "(IsValidJson)" },
+    {"unbound":true, "control":"textbox", "validate":["IsJSON"], "caption":"Field 11" }, { "control":"html", "value": "(IsJSON)" },
     {"unbound":true, "control":"textbox", "validate":["MaxValue:999","IsFloat"], "caption":"Field 12" }, { "control":"html", "value": "(MaxValue:999)" },
     {"unbound":true, "control":"textbox", "validate":["MinValue:100","IsFloat"], "caption":"Field 13" }, { "control":"html", "value": "(MinValue:100)" },
     {"unbound":true, "control":"textbox", "validate":["RegEx:'/^\\\\d{4}$/','be a four digit number.'"], "caption":"Field 14" }, { "control":"html", "value": "(RegEx:'/^\\\\d{4}$/','be a four digit number.')" },

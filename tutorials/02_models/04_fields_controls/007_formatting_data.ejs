@@ -369,7 +369,7 @@ Returns boolean true / false
 </pre>
 
 <h3 data-level="2">json</h3>
-The "json" formatter converts a possibly minified json string into a formatted json string.
+The "json" formatter converts a JSON object or unformatted json string into a formatted json string.
 <pre>
 Syntax
 ------
@@ -379,15 +379,15 @@ Encoding
 --------
 • "json"
   -------
-  "{"key":"value"}"
+  '{"key":"value"}'
   ->
-  "{
+  '{
     "key": "value"
-  }"
+  }'
 
 Decoding
 --------
-Returns "{"key":"value"}"
+Returns '{"key":"value"}'
 </pre>
 
 <h3>Formatting data using JavaScript</h3>
