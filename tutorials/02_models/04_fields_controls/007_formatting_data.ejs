@@ -52,6 +52,7 @@ The following built-in formatters are available:
 "ssn"
 "ein"
 "bool"
+"json"
 </pre>
 Formatters are applied by using the field.format property:
 <pre>
@@ -87,6 +88,8 @@ The following example implements all the built-in formatters:
     {"unbound":true, "control":"textbox", "caption":"Field 11", "format":"ein", "default":121234567 },
 
     {"unbound":true, "control":"textbox", "caption":"Field 12", "format":"bool", "default":true },
+
+    {"unbound":true, "control":"textbox", "caption":"Field 13", "format":"json", "default":"{\"key\":\"value\"}" },
   ]
 }
 </pre>
@@ -363,6 +366,28 @@ Encoding
 Decoding
 --------
 Returns boolean true / false
+</pre>
+
+<h3 data-level="2">json</h3>
+The "json" formatter converts a JSON object or unformatted json string into a formatted json string.
+<pre>
+Syntax
+------
+• json
+
+Encoding
+--------
+• "json"
+  -------
+  '{"key":"value"}'
+  ->
+  '{
+    "key": "value"
+  }'
+
+Decoding
+--------
+Returns '{"key":"value"}'
 </pre>
 
 <h3>Formatting data using JavaScript</h3>
