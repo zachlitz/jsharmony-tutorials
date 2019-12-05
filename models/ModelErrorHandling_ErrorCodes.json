@@ -1,0 +1,8 @@
+{
+  "ModelErrorHandling_ErrorCodes": {
+    "layout":"exec",
+    "title":"",
+    "actions":"B",
+    "hide_system_buttons":["print","help"]
+  }
+}
