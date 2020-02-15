@@ -1,5 +1,5 @@
 {
-  "FormCustom": {
+  "FormFrontEnd_Form": {
     "layout": "form",
     "title": "",
     "caption":["","Status","Statuses"],
@@ -8,33 +8,34 @@
     "roles": {
       "main": {"*":"*"}
     },
-    "oninit": "_this.oninit(xmodel);",
-    "ondestroy": "_this.ondestroy();",
-    "buttons": [
-      { "link": "js:_this.help();", "icon": "help", "text": "", "actions": "B" }
-    ],
-    "hide_system_buttons" : ["print","help"]
+    "css":".xbody_<%=model.class%> { display:block; padding-right:29px; }",
+    "onload": "_this.onload();",
+    "hide_system_buttons" : ["print","help"],
+    "fields":[
+      {"control":"html","value":"<div class='<%=model.class%>_form_container'></div>"}
+    ]
   },
 
   //Custom API Endpoint for getting list of customers and initial form data
-  "FormCustom_Get_Cust": {
+  "FormFrontEnd_Form_Get_Cust": {
     "layout": "exec",
-    "title": "Select all customers",
+    "title": "Select a customer",
     "actions": "U",
     "roles": {
       "main": {"*":"*"}
     },
     "sqlexec": [
-      "select cust_id,cust_name,cust_sts from cust;",
+      "select cust_id,cust_name,cust_sts from cust where cust_id=@cust_id;",
       "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
     ],
     "sqltype": "multirecordset",
     "fields": [
+      {"name":"cust_id","type":"bigint","actions":"U","control":"hidden"}
     ]
   },
 
   //Custom API Endpoint for updating customer status
-  "FormCustom_Update_CustSts": {
+  "FormFrontEnd_Form_Update_CustSts": {
     "layout": "exec",
     "title": "Update customer status",
     "actions": "U",

@@ -1,0 +1,226 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "form_front_end",
+  "Title": "Front-end Forms",
+  "Menu": ["Models","Forms"],
+  "Code": [
+    "/models/FormFrontEnd_Form.json",
+    "/models/FormFrontEnd_Form.js",
+    "/models/FormFrontEnd_Form_Popup.json",
+    "/models/FormFrontEnd_Form_Popup.js",
+    "/models/FormFrontEnd_Form_Popup.ejs"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/FormFrontEnd_Form?cust_id=2", "title": "Front-end Form" },
+    { "url": "jsHarmonyTutorials/FormFrontEnd_Form_Popup?cust_id=2", "title": "Front-end Form w/Popup" }
+    
+  ]
+}
+</script>
+
+<h3>Introduction</h3>
+jsHarmony models can be used to dynamically define and render models client-side.
+
+<h3>Initializing New Models</h3>
+In order to initialize  new model, use the XPage.LoadVirtualModel function:
+<pre>
+XPage.LoadVirtualModel(container, modelDefinition, callback /* function(xmodel){} */)
+:: Create a new model based on modelDefinition and render into the container
+
+Parameters
+----------
+container       - A DOM object whose content will be replaced with the form
+modelDefinition - A JavaScript object defining the new model
+callback        - Executed on successful creation and initialization of the model
+</pre>
+
+<h3>Creating Forms</h3>
+<%-getScreenshot('jsHarmonyTutorials/FormFrontEnd_Form?cust_id=2&popup=1','Front-end Form')%>
+The form above can be initialized using the model definition below:
+<pre>
+{
+  "id": "Customer",
+  "layout": "form",
+  "parent": xmodel.id,
+  "buttons": [{"link": "js:_this.showTestMessage()", "icon": "ok", "actions":"BIU", "text":"Test Message"}],
+  "ejs": "<div class='<"+"%=model.class%"+">_sample_ejs'>Sample EJS for <"+"%=model.id%"+"> model</div>",
+  "css": ".<"+"%=model.class%"+">_sample_ejs { background-color:#f0f0f0; border:1px solid #bbb; padding:4px 20px; margin-top:10px; }",
+  "js": function(){ //This function is virtual and cannot reference any variables outside its scope
+    var _this = this;
+    //var modelid = [current model id];
+    //var xmodel = [current model];
+
+    _this.oninit = function(xmodel){
+      //Custom oninit function
+    }
+
+    _this.onload = function(xmodel){
+      //Custom onload function
+    }
+
+    _this.save = function(){
+      jsh.App[xmodel.parent].commitCust();
+    }
+
+    _this.showTestMessage = function(){
+      XExt.Alert('Test Message');
+    }
+  },
+  "oninit":"_this.oninit(xmodel);",
+  "onload":"_this.onload(xmodel);",
+  "fields": [
+    {"name": "cust_id", "caption":"Customer ID", "type": "int", "actions":"B",
+      "control":"textbox", "controlstyle":"width:80px;", "validate": ["IsNumeric","Required"] },
+      
+    {"name": "cust_name", "caption":"Name", "type": "varchar", "length": 256, "actions":"B",
+      "control":"textbox", "controlstyle":"width:260px;", "validate": ["MaxLength:256","Required"] },
+      
+    {"name": "cust_sts", "caption":"Status", "type": "varchar", "length":32,
+      "control":"dropdown", "validate": ["Required"] },
+
+    {"control":"html","value":"<b>Sample HTML:</b> Content"},
+
+    {"control":"button","value":"Save", "onclick": "js:_this.save();"},
+  ]
+}
+</pre>
+
+<h3 data-level="2">Form Controller</h3>
+The following controller functions are available for interfacing with the virtual form:
+<pre>
+xmodel.controller.Render(data, action)
+:: Update a form with new data
+
+Parameters
+----------
+data   - A JavaScript object with the new data, ex:
+         {
+           field1: value1,
+           field2: value2
+         }
+action - Action flags "BIU" (Browse/Insert/Update Flags) - Default "BIU"
+           Only render controls matching the target action
+           For example, if action="U", only fields with the "U" action will be rendered
+
+
+
+xmodel.controller.Commit(data, action)
+:: Retrieve data from the form and save it to the data object
+
+Parameters
+----------
+data   - A JavaScript object that willbe updated with the new data, ex:
+         {
+           field1: value1,
+           field2: value2
+         }
+action - Action flags "BIU" (Browse/Insert/Update Flags) - Default "IU"
+           Only retrieve data from controls matching the target action
+           For example, if action="U", only fields with the "U" action will be validated / retrieved
+
+
+
+xmodel.controller.setLOV(fieldname, lov)
+:: Update the List of Values for a field
+
+Parameters
+----------
+fieldname - The name of the field whose List of Values will be updated
+lov       - An array of { code_val: 'VALUE', code_txt: 'Display Text' } defining the dropdown options
+</pre>
+
+For example:
+<pre>
+//Render Form
+this.renderCust = function(){
+  //Apply List of Values
+  jsh.XModels['Customer'].controller.setLOV('cust_sts', _this.LOVs.cust_sts);
+  jsh.XModels['Customer'].controller.Render(_this.cust);
+}
+
+//Get / Validate Form Values, Save to API
+this.commitCust = function(){
+  if(!jsh.XModels['Customer'].controller.Commit(_this.cust, 'U')) return;
+  _this.api_saveCust();
+}
+</pre>
+
+<h3>Forms in Popups</h3>
+Virtual forms can also be loaded in popup windows:
+<%-getScreenshot('jsHarmonyTutorials/FormFrontEnd_Form_Popup?cust_id=2&popup=1','Front-end Form w/Popup')%>
+<%-getScreenshot('jsHarmonyTutorials/FormFrontEnd_Form_Popup?cust_id=2&popup=1','Front-end Form w/Popup Open', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.showPopup').click();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.$root('.save_button').is(':visible'); }, resolve);
+}); } })%>
+
+First, define the container with the xdialogbox class, inside a hidden div.  Additionally, the width of the popup window can be defined as a style of the xdialogbox tag.
+<pre>
+<div style='display:none;'>
+  <div class='&lt;%=model.class%&gt;_cust_form_container xdialogbox' style='width:400px;'></div>
+</div>
+</pre>
+Next, inside the click event for the popup, use the XExt.CustomPrompt function to open the form in a dialog box.<br/>
+<br/>
+A few helpful tips:
+<ul>
+  <li>Be sure to set the { reuse: true } option on the CustomPrompt, so that the form controls will not be cleared after the popup is closed</li>
+  <li>In the "onInit" function, bind the "acceptFunc" and "cancelFunc" functions to buttons in the form.  When clicked, these will trigger the "onAccept" and "onCancel" events, and close the dialog</li>
+  <li>Load and render the API data before displaying the popup, so that the user does not see old data on the screen while it is loading.</li>
+  <li>Set controller.form.Prop.Enabled = true when opening the popup, and false when closing.  This will disable the popup form from triggering "unsaved data" notifications when leaving the page.</li>
+</ul>
+<pre>
+this.showPopup_click = function(){
+  //Initialize model
+  _this.initCust(function(){
+
+    //Load data from the API
+    _this.api_getCust(function(){
+
+      //Update values in the Customer form
+      _this.renderCust();
+
+      //Open dialog
+      XExt.CustomPrompt(CUST_FORM_CONTAINER, $(CUST_FORM_CONTAINER), function(acceptFunc, cancelFunc){ //onInit
+
+        //Enable the form (so that navigation events trigger check for updates)
+        jsh.XModels['Customer'].controller.form.Prop.Enabled = true;
+
+        //Attach save / cancel events to dialog events
+        jsh.$root('.save_button.xelemCustomer').off('click').on('click', acceptFunc);
+        jsh.$root('.cancel_button.xelemCustomer').off('click').on('click', cancelFunc);
+
+      }, function(success){ //onAccept
+        //Commit customer data to API
+        _this.commitCust(success);
+
+      }, function(){ //onCancel
+
+      }, function(){ //onClosed
+        //Disable the form (so that navigation events do not trigger check for updates)
+        jsh.XModels['Customer'].controller.form.Prop.Enabled = false;
+
+      }, { reuse: true });
+    });
+  });
+}
+</pre>
