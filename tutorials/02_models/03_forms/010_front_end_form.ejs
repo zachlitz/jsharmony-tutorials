@@ -20,19 +20,19 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <script type="text/x-tutorial-info">
 {
-  "ID": "form_front_end",
-  "Title": "Front-end Forms",
+  "ID": "form_virtual",
+  "Title": "Virtual Forms",
   "Menu": ["Models","Forms"],
   "Code": [
-    "/models/FormFrontEnd_Form.json",
-    "/models/FormFrontEnd_Form.js",
-    "/models/FormFrontEnd_Form_Popup.json",
-    "/models/FormFrontEnd_Form_Popup.js",
-    "/models/FormFrontEnd_Form_Popup.ejs"
+    "/models/FormVirtual_Form.json",
+    "/models/FormVirtual_Form.js",
+    "/models/FormVirtual_Form_Popup.json",
+    "/models/FormVirtual_Form_Popup.js",
+    "/models/FormVirtual_Form_Popup.ejs"
   ],
   "Demo": [
-    { "url": "jsHarmonyTutorials/FormFrontEnd_Form?cust_id=2", "title": "Front-end Form" },
-    { "url": "jsHarmonyTutorials/FormFrontEnd_Form_Popup?cust_id=2", "title": "Front-end Form w/Popup" }
+    { "url": "jsHarmonyTutorials/FormVirtual_Form?cust_id=2", "title": "Virtual Form" },
+    { "url": "jsHarmonyTutorials/FormVirtual_Form_Popup?cust_id=2", "title": "Virtual Form w/Popup" }
     
   ]
 }
@@ -55,7 +55,7 @@ callback        - Executed on successful creation and initialization of the mode
 </pre>
 
 <h3>Creating Forms</h3>
-<%-getScreenshot('jsHarmonyTutorials/FormFrontEnd_Form?cust_id=2&popup=1','Front-end Form')%>
+<%-getScreenshot('jsHarmonyTutorials/FormVirtual_Form?cust_id=2&popup=1','Virtual Form')%>
 The form above can be initialized using the model definition below:
 <pre>
 {
@@ -167,8 +167,8 @@ this.commitCust = function(){
 
 <h3>Forms in Popups</h3>
 Virtual forms can also be loaded in popup windows:
-<%-getScreenshot('jsHarmonyTutorials/FormFrontEnd_Form_Popup?cust_id=2&popup=1','Front-end Form w/Popup')%>
-<%-getScreenshot('jsHarmonyTutorials/FormFrontEnd_Form_Popup?cust_id=2&popup=1','Front-end Form w/Popup Open', { onload:function(){ return new Promise(function(resolve){
+<%-getScreenshot('jsHarmonyTutorials/FormVirtual_Form_Popup?cust_id=2&popup=1','Virtual Form w/Popup')%>
+<%-getScreenshot('jsHarmonyTutorials/FormVirtual_Form_Popup?cust_id=2&popup=1','Virtual Form w/Popup Open', { onload:function(){ return new Promise(function(resolve){
   jshInstance.$root('.showPopup').click();
   jshInstance.XExt.waitUntil(function(){ return jshInstance.$root('.save_button').is(':visible'); }, resolve);
 }); } })%>
