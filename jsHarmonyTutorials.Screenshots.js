@@ -24,6 +24,7 @@ var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 var HelperFS = require('jsharmony/HelperFS');
+var Helper = require('jsharmony/Helper');
 var imagick = require('jsharmony/lib/gm').subClass({ imageMagick: true });
 
 module.exports = exports = {};
@@ -33,13 +34,20 @@ module.exports = exports = {};
 *******************/
 
 exports.DEFAULT_SCREENSHOT_SIZE = [950, 700];
+exports.HEADLESS = true;
 
 exports.generateScreenshots = function(options,callback){
   var _this = this;
   var jsh = _this.jsh;
-  _this.options = _.extend({ screenshot_folder: path.join('public','screenshots')}, options);
+  _this.options = _.extend({
+    screenshot_folder: path.join('public','screenshots'),
+    targetTests: null
+  }, options);
 
-  puppeteer.launch({ ignoreHTTPSErrors: true, ignoreDefaultArgs: [ '--hide-scrollbars' ] /*, headless: false*/ }).then(function(browser){
+  var browserParams = { ignoreHTTPSErrors: true, ignoreDefaultArgs: [ '--hide-scrollbars' ] };
+  if(!exports.HEADLESS) browserParams.headless = false;
+
+  puppeteer.launch(browserParams).then(function(browser){
     HelperFS.funcRecursive(_this.tutfolder,function(filepath, relativepath, file_cb){
       //For each File
       fs.readFile(filepath, 'utf8', function(err, txt){
@@ -47,12 +55,15 @@ exports.generateScreenshots = function(options,callback){
 
         var screenshots = [];
   
-        ejs.render(txt, { 
-          req: null,
-          getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); },
-          instance: '',
-          _: _
-        });
+        try{
+          ejs.render(txt, { 
+            req: null,
+            getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); },
+            instance: '',
+            _: _
+          });
+        }
+        catch(ex){ return file_cb(ex); }
 
         async.eachLimit(screenshots, 1, function(screenshot, screenshot_cb){
           _this.generateScreenshot(browser, screenshot.url, screenshot.desc, screenshot.params, screenshot_cb);
@@ -61,7 +72,8 @@ exports.generateScreenshots = function(options,callback){
           return file_cb();
         });
       });
-    },undefined,undefined,function(){
+    },undefined,undefined,function(err){
+      if(err){ jsh.Log.error(err); }
       browser.close();
       return callback();
     });
@@ -80,6 +92,10 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   //Do not generate screenshot if image already exists
   if(fs.existsSync(fpath)) return callback();
 
+  if(_this.options.targetTests){
+    if(!_.includes(_this.options.targetTests, fname)) return callback();
+  }
+
   var origParams = params||{};
   params = _.extend({ 
     x: 0, 
@@ -90,11 +106,31 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
     resize: null, //{ width: xxx, height: yyy }
     postClip: null, //{ x: 0, y: 0, width: xxx, height: yyy }
     cropToSelector: null, //Selector
-    onload: function(){},
-    waitBeforeScreenshot: 150
+    onload: null,
+    waitBeforeScreenshot: (exports.HEADLESS ? 150 : 1500)
   }, params);
   if(!params.browserWidth) params.browserWidth = params.x + params.width;
   if(!params.browserHeight) params.browserHeight = _this.DEFAULT_SCREENSHOT_SIZE[1];
+
+  if(!params.onload) params.onload = function(){ return new Promise(function(resolve){ return resolve(); }); };
+  
+  var base_onload = params.onload;
+  params.onload = function(){
+    return new Promise(function(resolve){
+      if(!window.jshInstance){ return base_onload().then(resolve); }
+      var startTime = new Date().getTime();
+      jshInstance.XExt.waitUntil(
+        function(){ return jshInstance.init_complete; },
+        function(){
+          if(jshInstance) jshInstance.XWindowResize();
+          return base_onload().then(resolve);
+        },
+        function(f){ if ((new Date().getTime() - startTime) > 5000) { f(); return false; } }
+      );
+    });
+  }
+  params.onload = Helper.ReplaceAll(params.onload.toString(), 'base_onload', '(' + base_onload.toString() + ')');
+  eval('params.onload = ' + params.onload + ';');
 
   var getPageInfo = function(selector){
     document.querySelector('html').style.overflow = 'hidden';
@@ -145,19 +181,27 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
   browser.newPage().then(function (page) {
     var port = jsh.Servers['default'].servers[0].address().port;
     var fullurl = 'http://localhost:'+port+url;
+    console.log(_this.basepath + '/public/screenshots/'+fname);
     page.setViewport({ width: params.browserWidth, height: params.browserHeight }).then(function(){
-      page.goto(fullurl).then(function(){
+      page.goto(fullurl, { waitUntil: 'networkidle0' }).then(function(){
         page.evaluate(params.onload).then(function(){
           page.evaluate(getPageInfo, params.cropToSelector).then(function(pageInfo){
+            //Apply height clipping using cropRectangle
+            if(!pageInfo.cropRectangle){
+              if(params.height){
+                pageInfo.cropRectangle = {
+                  x: params.x,
+                  y: params.y,
+                  width: (origParams.width ? origParams.width : pageInfo.pageWidth),
+                  height: params.height
+                };
+              }
+            }
             var takeScreenshot = function(){
               setTimeout(function(){
-                console.log(_this.basepath + '/public/screenshots/'+fname);
                 var screenshotParams = { path: fpath, type: 'png' };
                 if(pageInfo.cropRectangle) params.postClip = pageInfo.cropRectangle;
-                if(params.height){
-                  screenshotParams.clip = { x: params.x, y: params.y, height: params.height, width: (origParams.width ? origParams.width : pageInfo.pageWidth) };
-                }
-                else screenshotParams.fullPage = true;
+                screenshotParams.fullPage = true;
                 page.screenshot(screenshotParams).then(function(){
                   _this.processScreenshot(fpath, params, function(err){
                     if(err) jsh.Log.error(err);

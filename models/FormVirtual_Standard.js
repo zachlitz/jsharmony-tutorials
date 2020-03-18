@@ -18,9 +18,10 @@ jsh.App[modelid] = new (function(){
       "id": "Customer",
       "layout": "form",
       "parent": xmodel.id,
+      "unbound": true,
       "buttons": [{"link": "js:_this.showTestMessage()", "icon": "ok", "actions":"BIU", "text":"Test Message"}],
-      "ejs": "<div class='<"+"%=model.class%"+">_sample_ejs'>Sample EJS for <"+"%=model.id%"+"> model</div>",
-      "css": ".<"+"%=model.class%"+">_sample_ejs { background-color:#f0f0f0; border:1px solid #bbb; padding:4px 20px; margin-top:10px; }",
+      "ejs": "<div class='<%%=model.class%%>_sample_ejs'>Sample EJS for <%%=model.id%%> model</div>",
+      "css": ".<%%=model.class%%>_sample_ejs { background-color:#f0f0f0; border:1px solid #bbb; padding:4px 20px; margin-top:10px; }",
       "js": function(){ //This function is virtual and cannot reference any variables outside its scope
         var _this = this;
         //var modelid = [current model id];
@@ -86,8 +87,8 @@ jsh.App[modelid] = new (function(){
 
   //Get customer status data from the database API
   this.api_getCust = function(onComplete){
-    var emodelid = xmodel.namespace+'FormVirtual_Form_Get_Cust';
-    //Execute the FormVirtual_Form_Get_Cust model
+    var emodelid = xmodel.namespace+'FormVirtual_Standard_Get_Cust';
+    //Execute the FormVirtual_Standard_Get_Cust model
     XForm.prototype.XExecutePost(emodelid, { cust_id: jsh._GET.cust_id }, function (rslt) { //On Success
       if ('_success' in rslt) {
         if(!rslt[emodelid][0] || !rslt[emodelid][0].length) return XExt.Alert('Customer not found');
@@ -110,12 +111,12 @@ jsh.App[modelid] = new (function(){
   this.api_saveCust = function(onComplete){
     if(!_this.cust) return XExt.Alert('Customer data not loaded');
 
-    //Execute the FormVirtual_Form_Update_CustSts model
+    //Execute the FormVirtual_Standard_Update_CustSts model
     var params = {
       cust_id: _this.cust.cust_id,
       cust_sts: _this.cust.cust_sts 
     };
-    XForm.prototype.XExecutePost(xmodel.namespace+'FormVirtual_Form_Update_CustSts', params, function (rslt) { //On Success
+    XForm.prototype.XExecutePost(xmodel.namespace+'FormVirtual_Standard_Update_CustSts', params, function (rslt) { //On Success
       if ('_success' in rslt) {
         //Reload customer data
         _this.api_getCust(onComplete);

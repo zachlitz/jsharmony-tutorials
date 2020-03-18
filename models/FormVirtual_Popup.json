@@ -1,5 +1,5 @@
 {
-  "FormVirtual_Form": {
+  "FormVirtual_Popup": {
     "layout": "form",
     "title": "",
     "caption":["","Status","Statuses"],
@@ -9,15 +9,14 @@
       "main": {"*":"*"}
     },
     "css":".xbody_<%=model.class%> { display:block; padding-right:29px; }",
-    "onload": "_this.onload();",
     "hide_system_buttons" : ["print","help"],
     "fields":[
-      {"control":"html","value":"<div class='<%=model.class%>_form_container'></div>"}
+      {"control":"button","name":"showPopup","value":"Show Popup","onclick":"_this.showPopup_click();"}
     ]
   },
 
   //Custom API Endpoint for getting list of customers and initial form data
-  "FormVirtual_Form_Get_Cust": {
+  "FormVirtual_Popup_Get_Cust": {
     "layout": "exec",
     "title": "Select a customer",
     "actions": "U",
@@ -35,7 +34,7 @@
   },
 
   //Custom API Endpoint for updating customer status
-  "FormVirtual_Form_Update_CustSts": {
+  "FormVirtual_Popup_Update_CustSts": {
     "layout": "exec",
     "title": "Update customer status",
     "actions": "U",

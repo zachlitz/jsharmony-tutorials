@@ -1,0 +1,34 @@
+{
+  "GridVirtual_Popup": {
+    "layout": "form",
+    "title": "",
+    "caption":["","Customer","Customers"],
+    "actions": "B",
+    "unbound": 1,
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "css":".xbody_<%=model.class%> { display:block; padding-right:29px; }",
+    "hide_system_buttons" : ["print","help"],
+    "fields":[
+      {"control":"button","name":"showPopup","value":"Show Popup","onclick":"_this.showPopup_click();"}
+    ]
+  },
+
+  //Custom API Endpoint for getting list of customers and initial grid data
+  "GridVirtual_Popup_Get_Cust": {
+    "layout": "exec",
+    "title": "Select all customers",
+    "actions": "U",
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "sqlexec": [
+      "select cust_id,cust_name,cust_sts from cust;",
+      "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
+    ],
+    "sqltype": "multirecordset",
+    "fields": [
+    ]
+  }
+}

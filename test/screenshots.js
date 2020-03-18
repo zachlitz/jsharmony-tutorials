@@ -10,6 +10,18 @@ var async = require('async');
 var HelperFS = require('jsharmony/HelperFS');
 var xlib = (require('jsharmony/WebConnect')).xlib;
 
+var targetTests = null;
+
+//Parse command line arguments
+for(var i=0;i<process.argv.length;i++){
+  var arg = process.argv[i];
+  if(arg == '--test'){
+    targetTests = targetTests || [];
+    if(process.argv.length >= i) i++;
+    targetTests.push(process.argv[i]);
+  }
+}
+
 let app_source_dir = path.normalize(process.cwd());
 let app_source_data_dir = path.join(app_source_dir, 'data');
 let test_dir = path.dirname(__filename);
@@ -30,7 +42,7 @@ afterEach(function() {
 });
 
 before(function(done) {
-  this.timeout(600000); // set test timeout long process to generate screenshots
+  this.timeout(1200000); // set test timeout long process to generate screenshots
   console.log('\n\rBefore Tests (Global)');
   //Remove data and screenshot folders
   HelperFS.rmdirRecursiveSync(app_data_dir);
@@ -67,10 +79,12 @@ before(function(done) {
 after(function () {
   console.log('After Tests (Global) State: '+ global_test_state);
   if (global_test_state === 'passed') {
-    HelperFS.rmdirRecursiveSync(app_data_dir);
-    HelperFS.rmdirRecursiveSync(screenshots_generated_dir);
-    HelperFS.rmdirRecursiveSync(screenshots_diff_dir);
-    HelperFS.rmdirRecursiveSync(path.join(test_dir,'test-app','models'));
+    setTimeout(function(){
+      HelperFS.rmdirRecursiveSync(app_data_dir);
+      HelperFS.rmdirRecursiveSync(screenshots_generated_dir);
+      HelperFS.rmdirRecursiveSync(screenshots_diff_dir);
+      HelperFS.rmdirRecursiveSync(path.join(test_dir,'test-app','models'));
+    }, 1000);
   }
 });
 
@@ -86,6 +100,9 @@ describe('Compare Screenshots', function() {
   it('existing and generated images should be equal', function(done) {
     this.timeout(600000);
     let files = fs.readdirSync(screenshots_source_dir);
+    if(targetTests){
+      files = _.filter(files, function(file){ return _.includes(targetTests, file); });
+    }
     console.log('# of existing images to test '+files.length);
     console.log('# of generated images to test '+fs.readdirSync(screenshots_generated_dir).length);
     let failImages = [];
@@ -94,14 +111,17 @@ describe('Compare Screenshots', function() {
         failImages[imageName]={name:imageName,reason:'New image was not generated'};
         return file_cb();
       }
+      //Initial comparison
       compareScreenshots(imageName,0).then(function(isEqual){
         if (!isEqual){
           failImages[imageName]={name:imageName,reason: 'Images are not the same.'};
+          //Rerun comparison with file parameter to generate image diff
           return compareScreenshots(imageName,{file: path.join(screenshots_diff_dir,imageName)}).then(function(){ return file_cb(); });
         }
         else return file_cb();
       }).catch(function(e){
         failImages[imageName]={name:imageName, reason: 'Comparison Error: '+e.toString()};
+        //Rerun comparison with file parameter to generate image diff
         compareScreenshots(imageName,{file: path.join(screenshots_diff_dir,imageName)}).then(function(){ return file_cb(); }).catch(function(e){ return file_cb(); });
       });
     }, function(err){
@@ -146,7 +166,7 @@ function generateFailImagesResultPage(failImages){
 function gmCompareImagesWrapper(srcpath, cmppath, options) {
   return new Promise((resolve, reject)=> {
     //Resized version of cmppath, to be the same size as srcpath
-    let cmppath_srcsize = cmppath+'.srcsize.png';
+    let cmppath_resize = cmppath+'.resize.png';
     //Compare function
     let fcmp = function(_cmppath){
       if(!_cmppath) _cmppath = cmppath;
@@ -168,20 +188,20 @@ function gmCompareImagesWrapper(srcpath, cmppath, options) {
             if(err) return reject(err);
             //If srcpath and cmppath are the same size, generate the difference image
             if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp();
-            //Crop cmppath to be the same as srcpath, and save to cmppath_srcsize
+            //Crop cmppath to be the same as srcpath, and save to cmppath_resize
             img2.autoOrient();
             img2.crop(size1.width,size1.height,0,0);
             img2.extent(size1.width,size1.height);
             img2.repage(0, 0, 0, 0);
-            img2.noProfile().write(cmppath_srcsize, function(err){
+            img2.noProfile().write(cmppath_resize, function(err){
               if(err) console.log(err);
               if(err) return reject(err);
-              img2 = imageMagick(cmppath_srcsize);
-              //Make sure that cmppath_srcsize is the same size as srcsize
+              img2 = imageMagick(cmppath_resize);
+              //Make sure that cmppath_resize is the same size as srcsize
               img2.size(function(err,size2){
                 if(err) return reject(err);
                 //Generate the difference image
-                if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp(cmppath_srcsize);
+                if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp(cmppath_resize);
                 return reject(new Error('Sizes still not the same after resize'));
               });
             });
@@ -222,7 +242,7 @@ function start_jsHarmony(cb) {
   var jsh = new jsHarmonyTutorials.Application();
   jsh.Config.appbasepath = app_dir;
   jsh.Config.onServerReady.push(function () {
-    jsh.Modules.jsHarmonyTutorials.generateScreenshots({screenshot_folder:screenshots_generated_dir},function () {
+    jsh.Modules.jsHarmonyTutorials.generateScreenshots({screenshot_folder:screenshots_generated_dir, targetTests: targetTests},function () {
       jsh.Servers['default'].Close();
       cb();
     });

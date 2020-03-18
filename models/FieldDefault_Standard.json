@@ -11,6 +11,6 @@
     {"name":"cust_name","caption":"Name","default":{ "sql": "select cust_name||' :: Child' from cust where cust_id = @cust_parent_id" }},
     {"name":"cust_sts","caption":"Status","default":"ACTIVE"},
     {"name":"cust_update_dt","caption":"Update Date","control":"date","default":"js:new Date()"},
-    {"name":"cust_start_dt","caption":"Start Date","control":"date","default":"js:(function(){ var rslt = new Date(); var parent_start_dt = data && data._bcrumbs && data._bcrumbs.parent_start_dt && new Date(data._bcrumbs.parent_start_dt); if(rslt > parent_start_dt) rslt = parent_start_dt; debugger; return rslt; })()"},
+    {"name":"cust_start_dt","caption":"Start Date","control":"date","default":"js:(function(){ var rslt = new Date(); var parent_start_dt = data && data._bcrumbs && data._bcrumbs.parent_start_dt && new Date(data._bcrumbs.parent_start_dt); if(rslt > parent_start_dt) rslt = parent_start_dt; return rslt; })()"},
   ]
 }

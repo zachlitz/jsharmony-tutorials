@@ -1,0 +1,145 @@
+<html>
+<head>
+
+<script type="text/javascript" src="/js/jsHarmony.loader.js?oninit=app.init(jsh);"></script>
+<script type="text/javascript">
+var SampleApp = function(){
+  var _this = this;
+  var jsh = null;
+  var XExt = null;
+  var XPage = null;
+  var $ = null;
+
+  var CUST_FORM_CONTAINER = '.sample_cust_form_container';
+
+  //Called when jsHarmony is loaded (via querystring parameter to jsHarmony.loader.js)
+  this.init = function(_jsh){
+    jsh = _jsh;
+    XExt = jsh.XExt;
+    XPage = jsh.XPage;
+    $ = jsh.$;
+
+    jsh.init_complete = true;
+  }
+
+  //Customer Data structure (will be edited via popup form)
+  this.cust_data = {
+    cust_id:   1,
+    cust_name: 'Test Customer',
+    cust_sts:  'ACTIVE',
+  };
+
+  //Load Form into memory, if not previously loaded
+  this.loadPopupForm = function(callback){
+
+    //If form is already loaded into memory, return
+    if(jsh.XModels['Customer']) return callback();
+
+    //Check for changes before leaving page
+    window.onbeforeunload = XExt.chain(window.onbeforeunload, function(){ return XPage.GetChangesMessage('Customer'); });
+
+    //Define the form in-memory
+    jsh.XPage.LoadVirtualModel($(CUST_FORM_CONTAINER)[0], {
+      "id": "Customer",
+      "layout": "form",
+      "unbound": true,
+      "buttons": [{"link": "js:_this.showTestMessage()", "icon": "ok", "actions":"BIU", "text":"Test Message"}],
+      "ejs": "<div class='test_sample_ejs'>Sample EJS for Test model</div>",
+      "css": ".test_sample_ejs { background-color:#f0f0f0; border:1px solid #bbb; padding:4px 20px; margin-top:10px; }",
+      "js": function(){ //This function is virtual and cannot reference any variables outside its scope
+        var _this = this;
+        //var modelid = <current model id>;
+        //var xmodel = <current model>;
+
+        _this.oninit = function(xmodel){
+          //Custom oninit function
+        }
+
+        _this.onload = function(xmodel){
+          //Custom onload function
+        }
+
+        _this.showTestMessage = function(){
+          XExt.Alert('Test Message');
+        }
+      },
+      "oninit":"_this.oninit(xmodel);",
+      "onload":"_this.onload(xmodel);",
+      "fields": [
+        {"name": "cust_id", "caption":"Customer ID", "type": "int", "actions":"B",
+         "control":"textbox", "controlstyle":"width:80px;", "validate": ["IsNumeric","Required"] },
+         
+        {"name": "cust_name", "caption":"Name", "type": "varchar", "length": 256, "actions":"B",
+         "control":"textbox", "controlstyle":"width:260px;", "validate": ["MaxLength:256","Required"] },
+         
+        {"name": "cust_sts", "caption":"Status", "type": "varchar", "length":32,
+         "control":"dropdown", "validate": ["Required"] },
+
+        {"control":"html","value":"<b>Sample HTML:</b> Content"},
+
+        {"name":"save_button","control":"button","value":"Save"},
+        {"name":"cancel_button","control":"button","value":"Cancel","nl":false},
+      ]
+    }, function(custmodel){
+      if(callback) callback();
+    });
+  }
+
+  //Display the popup form
+  this.showPopupForm = function(){
+
+    _this.loadPopupForm(function(){
+      //Render data into form controls
+      jsh.XModels['Customer'].controller.setLOV('cust_sts', [
+        {code_val: '',       code_txt:'Please select...'},
+        {code_val: 'ACTIVE', code_txt:'Active'},
+        {code_val: 'CLOSED', code_txt:'Closed'},
+      ]);
+      jsh.XModels['Customer'].controller.Render(_this.cust_data);
+
+      //Show popup dialog
+      XExt.CustomPrompt(CUST_FORM_CONTAINER, $(CUST_FORM_CONTAINER),
+
+        //Dialog - onInit Handler
+        function(acceptFunc, cancelFunc){
+          //Enable the form (so that navigation events trigger check for updates)
+          jsh.XModels['Customer'].controller.form.Prop.Enabled = true;
+          //Attach save / cancel events to dialog events
+          jsh.$root('.save_button.xelemCustomer').off('click').on('click', acceptFunc);
+          jsh.$root('.cancel_button.xelemCustomer').off('click').on('click', cancelFunc);
+        }, 
+
+        //Dialog - onAccept Handler
+        function(success){
+          //Commit customer data to API
+          if(!jsh.XModels['Customer'].controller.Commit(_this.cust_data, 'U')) return;
+          //Success callback needs to be called to close popup
+          return success();
+        }, 
+
+        //Dialog - onCancel Handler
+        undefined, 
+
+        //Dialog - onClosed Handler
+        function(){
+          //Disable the form (so that navigation events do not trigger check for updates)
+          jsh.XModels['Customer'].controller.form.Prop.Enabled = false;
+        }, 
+
+        //Dialog Options - Reuse the existing container, so that the form is not rerendered on every popup
+        { reuse: true }
+      );
+    });
+  }
+}
+
+window.app = new SampleApp();
+</script>
+</head>
+<body style="padding:15px 30px;">
+  <input type="button" onclick="app.showPopupForm();" value="Show Popup" />
+  <div style='display:none;'>
+    <div class='sample_cust_form_container xdialogbox' style='width:400px;'></div>
+  </div>
+</body>
+</html>

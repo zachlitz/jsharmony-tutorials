@@ -1,0 +1,342 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "grid_virtual",
+  "Title": "Virtual Grids",
+  "Menu": ["Models","Grids"],
+  "Code": [
+    "/models/GridVirtual_Standard.json",
+    "/models/GridVirtual_Standard.js",
+    "/models/GridVirtual_Popup.json",
+    "/models/GridVirtual_Popup.js",
+    "/models/GridVirtual_Popup.ejs",
+    "/models/GridVirtual_CustomRow_Popup.json",
+    "/models/GridVirtual_CustomRow_Popup.js",
+    "/models/GridVirtual_CustomRow_Popup.ejs"
+  ],
+  "Demo": [
+    { "url": "jsHarmonyTutorials/GridVirtual_Standard", "title": "Virtual Grid" },
+    { "url": "jsHarmonyTutorials/GridVirtual_Popup", "title": "Virtual Grid Popup" },
+    { "url": "jsHarmonyTutorials/GridVirtual_CustomRow_Popup", "title": "Virtual Grid Popup w/Custom Rows" }
+    
+  ]
+}
+</script>
+
+<h3>Introduction</h3>
+jsHarmony models can be used to dynamically define and render models client-side.
+
+<h3>Initializing New Models</h3>
+In order to initialize  new model, use the XPage.LoadVirtualModel function:
+<pre>
+XPage.LoadVirtualModel(container, modelDefinition, callback /* function(xmodel){} */)
+:: Create a new model based on modelDefinition and render into the container
+
+Parameters
+----------
+container       - A DOM object whose content will be replaced with the grid
+modelDefinition - A JavaScript object defining the new model
+callback        - Executed on successful creation and initialization of the model
+</pre>
+
+<h3>Creating Grids</h3>
+<%-getScreenshot('jsHarmonyTutorials/GridVirtual_Standard?popup=1','Virtual Grid')%>
+The grid above can be initialized using the model definition below:
+<pre>
+{
+  "id": "Customer",
+  "layout": "grid",
+  'title': 'Customers',
+  "parent": xmodel.id,
+  "unbound": true,
+  "buttons": [
+    {"link": "js:_this.showTestMessage()", "icon": "ok", "actions":"BIU", "text":"Test Message"},
+    {"link": "js:_this.save()", "icon": "save", "actions":"IU", "text":"Save"},
+  ],
+  "ejs": "<div class='<%%=model.class%%>_sample_ejs'>Sample EJS for <%%=model.id%%> model</div>",
+  "css": ".<%%=model.class%%>_sample_ejs { background-color:#f0f0f0; border:1px solid #bbb; padding:4px 20px; margin-top:10px; }",
+  "js": function(){ //This function is virtual and cannot reference any variables outside its scope
+    var _this = this;
+    //var modelid = [current model id];
+    //var xmodel = [current model];
+    var apiGrid = new jsh.XAPI.Grid.Static(modelid);
+    var apiForm = new jsh.XAPI.Form.Static(modelid);
+
+    _this.oninit = function(xmodel){
+      //Custom oninit function
+    }
+
+    _this.onload = function(xmodel){
+      //Custom onload function
+    }
+
+    _this.getapi = function(xmodel, apitype){
+      if(apitype=='grid') return apiGrid;
+      else if(apitype=='form') return apiForm;
+    }
+
+    _this.save = function(){
+      jsh.App[xmodel.parent].commitCust();
+    }
+
+    _this.showTestMessage = function(){
+      XExt.Alert('Test Message');
+    }
+  },
+  "oninit":"_this.oninit(xmodel);",
+  "onload":"_this.onload(xmodel);",
+  "getapi":"return _this.getapi(xmodel, apitype);",
+  "fields": [
+    {"name": "cust_id", "caption":"Customer ID", "type": "int", "actions":"B", "control":"label", "key": true },
+      
+    {"name": "cust_name", "caption":"Name", "type": "varchar", "length": 256, "control":"textbox", "validate": ["Required", "MaxLength:256"] },
+      
+    {"name": "cust_sts", "caption":"Status", "type": "varchar", "length":32, "control":"dropdown", "validate": ["Required"] },
+  ]
+}
+</pre>
+
+<h3 data-level="2">Grid API</h3>
+In normal operation, the Grid uses the jsHarmony API.  This connects to the jsHarmony API endpoints for performing database operations, such as select, insert, update, and delete.<br/>
+<br/>
+The Grid can be modified to use a custom static API via the model "getapi" property.<br/>
+<br/>
+In the example below, the grid is bound to a Static API adapter, that loads from and saves data to an in-memory array:
+<pre>
+XModel.getapi(apiName)
+:: Return the API data adapter
+
+Parameters
+----------
+container       - A DOM object whose content will be replaced with the grid
+modelDefinition - A JavaScript object defining the new model
+callback        - Executed on successful creation and initialization of the model
+
+Example Model.json:
+{
+  ...
+  "getapi": "return _this.getapi(xmodel, apitype);"
+}
+
+Example Model.js:
+
+function(){
+  var dataset = [
+    { field_1: "value_1", field_2: "value_2" },
+    { /* row 2 */ },
+    { /* row 3 */ },
+    ...
+  ];
+
+  var apiGrid = new jsh.XAPI.Grid.Static(modelid, dataset);
+  var apiForm = new jsh.XAPI.Form.Static(modelid, dataset);
+
+  _this.getapi = function(xmodel, apitype){
+    if(apitype=='grid') return apiGrid;
+    else if(apitype=='form') return apiForm;
+  }
+}
+</pre>
+
+The XPI.Form.Static data adapter provides overrides for onSelect, onInsert, onUpdate, and onDelete, to perform additional data processing with each operation:
+<pre>
+XPI.Form.Static.onSelect = function(action, actionrslt, keys){} //If return value is false, stop processing
+XPI.Form.Static.onInsert = function(action, actionrslt, newrow){} //If return value is false, stop processing
+XPI.Form.Static.onUpdate = function(action, actionrslt, keys, newdata){} //If return value is false, stop processing
+XPI.Form.Static.onDelete = function(action, actionrslt, keys){} //If return value is false, stop processing
+</pre>
+
+In the Virtual Grid examples, the grid is bound to a dataset in the container form after initialization.
+<pre>
+jsh.XModels['Customer'].getapi('grid').dataset = _this.cust;
+jsh.XModels['Customer'].getapi('form').dataset = _this.cust;
+jsh.XModels['Customer'].getapi('form').onInsert = function(action, actionrslt, newrow){
+  //Assign a new cust_id key to the new row
+  var max_cust_id = _.max(_.map(_this.cust,function(row){ return row.cust_id; }));
+  newrow.cust_id = (max_cust_id||0)+1;
+  //Return the newly inserted cust_id key
+  actionrslt['Customer'] = { cust_id: newrow.cust_id };
+}
+</pre>
+
+
+<h3 data-level="2">Grid Controller</h3>
+The following controller functions are available for interfacing with the virtual grid:
+<pre>
+xmodel.controller.Render(callback)
+:: Reload grid data using the data adapter
+
+Parameters
+----------
+callback  - A JavaScript function called on completion
+
+
+
+xmodel.controller.Commit(onSuccess)
+:: Save data from the grid using the data adapter
+
+Parameters
+----------
+onSuccess   - A JavaScript function called on successful completion
+              (onSuccess will not be called if a validation error or API error occurs)
+
+
+
+xmodel.controller.setLOV(fieldname, lov)
+:: Update the List of Values for a field
+
+Parameters
+----------
+fieldname - The name of the field whose List of Values will be updated
+lov       - An array of { code_val: 'VALUE', code_txt: 'Display Text' } defining the dropdown options
+</pre>
+
+For example:
+<pre>
+//Render Grid
+this.renderCust = function(){
+  //Apply List of Values
+  jsh.XModels['Customer'].controller.setLOV('cust_sts', _this.LOVs.cust_sts);
+  jsh.XModels['Customer'].controller.Render();
+}
+
+//Get / Validate Grid Values, Save to API
+this.commitCust = function(){
+  jsh.XModels['Customer'].controller.Commit();
+}
+</pre>
+
+<h3>Grids in Popups</h3>
+Virtual grids can also be loaded in popup windows:
+<%-getScreenshot('jsHarmonyTutorials/GridVirtual_Popup?popup=1','Virtual Grid Popup')%>
+<%-getScreenshot('jsHarmonyTutorials/GridVirtual_Popup?popup=1','Virtual Grid Popup - Open', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.showPopup').click();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.$root('.xbutton_Save').is(':visible'); }, resolve);
+}); } })%>
+
+First, define the container with the xdialogbox class, inside a hidden div.  Additionally, the width of the popup window can be defined as a style of the xdialogbox tag.
+<pre>
+<div style='display:none;'>
+    <div class='popup_&lt;%=model.class%&gt; xdialogbox' style='width:700px;height:300px;'></div>
+</div>
+</pre>
+Next, inside the click event for the popup, use the XExt.CustomPrompt function to open the grid in a dialog box.<br/>
+<br/>
+A few helpful tips:
+<ul>
+  <li>Be sure to set the { reuse: true } option on the CustomPrompt, so that the grid controls will not be cleared after the popup is closed</li>
+  <li>In the "onInit" function, bind the "acceptFunc" and "cancelFunc" functions to buttons in the grid.  When clicked, these will trigger the "onAccept" and "onCancel" events, and close the dialog</li>
+  <li>Load and render the API data before displaying the popup, so that the user does not see old data on the screen while it is loading.</li>
+  <li>Set controller.grid.Prop.Enabled = true when opening the popup, and false when closing.  This will disable the popup grid from triggering "unsaved data" notifications when leaving the page.</li>
+</ul>
+<pre>
+this.showPopup_click = function(){
+  //Initialize model
+  _this.initCust(function(){
+    //Enable the grid (so that navigation events trigger check for updates)
+    jsh.XModels['Customer'].controller.grid.Prop.Enabled = true;
+
+    //Update values in Customer grid
+    _this.renderCust();
+    //Open dialog
+    XExt.CustomPrompt(CUST_GRID_CONTAINER, $(CUST_GRID_CONTAINER), function(acceptFunc, cancelFunc){ //onInit
+      //Attach save / cancel events to dialog events
+      jsh.App['Customer'].acceptDialog = acceptFunc;
+
+    }, function(success){ //onAccept
+      //Executed after save - closes dialog
+      success();
+    }, function(options){ //onCancel
+      if(!options.force && jsh.XModels['Customer'].controller.HasUpdates()){
+        XExt.Confirm('Close without saving changes?', function(){
+          //Reset grid data
+          jsh.XModels['Customer'].controller.form.ResetDataset();
+          //Close dialog without checking for unsaved changes
+          options.forceCancel();
+        });
+        return false;
+      }
+    }, function(){ //onClosed
+      //Disable the grid (so that navigation events do not trigger the check for updates)
+      jsh.XModels['Customer'].controller.grid.Prop.Enabled = false;
+    }, { reuse: true, backgroundClose: true });
+  });
+}
+</pre>
+
+<h3>Grids in Popups with Custom Rows</h3>
+The grid can be customized with custom row controls.  In this example, the the two fields (Customer Name and Status) are combined into one:
+<%-getScreenshot('jsHarmonyTutorials/GridVirtual_CustomRow_Popup?popup=1','Virtual Grid Popup w/Custom Rows')%>
+<%-getScreenshot('jsHarmonyTutorials/GridVirtual_CustomRow_Popup?popup=1','Virtual Grid Popup w/Custom Rows - Open', { onload:function(){ return new Promise(function(resolve){
+  jshInstance.$root('.showPopup').click();
+  jshInstance.XExt.waitUntil(function(){ return jshInstance.$root('.xbutton_Save').is(':visible'); }, resolve);
+}); } })%>
+
+First, the fields are defined in the Virtual Model:
+<pre>
+{
+  "fields": [
+    {"name": "cust_id", "caption":"Customer ID", "type": "int", "actions":"B", "control":"hidden", "key": true },
+      
+    {"name": "cust_name", "caption":"Name", "type": "varchar", "length": 256, "control":"hidden",
+      "validate": [
+        { "function": "Required", "selector": ".xelemCustomer .virtual_cust_name" },
+        { "function": "MaxLength:256", "selector": ".xelemCustomer .virtual_cust_name" },
+      ]
+    },
+      
+    {"name": "cust_sts", "caption":"Status", "type": "varchar", "length":32, "control":"hidden",
+      "validate": [
+        { "function": "Required", "selector": ".xelemCustomer .virtual_cust_sts" },
+      ]
+    },
+
+    {"name": "cust_field", "caption":"Customer", "control":"label", "unbound": true, "controlstyle": "vertical-align:baseline;",
+      "value": "<#-ejs.render(_this.template_CustRow, ejsparams)#>",
+      "ongetvalue": "return _this.cust_field_ongetvalue(val,field,xmodel,jctrl,parentobj);"
+    }
+  ]
+}
+</pre>
+The data fields themselves are hidden, while the new render field is defined as a label control.<br/>
+<br/>
+The field.value of the render control is set to render the template (defined in the model EJS), while the field.ongetvalue property is overridden to read from the UI and update the backend data.<br/>
+<br/>
+Next, the new custom grid control render template is defined in the Model.ejs file:
+<pre>
+<script class="xgrid_CustRow_template" type="text/x-ejs-template">
+  <input type="text" class="virtual_cust_name xform_ctrl_subfocus" value="&lt;%%=data.cust_name%%&gt;">
+  <input type="text" class="virtual_cust_sts" value="&lt;%%=data.cust_sts%%&gt;">
+</script>
+</pre>
+Note that the first input element in the control template has the "xform_ctrl_subfocus" class.  This will trigger focus to that element when the container control receives focus.<br/>
+<br/>
+Finally, the model.onrowbind property is overridden to trigger "SetFocus" on the container control when either of the subcontrols receive focus:
+<pre>
+_this.onrowbind = function(xmodel,jobj,datarow){
+  //When focus on child textboxes, trigger SetFocus for container
+  jobj.find('.virtual_cust_name,.virtual_cust_sts').focus(function (e) {
+    xmodel.controller.editablegrid.SetFocus(this, e);
+  });
+}
+</pre>
+The SetFocus method is required so that the grid will know to change cell / row and perform validation / commits when a user switches focus between controls.

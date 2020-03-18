@@ -61,12 +61,16 @@ The jsHarmony Factory comes with administration tools to create and manage 1D an
 <h4>Adding a Code</h4>
 1. First, add a row to the Code Listing grid:
 <%-getScreenshot('jsHarmonyFactory/Dev/Code_Listing?popup=1','Code Listing - Insert', { height: 150, onload:function(){ return new Promise(function(resolve){
-  jshInstance.$root('.xbuttoninsert').click();
-  window.setTimeout(function(){
-    jshInstance.$root('.code_name').first().val('sample_code');
-    jshInstance.$root('.code_desc').first().val('Sample Code');
-    window.setTimeout(resolve, 300);
-  }, 100);    
+  jshInstance.$root('.xbuttoninsert').focus();
+  setTimeout(function(){
+    jshInstance.$root('.xbuttoninsert').click();
+    window.setTimeout(function(){
+      jshInstance.$root('.code_name').first().focus();
+      jshInstance.$root('.code_name').first().val('sample_code');
+      jshInstance.$root('.code_desc').first().val('Sample Code');
+      window.setTimeout(resolve, 300);
+    }, 100);
+  }, 200);
 }); } })%>
 
 2. Next, click the "Create Table" button:

@@ -1,0 +1,99 @@
+<!-- 
+/*
+Copyright 2017 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "ID": "external_integration",
+  "Title": "Integrating with External Systems",
+  "Menu": ["Models","Models Overview"],
+  "Code": [
+    "/public/samples/ExternalInline/form.html",
+    "/public/samples/ExternalInline/form_popup.html",
+    "/public/samples/ExternalInline/grid.html",
+    "/public/samples/ExternalInline/grid_popup.html",
+    "/public/samples/ExternalInline/grid_customrow_popup.html"
+  ],
+  "Demo": [
+    { "url": "/samples/ExternalInline/form.html?cust_id=2", "title": "External Inline Form" },
+    { "url": "/samples/ExternalInline/form_popup.html?cust_id=2", "title": "External Inline Popup Form" },
+    { "url": "/samples/ExternalInline/grid.html", "title": "External Inline Grid" },
+    { "url": "/samples/ExternalInline/grid_popup.html", "title": "External Inline Popup Grid" },
+    { "url": "/samples/ExternalInline/grid_customrow_popup.html", "title": "External Inline Popup Grid w/Custom Rows" }
+  ]
+}
+</script>
+
+<h3>Loading jsHarmony into an existing application</h3>
+jsHarmony forms can be in-lined into existing applications.<br/>
+<br/>
+Assuming that the user is authenticated into the jsHarmony application, the following code can be used to load jsHarmony into an existing HTML page:
+
+<pre>
+<html>
+  <head>
+    <script type="text/javascript" src="/js/jsHarmony.loader.js?oninit=app.init(jsh);"></script>
+    <script type="text/javascript">
+    var SampleApp = function(){
+      var _this = this;
+      var jsh = null;
+      var XExt = null;
+      var XPage = null;
+      var XForm = null;
+      var $ = null;
+      var _ = null;
+      
+      //Called when jsHarmony is loaded (via querystring parameter to jsHarmony.loader.js)
+      this.init = function(_jsh){
+        jsh = _jsh;
+        XExt = jsh.XExt;
+        XPage = jsh.XPage;
+        XForm = jsh.XForm;
+        $ = jsh.$;
+        _ = jsh._;
+
+        this.initForm();
+        jsh.init_complete = true;
+      }
+    }
+
+    window.app = new SampleApp();
+    </script>
+  </head>
+  <body style="padding:15px 30px;">
+  </body>
+</html>
+</pre>
+
+The variable "init_complete" on the jsHarmony object should be set to true when initialization is complete.
+
+<h3>Loading Models</h3>
+Once jsHarmony is loaded, models can then be loaded using the Virtual Forms and Virtual Grids.
+
+<h3 data-level="2">External Inline Form</h3>
+The code samples in this tutorial show how to integrate jsHarmony forms both inline and in a popup window.
+<%-getScreenshot('samples/ExternalInline/form.html?cust_id=2','External Inline Form')%>
+
+Learn more about Virtual forms in the <a href="/tutorials/form_virtual">Virtual Forms</a> tutorials.
+
+<h3 data-level="2">External Inline Grid</h3>
+The code samples in this tutorial show how to integrate jsHarmony grids both inline and in popup windows.
+<%-getScreenshot('samples/ExternalInline/grid.html','External Inline Grid')%>
+
+Learn more about Virtual Grids in the <a href="/tutorials/grid_virtual">Virtual Grids</a> tutorials.

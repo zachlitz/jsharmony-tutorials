@@ -107,8 +107,11 @@ When the user adds a new row, by default, the row is added to the top of the gri
 </pre>
 
 <%-getScreenshot('jsHarmonyTutorials/GridEditable_Cust_Listing?popup=1','Grid Insert', { onload:function(){ return new Promise(function(resolve){
-  jshInstance.$root('.xbuttoninsert').click();
-  window.setTimeout(resolve, 100);
+  jshInstance.$root('.xbuttoninsert').focus();
+  setTimeout(function(){
+    jshInstance.$root('.xbuttoninsert').click();
+    resolve();
+  }, 200);
 }); } })%>
 
 <h3>"insert" Button</h3>
