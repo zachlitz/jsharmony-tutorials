@@ -34,7 +34,7 @@ hljs.initHighlightingOnLoad();
   <a class="xbrand_link" href="<%-ejsext.iif(req.isAuthenticated,'',req.jshsite.home_url)%>/">&nbsp;</a>
   <div class="xlogo">
     <a class="xlogoimg" href="<%-ejsext.iif(req.isAuthenticated,'',req.jshsite.home_url)%>/"><img src="/images/tutorials-logo.png" alt="jsHarmony Tutorials" title="jsHarmony Tutorials" /></a>
-    <a class="xsublogo" href="<%-ejsext.iif(req.isAuthenticated,'',req.jshsite.home_url)%>/" alt="Tutorials Collection" title="Tutorials Collection"><img src="/images/tutorials-tagline.png" /></a>
+    <a class="xsublogo" href="<%-ejsext.iif(req.isAuthenticated,'',req.jshsite.home_url)%>/" alt="Tutorials Collection" title="Tutorials Collection"><%=req.jshsite.title%></a>
   </div>
   <div class="tutorials_search">
     <form action="/_search" method="get" onSubmit="<%=req.jshsite.instance%>.App.tutorials.searchTutorials(<%=req.jshsite.instance%>.$root('.tutorials_search .query').val()); return false;">
