@@ -47,7 +47,7 @@ Forms consists of fields and additional child forms.  Child forms can be embedde
 All parent and child form data will be saved in one transaction, and only the topmost writable parent form will have a "Save" button.
 
 <h4>Simple Form:</h4>
-<%-getScreenshot('jsHarmonyTutorials/Cust?cust_id=1','Simple Form')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust?action=update&cust_id=1','Simple Form')%>
 
 <h4>Parent / Child Subforms:</h4>
 <%-getScreenshot('jsHarmonyTutorials/Cust_Container?cust_id=1&action=update','Parent / Child Subforms')%>
@@ -83,8 +83,8 @@ Exec forms are unbound, except during initial load.  Exec forms can be used for:
   <li>API Endpoints for SQL Operations / Procedures</li>
   <li>Custom User Interfaces</li>
 </ul>
-<%-getScreenshot('jsHarmonyFactory/Reports/SysUser_Listing?popup=1','Parent / Child Grid')%>
+<%-getScreenshot('jsHarmonyTutorials/Cust_Exec?action=update&cust_id=1&popup=1','Exec Form')%>
 
 <h3 data-level="2">Report Layout</h3>
 Reports have two components - the form used to enter report parameters, and the actual report, which is a PDF rendered from generated HTML.
-<%-getScreenshot('jsHarmonyFactory/Reports/SysUser_Listing?popup=1','Parent / Child Grid')%>
+<%-getScreenshot('jsHarmonyFactory/Reports/SysUser_Listing?popup=1','Report')%>

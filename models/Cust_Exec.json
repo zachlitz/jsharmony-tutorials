@@ -9,7 +9,7 @@
   "sqlexec": "update cust set cust_sts='INACTIVE' where cust_id=@cust_id", 
   "popup":[1000,700],
   "fields": [
-    {"name":"cust_id", "type": "bigint", "actions":"U", "foreignkey": 1},
+    {"name":"cust_id", "control":"hidden", "type": "bigint", "actions":"BU", "foreignkey": 1},
     {"name":"SET_INACTIVE","caption":"","control":"button","value":"Set INACTIVE","controlstyle": "padding:3px 8px;margin-top:10px;",
      "onclick":"XPage.RunDBFunc(this,function(){XPage.Refresh();});"}
   ]
