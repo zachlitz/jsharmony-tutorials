@@ -149,6 +149,7 @@ jsHarmonyTutorials.prototype.Auth = function(){
 jsHarmonyTutorials.prototype.getFactoryConfig = function(){
   var _this = this;
   return { 
+    title: 'Tutorials and Reference',
     auth: _this.Auth(),
     menu: menu(_this.jsh.Modules['jsHarmonyFactory']).bind(null, 'S'),
     public_apps: [
