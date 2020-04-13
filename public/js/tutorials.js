@@ -219,6 +219,14 @@ jsHarmonyTutorials.prototype.Init = function(config){
         html = XExt.ReplaceAll(html, "[/i]", "</i>");
         html = XExt.ReplaceAll(html, "[b]", "<b>");
         html = XExt.ReplaceAll(html, "[/b]", "</b>");
+        html = XExt.ReplaceAll(html, "[anchor]", '<a name="');
+        html = XExt.ReplaceAll(html, "[/anchor]", '"></a>');
+        html = html.replace(/\[html\](.*)\[\/html\]/g, function(match, p1){
+          var rslt = p1;
+          rslt = XExt.ReplaceAll(rslt, '&lt;', '<');
+          rslt = XExt.ReplaceAll(rslt, '&gt;', '>');
+          return rslt;
+        });
       }
       jobj.html(html);
     });

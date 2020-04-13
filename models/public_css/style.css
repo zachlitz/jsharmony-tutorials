@@ -22,6 +22,9 @@
   margin-top:0px;
   margin-bottom:0px;
 }
+<%-rootcss%> a .hljs-comment {
+  color:#6b8ed6;
+}
 <%-rootcss%> .tutorials_search {
   position:absolute;
   top:88px;
@@ -101,6 +104,9 @@
 <%-rootcss%> .tutorial_overview h3 {
   margin-top:30px;
   margin-bottom:10px;
+}
+<%-rootcss%> .tutorial_overview h3.tutorials_intro {
+  margin-top:5px;
 }
 <%-rootcss%> .tutorial_overview .url {
   display:inline-block;

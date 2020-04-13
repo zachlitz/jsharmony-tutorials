@@ -1,0 +1,240 @@
+<!-- 
+/*
+Copyright 2020 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Forms",
+  "ID": "reference_forms",
+  "Menu": ["Language Reference"]
+}
+</script>
+
+<h3 class="tutorials_intro">Forms</h3>
+
+<pre>
+model := {
+  "layout": "[i]model_layout[/i]", //[i]model_layout[/i]:
+                            //  grid
+                            //  form
+                            //  form-m
+                            //  multisel
+                            //  exec
+                            //ex: "grid"
+
+  "inherits": "[i]model_id[/i]",   //[i]model_id[/i]:
+                            //  [i]base_model_id[/i]: model id without folder or namespace
+                            //  [i]absolute_model_id[/i]: /[i]module_namespace[/i]/path/to/[i]base_model_id[/i]
+                            //ex: "SysUser" //if the child model is in the same folder as the parent model)
+                            //ex: "/jsHarmonyFactory/Admin/SysUser"
+
+  "table": "[i]sql_table[/i]",   //[i]sql_table[/i]: Database table or view - including schema if necessary
+                          //ex: "dbo.V_E001L"
+
+  "caption": [i]caption_array[/i], //[i]caption_array[/i]:
+                            //  [ "", "[i]singular caption[/i]", "[i]plural caption[/i]" ]
+                            //  [ "[i]singular caption[/i]", "[i]plural caption[/i]" ]
+                            //  [ "[i]singular &amp; plural caption[/i]" ]  //If singular and plural captions are the same
+                            //ex: [ "Client", "Clients" ]
+
+  "title": 
+    //Static string
+    "CLIENT"
+    //Title with parameters from jshsite.globalparams
+    "CLIENT - @cust_name - STRD"
+    //Title with fields from form data:
+    "<#=data.cust_name#>"
+    //Title with fields from breadcrumb sql:
+    "<#=bcrumbs.PL_YEAR_TXT#>"
+    //Title with GET parameters:
+    "<#=_GET.TO_ID#>"
+    //Title with SQL lookup
+    { "sql":"select getdate()" }
+    { "sql":"select getdate()", "nodatalock": ["cust_id"] }
+    //Title with separate Add/Edit titles
+    {
+      "insert": "Add Customer",
+      "update": "Edit Customer",
+      "browse": "View Customer",
+    }
+    //Title with separate Add/Edit SQL lookups:
+    {
+      "insert": { "sql":"select getdate()" }, //"nodatalock":["cust_id"] (If applicable)
+      "update": { "sql":"select cust_name||' Contacts' from cust where cust_id=@cust_id" }, //"nodatalock":["cust_id"] (If applicable)
+      "browse": { "sql":"select cust_name||' Contacts' from cust where cust_id=@cust_id" }, //"nodatalock":["cust_id"] (If applicable)
+    }
+    //If the title is not set, the caption will be used.  If the caption is not set, the model ID will be used
+    //The topmost form's title will be used in the window title
+    //If the title is set to blank on a tabbed form, the current tab's title will be used for the window title
+
+  "menu": "Admin/AuditTrail",  //If using the jsHarmony Factory:
+                               //  "menu" should match the "menu_name" field in the jsHarmony Factory
+                               //  "menu" can be set to either a top menu or submenu
+
+  "actions": "[i]actions[/i]", //[i]actions[/i]: string containing any of the following characters
+                        //  B :: Browse
+                        //  I :: Insert
+                        //  U :: Update
+                        //  D :: Delete
+                        //ex: "BIU"
+                        //Empty string means no access
+
+  "roles": { "X_X": "*", "X_B": "B" }, //By default, only SYSADMIN & DEV have access.  Permissions only assigned to "main" site, not "client" site
+  "roles": 
+    "main":   { "SYSADMIN": "*", "*": "B" },
+    "client": { "C*": "B" }
+  },
+  "using": ["jsHarmonyFactory"], //Namespaces used by this model
+  "dev": true, //Enable for users with the "DEV" role, not for users with the "SYSADMIN" role
+  "db": "default", //Optional property - use an alternate database connection
+  "popup": [ 1000, 900 ],
+  "sort": [ "^equip_name asc", "^cust_name" ], //^ = Ascending or v = Descending
+  "sort": [ {"equip_name": "asc"}, {"cust_name": "desc"} ],
+  "default_search": [{"Column":"cust_name","Value":"Smith","Join":"and","Comparison":"contains"}],
+  "samplerepeat": 5,
+  "rowlimit": 5, //Maximum rows returned per iteration in GridView
+  "querystring": { "&action": "update", "|cust_id": "@cust_id" }, //QueryString Defaults/Overrides = &Override, |Default
+  "breadcrumbs":{
+    "parents": ["QC_DBDW","CCL","<a href='PLRNDW?action=update&PL_ID=<#=bcrumbs.PL_ID#>&tabs=%7B&quot;PLRNDW&quot;%3A&quot;PLRL&quot;%7D'>RND - <#=bcrumbs.PL_YEAR_TXT#> - <#=bcrumbs.PL_TYPE_TXT#></a>"], //Simple Breadcrumbs, array of parents.  Can also use HTML and Dynamic JS
+    "title": "Client", //Title Override for Breadcrumbs, can use <#=bcrumbs.PL_YEAR_TXT#> for breadcrumb SQL data
+    "sql": "select PL_ID,PL_YEAR_TXT,PL_TYPE_TXT from V_PLL where PL_ID=isnull(@PL_ID,(select PL_ID from PLR where PLR_ID=@PLR_ID))",
+    "sql_params":["cust_id","trait_id"],
+    "nodatalock": ["cust_id"],
+    "insert": { /* parents, title, sql, sql_params, nodatalock */ },
+    "update": { /* parents, title, sql, sql_params, nodatalock */ },
+    "browse": { /* parents, title, sql, sql_params, nodatalock */ }
+    }
+  },
+  "helpid": "CL",
+  "js": "function(){}", //Custom JS to be included client-side.  Concatenated with model.js
+  "ejs": "HTML CONTENT", //Custom EJS to be included client-side.  Concatenated with model.ejs
+  "css": "CSS CONTENT",  //Custom CSS to be included client-side.  Concatenated with model.css
+  "tabpos": "top", //top,bottm
+  "sqlselect": "select fields from table where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%% order by %%%SORT%%% limit %%%ROWCOUNT%%% offset %%%ROWSTART%%%"
+  "sqlrowcount": "select count(*) as cnt from table where %%%SQLWHERE%%% %%%DATALOCKS%%% %%%SEARCH%%%",
+  "sqldownloadselect": "select fields from table where 1=1 %%%DATALOCKS%%% and key=@key",
+  "sqlinsertencrypt": "update table set field=@field where 1=1 %%%DATALOCKS%%% and key=@key",
+  "sqlinsert":"insert into %%%TABLE%%%(%%%FIELDS%%%) values(%%%VALUES%%%);%%%GETINSERTKEYS%%%",
+  "sqlupdate": "update table set field=@field where 1=1 %%%DATALOCKS%%% and key=@key",
+  "sqldelete": "delete from table where 1=1 %%%DATALOCKS%%% and key=@key",
+  "sqlexec": "exec dbo.PLE_NOTIF @cust_id,@MDate", //Used by EXEC.  Be sure to add %%%DATALOCKS%%% if applicable
+  "sqltype": "multirecordset", //recordset, multirecordset  Used by EXEC.
+  "sqlwhere": "CUST_STS='ACTIVE'", //Additional search query for grid
+  "sqlgetinsertkeys": "select scope_identitiy() as CHG_ID;",
+  "onload": "_this.onload(xmodel,callback)", //Returns false to not bubble (Executed once all selects are complete, on every reselect.  Callback pulls execution away from main thread, return false, and reset links on completion,
+  "onloadimmediate": "_this.onloadimmediate(xmodel)", //Runs immediately once select is complete, instead of when all selects are complete for all subforms
+  "oninit": "_this.oninit(xmodel)", //(Executed when form is first loaded)
+  "oninsert": "_this.oninsert(xmodel,urlkeys,url)", //(FORM ONLY) Returns false to not bubble - Executed after insert operation is completed
+  "onvalidate": "_this.onvalidate(xmodel, callback)", //Must return callback(true) if validation succeeded and handle errors
+  "onupdate": "_this.onupdate (xmodel)", //(FORM ONLY)
+  "ondestroy": "_this.ondestroy (xmodel)",
+  "oncommit": "_this.oncommit(xmodel, rowid, callback)", //(GRID ONLY) - Executes after db Update / Insert / Delete.
+  "onloadstate": "_this.onloadstate(xmodel, state)",
+  "ongetstate": "_this.ongetstate(xmodel)",
+  "onrowbind": "_this.onrowbind(xmodel,jobj,datarow)", //(GRID ONLY)
+  "getapi": "_this.getapi(apitype)",
+  "onroute": "_this.onroute(routetype, req, res, f, require, jsh, modelid, params)", //Server-side reroute to different page if necessary, called before any ent data loaded
+    //routetypes: singlepage, model, d, d_transaction, csv, report, d_report, d_report_html, d_reportjob
+    //params = { query: {...}, post: {...} }
+  "nokey": true, //No primary key - only browse
+  "nodatalock": ["cust_id"],
+  "unbound": true, //Disable any AppSrv operations
+  "tabs": [
+    { "name": "General", "caption": "General Info", "target": "C", "bindings": { "cust_id": "cust_id" }, "showcode": ["VIEW","EDIT"],
+      "roles": { "main": ["*"], "client": ["CX_B","CX_X"] }
+    },
+    { "name": "General", "__REMOVE__": true }
+    //showcode - If the value of the column defined in model.tabcode is not one of the values of showcode, hide the tab entirely
+    //If no caption is specified, name will be used as the caption
+  ],
+  "tabcode": "A_TYPE", //The column used as a basis for "showcode" - hiding or showing tabs.  Must be defined as a parameter
+  "bindings": {"J_ID":"J_ID"}, //Additional bindings for top-level forms
+  "tabpanelstyle": "min-width:900px;",
+  "tablestyle": "min-width:700px;",
+  "formstyle": "min-width:900px;",
+  "inlinepopup": true, //Used internally by program for popuplov child grid
+  "code_val": "J_ID", //Used internally by program for popuplov child grid
+  "disableautoload": true, //Disables autoload in grid on scroll to bottom
+  "buttons": [
+    { 
+      "link": "insert:H", 
+      "icon": "insert", 
+      "text": "Add %%%CAPTION%%%", 
+      "actions": "I", 
+      "bindings": { "note_scope_id": "note_scope_id", "note_scope": "'C'", "cust_id":  "note_scope_id", "note_type":  "'C'" },  //bindings syntax: js:return xmodel.id
+      "style": "", 
+      "class": "", 
+      "roles": { "client": { "CLIENT": "*", "C_ADMIN": "B" } }, 
+      "hide_when_target_inaccessible": true, //If true, Insert buttons will not show if "I" permission is not on the target form.  True by default.
+      "nl": true }, //or just put the link for add
+    {"link":"js:jsh.App.C_LOVBAR.Add(this,modelid);", "icon": "insert", "text": "Add Customer", "actions": "B" },
+    {"link": "savenew:", "icon": "insert", "text": "Save and New", "actions": "IU" }
+    {"link": "savenew:", "icon": "insert", "text": "Save and New", "actions": "IU", "group":"Actions" }
+    //"link":"js:XExt.popupReport('I',{ cust_id: 97 },{ width:900, height:500 });"
+  ],
+  "hide_system_buttons" : ["print","export","help","search","clear","insert","add","delete","save"], //Current only on Grid
+  "rowstyle": "<#=xejs.iif(1==1,'color:red;','color:yellow;')#>", //Used in grid to style rows dynamically
+  "rowclass": "<#-xejs.case(datarow['PLE_SEL_NOTIF'],'xgrid_row_highlight',!datarow['PLE_SEL_NOTIF_OK'],'xgrid_row_disabled')#>", //Used in grid to style rows dynamically
+    //xejs.iif(condition,true,[false])  [false] result is optional
+    //xejs.case(condition1,result1,condition2,result2,[catchall_result])
+  "reselectafteredit": "row",    "comment1":"row, or blank",
+  "newrowposition": "last",      "comment2":"first or last",
+  "commitlevel": "row",          "comment3":"cell, row, page, auto, or none", //auto=(if not editable, "none" - if top-level, "row", if subform "page"
+  "validationlevel": "cell",     "comment4":"cell, or row",
+  "noresultsmessage":  "No results found %%%FORSEARCHPHRASE%%%",
+  "grid_expand_search": true,
+  "grid_rowcount": true,
+  "grid_require_search": true, //Do not initially load results
+  "grid_static": true, //Static (uneditable) grid for fast rendering
+  "duplicate": {"target": "EQUIP_DUPLICATE", "bindings": {"equip_id":"equip_id", "cust_id": "cust_id"},"link_on_success":"update:EW&equip_id=new_equip_id","button_text": "Duplicate Item"},
+  "templates": { "grid": ".xgrid_calendar_template" },
+  "onecolumn": true, //Add newline (nl) after each form field except the first. (form, form-m)  Automatically align width of captions
+  "fields": [
+    [html]<i><a href="/tutorials/reference_fields">field definition</a></i>[/html]
+  ],
+  "dberrors": [
+    [ "UNQ_H_H_UNIQUE", "This Help Panel has already been defined." ],
+    [ "/UNQ_H_H_[UN]*IQUE/", "This Help Panel has already been defined." ]
+    //If error/warning/notice begins with "Application Error - " the error message will be displayed to the user.
+    //If error/warning/notice begins with "Application Warning - " the warning message will be displayed to the user
+    //If error/warning/notice has the format "Execute Form - MESSAGE //C?cust_id=1" the message will be displayed to the user and the target model will be opened
+  ],
+  "display_layouts": {
+    "standard": {
+      "title": "Standard",
+      "columns": [
+        "column_name_1",
+        "column_name_2"
+          //HTML columns with field.value are always displayed
+          //Columns with field.control="hidden" are never displayed
+      ]
+    }
+  },
+  "source_files_prefix": "AUDL", //Prefix for source file extensions (prefix.ejs, prefix.js, ... )
+  
+  //Auto-generated System Properties
+  "curtab":true, //VIRTUAL PROPERTY, DO NOT OVERWRITE - Current Tab
+  "_inherits": ["CL_X","CL"] //Array of parent models
+  "_basemodel": "CL" //Base parent model
+  "_referencedby": ["CUST","CUST_CONTACT"], //Forms that link to this form
+  "_sysconfig": {},
+  "_transforms": [],
+  "namespace": "jsHarmonyFactory",
+}
+</pre>

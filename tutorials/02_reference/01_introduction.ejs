@@ -1,0 +1,303 @@
+<!-- 
+/*
+Copyright 2020 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Introduction",
+  "ID": "reference_introduction",
+  "Menu": ["Language Reference"]
+}
+</script>
+
+<h3>Introduction</h3>
+The core of jsHarmony is the model-based definition language.  Models are written in a custom JSON format.<br/>
+<br/>
+Specific model definitions can be found below:
+<ul>
+  <li><a href="/tutorials/reference_forms">Forms</a></li>
+  <li><a href="/tutorials/reference_fields">Fields</a></li>
+  <li><a href="/tutorials/reference_reports">Reports</a></li>
+  <li><a href="/tutorials/reference_sqlobjects">SQL Objects</a></li>
+  <li><a href="/tutorials/reference_tasks">Tasks</a></li>
+</ul>
+
+<h3>jsHarmony JSON Parser</h3>
+jsHarmony implements a custom JSON parser with the following additional features.
+
+<h3 data-level="2">Trailing Commas</h3>
+Trailing commas for arrays and object properties
+<pre>
+Object:
+{
+  "property1": "value1",
+  "property2": "value2",
+}
+
+Array:
+{
+  "array1": [
+    "item1",
+    "item2",
+  ]
+}
+</pre>
+
+<h3 data-level="2">Comments</h3>
+A line can be commented using two forward slashes:
+<pre>
+{
+  "property1": "value1",
+  // "property2": "value2",
+}
+</pre>
+In this example, property2 is commented, and will not be loaded as part of the JSON model.
+
+<h3 data-level="2">Imports</h3>
+External files can be imported - either as strings or JSON objects.
+
+<pre>
+"key1": @importstr("sample.sql"),
+"key2": @importjson("sample.scriplet"),
+</pre>
+
+<h4>@importstr - String Import</h4>
+<pre>
+//sample.sql
+select * from table
+
+//sample.json
+{
+  "sqlupdate": @importstr("sample.sql")
+}
+
+In the example with the two files above, sample.json will resolve to:
+{
+  "sqlupdate": "select * from table"
+}
+</pre>
+
+<h4>@importjson - JSON Import</h4>
+<pre>
+//sample.scriplet
+{
+  "name": "field1",
+  "value": "value1"
+}
+
+//sample.json
+{
+  "fields": [
+    @importjson("sample.scriplet")
+  ]
+}
+
+In the example with the two files above, sample.json will resolve to:
+{
+  "fields": [
+    {
+      "name": "field1",
+      "value": "value1"
+    }
+  ]
+}
+</pre>
+
+
+<h3>Model Inheritance</h3>
+A Form and Report model can inherit all properties from another model, and override / add new values (similar in some ways to class inheritance in C++).<br/>
+<br/>
+Model properties can have varied behavior during inheritance.  Specific implementation details are covered in the <a href="/tutorials/model_inheritance">Model Inheritance</a> tutorial.<br/>
+<br/>
+The follow general properties enable modifying the model during inheritance:
+<pre>
+{
+  "inherits": "[i]parent model[/i]",
+  "key1": "__REMOVEPROPERTY__", //Remove this property from the child model
+  "key2": "value2", //Override this property with the new value, ex. "value2"
+
+  //"__REMOVE__" and "__AFTER__" can be used for the model.fields and model.tabs arrays
+  "fields": [
+    { "name": "field1", "__REMOVE__": true } //Remove this entire field from the child model
+    { "name": "field2", "__AFTER__": "__END__" } //Move this field to the end of the fields list
+    { "name": "field3", "__AFTER__": "__START__" } //Move this field to the beginning of the fields list
+    { "name": "field4", "__AFTER__": "field3" } //Move this field after "field3" in the fields list
+  ]
+}
+</pre>
+
+<h3>Model Transforms</h3>
+Model transforms enable in-place modification of existing models.  This is useful when needing to override behavior in an imported jsHarmony module, without changing existing links and bindings.<br/>
+<br/>
+Assuming the parent has previously been defined / loaded, models can be transformed by setting the "inherits" property to the same value as the "id":
+<pre>
+{
+  "id": "/absolute/module/id", //ex. /jsHarmonyFactory/Admin/SysUser
+  "inherits": "/absolute/module/id", //same id as above, in order to use a transform instead of inheritance
+}
+</pre>
+
+<h3 data-level="2">Model Transforms: Object Properties</h3>
+<pre>
+//Add a property an existing object
+{"key": "value"}
+
+//Remove a property from an existing object
+{"key": "__REMOVEPROPERTY__"}
+
+//Replace the entire object with a new object
+{
+  "__REPLACE__": true
+  "key": "value"
+}
+
+//Remove the entire object
+{
+  "__REMOVE__": true
+}
+</pre>
+
+<h3 data-level="2">Model Transforms: Array Properties</h3>
+<pre>
+//Add an element to an existing array
+[
+  {"key": "value"} //Add to end of array
+  {"key": "value", "__AFTER__": "name:ZZZZZZZZ"} //Find an existing element with "name":"ZZZZZZZZ", and add the new element after that.  Add to end if no match
+  {"key": "value", "__AFTER__": 0} //Add at index
+  {"key": "value", "__AFTER__": "__START__"} //Add to start of array
+  {"key": "value", "__AFTER__": "__END__"} //Add to end of array
+]
+
+//Update an existing element in the array
+//Find an element with "name":"ZZZZZ"
+[
+  {"__MATCH__": "name:ZZZZZ", "key": "value"}
+]
+
+//Remove element from an array
+//Remove an element with "name":"ZZZZZ"
+[
+  {"__MATCH__": "name:ZZZZZ", "__REMOVE__": true}
+]
+
+//Replace an element in the array
+//Replace an element with "name":"ZZZZZ"
+[
+  {"__MATCH__": "name:ZZZZZ", "__REPLACE__": true, "key": "value"}
+]
+
+//Reorder an element in the array
+//Find an element with "name":"ZZZZZ", and move it to the beginning of the array
+[
+  {"__MATCH__": "name:ZZZZZ", "__AFTER__": "__START__"}
+]
+
+//Replace the entire array with new values
+[
+  {"__MATCH__": "*", "__REMOVE__": true},
+  {"key": "value"},
+]
+
+//__MATCH__: If the property name is not specified (via : separator), MATCH will default to using the "name" property.
+//The following two lines are equivalent:
+{"__MATCH__": "name:ZZZZZ", "__REMOVE__": true}
+{"__MATCH__": "ZZZZZ", "__REMOVE__": true}
+</pre>
+
+<h3 data-level="2">Model Transforms: String Properties</h3>
+<pre>
+//Concatenate a prefix and/or suffix to an existing string (or add if it does not exist)
+{
+  "key": {"__PREFIX__": "Prefix", "__SUFFIX__": "Suffix"}
+}
+
+//Replace an existing string with a new value
+{
+  "sql": "New SQL"
+}
+
+//Remove an existing string
+{
+  "sql": "__REMOVEPROPERTY__"
+}
+
+//Example
+//-------
+//For example, if the parent model has a title:
+{
+  "title": "Model Title"
+}
+
+//The transform can prefix the title using:
+{
+  "title": { "__PREFIX__": "Test: " }
+}
+
+//This will resolve to:
+{
+  "title": "Test: Model Title"
+}
+</pre>
+
+<h3>Macros</h3>
+Macros are defined in "_config.json".<br/>
+<br/>
+Macros are applied to models on system load:
+<pre>
+/models/_config.json
+{
+  "macros": {
+    //Standard String Replacement Macro, used via "#MACRO1"
+    "MACRO1": "VALUE1",
+
+    //Standard Object Replacement Macro, used via "#MACRO2"
+    //Can be used for defining fields or other objects with default values
+    "MACRO2": { "KEY1": "VALUE1", "KEY2": "VALUE2" },
+    //Object Replacement Macros can be merged with overrides via:
+    //  { "#MACRO2": { "KEY1": "VALUE3" } }    =>   { "KEY1": "VALUE3", "KEY2": "VALUE2" }
+
+    //Function macro, used via ["#MACRO3","PARAM1","PARAM2"]
+    "MACRO3": "js:function(a,b){ return a+b; }",
+
+    //Macros can be nested:
+    //  { "#MACRO2": { "KEY1": ["#MACRO3","PARAM1","PARAM2"] } }    =>   { "KEY1": "PARAM1PARAM2", "KEY2": "VALUE2" }
+  },
+}
+</pre>
+
+For example, the macros defined above could be used in a model as follows:
+<pre>
+{
+  "key1": "#MACRO1",
+  "key2": { "#MACRO2": { "KEY1": "VALUE3" } },
+  "key3": ["#MACRO3","PARAM1","PARAM2"],
+  "key4": { "#MACRO2": { "KEY1": ["#MACRO3","PARAM1","PARAM2"] } },
+}
+</pre>
+This will be resolved to:
+<pre>
+{
+  "key1": "VALUE1",
+  "key2": { "KEY1": "VALUE3", "KEY2": "VALUE2" },
+  "key3": "PARAM1PARAM2",
+  "key4": { "KEY1": "PARAM1PARAM2", "KEY2": "VALUE2" },
+}
+</pre>
+
+More information about defining macros can be found in the <a href="/tutorials/GETTING_STARTED_APPLICATION_CONFIG#macros">Application Config</a> tutorial.

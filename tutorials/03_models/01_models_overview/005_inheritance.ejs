@@ -21,6 +21,7 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/x-tutorial-info">
 {
   "Title": "Inheritance",
+  "ID": "model_inheritance",
   "Menu": ["Models","Models Overview"],
   "Code": ["/models/Cust_Listing.json"]
 }
@@ -80,12 +81,12 @@ A developer may want to create another grid, based on that grid, but with the cu
     The inherits parameter references the parent model.  All properties of the parent model will be copied to the child model.  It's important to note, any JavaScript that embeds the parent model name will not be changed.  In the example above, if there was a JavaScript class "CustContact_Listing_Basic", it would still be called "CustContact_Listing_Basic" in the child model.  It should not cause problems, however it is recommended to use a different shared base class name in this situation for code readability.
   </li>
   <li>
-    <b>"__REMOVEPROPERTY__": 1</b><br/>
-    The __REMOVEPROPERTY__ parameter can be used to remove top-level parent model properties from child models.
+    <b>"key": "__REMOVEPROPERTY__"</b><br/>
+    The __REMOVEPROPERTY__ value can be used to remove top-level parent model properties from child models.
   </li>
   <li>
-    <b>"__REMOVE__": 1</b><br/>
-    The __REMOVE__ parameter can be used to remove Fields and Tabs from inherited models.
+    <b>"__REMOVE__": true</b><br/>
+    The __REMOVE__ key can be used to remove an entire object.  For example, Fields and Tabs can be removed from inherited models.
   </li>
   <li>
     <b>"__AFTER__": "FIELDNAME"</b><br/>
@@ -122,7 +123,13 @@ A developer may want to create another grid, based on that grid, but with the cu
     <b>model.roles</b> - Model roles are replaced
   </li>
   <li>
-    <b>model.js</b> - Child model javascript codefiles will be appended to the parent model's javascript codefile
+    <b>model.js</b> - Child model javascript code will be appended to the parent model's javascript code
+  </li>
+  <li>
+    <b>model.ejs</b> - Child model EJS code will be appended to the parent model's EJS code
+  </li>
+  <li>
+    <b>model.css</b> - Child model css will be appended to the parent model's css
   </li>
   <li>
     <b>model.pagesettings</b> - Report page settings are merged

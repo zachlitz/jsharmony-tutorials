@@ -1,0 +1,233 @@
+<!-- 
+/*
+Copyright 2020 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "Fields",
+  "ID": "reference_fields",
+  "Menu": ["Language Reference"]
+}
+</script>
+
+<h3 class="tutorials_intro">Fields</h3>
+
+<pre>
+field := {
+  "name": "cust_name", //field name should match database column name, if binding to database
+  "type": "varchar", //bigint, varchar, date, decimal, float, int, datetime, char, smallint, tinyint, file, hash, encascii, time, boolean, binary
+  "length": "255",
+  "precision": [12,6], //For decimal, default is 10,4 if omitted
+  "precision": 53, //For float
+  "key": true, //If key exists, then this is a key field
+  "foreignkey": true, //Field is a foreign key (used to ensure datalocks are correctly applied)
+  "lovkey": true, //Used by Multisel to enable additional foreign key in LOV expression, without being a required parameter
+  "always_editable": true, //Field is always editable, regardless of field.actions / field.readonly.  Can only be used with unbound fields.
+  "unbound": true, //Field is completely unbound, not added to Fields array
+  "sqlselect": "@BXBUY_ID", //Override select sql for this field on Grid select
+  "sqlupdate": "@BXBUY_ID+5",
+  "sqlinsert": "null",
+  "sqlwhere": "x like @E_Name", //Custom where express for "F" fields in Grid
+  "caption": "Employee",
+  "caption_ext":  "Employee Name", //Optional longer caption for Search & Validation
+  "captionstyle": "font-size:12px;",
+  "captionclass": "classname",
+  "captioncolon": true, //Applies to form/form-m/exec - whether display a colon after the caption.  If set to a string, the caption will be replaced by the target string
+  "actions": "B", //BIUD   // html and button controls auto-add "B" rights.
+  "datalock": { "c_id": "client_c_id" }, //Link DataLock ID to query in _config.datalocks.
+  "control": "label", //label,html(value),textbox,textzoom,dropdown,date,textarea,htmlarea,subform,hidden,password,file_upload,file_download,image,button,linkbutton,tree,checkbox,tagbox
+  "controlparams": {
+                    {  //file_upload params
+                      "sqlparams": {"file_size": "doc_size",  //File Size
+                          "file_extension": "d_ocext", //File Extension
+                          "file_upload_timestamp": "doc_uptstmp", //Upload Timestamp - will be combined with jsh.map.timestamp sql
+                          "file_upload_user": "doc_upuser", //Upload User - will be combined with jsh.map.current_user sql
+                          "file_name": "doc_filename" //Target file name for download
+                        },
+                        "image": {
+                          "crop": [800,600], //Use either crop or resize
+                          "resize": [800,600],
+                          "resize": [225,75,{ "upsize": true, "extend":  true }], //upsize = increase size if smaller, extend = increase size to max, center content
+                          "format": "jpg", //jpg or png
+                        },
+                        "thumbnails": {
+                          "D_Medium": { //Key = file name
+                            "crop": [800,600], //Use either crop or resize
+                            "resize": [800,600],
+                            "resize": [225,75,{ "upsize": true, "extend":  true }],
+                            "format": "jpg", //jpg or png
+                          } 
+                        },
+                        "download_button": "Download", //Text for download button
+                        "preview_button": "View", //Text for preview button - opens within new browser window
+                        "upload_button": "Upload", //Text for upload button
+                        "delete_button": "Delete", //Text for delete button
+                        "show_thumbnail":"small", //Target thumbnail for display
+                        "preview_on_click":true,  //Whether to link to preview the full image on click
+                        "data_folder": "D",//Folder for files, must be unique per data_file_prefix
+                        "data_file_prefix": "c_doc", //File prefix in PREFIX_KEY.EXT (defaults to field name if blank or not set)
+                        "_data_file_has_extension": false, //System parameter.  Automatically set to true if sqlparams.file_extension not set.  Slower because a directory search is required on each request.  
+                  }, 
+                  { //file_download params
+                    "sqlparams": {
+                      "file_extension": "d_ext", //File Extension
+                      "file_name": "d_filename" //Target file name for download
+                    },
+                    "download_button": "Download", //Text for download button
+                    "data_folder": "D",//Folder for files, must be unique per data_file_prefix
+                    "data_file_prefix": "c_doc", //File prefix in PREFIX_KEY.EXT (defaults to field name if blank or not set)
+                    "_data_file_has_extension": false, //System parameter.  Automatically set to true if sqlparams.file_extension not set.  Slower because a directory search is required on each request.  
+                  },
+                  { //image params
+                    "sqlparams": {
+                      "file_extension": "d_ext", //File Extension
+                      "file_name": "d_filename" //Target file name for download
+                    },
+                    "show_thumbnail":"small", //Target thumbnail for display, or "true" first first thumbnail or image
+                    "preview_on_click":true,  //Whether to link to preview the full image on click
+                    "data_folder": "D",       //Folder for files, must be unique per data_file_prefix
+                    "data_file_prefix": "c_doc", //File prefix in PREFIX_KEY.EXT (defaults to field name if blank or not set)
+                    "_data_file_has_extension": false, //System parameter.  Automatically set to true if sqlparams.file_extension not set.  Slower because a directory search is required on each request.  
+                  },
+                  {"item_context_menu": [ //tree params - Context Menu for an Item
+                      { "icon": "insert", "text": "Add", "command": "XExt.Alert('insert' + context_item);", "actions": "IUD", "onrender": "(context_item, data) /* JS */ return false to hide;" }
+                    ],
+                    "expand_all": false, //Show nodes expanded by default
+                    "expand_to_selected": true, //Defaults to true
+                    "lazy_render": false, //Render nodes as needed, instead of up-front
+                    //Move one node to another
+                    "onmove": "_this.control_onmove(dragval, dropval, anchor, e);",
+                    //Drop external file onto tree node
+                    "ondrop": "_this.control_ondrop(dropval, anchor, e);",
+                    "drag_anchor_settings": { "anchors": ["top","bottom","left","right","full"] },
+                  },
+                  {"value_true":"ON",   //checkbox params
+                    "value_false":"OFF",
+                    "value_hidden":""
+                  },
+                  {"grid_save_before_update": true, //subform params
+                    "insert_link": "add:CA", //In case of subform with "form" layout, link is used for "insert" button when record not found
+                    "panelstyle": "",
+                  },
+                  {"update_when_blank": false, //password params
+                  },
+                  {                            //htmlarea params
+                    "htmlarea_config": {  //CKEditor Config Overrides
+                      "toolbar": [
+                        ['Styles', 'Format', 'Font', 'FontSize'],
+                        ['Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'Find', 'Replace', '-', 'Outdent', 'Indent', '-', 'Print'],
+                        ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                        ['Image', 'Table', 'HorizontalRule', '-', 'Link', 'Smiley', 'TextColor', 'BGColor', 'Source', 'Maximize']
+                      ]
+                    }
+                  },
+  }
+  "controlstyle": "font-size:12px;",
+  "controlclass": "classname",
+  "sample": "John Smith",  //Sample data
+  "value": "John Smith",   //Field value
+  "link": "update:CW",     //for grid, "insert:", "browse":, "select", "url:", "download:"...also added tab syntax: "update:JW&tabs={\"JW\":\"J_QUICK\"}"
+  "onchange": "console.log(JSON.stringify(obj));console.log(newval);XExt.Alert('test'); undoChange();",//JavaScript Event Handler for onchange event
+    //onchange(obj,newval,undoChange,e)
+  "ongetvalue": "return jsh._GET['E_ID'];", //JavaScript Event Handler that fire when "GetValue" is called - before field is sent to the database
+    //ongetvalue(val,field,xmodel,jctrl,parentobj)
+  "password": "E_SSN", // For type=encascii
+  "salt": "E_SSNHASH", // For type=hash
+  "roles": {"CX_X": ""}, //"" to remove actions, * for all actions, else BIUD
+  "format": "phone", //"phone", or "date:'MM/DD/YY HH:mm'", or "tstmp", or "MMDDYY", or "time:'h:mm A'", or "time:'HH:mm'", or "decimal:2", or "decimalext:2" (Decimal that doesn't round up, only adds zeros, up to 20 decimal places), or "decimalcomma:2", or "comma", or "ssn", or "ein", or "bool", or "json"   //Date uses Moment.js
+                      //Can alternatively use array syntax for parameters: ["date","MM/DD/YY HH:mm"]
+                      //Read-only formatters: "bytes", "js:return (val||'').toString()"
+  "validate": [ "Required", "MaxLength:5", "MinLength:5", "IsNumeric", "IsNumeric:true" (Only positive), "IsDecimal", "IsDecimal:3" (3 decimal places), "IsDecimalComma:2" (Decimal 2 places with commas), "MaxValue:999", "MinValue:100", "RegEx:'/regex/','be a correct value.'", "IsEmail", "IsDate", "IsSSN", "Equals:field.name", "Equals:'_obj.fieldname','Caption'", "Equals:5,'Five'" ],
+  "validate": [ //Alternative extended syntax, array can be mixed with string syntax
+    { "actions":"BIUD", "function": "MaxLength:20", "caption": "Customer Name", "selector": ".c_name.xelemC" }, //Each parameter except "function" is optional
+    { "actions":"BIUD", "function": "Required", "caption": "Customer Name", "selector": ".c_name.xelemC" }
+  ],
+    //File controls can have the following validators: ["Required", "MaxSize:5000000" (bytes), "Extension:['.PDF','.JPEG']"]
+
+  //LOV sql_params must be defined as fields, and must be in the request QueryString
+  "lov": { 
+    "sql": "select HP_CODE as code_val,HP_Desc as code_txt from HP where 1=1 %%%TRUNCATE%%% order by HP_Desc", 
+    "datalock":{"c_id":"client_c_id"}, 
+    "sql_params":["c_id","t_id"],
+    "sqlselect": "(select hp_desc from jsharmony.hp where hp.hp_code = h.hp_code)",
+    "sqltruncate": "HP_CODE=@HP_CODE", //Limit list to one entry - parameter = field.name
+    "always_get_full_lov": true, //Do not truncate LOV to one value, when field is "B", readonly, or value is set in querystring.
+    "db": "default", //Optional property - use an alternate database connection
+    "blank": true, //Whether to allow a "blank" option.  Can optionally be set to the text of the blank option
+  }, //code_val = Value, code_txt = Desc    "nodatalock":["c_id"] (If applicable)
+  "lov": { "sql": "select fcert_id as code_id,fcert_parent_id as code_parent_id,fcert_id as code_val,fcert_name as code_txt,'folder' as code_icon from fcert where c_id=(select c_id from E where e_id=@e_id) order by fcert_parent_id, fcert_name, fcert_id", "sql_params":["e_id"] }, //For Tree Control
+  "lov": { "sql2": "select X_ID as code_parent, HP_CODE as code_val,HP_Desc as code_txt from HP order by HP_Desc","parent": "ca_country", "datalock":{"c_id":"client_c_id"} }, //code_parent = Parent Value, code_val = Value, code_txt = Desc
+  "lov": { "sqlmp": "select X_ID as code_parent1, Y_ID as code_parent2, HP_CODE as code_val,HP_Desc as code_txt from HP order by HP_Desc","parents": ["ca_country","other"], "datalock":{"c_id":"client_c_id"} }, //code_parent[#] = Parent Value, code_val = Value, code_txt = Desc
+  "lov": { "code": "e_sts" },
+  "lov": { "code2": "dscope_dctgr", "schema": "jsharmony","blank": true,"parent": "ca_country" }, //Alternatively, blank can be set to text: "blank":"(None)" otherwise defaults to "Please Select..."
+  "lov": { "code2": "jsharmony.dscope_dctgr","parent": "ca_country" }, //Short schema syntax
+  "lov": { "code": "e_ctgr", "showcode": true }, //showcode ignores the code_txt and shows the code_val on the front-end.  Useful for States
+  "lov": { "code2": "dscope_dctgr", "schema": "jsharmony","blank": true,"parent": "ca_country" },
+  "lov": { "values": [{ "code_val": "ACTIVE", "code_txt": "Active" },{ "code_val": "CLOSED", "code_txt": "Closed" }] },
+  "lov": { "values": { "ACTIVE": "Active", "CLOSED": "Closed" } },
+  "lov": { "values": "#LOV_STATUS_AC" },
+    //where config.macros = {
+    //    "LOV_STATUS_AC": [{ "code_val": "ACTIVE", "code_txt": "Active" },{ "code_val": "CLOSED", "code_txt": "Closed" }] 
+    //  }
+  "lov": { "values": { "ACTIVE": "Active", "CLOSED": "Closed" }, "post_process": "console.log(values);" },
+    //"post_process": "jsh.generateLOVTree(values);"   jsh.generateLOVTree(values, { separator: '/', root_txt: '(Root)', default_root: true })
+  "popuplov": {  //Enable POPUPLOV, requires target grid
+                    "target":  "J",
+                    "code_val": "j_id",
+                    "popupstyle": "height:200px;",
+                    "popup_copy_results": { "c_name": "c_name" },
+                    "base_readonly": true,
+                    "onpopup": "console.log('popup');", //(popupmodelid, parentmodelid, fieldid, onComplete)
+                    "popupiconstyle": "display:none;",
+                  },
+  "default": "USA",
+  "default": "js:moment().format()",
+  "default": { "sql": "select c_name from c where c_id=@c_id", "sql_params": ["c_id"] }, //"nodatalock":["c_id"] (If applicable)
+  "readonly": true,
+  "locked_by_querystring": true, //Make field uneditable when querystring defaults are applied.  Default is true
+  "target": "E_Name",  //for subform, popuplov
+  "bindings": { "c_id": "c_id" },
+  "cellclass": "", //For Grid / Multisel table
+  "cellstyle": "width:300px;"  //For Grid / Multisel table
+  "eol": true, //Add line break after this field (end-of-line)
+  "nl": true,  //Add line break before this field (new-line)
+  "block": true, //Whether this should be rendered as a block element
+                  //If true, wrap a div around the field + caption, and do not add a line-break after (ignore next field's field.nl)
+  "blockclass": "", //Class of block wrapper
+  "blockstyle": "", //Style for block wrapper
+  "serverejs": true, //Evaluate EJS server-side (for HTML)
+  "disable_sort": true, //Only applies to grid
+  "enable_search": true, //Only applies to grid, enable search if it is a hidden column
+  "disable_search": true, //Only applies to grid, do not display as a search column
+  "disable_search_all": true, //Only applies to grid, do not query in "Any" search
+  "sqlsort": "(case when X then 1 else 0 end)", //Only applies to grid
+  "sqlsearch": "(case when X then 1 else 0 end)", //Only applies to grid
+  "sqlsearchsound": "c_id in (select c_id from SDX where SDX_COL='CN' and SDX_VAL=SOUNDEX(%%%FIELD%%%))",
+
+  //Properties for inheriting models
+  "__REMOVE__":true, //Remove the entire model field from the inheriting child model
+  "property":"__REMOVEPROPERTY__", //Remove the target property from the inheriting child model
+  "__AFTER__": "FIELDNAME", "__START__", "__END__", //Change the position of the field in the inheriting child model
+
+  //SYSTEM Properties
+  "datatype_config": ...
+  "sql_from_db": ...
+  "sql_to_db": ...
+}
+</pre>
