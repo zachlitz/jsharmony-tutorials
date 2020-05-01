@@ -62,7 +62,7 @@ model := {
       read_file (path, into, foreach_line)
       write_csv (path, db, data, sql, headers)
       append_csv (path, db, data, sql)
-      read_csv (path, into, foreach_row, headers)
+      read_csv (path, into, foreach_row, headers, pipe, csv_options)
       js (js, cmd, into, foreach) --> update parameters, custom validation, return an array foreach - can return promise for async operations
       shell (path, params, cwd)
       email ( email: {to, cc, bcc, subject, text, html, attachments} ) //Attachments = { path: ... }
@@ -85,7 +85,7 @@ model := {
       ] },
       { "exec": "list_files", "path": "sample_folder", "matching": ["*.csv"], "into": "csvfile",
         "foreach_file": [
-          { "exec": "read_csv", "path": "@csvfile.path", "into": "csvdata", "headers": false,
+          { "exec": "read_csv", "path": "@csvfile.path", "into": "csvdata", "headers": false, "pipe": "require('zlib').createGunzip()", "csv_options": { "delimiter": "\t" },
             "fields": [
               {"name":"country"},
               {"name":"id"},

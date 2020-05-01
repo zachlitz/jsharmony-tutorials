@@ -55,10 +55,30 @@ sqlobject := {
   "unique": [
     ["branch_name","branch_user_id"] //Multi-unique
   ],
+  "dependencies": ["tbl1", "tbl2"], //Dependencies are used to order create statements in situations such as views with custom SQL
   "index": [
     { "columns": ["environment_id"] },
     { "columns": ["environment_id", "series_code"] } //Multi-index
   ],
+  "tables": [ //For views only - used to generate sql statement
+    "table1": {
+      "columns": [
+        "column1",
+        "column2",
+        { "name": "column3", "type": "varchar", "length": -1, "sqlselect": "concat(column1, column2)" }, //Custom column expression
+      ]
+    }
+    "table2": {
+      "columns": [
+        "column4"
+      ],
+      "join_type": "left",  //left, right, inner
+      "join_columns": {
+        "table1.column1", "table2.column1",
+        "table1.column2", "table2.column2"
+      }
+    }
+  ]
   "triggers": [
     { "on": ["update", "insert","delete","validate_insert","validate_update"],
       "exec": [
@@ -71,6 +91,9 @@ sqlobject := {
       ]
     }
   ],
+  "init": [
+    { "sql": "..." }
+  ]
   "init_data": [
     { "field1": "value1", "field2": "value2" }
   ],
