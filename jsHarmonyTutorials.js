@@ -133,7 +133,9 @@ jsHarmonyTutorials.prototype.Auth = function(){
       req.isAuthenticated = true;
       req.user_id = 1;
       req._DBContext = 'system';
-      req._roles = {'SYSADMIN':'SYSADMIN', 'DEV':'DEV'};
+      
+      req._roles = {'SYSADMIN':'SYSADMIN'};
+      if(_this.Config.enable_dev) req._roles.DEV = 'DEV';
 
       jsh.AppSrv.ExecRow('login', 'select '+jsh.map.user_firstname+','+jsh.map.user_lastname+' from jsharmony.sys_user where '+jsh.map.user_id+'=@user_id', [jsh.AppSrv.DB.types.BigInt], { 'user_id': req.user_id }, function(err,rslt){
         if(rslt && rslt[0]){

@@ -24,6 +24,8 @@ var path = require('path');
 function jsHarmonyTutorialsConfig(){
   //jsHarmony Tutorials module path
   this.moduledir = path.dirname(module.filename);
+  //Enable DEV functions for unauthenticated user
+  this.enable_dev = false;
 }
 
 jsHarmonyTutorialsConfig.prototype = new jsHarmonyConfig.Base();
