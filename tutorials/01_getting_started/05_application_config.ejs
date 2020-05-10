@@ -555,7 +555,7 @@ site.auth = {
   onAuthComplete: function (req, user_info, jsh, onSuccess) { onSuccess(); },
 
   //Run code before authenticating user, for custom authentication via tokens
-  preprocess_account: function (AppSrv, account, onComplete, onFail) { onComplete(); },
+  preprocess_account: function (AppSrv, account, onComplete, onFail, req) { onComplete(); },
 
   //Generate and return authentication token
   getToken = function (AppSrv, req, cb) {
@@ -573,7 +573,7 @@ site.auth = {
 
   allow_insecure_http_logins: false,  //Allow login over http (normally https is required)
 
-  on_auth: function(req, jsh, params, cb){ /*cb(err, rslt)*/ },         //Override authentication database code 
+  on_auth: function(req, jsh, account, params, cb){ /*cb(err, rslt)*/ },//Override authentication database code 
   on_login: function(req, jsh, params, cb){ /*cb(err, rslt)*/ },        //Override login database code
   on_loginsuccess: function(req, jsh, params, cb){ /*cb(err, rslt)*/ }, //Override post-login success database code
   on_superlogin: function(req, jsh, params, cb){ /*cb(err, rslt)*/ },   //Override superadmin login database code
