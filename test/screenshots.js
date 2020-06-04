@@ -60,7 +60,7 @@ before(function(done) {
       if(!fs.existsSync(app_source_data_dir)) return cb();
       if(path.normalize(app_source_data_dir) == path.normalize(test_data_dir)) return cb();
       if(path.normalize(app_source_data_dir) == path.normalize(app_data_dir)) return cb();
-      HelperFS.copyRecursive(app_source_data_dir, app_data_dir,{ forEachDir: function(dirpath, targetpath, cb){
+      HelperFS.copyRecursive(app_source_data_dir, app_data_dir,{ forEachDir: function(dirpath, targetpath, relativepath, cb){
         var curtargetpath = path.normalize(targetpath);
         if(dirpath.indexOf(app_data_dir) >= 0) return cb(false);
         if(dirpath.indexOf(test_data_dir) >= 0) return cb(false);
