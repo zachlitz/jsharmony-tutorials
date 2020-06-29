@@ -144,6 +144,7 @@ model := {
   "onvalidate": "_this.onvalidate(xmodel, callback)", //Must return callback(true) if validation succeeded and handle errors
   "onupdate": "_this.onupdate (xmodel)", //(FORM ONLY)
   "ondestroy": "_this.ondestroy (xmodel)",
+  "onchange": "_this.onchange (obj, newval, e)", //Runs when any field value has changed (after field.onchange event)
   "oncommit": "_this.oncommit(xmodel, rowid, callback)", //(GRID ONLY) - Executes after db Update / Insert / Delete.
   "onloadstate": "_this.onloadstate(xmodel, state)",
   "ongetstate": "_this.ongetstate(xmodel)",
