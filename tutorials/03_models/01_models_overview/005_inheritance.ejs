@@ -86,13 +86,17 @@ A developer may want to create another grid, based on that grid, but with the cu
   </li>
   <li>
     <b>"__REMOVE__": true</b><br/>
-    The __REMOVE__ key can be used to remove an entire object.  For example, Fields and Tabs can be removed from inherited models.
+    The __REMOVE__ key can be used to remove an entire object.  For example, Fields, Tabs, and Buttons can be removed from inherited models.
+  </li>
+  <li>
+    <b>"__REMOVEALL__": true</b><br/>
+    The __REMOVEALL__ key can be used to remove this object, any objects defined prior to this object, any objects inherited from a parent model.  For example, Fields, Tabs, and Buttons can be removed from inherited models.
   </li>
   <li>
     <b>"__AFTER__": "FIELDNAME"</b><br/>
     <b>"__AFTER__": "__START__"</b><br/>
     <b>"__AFTER__": "__END__"</b><br/>
-    The __AFTER__ parameter can be used to change the sort position of fields and tabs.  Setting __AFTER__ to the fieldname will position the new field after the target field.  Setting __AFTER__ to __START__ or __END__ will position the field at the beginning or end of the model.
+    The __AFTER__ parameter can be used to change the sort position of fields, tabs, and buttons.  Setting __AFTER__ to the fieldname will position the new field after the target field.  Setting __AFTER__ to __START__ or __END__ will position the field at the beginning or end of the model.
   </li>
 </ul>
 
@@ -102,7 +106,7 @@ A developer may want to create another grid, based on that grid, but with the cu
     <b>model.groups</b> - Child model groups are added to the parent model groups.
   </li>
   <li>
-    <b>model.fields</b> - Child fields are added to the array of parent fields.  Fields can be removed using "__REMOVE__" and reordered using "__AFTER__".  Parent field properties can be overridden per-field, when the child field has the same name as the parent.
+    <b>model.fields</b> - Child fields are added to the array of parent fields.  Fields can be removed using "__REMOVE__" / "__REMOVEALL__" and reordered using "__AFTER__".  Parent field properties can be overridden per-field, when the child field has the same name as the parent.
   </li>
   <li>
     <b>model.fields.roles</b> - Field roles are merged
@@ -114,10 +118,16 @@ A developer may want to create another grid, based on that grid, but with the cu
     <b>model.fields.*</b> - All other field properties are merged
   </li>
   <li>
-    <b>model.tabs</b> - Child model tabs are added to existing parent tabs.  Tabs can be removed using "__REMOVE__" and reordered using "__AFTER__".  Parent model tab properties can be overridden per-tab, when the child model's tab has the same name as the parent.
+    <b>model.tabs</b> - Child model tabs are added to existing parent tabs.  Tabs can be removed using "__REMOVE__" / "__REMOVEALL__" and reordered using "__AFTER__".  Parent model tab properties can be overridden per-tab, when the child model's tab has the same name as the parent.
   </li>
   <li>
     <b>model.tabs.*</b> - All tab properties are merged
+  </li>
+  <li>
+    <b>model.buttons</b> - Child model buttons are added to existing parent buttons.  Buttons can be removed using "__REMOVE__" / "__REMOVEALL__" and reordered using "__AFTER__".  Parent model button properties can be overridden per-button, when the child model's button has the same name as the parent.
+  </li>
+  <li>
+    <b>model.buttons.*</b> - All button properties are merged
   </li>
   <li>
     <b>model.roles</b> - Model roles are replaced

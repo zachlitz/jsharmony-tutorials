@@ -60,6 +60,7 @@ Buttons have a variety of properties for configuring text, icon, and style:
 {
   "buttons":[
     {
+      "name":"insertCust",
       "link":"insert:Cust",
       "text":"Add %%%CAPTION%%%",
       "icon":"insert",
@@ -70,6 +71,10 @@ Buttons have a variety of properties for configuring text, icon, and style:
   ],
 }
 </pre>
+<div style="padding-bottom:15px;">
+  <b>button.name</b><br/>
+  The name of the button.  Every button name should be unique.  Button names are optional, but recommended.  Names are required when modifying buttons in inheriting models.
+</div>
 <div style="padding-bottom:15px;">
   <b>button.text</b><br/>
   The text attribute modifies the text to the right of the button.  The keyword %%%CAPTION%%% will insert the model caption into the button text.  Setting the text to blank will display only the icon.

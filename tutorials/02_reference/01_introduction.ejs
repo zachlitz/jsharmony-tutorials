@@ -138,6 +138,7 @@ The follow general properties enable modifying the model during inheritance:
     { "name": "field2", "__AFTER__": "__END__" } //Move this field to the end of the fields list
     { "name": "field3", "__AFTER__": "__START__" } //Move this field to the beginning of the fields list
     { "name": "field4", "__AFTER__": "field3" } //Move this field after "field3" in the fields list
+    { "__REMOVEALL__": true } //Remove all fields from parent model, and all fields in this model above this field
   ]
 }
 </pre>
