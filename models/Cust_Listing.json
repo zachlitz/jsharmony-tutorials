@@ -7,7 +7,7 @@
     "actions":"B", 
     "roles": {"C_B":"B","C_X":"*"},
     "sort":["^cust_name"], 
-    "buttons":[{"link":"insert:Cust"}],
+    "buttons":[{"name":"insertCust","link":"insert:Cust"}],
     "menu":"clients",
     "fields":[
       {"name":"cust_id","type":"bigint","actions":"B","key":1,"link":"update:Cust","caption": "ID"},
@@ -17,7 +17,7 @@
   },
   "Cust_Listing_Tabs": {
     "inherits": "Cust_Listing",
-    //"buttons":[{"link":"insert:Cust_Container"}],
+    //"buttons":[{"name":"insertCust","link":"insert:Cust_Container"}],
     "fields": [
       {"name":"cust_id","link":"update:Cust_Container"},
       {"name":"cust_name","link":"update:Cust_Container"}
@@ -40,7 +40,7 @@
   },
   "Cust_Listing_Dev": {
     "inherits": "Cust_Listing",
-    "buttons":[{"link":"insert:Cust_Container_Dev"}],
+    "buttons":[{"name":"insertCust","link":"insert:Cust_Container_Dev"}],
     "fields": [
       {"name":"cust_id","link":"update:Cust_Container_Dev"},
       {"name":"cust_name","link":"update:Cust_Container_Dev"}
