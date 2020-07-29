@@ -58,6 +58,20 @@ The textbox control is used for both entering and displaying data:
 }
 </pre>
 
+The textbox has the following controlparams:
+
+<pre>
+{
+  "name":"x_textbox",
+  "control":"textbox",
+  "controlparams": {
+    "placeholder":"Please enter a name"
+  },
+}
+</pre>
+
+If defined, the placeholder text is displayed in the field as a grayed-out value until the actual value is entered.
+
 <h3>Textarea</h3>
 The textarea control renders a multiline textbox.
 
@@ -193,6 +207,20 @@ The following example uses the date control on unbound fields:
   ]
 }
 </pre>
+
+The date control has the following controlparams:
+
+<pre>
+{
+  "name":"x_date",
+  "control":"date",
+  "controlparams": {
+    "placeholder":"MM/DD/YYYY"
+  },
+}
+</pre>
+
+If defined, the placeholder text is displayed in the field as a grayed-out value until the actual value is entered.
 
 <h3>Checkbox</h3>
 

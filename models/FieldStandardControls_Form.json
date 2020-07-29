@@ -6,10 +6,12 @@
   "popup":[900,400],
   "fields": [
     {"name":"x_textbox", "control":"textbox","caption":"Textbox"},
+    {"name":"x_textbox_placeholder","unbound":true,"control":"textbox","caption":"Textbox w/Placeholder","controlparams":{"placeholder":"Sample Placeholder"}},
     {"name":"x_textarea", "control":"textarea", "caption":"Textarea"},
     {"name":"x_textzoom", "control":"textzoom","caption":"Textzoom"},
     {"name":"x_dropdown", "control":"dropdown", "lov": { "values": { "VALUE1": "Display Text 1", "VALUE2": "Display Text 2" } },"caption":"Dropdown"},
     {"name":"x_date", "control":"date", "caption":"Date"},
+    {"name":"x_date_placeholder","unbound":true,"control":"date","caption":"Date w/Placeholder","controlparams":{"placeholder":"YYYY-MM-DD"}},
     {"name":"x_checkbox", "control":"checkbox", "caption":"Checkbox"},
     {"control":"button","link":"update:FieldStandardControls_Form", "caption":"Button", "controlclass":"x_button"},
     {"control":"linkbutton","link":"update:FieldStandardControls_Form", "caption":"Linkbutton", "controlclass":"x_linkbutton"},
