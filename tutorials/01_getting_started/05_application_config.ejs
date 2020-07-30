@@ -129,6 +129,10 @@ config.system_settings = {
     "lovs": true,              //Load LOVs (List of Values - code/code2) from the database
     "keys": true               //Generate primary and foreign keys based on table keys and bindings
   },
+  //Deprecated Options Backwards Compatibility
+  "deprecated": {
+    "disable_button_inheritance": { /* moduleName: true */ } //Disable button inheritance per module. ex: { "application": true }
+  },
   //Model validation level - "standard", "strict"
   //  Strict: MISSING_CAPTION
   "validation_level": "standard"
