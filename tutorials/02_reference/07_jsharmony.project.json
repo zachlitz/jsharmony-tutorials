@@ -1,0 +1,96 @@
+<!-- 
+/*
+Copyright 2020 apHarmony
+
+This file is part of jsHarmony.
+
+jsHarmony is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jsHarmony is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this package.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<script type="text/x-tutorial-info">
+{
+  "Title": "jsharmony.project.json",
+  "ID": "reference_jsharmony_project_json",
+  "Menu": ["Language Reference"]
+}
+</script>
+
+<h3 class="tutorials_intro">Installer Manifest - jsharmony.project.json</h3>
+
+This manifest file is used by the jsHarmony CLI "create project" installer.<br/>
+It is only needed by projects that are distributable and installable via the CLI.<br/>
+It should be saved as "jsharmony.project.json" in the application root.
+<pre>
+{
+  //Database attributes
+  //If not defined - installer assumes full database support for all databases
+  "database": {
+    "type": ["mssql","pgsql","sqlite"] //Compatibility with the listed database
+  },
+  "database": false, //No database required
+  
+  //Installer Configuration
+  "installer": {
+    //Install the jsHarmony Factory - default "true"
+    "jsharmony_factory": true, 
+    
+    //Install the jsHarmony Factory Client Portal - default "false"
+    "jsharmony_factory_client_portal": false,
+    
+    //Run the following local script in the project before installation
+    "script_pre_install": "init/install.pre.js",
+    
+    //Run the following local script in the project after installation
+    "script_post_install": "init/install.post.js",
+    
+    //Set "execute" permission on the scripts below, and change line endings to local OS
+    "executables": [
+      "app.js"
+    ],
+    
+    //Generate self-signed certificates for web servers
+    "generate_self_signed_certs": [
+      {
+        "key": "cert/localhost.key", //Location where key will be saved
+        "cert": "cert/localhost.crt" //Location where cert will be saved
+      }
+    ],
+    
+    //Generate the "nstart" script that restarts the server when program files are changed - default "true"
+    "generate_nstart": true,
+    "generate_nstart": ["./models","./views","./app.config.js","./app.config.local.js","./app.js"],
+
+    //Generate a .gitignore file to leave config and data out of the git repository - default "true"
+    "generate_gitignore": true,
+    "generate_gitignore": ["/app.config.*.js","/node_modules","/cert","/data"],
+    
+    //Do not ask the user whether or not to create a database - default "true"
+    "auto_create_database": true
+  },
+  
+  //Package.json extensions - will be merged with default package.json
+  "package": {
+    "dependencies": {
+      "jsharmony-cms": "^1.0.0"
+    },
+    //"__REMOVE__" can be used to remove a setting from the default file
+    "main": "__REMOVE__",
+    //"__REMOVEALL__" can be used to remove all items from the parent, so that only local settings will remain
+    "devDependencies": {
+      "__REMOVEALL__": true,
+      "mocha": "^7.2.0"
+    }
+  }
+}
+</pre>
