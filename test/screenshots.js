@@ -216,25 +216,20 @@ function gmCompareImagesWrapper(srcpath, cmppath, options) {
 }
 
 function init_jsHarmony(cb) {
-  var fconfig = path.join(app_dir, 'app.config.js');
-
-  //Copy file from current project, if available
-  if(fs.existsSync(path.join(app_source_dir, 'app.config.js'))) return HelperFS.copyFile(path.join(app_source_dir, 'app.config.js'), fconfig, cb);
-
-  //Otherwise, generate file
-  var fconfigtext = 'exports = module.exports = function(jsh, config, dbconfig){\n\
-//Server Settings\n\
-config.frontsalt = '+JSON.stringify(xlib.getSalt(60))+';\n\
-//jsHarmony Factory Configuration\n\
-var configFactory = config.modules["jsHarmonyFactory"];\n\
-\n\
-configFactory.clientsalt = '+JSON.stringify(xlib.getSalt(60))+';\n\
-configFactory.clientcookiesalt = '+JSON.stringify(xlib.getSalt(60))+';\n\
-configFactory.mainsalt = '+JSON.stringify(xlib.getSalt(60))+';\n\
-configFactory.maincookiesalt = '+JSON.stringify(xlib.getSalt(60))+';\n\
-}';
-  fs.writeFileSync(fconfig, fconfigtext,'utf8');
-  return cb();
+  async.waterfall([
+    function(init_cb){
+      //Copy app.config.js
+      var fname = 'app.config.js';
+      if(fs.existsSync(path.join(app_source_dir, fname))) return HelperFS.copyFile(path.join(app_source_dir, fname), path.join(app_dir, fname), init_cb);
+      else return init_cb();
+    },
+    function(init_cb){
+      //Copy app.config.local.js
+      var fname = 'app.config.local.js';
+      if(fs.existsSync(path.join(app_source_dir, fname))) return HelperFS.copyFile(path.join(app_source_dir, fname), path.join(app_dir, fname), init_cb);
+      else return init_cb();
+    },
+  ], cb);
 }
 
 function start_jsHarmony(cb) {

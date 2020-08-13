@@ -16,7 +16,7 @@ Run the following command in the jsHarmony CLI (jsharmony-cli):
 jsharmony create tutorials
 ```
 
-Or, alternatively, create an app.config.js and initialize the tutorials manually via:
+Or, alternatively, create an app.config.js / app.config.local.js and initialize the tutorials manually via:
 
 ```javascript
 var jsHarmonyTutorials = require('jsharmony-tutorials');

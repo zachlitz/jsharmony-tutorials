@@ -65,7 +65,7 @@ In many databases, views are read-only by default.  There are two options for ma
 </ul>
 
 <h3>Custom SQL</h3>
-Custom SQL expressions can be used to replace any of the generated SQL.  View the raw SQL for any model by turning on database debugging in app.config.js:<br/>
+Custom SQL expressions can be used to replace any of the generated SQL.  View the raw SQL for any model by turning on database debugging in app.config.local.js:<br/>
 <pre>
 config.debug_params.db_requests = true;
 </pre>
@@ -509,7 +509,7 @@ If the user sorts by the cust_name column:
 <h3>Multiple Databases</h3>
 One jsHarmony project can connect to multiple databases.  Each model has a "db" value that can be set to the database connection.<br/>
 <br/>
-First, define the second database in app.config.js:
+First, define the second database in app.config.local.js:
 <pre>
 dbconfig['secondary'] = { 
   server: "server.domain.com", 

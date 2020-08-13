@@ -48,7 +48,9 @@ During a fatal system crash, an error will be logged to data\log\lasterror.log. 
 <h3>Development / Test Environment</h3>
 When working in the development / test environment, it can be necessary to disable certain components, such as the job processor, or modify all emails to forward to a different address so that customers do not receive email notifications.<br/>
 <br/>
-A local app.config.js can be created for a development environment by adding the computer hostname to the filename:
+Passwords should not be saved in the source code repository, and local configuration specific to that instance should be stored in "app.config.local.js" instead of "app.config.js".<br/>
+<br/>
+An app.config.js can also be created specifically for an individual development environment by adding the computer hostname to the filename:
 <pre>
 app.config.HOSTNAME.js
 
@@ -69,7 +71,7 @@ exports = module.exports = function(jsh, config, dbconfig){
   configFactory.debug_params.disable_job_processor = true;
 }
 </pre>
-On startup, the system will first read app.config.js, and then read app.config.HOSTNAME.js, so the hostname-specific app.config file only needs to contain overrides.<br/>
+On startup, the system will first read app.config.js, then app.config.local.js, and then read app.config.HOSTNAME.js, so the hostname-specific app.config file only needs to contain overrides.<br/>
 <br/>
 The "email_override" and "sms_override" only apply to the jsHarmony Factory job processor, which is the recommended method to send from the system.
 
@@ -78,10 +80,10 @@ Since running jsHarmony locally is very fast, so it can be challenging to simula
 <pre>
 config.delay_requests = 1000;
 </pre>
-Adding the line above to the app.config.js will add 1 second of latency to each request.
+Adding the line above to the app.config.local.js will add 1 second of latency to each request.
 
 <h3>Log Levels / Debugging Information</h3>
-The following parameters can be used in app.config.js to get additional debug / logging information:
+The following parameters can be used in app.config.local.js to get additional debug / logging information:
 <pre>
 config.debug_params.jsh_error_level = 15;
 config.debug_params.appsrv_requests = true;
@@ -142,12 +144,12 @@ jsHarmony comes with a client-side global variable monitor.  If global variable 
 }); } })%>
 To enable global variable monitoring:
 <pre>
-//app.config.js
+//app.config.local.js
 config.debug_params.monitor_globals = true;
 </pre>
 To ignore variables that should be declared in the global scope:
 <pre>
-//app.config.js
+//app.config.local.js
 config.debug_params.ignore_globals = ['correct_global_variable'];
 </pre>
 
@@ -190,7 +192,7 @@ The user must have the Developer role in order to use the Model Viewer.
 <h3>Debug Console</h3>
 The Debug Console brings the command line into the browser, with a popup developer console.  The user must have the Developer role in order to use the Debug Console, and also the "config.debu_params.log_socket" must be enabled:
 <pre>
-//app.config.js
+//app.config.local.js
 config.debug_params.log_socket = true;
 </pre>
 
