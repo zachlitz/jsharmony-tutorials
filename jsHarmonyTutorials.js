@@ -132,7 +132,7 @@ jsHarmonyTutorials.prototype.Auth = function(){
     onAuth: function(req, res, onSuccess, onFail){
       req.isAuthenticated = true;
       req.user_id = 1;
-      req._DBContext = 'system';
+      req._DBContext = 'S1';
       
       req._roles = {'SYSADMIN':'SYSADMIN'};
       if(_this.Config.enable_dev) req._roles.DEV = 'DEV';

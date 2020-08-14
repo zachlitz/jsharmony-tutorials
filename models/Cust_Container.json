@@ -16,7 +16,8 @@
       {"name":"Customer Flags","caption": "Customer Flags","target":"Cust_Flag","bindings":{"cust_id":"cust_id"},
         "showcode": ["ACTIVE"],"actions":"BU"},
       {"name":"SetInactive","caption": "Set Inactive","target":"Cust_Exec","bindings":{"cust_id":"cust_id"},
-        "showcode": ["ACTIVE"],"actions":"BU"}
+        "showcode": ["ACTIVE"],"actions":"BU"},
+      {"name":"Notes","target":"jsHarmonyFactory/Note_UserCustSys_Tabs"}
     ],
     "fields": [
       {"name":"cust_id", "type": "bigint", "actions":"B","key": 1,"control":"hidden"},
