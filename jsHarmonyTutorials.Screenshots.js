@@ -17,7 +17,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with this package.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var puppeteer = require('jsharmony/lib/puppeteer');
 var ejs = require('ejs');
 var fs = require('fs');
 var path = require('path');
@@ -25,7 +24,6 @@ var _ = require('lodash');
 var async = require('async');
 var HelperFS = require('jsharmony/HelperFS');
 var Helper = require('jsharmony/Helper');
-var imagick = require('jsharmony/lib/gm').subClass({ imageMagick: true });
 
 module.exports = exports = {};
 
@@ -47,37 +45,40 @@ exports.generateScreenshots = function(options,callback){
   var browserParams = { ignoreHTTPSErrors: true, ignoreDefaultArgs: [ '--hide-scrollbars' ] };
   if(!exports.HEADLESS) browserParams.headless = false;
 
-  puppeteer.launch(browserParams).then(function(browser){
-    HelperFS.funcRecursive(_this.tutfolder,function(filepath, relativepath, file_cb){
-      //For each File
-      fs.readFile(filepath, 'utf8', function(err, txt){
-        if(err) return file_cb(err);
-
-        var screenshots = [];
+  jsh.Extensions.report.getPuppeteer(function(err, puppeteer){
+    if(err) return jsh.Log.error(err);
+    puppeteer.launch(browserParams).then(function(browser){
+      HelperFS.funcRecursive(_this.tutfolder,function(filepath, relativepath, file_cb){
+        //For each File
+        fs.readFile(filepath, 'utf8', function(err, txt){
+          if(err) return file_cb(err);
   
-        try{
-          ejs.render(txt, { 
-            req: null,
-            getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); },
-            instance: '',
-            _: _
+          var screenshots = [];
+    
+          try{
+            ejs.render(txt, { 
+              req: null,
+              getScreenshot: function(url, desc, params){ screenshots.push( { url: url, desc: desc, params: params } ); },
+              instance: '',
+              _: _
+            });
+          }
+          catch(ex){ return file_cb(ex); }
+  
+          async.eachLimit(screenshots, 1, function(screenshot, screenshot_cb){
+            _this.generateScreenshot(browser, screenshot.url, screenshot.desc, screenshot.params, screenshot_cb);
+          }, function(err){
+            if(err){ jsh.Log.error(err); }
+            return file_cb();
           });
-        }
-        catch(ex){ return file_cb(ex); }
-
-        async.eachLimit(screenshots, 1, function(screenshot, screenshot_cb){
-          _this.generateScreenshot(browser, screenshot.url, screenshot.desc, screenshot.params, screenshot_cb);
-        }, function(err){
-          if(err){ jsh.Log.error(err); }
-          return file_cb();
         });
+      },undefined,undefined,function(err){
+        if(err){ jsh.Log.error(err); }
+        browser.close();
+        return callback();
       });
-    },undefined,undefined,function(err){
-      if(err){ jsh.Log.error(err); }
-      browser.close();
-      return callback();
-    });
-  }).catch(function(err){ jsh.Log.error(err); });
+    }).catch(function(err){ jsh.Log.error(err); });
+  });
 }
 
 exports.generateScreenshot = function(browser, url, desc, params, callback){
@@ -225,16 +226,29 @@ exports.generateScreenshot = function(browser, url, desc, params, callback){
 
 exports.processScreenshot = function(fpath, params, callback){
   var _this = this;
-  var img = imagick(fpath);
-  if(params.postClip) img.crop(params.postClip.width, params.postClip.height, params.postClip.x, params.postClip.y);
-  if(params.trim) img.trim();
-  if(params.resize){
-    img.resize(params.resize.width||null, params.resize.height||null);
-  }
-  //Compress PNG
-  img.quality(1003);
-  img.setFormat('png');
-  img.noProfile().write(fpath, callback);
+  var jsh = _this.jsh;
+
+  async.waterfall([
+    function(img_cb){
+      if(!params.postClip && !params.trim) return img_cb();
+      var cropParams = [null, null, { resize: false }];
+      if(params.postClip){
+        cropParams[0] = params.postClip.width;
+        cropParams[1] = params.postClip.height;
+        cropParams[2].x = params.postClip.x;
+        cropParams[2].y = params.postClip.y;
+      }
+      if(params.trim) cropParams[2].trim = true;
+      jsh.Extensions.image.crop(fpath, fpath, cropParams, 'png', img_cb);
+    },
+    function(img_cb){
+      if(!params.resize) return img_cb();
+      var resizeParams = [params.resize.width||null, params.resize.height||null];
+      jsh.Extensions.image.resize(fpath, fpath, resizeParams, 'png', img_cb);
+    },
+  ], function(err){
+    return callback(err);
+  });
 }
 
 exports.getScreenshot = function(url, desc, params){

@@ -139,6 +139,10 @@ Models are used to display and edit data.  Below is the full workflow for a stan
 </ol>
 
 <h3>Report Architecture</h3>
+In order to run reports, the "jsharmony-report" module must be installed, and the report extension should be loaded in the app.config.js file:
+<pre>
+jsh.Extensions.report = require('jsharmony-report');
+</pre>
 Reports consist of two components: the form to enter the report parameters, and the actual execution of the report.
 <ol>
   <li>

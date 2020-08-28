@@ -1,6 +1,3 @@
-var gm = require('gm');
-var imageMagick = gm.subClass({ imageMagick: true });
-var im = imageMagick();
 var _ = require('lodash');
 var fs = require("fs");
 var path = require("path");
@@ -8,9 +5,10 @@ var ejs = require('ejs');
 var assert = require('assert');
 var async = require('async');
 var HelperFS = require('jsharmony/HelperFS');
-var xlib = (require('jsharmony/WebConnect')).xlib;
 
 var targetTests = null;
+
+var DO_NO_CLEAN_BEFORE_TEST = false;
 
 //Parse command line arguments
 for(var i=0;i<process.argv.length;i++){
@@ -22,6 +20,7 @@ for(var i=0;i<process.argv.length;i++){
   }
 }
 
+let jsh = null;
 let app_source_dir = path.normalize(process.cwd());
 let app_source_data_dir = path.join(app_source_dir, 'data');
 let test_dir = path.dirname(__filename);
@@ -45,9 +44,11 @@ before(function(done) {
   this.timeout(1200000); // set test timeout long process to generate screenshots
   console.log('\n\rBefore Tests (Global)');
   //Remove data and screenshot folders
-  HelperFS.rmdirRecursiveSync(app_data_dir);
-  HelperFS.rmdirRecursiveSync(screenshots_generated_dir);
-  HelperFS.rmdirRecursiveSync(screenshots_diff_dir);
+  if(!DO_NO_CLEAN_BEFORE_TEST){
+    HelperFS.rmdirRecursiveSync(app_data_dir);
+    HelperFS.rmdirRecursiveSync(screenshots_generated_dir);
+    HelperFS.rmdirRecursiveSync(screenshots_diff_dir);
+  }
   //Recreate data and screenshot folders
   HelperFS.createFolderRecursiveSync(test_data_dir);
   HelperFS.createFolderRecursiveSync(app_dir);
@@ -72,7 +73,7 @@ before(function(done) {
     //Initialize jsHarmony Config
     init_jsHarmony,
     //Start jsHarmony and generate screenshots
-    start_jsHarmony
+    start_jsHarmony,
   ],done)
 });
 
@@ -97,7 +98,7 @@ describe('Compare Screenshots', function() {
     checkDirectory(screenshots_generated_dir);
   });
 
-  it('existing and generated images should be equal', function(done) {
+  it('compare images', function(done) {
     this.timeout(600000);
     let files = fs.readdirSync(screenshots_source_dir);
     if(targetTests){
@@ -165,54 +166,58 @@ function generateFailImagesResultPage(failImages){
 
 function gmCompareImagesWrapper(srcpath, cmppath, options) {
   return new Promise((resolve, reject)=> {
-    //Resized version of cmppath, to be the same size as srcpath
-    let cmppath_resize = cmppath+'.resize.png';
-    //Compare function
-    let fcmp = function(_cmppath){
-      if(!_cmppath) _cmppath = cmppath;
-      im.compare(srcpath, _cmppath, options, function (err, isEqual, equality, raw) {
-        if (err) return reject(err);
-        return resolve(isEqual);
-      });
-    };
-    //Check for differences without generating a difference image
-    if(!options.file) return fcmp();
-    else{
-      try{
-        //Get sizes of srcpath and cmppath
-        var img1 = imageMagick(srcpath);
-        var img2 = imageMagick(cmppath);
-        img1.size(function(err,size1){
-          if(err) return reject(err);
-          img2.size(function(err,size2){
+    jsh.Extensions.image.getDriver(function(err, imageMagick){
+      if(err) return reject(err);
+
+      //Resized version of cmppath, to be the same size as srcpath
+      let cmppath_resize = cmppath+'.resize.png';
+      //Compare function
+      let fcmp = function(_cmppath){
+        if(!_cmppath) _cmppath = cmppath;
+        imageMagick().compare(srcpath, _cmppath, options, function (err, isEqual, equality, raw) {
+          if (err) return reject(err);
+          return resolve(isEqual);
+        });
+      };
+      //Check for differences without generating a difference image
+      if(!options.file) return fcmp();
+      else{
+        try{
+          //Get sizes of srcpath and cmppath
+          var img1 = imageMagick(srcpath);
+          var img2 = imageMagick(cmppath);
+          img1.size(function(err,size1){
             if(err) return reject(err);
-            //If srcpath and cmppath are the same size, generate the difference image
-            if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp();
-            //Crop cmppath to be the same as srcpath, and save to cmppath_resize
-            img2.autoOrient();
-            img2.crop(size1.width,size1.height,0,0);
-            img2.extent(size1.width,size1.height);
-            img2.repage(0, 0, 0, 0);
-            img2.noProfile().write(cmppath_resize, function(err){
-              if(err) console.log(err);
+            img2.size(function(err,size2){
               if(err) return reject(err);
-              img2 = imageMagick(cmppath_resize);
-              //Make sure that cmppath_resize is the same size as srcsize
-              img2.size(function(err,size2){
+              //If srcpath and cmppath are the same size, generate the difference image
+              if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp();
+              //Crop cmppath to be the same as srcpath, and save to cmppath_resize
+              img2.autoOrient();
+              img2.crop(size1.width,size1.height,0,0);
+              img2.extent(size1.width,size1.height);
+              img2.repage(0, 0, 0, 0);
+              img2.noProfile().write(cmppath_resize, function(err){
+                if(err) console.log(err);
                 if(err) return reject(err);
-                //Generate the difference image
-                if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp(cmppath_resize);
-                return reject(new Error('Sizes still not the same after resize'));
+                img2 = imageMagick(cmppath_resize);
+                //Make sure that cmppath_resize is the same size as srcsize
+                img2.size(function(err,size2){
+                  if(err) return reject(err);
+                  //Generate the difference image
+                  if((size1.width==size2.width) && (size1.height==size2.height)) return fcmp(cmppath_resize);
+                  return reject(new Error('Sizes still not the same after resize'));
+                });
               });
             });
           });
-        });
+        }
+        catch(ex){
+          return reject(ex);
+        }
       }
-      catch(ex){
-        return reject(ex);
-      }
-    }
-  })
+    });
+  });
 }
 
 function init_jsHarmony(cb) {
@@ -234,9 +239,14 @@ function init_jsHarmony(cb) {
 
 function start_jsHarmony(cb) {
   var jsHarmonyTutorials = require('./../index.js');
-  var jsh = new jsHarmonyTutorials.Application();
+  jsh = new jsHarmonyTutorials.Application();
   jsh.Config.appbasepath = app_dir;
   jsh.Config.onServerReady.push(function () {
+    if(jsh.Extensions.image.type != 'jsharmony-image-magick'){
+      jsh.Servers['default'].Close();
+      jsh.DB['default'].Close();
+      return setTimeout(function(){ cb(new Error('Screenshot tests require jsharmony-image-magick extension')); }, 1000);
+    }
     jsh.Modules.jsHarmonyTutorials.generateScreenshots({screenshot_folder:screenshots_generated_dir, targetTests: targetTests},function () {
       jsh.Servers['default'].Close();
       cb();

@@ -108,8 +108,10 @@ config.frontsalt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 config.system_settings = {
   //"Datalock to Key" matching will be case-insensitive for cross-database compatibility
   case_insensitive_datalocks: true,
-  //Do not show an error if ImageMagick is not installed
-  ignore_imagemagick: false,
+  //Do not check for Image Extension on startup
+  "ignore_image_extension": false,
+  //Do not check for Report Extension on startup
+  "ignore_report_extension": false,
   //Enable http access to encrypted content (normally https is enforced for any encrypted data requests)
   "allow_insecure_http_encryption": false,
   //Suffix override for jsHarmony cookie name - default is _PORT (ex. _8080), to enable multiple applications on the same domain
