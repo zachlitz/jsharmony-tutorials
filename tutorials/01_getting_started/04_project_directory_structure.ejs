@@ -53,7 +53,7 @@ Front-end and back-end interface definitions are stored in the models folder.  I
   </li>
   <li>
     <b>/models/js/*</b><br/>
-    Shared front-end JavaScript files used by the models
+    Shared front-end JavaScript files used by the models.  JavaScript files are loaded in order of file name, and concatenated into "/application.js".  In the standard setup, "/application.js" requires authentication before access.
   </li>
   <li>
     <b>/models/public_css/*</b><br/>
