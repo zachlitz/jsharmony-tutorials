@@ -28,6 +28,14 @@ along with this package.  If not, see <http://www.gnu.org/licenses/>.
 
 <h3 class="tutorials_intro">Reports</h3>
 
+<h3>Enabling Reports</h3>
+In order to run reports, the "jsharmony-report" module must be installed using NPM, and the report extension should be loaded in the app.config.js file:
+<pre>
+jsh.Extensions.report = require('jsharmony-report');
+</pre>
+
+<h3>Report Model Definition</h3>
+
 <pre>
 model := {
   //Same top-level and field properties as [html]<i><a href="/tutorials/reference_forms">Forms</a></i>[/html]

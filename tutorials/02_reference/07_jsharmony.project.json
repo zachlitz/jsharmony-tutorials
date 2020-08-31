@@ -47,12 +47,20 @@ It should be saved as "jsharmony.project.json" in the application root.
     
     //Install the jsHarmony Factory Client Portal - default "false"
     "jsharmony_factory_client_portal": false,
-    
-    //Run the following local script in the project before installation
-    "script_pre_install": "init/install.pre.js",
-    
-    //Run the following local script in the project after installation
-    "script_post_install": "init/install.post.js",
+
+    //Installation Scripts
+    "scripts": {
+      //Run the following local script in the project before installation
+      "pre_install": "init/install.pre.js",
+      //Run the following local script in the project after installation
+      "post_install": "init/install.post.js",
+      //Run the following local script in the project before creating the database
+      "pre_db_create": "init/create.db.pre.js",
+      //Run the following local script in the project before initializing the database
+      "pre_db_init": "init/init.db.pre.js",
+      //Run the following local script in the project after initializing the database
+      "post_db_init": "init/init.db.post.js",
+    },
     
     //Set "execute" permission on the scripts below, and change line endings to local OS
     "executables": [
