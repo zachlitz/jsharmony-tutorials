@@ -29,6 +29,11 @@
     "url": "https://github.com/apHarmony/jsharmony-tutorials/issues"
   },
   "homepage": "https://github.com/apHarmony/jsharmony-tutorials",
+  "nodemonConfig": {
+    "watch": [
+      "./models"
+    ]
+  },
   "devDependencies": {
     "@types/glob": "^7.1.3",
     "@types/react": "^16.9.49",
