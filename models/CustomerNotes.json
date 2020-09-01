@@ -1,0 +1,35 @@
+{
+  "CustomerNotes": {
+    "layout": "form",
+    "title": "",
+    "caption":["","Status","Statuses"],
+    "actions": "B",
+    "unbound": true,
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "oninit": "_this.oninit(xmodel);",
+    "ondestroy": "_this.ondestroy();",
+    "buttons": [],
+    "hide_system_buttons" : ["print","help"]
+  },
+
+
+
+  //Custom API Endpoint for getting list of customers and initial form data
+  "CustomerNotes_Get_Cust": {
+    "layout": "exec",
+    "title": "Select all customers",
+    "actions": "U",
+    "roles": {
+      "main": {"*":"*"}
+    },
+    "sqlexec": [
+      "select cust_id,cust_name,cust_sts from cust;",
+      // "select code_val,code_txt from code_cust_sts where (code_end_dt is null or code_end_dt>datetime('now','localtime')) order by code_seq;"
+    ],
+    "sqltype": "multirecordset",
+    "fields": [
+    ]
+  }
+}

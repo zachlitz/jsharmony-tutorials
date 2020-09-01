@@ -1,0 +1,43 @@
+.NoteListComponent {
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+
+    @newNoteHeight: 100px;
+
+    .verticalWrapper {
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        width: 100%;
+
+        .noteList {
+            position: relative;
+            height: calc(100% - @newNoteHeight);
+            max-height: calc(100% - @newNoteHeight);
+            overflow: hidden;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        .newNote {
+            position: relative;
+            height: @newNoteHeight;
+            box-sizing: border-box;
+            padding: 10px;
+
+            textarea {
+                height: calc(100% - 25px);
+                width: 100%;
+                resize: none;
+                box-sizing: border-box;
+                border-radius: 3px;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
